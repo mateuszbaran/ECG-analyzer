@@ -10,3 +10,18 @@
 *.lai
 *.la
 *.a
+
+# msvc
+*.tlog
+*.log
+*.suo
+*.pdb
+*.ilk
+*.sdf
+*.filters
+*.obj
+*.manifest
+*.exe
+*.lastbuildstate
+*.cache
+*.user
