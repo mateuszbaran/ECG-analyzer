@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ecganalyzer.ui'
 **
-** Created: Wed 17. Oct 21:42:02 2012
+** Created: Thu 18. Oct 18:59:14 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
