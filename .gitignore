@@ -140,5 +140,6 @@ install_manifest.txt
 moc_*.cpp
 ui_*.h
 moc_*.cxx
+GeneratedFiles/
 
 *.depends
