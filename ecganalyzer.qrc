@@ -1,4 +1,11 @@
 <RCC>
-    <qresource prefix="ECGanalyzer">
-    </qresource>
+  <qresource prefix="ECGanalyzer">
+    <file>icons/info.png</file>
+    <file>icons/3floppy_unmount.png</file>
+    <file>icons/exit.png</file>
+    <file>icons/folder.png</file>
+    <file>icons/on.png</file>
+    <file>icons/QtIcon.png</file>
+    <file>icons/software-development.png</file>
+  </qresource>
 </RCC>
