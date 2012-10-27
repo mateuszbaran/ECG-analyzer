@@ -2,12 +2,15 @@
 
 #include <vector\gsl_vector.h>
 
+/**
+ * @class Class for parameters created in HRV1 module
+ */
 class ECGHRV1
 {
 public:
   ECGHRV1 (void);
   ~ECGHRV1 (void);
-  
+
   double GetHF () const
   {
     return HF;
@@ -158,7 +161,7 @@ public:
     this->pNN50 = NN50;
   }
 
-  
+
 private:
   //time domain parameters
   double RR_avg;

@@ -4,6 +4,7 @@
 #include "ECGRs.h"
 #include "ECGWaves.h"
 #include "ECGHRV1.h"
+#include "ECGHRV2.h"
 
 /**
  * @class Class which controls executing all modules.
@@ -19,5 +20,6 @@ private:
   ECGRs r_peaks;
   ECGWaves waves;
   ECGHRV1 hrv1;
+  ECGHRV2 hrv2;
 };
 
