@@ -50,6 +50,42 @@
     <ClCompile Include="GeneratedFiles\qrc_ecganalyzer.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="ECGSignal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGRs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGWaves.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGHRV1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGHRV2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EGHRVDFT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGHRVDFA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGClasses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGST.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGTWave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGHRT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECGController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -65,6 +101,42 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGSignal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGRs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGWaves.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGHRV1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGHRV2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EGHRVDFT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGHRVDFA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGClasses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGST.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGTWave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGHRT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGController.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -80,6 +80,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ecganalyzer.cpp" />
+    <ClCompile Include="ECGClasses.cpp" />
+    <ClCompile Include="ECGController.cpp" />
+    <ClCompile Include="ECGHRT.cpp" />
+    <ClCompile Include="ECGHRV1.cpp" />
+    <ClCompile Include="ECGHRV2.cpp" />
+    <ClCompile Include="ECGHRVDFA.cpp" />
+    <ClCompile Include="ECGRs.cpp" />
+    <ClCompile Include="ECGSignal.cpp" />
+    <ClCompile Include="ECGST.cpp" />
+    <ClCompile Include="ECGTWave.cpp" />
+    <ClCompile Include="ECGWaves.cpp" />
+    <ClCompile Include="EGHRVDFT.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_ecganalyzer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -120,6 +132,18 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ECGClasses.h" />
+    <ClInclude Include="ECGController.h" />
+    <ClInclude Include="ECGHRT.h" />
+    <ClInclude Include="ECGHRV1.h" />
+    <ClInclude Include="ECGHRV2.h" />
+    <ClInclude Include="ECGHRVDFA.h" />
+    <ClInclude Include="ECGRs.h" />
+    <ClInclude Include="ECGSignal.h" />
+    <ClInclude Include="ECGST.h" />
+    <ClInclude Include="ECGTWave.h" />
+    <ClInclude Include="ECGWaves.h" />
+    <ClInclude Include="EGHRVDFT.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
   </ItemGroup>
   <ItemGroup>
