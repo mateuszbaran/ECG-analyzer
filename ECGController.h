@@ -14,7 +14,6 @@
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 
-
 /**
  * @class Class which controls executing all modules.
  */

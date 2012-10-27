@@ -1,10 +1,11 @@
 #pragma once
+
 class ECGST
 {
 public:
-	ECGST(void);
-	~ECGST(void);
+  ECGST (void);
+  ~ECGST (void);
 private:
-  //TODO: analiza co tu ma byæ
+  //TODO: analiza co tu ma byï¿½
 };
 
