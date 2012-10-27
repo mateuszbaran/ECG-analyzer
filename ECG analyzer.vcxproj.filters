@@ -144,5 +144,8 @@
     <ClInclude Include="QRSClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModulesMethods.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
