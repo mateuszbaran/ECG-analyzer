@@ -7,6 +7,9 @@
 #include "ECGHRV2.h"
 #include "ECGHRVDFA.h"
 #include "ECGClasses.h"
+#include "ECGHRT.h"
+#include "ECGST.h"
+#include "ECGTWave.h"
 
 /**
  * @class Class which controls executing all modules.
@@ -25,5 +28,8 @@ private:
   ECGHRV2 hrv2;
   ECGHRVDFA ecghrvdfa;
   ECGClasses ecgclasses;
+  ECGST ecgst;
+  ECGTWave ecgtwave;
+  ECGHRT ecghrt;
 };
 
