@@ -2,6 +2,9 @@
 
 #include <vector\gsl_vector_int.h>
 
+/**
+ * @class Class for storing QRS parameters.
+ */
 class ECGWaves
 {
 public:

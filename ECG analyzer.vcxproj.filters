@@ -86,6 +86,9 @@
     <ClCompile Include="ECGController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QRSClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -136,6 +139,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ECGController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QRSClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

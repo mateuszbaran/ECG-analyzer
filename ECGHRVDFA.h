@@ -3,6 +3,9 @@
 #include <vector\gsl_vector.h>
 #include <vector>
 
+/**
+ * @class Class for storing DFA results.
+ */
 class ECGHRVDFA
 {
 public:

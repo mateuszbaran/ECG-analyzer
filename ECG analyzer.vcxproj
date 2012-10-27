@@ -105,6 +105,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="QRSClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -145,6 +146,7 @@
     <ClInclude Include="ECGWaves.h" />
     <ClInclude Include="EGHRVDFT.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
+    <ClInclude Include="QRSClass.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.qrc">
