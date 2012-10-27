@@ -7,5 +7,5 @@ ECGRs::ECGRs (void)
 
 ECGRs::~ECGRs (void)
 {
-  if (rs) delete rs;
+  if (rs) gsl_vector_int_free(rs);
 }
