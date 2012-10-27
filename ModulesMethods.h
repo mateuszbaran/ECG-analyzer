@@ -1,3 +1,5 @@
+#pragma once
+
 //This file is for enums for selecting module method.
 
 /**
@@ -7,4 +9,4 @@ enum ECG_BASELINE_METHOD
 {
   //example method
   BUTTERWORTH
-}
+};

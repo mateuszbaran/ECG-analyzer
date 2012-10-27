@@ -147,5 +147,8 @@
     <ClInclude Include="ModulesMethods.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModulesInterfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

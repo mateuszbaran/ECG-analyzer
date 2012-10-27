@@ -11,6 +11,10 @@
 #include "ECGST.h"
 #include "ECGTWave.h"
 
+#include "ModulesInterfaces.h"
+#include "ModulesMethods.h"
+
+
 /**
  * @class Class which controls executing all modules.
  */
@@ -19,8 +23,6 @@ class ECGController
 public:
   ECGController (void);
   ~ECGController (void);
-
-
 
 private:
   ECGSignal raw_signal;
