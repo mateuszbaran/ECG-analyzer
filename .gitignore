@@ -143,3 +143,5 @@ moc_*.cxx
 GeneratedFiles/
 
 *.depends
+
+*.dll
