@@ -36,47 +36,47 @@ public:
 class WavesModule : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGSignal &, const ECGRs &, ECGWaves &) = 0;
+  virtual void runModule (const ECGSignal &, const ECGRs &, ECGWaves &) = 0;
 };
 
 class HRV1Module : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGRs &, ECGHRV1 &) = 0;
+  virtual void runModule (const ECGRs &, ECGHRV1 &) = 0;
 };
 
 class HRV2Module : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGRs &, ECGHRV2 &) = 0;
+  virtual void runModule (const ECGRs &, ECGHRV2 &) = 0;
 };
 
 class HRVDFAModule : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGRs &, ECGHRVDFA &) = 0;
+  virtual void runModule (const ECGRs &, ECGHRVDFA &) = 0;
 };
 
 class QRSClassModule : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGWaves &, const ECGSignal &, ECGClasses &) = 0;
+  virtual void runModule (const ECGWaves &, const ECGSignal &, ECGClasses &) = 0;
 };
 
 class STIntervalModule : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGWaves &, const ECGSignal &, ECGST &) = 0;
+  virtual void runModule (const ECGWaves &, const ECGSignal &, ECGST &) = 0;
 };
 
 class TWaveAltModule : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGWaves &, const ECGSignal &, ECGTWave &) = 0;
+  virtual void runModule (const ECGWaves &, const ECGSignal &, ECGTWave &) = 0;
 };
 
 class HRT : public GlobalInterface
 {
 public:
-  virtual void runModule(const ECGWaves &, const ECGRs &, const ECGSignal &, ECGClasses &) = 0;
+  virtual void runModule (const ECGWaves &, const ECGRs &, const ECGSignal &, ECGClasses &) = 0;
 };
