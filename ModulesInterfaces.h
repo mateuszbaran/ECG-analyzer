@@ -15,10 +15,12 @@
 #include <map>
 #include <string>
 
+typedef std::map<std::string, double> ParametersTypes;
+
 class GlobalInterface
 {
 public:
-  virtual void setParams (std::map<std::string, double> &) = 0;
+  virtual void setParams (ParametersTypes &) = 0;
 };
 
 class ECGBaselineModule : public GlobalInterface
@@ -78,5 +80,5 @@ public:
 class HRT : public GlobalInterface
 {
 public:
-  virtual void runModule (const ECGWaves &, const ECGRs &, const ECGSignal &, ECGClasses &) = 0;
+  virtual void runModule (const ECGWaves &, const ECGRs &, const ECGSignal &, ECGHRT &) = 0;
 };

@@ -23,6 +23,17 @@ public:
   ECGController (void);
   ~ECGController (void);
 
+  void runECGBaseline(ParametersTypes & params);
+  void runRPeaks(ParametersTypes & params);
+  void runWaves(ParametersTypes & params);
+  void runHRV1(ParametersTypes & params);
+  void runHRV2(ParametersTypes & params);
+  void runHRVDFA(ParametersTypes & params);
+  void runQRSClass(ParametersTypes & params);
+  void runSTInterval(ParametersTypes & params);
+  void runTwaveAlt(ParametersTypes & params);
+  void runHRT(ParametersTypes & params);
+
 private:
   //data
   ECGSignal raw_signal;
@@ -31,11 +42,11 @@ private:
   ECGWaves waves_data;
   ECGHRV1 hrv1_data;
   ECGHRV2 hrv2_data;
-  ECGHRVDFA ecghrvdfa_data;
-  ECGClasses ecgclasses_data;
-  ECGST ecgst_data;
-  ECGTWave ecgtwave_data;
-  ECGHRT ecghrt_data;
+  ECGHRVDFA hrv_dfa_data;
+  ECGClasses classes_data;
+  ECGST st_data;
+  ECGTWave twave_data;
+  ECGHRT hrt_data;
 
   //modules
   ECGBaselineModule *ecg_baseline_module;
