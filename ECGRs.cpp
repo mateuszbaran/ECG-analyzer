@@ -7,5 +7,5 @@ ECGRs::ECGRs (void)
 
 ECGRs::~ECGRs (void)
 {
-  if (rs) delete 0;
+  if (rs) delete rs;
 }

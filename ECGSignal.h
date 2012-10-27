@@ -8,16 +8,16 @@
 class ECGSignal
 {
 public:
-	ECGSignal(void);
-	~ECGSignal(void);
+  ECGSignal (void);
+  ~ECGSignal (void);
 
-	/**
-	 * Get signal.
-	 * @return signal as pointer to gsl_vector.
-	 */
-	gsl_vector * getSignal() const;
+  /**
+   * Get signal.
+   * @return signal as pointer to gsl_vector.
+   */
+  gsl_vector * getSignal () const;
 private:
-	//signal
-	gsl_vector* signal;
+  //signal
+  gsl_vector* signal;
 };
 

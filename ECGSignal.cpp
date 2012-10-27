@@ -1,13 +1,11 @@
 #include "ECGSignal.h"
 
-
-ECGSignal::ECGSignal(void)
+ECGSignal::ECGSignal (void)
 {
-	signal =0;
+  signal = 0;
 }
 
-
-ECGSignal::~ECGSignal(void)
+ECGSignal::~ECGSignal (void)
 {
-	if (signal) delete signal;
+  if (signal) delete signal;
 }
