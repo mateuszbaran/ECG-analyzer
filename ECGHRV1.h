@@ -83,7 +83,7 @@ public:
 
   double GetNN50 () const
   {
-    return pNN50;
+    return NN50;
   }
 
   gsl_vector* GetPower () const
@@ -158,7 +158,7 @@ public:
 
   void SetNN50 (double NN50)
   {
-    this->pNN50 = NN50;
+    this->NN50 = NN50;
   }
 
 
