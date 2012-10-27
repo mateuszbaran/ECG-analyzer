@@ -7,5 +7,5 @@ ECGSignal::ECGSignal (void)
 
 ECGSignal::~ECGSignal (void)
 {
-  if (signal) gsl_vector_free(signal);
+  if (signal) gsl_vector_free (signal);
 }

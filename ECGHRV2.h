@@ -11,7 +11,7 @@ class ECGHRV2
 public:
   ECGHRV2 (void);
   ~ECGHRV2 (void);
-  
+
   double GetSD1 () const
   {
     return SD1;
@@ -71,7 +71,7 @@ public:
   {
     this->TINN = TINN;
   }
-  
+
 private:
   //data for plotting histogram
   gsl_vector_int * histogram_x;

@@ -7,7 +7,7 @@ class ECGWaves
 public:
   ECGWaves (void);
   ~ECGWaves (void);
-  
+
   gsl_vector_int* GetP_end () const
   {
     return P_end;

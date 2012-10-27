@@ -8,5 +8,10 @@ ECGHRV2::ECGHRV2 (void)
 
 ECGHRV2::~ECGHRV2 (void)
 {
-  int i;
+  if (histogram_x) gsl_vector_int_free (histogram_x);
+  if (histogram_y) gsl_vector_int_free (histogram_y);
+  if (poincare_x) gsl_vector_int_free (poincare_x);
+  if (poincare_y) gsl_vector_int_free (poincare_y);
+  if (triple_index_x) gsl_vector_free (triple_index_x);
+  if (triple_index_y) gsl_vector_free (triple_index_y);
 }

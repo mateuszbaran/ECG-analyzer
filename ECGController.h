@@ -5,6 +5,7 @@
 #include "ECGWaves.h"
 #include "ECGHRV1.h"
 #include "ECGHRV2.h"
+#include "ECGHRVDFA.h"
 
 /**
  * @class Class which controls executing all modules.
@@ -21,5 +22,6 @@ private:
   ECGWaves waves;
   ECGHRV1 hrv1;
   ECGHRV2 hrv2;
+  ECGHRVDFA ecghrvdfa;
 };
 
