@@ -1,9 +1,10 @@
 #pragma once
 
 #include "ECGSignal.h"
+#include "ECGRs.h"
 
 /**
- * @class 
+ * @class Class which controls executing all modules.
  */
 class ECGController
 {
@@ -13,6 +14,7 @@ public:
 private:
   ECGSignal raw_signal;
   ECGSignal filtered_signal;
+  ECGRs r_peaks;
 
 };
 
