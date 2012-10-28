@@ -85,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ecganalyzer.cpp" />
+    <ClCompile Include="ECGChannelInfo.cpp" />
     <ClCompile Include="ECGClasses.cpp" />
     <ClCompile Include="ECGController.cpp" />
     <ClCompile Include="ECGHRT.cpp" />
@@ -143,6 +144,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ECGChannelInfo.h" />
     <ClInclude Include="ECGClasses.h" />
     <ClInclude Include="ECGController.h" />
     <ClInclude Include="ECGHRT.h" />

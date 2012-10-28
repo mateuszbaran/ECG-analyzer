@@ -268,7 +268,15 @@ bool ECGController::readFile(std::string filename)
   {
     return false;
   }
-  
+  //read channels info
+  channel_one_info.filename = s[0].fname;
+  channel_one_info.description = s[0].desc;
+  channel_one_info.units = s[0].units;
+
+  channel_two_info.filename = s[1].fname;
+  channel_two_info.description = s[1].desc;
+  channel_two_info.units = s[1].units;
+ 
   //set signal
   nr_samples = s[0].nsamp; //we assume that both channels are equal.
   original_signal_channel_one->signal = gsl_vector_alloc(nr_samples);
@@ -277,6 +285,7 @@ bool ECGController::readFile(std::string filename)
   //alocate memory for filtered signal
   filtered_signal->signal = gsl_vector_alloc(nr_samples);
 
+  //read signals
   for (i = 0; i < nr_samples; i++)
   {
     if (getvec(v) < 0) //error
