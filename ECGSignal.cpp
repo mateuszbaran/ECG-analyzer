@@ -1,11 +1,19 @@
 #include "ECGSignal.h"
 
-ECGSignal::ECGSignal (void)
-{
-  signal = 0;
-}
+WrappedVector::WrappedVector (gsl_vector * _signal)
+	: signal(_signal)
+{}
 
-ECGSignal::~ECGSignal (void)
+WrappedVector::~WrappedVector ()
 {
   if (signal) gsl_vector_free (signal);
+}
+
+WrappedVectorInt::WrappedVectorInt( gsl_vector_int * _signal /*= NULL*/ )
+	: signal(_signal)
+{}
+
+WrappedVectorInt::~WrappedVectorInt()
+{
+	if (signal) gsl_vector_int_free (signal);
 }

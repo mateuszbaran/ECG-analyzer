@@ -2,7 +2,7 @@
 
 #include "QRSClass.h"
 
-#include <list>
+#include <vector>
 
 /**
  * @class Container for QRS Classes. Also result of QRSCLASS module.
@@ -13,11 +13,11 @@ public:
   ECGClasses (void);
   ~ECGClasses (void);
 
-  std::list<QRSClass*> & getClasses ()
+  std::vector<QRSClass*> & getClasses ()
   {
     return classes;
   }
 private:
-  std::list<QRSClass*> classes;
+  std::vector<QRSClass*> classes;
 };
 

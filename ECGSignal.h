@@ -1,23 +1,34 @@
 #pragma once
 
-#include <vector\gsl_vector.h>
+#include <vector/gsl_vector.h>
+#include <vector/gsl_vector_int.h>
+#include <boost/shared_ptr.hpp>
 
 /**
- * @class Raw signal ECG.
+ * @class Wrapped gsl_vector
  */
-class ECGSignal
+class WrappedVector
 {
 public:
-  ECGSignal (void);
-  ~ECGSignal (void);
+  WrappedVector (gsl_vector * _signal = NULL);
+  ~WrappedVector ();
 
-  /**
-   * Get signal.
-   * @return signal as pointer to gsl_vector.
-   */
-  gsl_vector * getSignal () const;
-private:
-  //signal
   gsl_vector* signal;
 };
+
+/**
+ * @class Wrapped gsl_vector_int
+ */
+class WrappedVectorInt
+{
+public:
+  WrappedVectorInt (gsl_vector_int * _signal = NULL);
+  ~WrappedVectorInt ();
+
+  gsl_vector_int* signal;
+};
+
+typedef boost::shared_ptr<WrappedVector> ECGSignal;
+typedef boost::shared_ptr<WrappedVector> OtherSignal;
+typedef boost::shared_ptr<WrappedVectorInt> IntSignal;
 

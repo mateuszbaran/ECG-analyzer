@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector\gsl_vector.h>
+#include <ECGSignal.h>
 
 /**
  * QRS Types.
@@ -30,7 +30,7 @@ public:
     this->type = type;
   }
 
-  gsl_vector* GetExample () const
+  OtherSignal GetExample () const
   {
     return example;
   }
@@ -49,6 +49,6 @@ public:
 private:
   int id;
   QRSType type;
-  gsl_vector * example;
+  OtherSignal example;
 };
 
