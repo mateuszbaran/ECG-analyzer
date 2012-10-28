@@ -252,18 +252,25 @@ void ECGController::setHRTNotRunned()
 
 bool ECGController::readFile(std::string filename)
 {
+  //check filename to be correct with WFDB
+  int pos;
+  if ((pos = filename.find('.')) != std::string::npos)
+  {
+    filename = filename.substr(0, pos);
+  }
+
   int nr_samples;
 
   size_t i;
   WFDB_Sample v[2];
-  WFDB_Siginfo s;
-  if (isigopen(const_cast<char*> (filename.c_str()), &s, 2) < 2)
+  WFDB_Siginfo s[2];
+  if (isigopen(const_cast<char*> (filename.c_str()), s, 2) < 2)
   {
     return false;
   }
   
   //set signal
-  nr_samples = s.nsamp;
+  nr_samples = s[0].nsamp; //we assume that both channels are equal.
   original_signal_channel_one->signal = gsl_vector_alloc(nr_samples);
   original_signal_channel_two->signal = gsl_vector_alloc(nr_samples);
 
