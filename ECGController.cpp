@@ -251,8 +251,8 @@ bool ECGController::readFile(std::string filename)
   int nr_samples;
 
   printf("ASD\n");
-  int i;
-  WFDB_Sample v[2];
+  size_t i;
+  WFDB_Sample v;
   WFDB_Siginfo s[2];
   if (isigopen(const_cast<char*> (filename.c_str()), s, 2) < 2)
   {
@@ -263,9 +263,13 @@ bool ECGController::readFile(std::string filename)
   nr_samples = s->nsamp;
   raw_signal->signal = gsl_vector_alloc(nr_samples);
 
-  for (i = 0; i < nr_samples; i++) {
-    if (getvec(v) < 0)
+  for (i = 0; i < nr_samples; i++)
+  {
+    if (getvec(&v) < 0) //error
+    {
       return false;
+    }
+    gsl_vector_set(raw_signal->signal, i, (double)v);
   }
   return true;
 }
