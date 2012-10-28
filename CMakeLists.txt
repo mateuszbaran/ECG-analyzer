@@ -12,8 +12,6 @@ find_package(Qwt 6 REQUIRED)
 find_package(gsl REQUIRED)
 find_package(fftw 3.3 REQUIRED)
 
-
-
 #check if some platform-specific libraries are needed for linking client and server
 CHECK_LIBRARY_EXISTS(rt shm_open "" HAVE_RT_LIB)
 if(HAVE_RT_LIB)
@@ -33,12 +31,44 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
     set(CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wextra -Wpointer-arith -Wno-switch -Wno-sign-compare -Wno-unused-parameter -Wno-overloaded-virtual")
 endif()
 
+# use this to regenerate: ls -al | grep \\.cpp | tr -s ' ' | cut -d ' ' -f 9
 set(ecg-analyzer_SOURCES
-  main.cpp
-  ecganalyzer.cpp)
+ecganalyzer.cpp
+ECGClasses.cpp
+ECGController.cpp
+ECGHRT.cpp
+ECGHRV1.cpp
+ECGHRV2.cpp
+ECGHRVDFA.cpp
+ECGRs.cpp
+ECGSignal.cpp
+ECGST.cpp
+ECGTWave.cpp
+ECGWaves.cpp
+EGHRVDFT.cpp
+main.cpp
+QRSClass.cpp
+  )
 
 set(ecg-analyzer_HEADERS
-  ecganalyzer.h)
+ecganalyzer.h
+ECGClasses.h
+ECGController.h
+ECGHRT.h
+ECGHRV1.h
+ECGHRV2.h
+ECGHRVDFA.h
+ECGRs.h
+ECGSignal.h
+ECGST.h
+ECGTWave.h
+ECGWaves.h
+EGHRVDFT.h
+ModulesInterfaces.h
+ModulesMethods.h
+QRSClass.h
+#ui_ecganalyzer.h
+  )
 
 SET(ecg-analyzer_FORMS ecganalyzer.ui)
 
@@ -53,6 +83,8 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 include_directories(${GSL_INCLUDE_DIRS} ${GSLCBLAS_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES} ${GSLCBLAS_LIBRARIES})
+
+add_subdirectory(wfdb)
 
 include_directories(${CMAKE_HOME_DIRECTORY} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
