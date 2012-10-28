@@ -14,6 +14,8 @@
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 
+#include <boost\scoped_ptr.hpp>
+
 /**
  * @class Class which controls executing all modules.
  */
@@ -23,6 +25,9 @@ public:
   ECGController (void);
   ~ECGController (void);
 
+  bool readFile(std::string filename);
+
+  //methods for setting parameters
   void setParamsECGBaseline(ParametersTypes & params);
   void setParamsRPeaks(ParametersTypes & params);
   void setParamsnWaves(ParametersTypes & params);
@@ -34,6 +39,7 @@ public:
   void setParamsTwaveAlt(ParametersTypes & params);
   void setParamsHRT(ParametersTypes & params);
   
+  //methods for running modules
   void runECGBaseline();
   void runRPeaks();
   void runWaves();
@@ -45,6 +51,8 @@ public:
   void runTwaveAlt();
   void runHRT();
 
+private:
+  //method for setting not runned
   void setECGBaselineNotRunned();
   void setRPeaksNotRunned();
   void setWavesNotRunned();
@@ -56,7 +64,6 @@ public:
   void setTwaveAltNotRunned();
   void setHRTNotRunned();
 
-private:
   //data
   ECGSignal raw_signal;
   ECGSignal filtered_signal;
@@ -71,15 +78,15 @@ private:
   ECGHRT hrt_data;
 
   //modules
-  ECGBaselineModule *ecg_baseline_module;
-  RPeaksModule *rpeaks_module;
-  WavesModule *waves_module;
-  HRV1Module *hrv1_module;
-  HRV2Module *hrv2_module;
-  HRVDFAModule *hrv_dfa_module;
-  QRSClassModule *qrs_class_module;
-  STIntervalModule *st_interval_module;
-  TWaveAltModule *t_wave_alt_module;
-  HRTModule *hrt_module;
+  boost::scoped_ptr<ECGBaselineModule> ecg_baseline_module;
+  boost::scoped_ptr<RPeaksModule> rpeaks_module;
+  boost::scoped_ptr<WavesModule> waves_module;
+  boost::scoped_ptr<HRV1Module> hrv1_module;
+  boost::scoped_ptr<HRV2Module> hrv2_module;
+  boost::scoped_ptr<HRVDFAModule> hrv_dfa_module;
+  boost::scoped_ptr<QRSClassModule> qrs_class_module;
+  boost::scoped_ptr<STIntervalModule> st_interval_module;
+  boost::scoped_ptr<TWaveAltModule> t_wave_alt_module;
+  boost::scoped_ptr<HRTModule> hrt_module;
 };
 
