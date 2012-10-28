@@ -23,16 +23,27 @@ public:
   ECGController (void);
   ~ECGController (void);
 
-  void runECGBaseline(ParametersTypes & params);
-  void runRPeaks(ParametersTypes & params);
-  void runWaves(ParametersTypes & params);
-  void runHRV1(ParametersTypes & params);
-  void runHRV2(ParametersTypes & params);
-  void runHRVDFA(ParametersTypes & params);
-  void runQRSClass(ParametersTypes & params);
-  void runSTInterval(ParametersTypes & params);
-  void runTwaveAlt(ParametersTypes & params);
-  void runHRT(ParametersTypes & params);
+  void setParamsECGBaseline(ParametersTypes & params);
+  void setParamsRPeaks(ParametersTypes & params);
+  void setParamsnWaves(ParametersTypes & params);
+  void setParamsHRV1(ParametersTypes & params);
+  void setParamsHRV2(ParametersTypes & params);
+  void setParamsHRVDFA(ParametersTypes & params);
+  void setParamsQRSClass(ParametersTypes & params);
+  void setParamsSTInterval(ParametersTypes & params);
+  void setParamsTwaveAlt(ParametersTypes & params);
+  void setParamsHRT(ParametersTypes & params);
+  
+  void runECGBaseline();
+  void runRPeaks();
+  void runWaves();
+  void runHRV1();
+  void runHRV2();
+  void runHRVDFA();
+  void runQRSClass();
+  void runSTInterval();
+  void runTwaveAlt();
+  void runHRT();
 
 private:
   //data
