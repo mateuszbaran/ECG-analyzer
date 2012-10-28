@@ -286,10 +286,5 @@ bool ECGController::readFile(std::string filename)
     gsl_vector_set(original_signal_channel_one->signal, i, (double)v[0]);
     gsl_vector_set(original_signal_channel_two->signal, i, (double)v[1]);
   }
-  for (i = 0; i < nr_samples; i++)
-  {
-    std::cout << gsl_vector_get(raw_signal->signal, i) << "\n";
-  }
-
   return true;
 }
