@@ -45,6 +45,17 @@ public:
   void runTwaveAlt();
   void runHRT();
 
+  void setECGBaselineNotRunned();
+  void setRPeaksNotRunned();
+  void setWavesNotRunned();
+  void setHRV1NotRunned();
+  void setHRV2NotRunned();
+  void setHRVDFANotRunned();
+  void setQRSClassNotRunned();
+  void setSTIntervalNotRunned();
+  void setTwaveAltNotRunned();
+  void setHRTNotRunned();
+
 private:
   //data
   ECGSignal raw_signal;
@@ -69,6 +80,6 @@ private:
   QRSClassModule *qrs_class_module;
   STIntervalModule *st_interval_module;
   TWaveAltModule *t_wave_alt_module;
-  HRT *hrt_module;
+  HRTModule *hrt_module;
 };
 
