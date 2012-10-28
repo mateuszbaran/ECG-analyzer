@@ -2,7 +2,7 @@
 
 #include "wfdb\wfdb.h"
 
-ECGController::ECGController (void)
+ECGController::ECGController (void) : raw_signal(ECGSignal(new WrappedVector())), filtered_signal(ECGSignal(new WrappedVector()))
 {
   //TODO: create modules objects
 }
