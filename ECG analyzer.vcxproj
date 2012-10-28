@@ -106,6 +106,11 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QRSClass.cpp" />
+    <ClCompile Include="wfdb\annot.c" />
+    <ClCompile Include="wfdb\calib.c" />
+    <ClCompile Include="wfdb\signal.c" />
+    <ClCompile Include="wfdb\wfdbinit.c" />
+    <ClCompile Include="wfdb\wfdbio.c" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -149,6 +154,10 @@
     <ClInclude Include="ModulesInterfaces.h" />
     <ClInclude Include="ModulesMethods.h" />
     <ClInclude Include="QRSClass.h" />
+    <ClInclude Include="wfdb\ecgcodes.h" />
+    <ClInclude Include="wfdb\ecgmap.h" />
+    <ClInclude Include="wfdb\wfdb.h" />
+    <ClInclude Include="wfdb\wfdblib.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.qrc">

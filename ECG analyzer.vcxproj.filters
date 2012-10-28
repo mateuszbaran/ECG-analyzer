@@ -33,6 +33,12 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\wfdb">
+      <UniqueIdentifier>{1d94a793-5d3a-47a8-8080-d43683c40d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\wfdb">
+      <UniqueIdentifier>{a935d3d4-7e1b-41b1-936e-649463f6a776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -88,6 +94,21 @@
     </ClCompile>
     <ClCompile Include="QRSClass.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wfdb\annot.c">
+      <Filter>Source Files\wfdb</Filter>
+    </ClCompile>
+    <ClCompile Include="wfdb\calib.c">
+      <Filter>Source Files\wfdb</Filter>
+    </ClCompile>
+    <ClCompile Include="wfdb\signal.c">
+      <Filter>Source Files\wfdb</Filter>
+    </ClCompile>
+    <ClCompile Include="wfdb\wfdbinit.c">
+      <Filter>Source Files\wfdb</Filter>
+    </ClCompile>
+    <ClCompile Include="wfdb\wfdbio.c">
+      <Filter>Source Files\wfdb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +170,18 @@
     </ClInclude>
     <ClInclude Include="ModulesInterfaces.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wfdb\ecgcodes.h">
+      <Filter>Header Files\wfdb</Filter>
+    </ClInclude>
+    <ClInclude Include="wfdb\ecgmap.h">
+      <Filter>Header Files\wfdb</Filter>
+    </ClInclude>
+    <ClInclude Include="wfdb\wfdb.h">
+      <Filter>Header Files\wfdb</Filter>
+    </ClInclude>
+    <ClInclude Include="wfdb\wfdblib.h">
+      <Filter>Header Files\wfdb</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
