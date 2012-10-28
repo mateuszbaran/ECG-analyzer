@@ -2,7 +2,11 @@
 
 #include "wfdb\wfdb.h"
 
-ECGController::ECGController (void) : raw_signal(ECGSignal(new WrappedVector())), filtered_signal(ECGSignal(new WrappedVector()))
+ECGController::ECGController (void) :
+  raw_signal(ECGSignal(new WrappedVector())),
+  filtered_signal(ECGSignal(new WrappedVector())),
+  original_signal_channel_one(ECGSignal(new WrappedVector())),
+  original_signal_channel_two(ECGSignal(new WrappedVector()))
 {
   //TODO: create modules objects
 }
@@ -250,26 +254,30 @@ bool ECGController::readFile(std::string filename)
 {
   int nr_samples;
 
-  printf("ASD\n");
   size_t i;
-  WFDB_Sample v;
-  WFDB_Siginfo s[2];
-  if (isigopen(const_cast<char*> (filename.c_str()), s, 2) < 2)
+  WFDB_Sample v[2];
+  WFDB_Siginfo s;
+  if (isigopen(const_cast<char*> (filename.c_str()), &s, 2) < 2)
   {
     return false;
   }
   
   //set signal
-  nr_samples = s->nsamp;
-  raw_signal->signal = gsl_vector_alloc(nr_samples);
+  nr_samples = s.nsamp;
+  original_signal_channel_one->signal = gsl_vector_alloc(nr_samples);
+  original_signal_channel_two->signal = gsl_vector_alloc(nr_samples);
+
+  //alocate memory for filtered signal
+  filtered_signal->signal = gsl_vector_alloc(nr_samples);
 
   for (i = 0; i < nr_samples; i++)
   {
-    if (getvec(&v) < 0) //error
+    if (getvec(v) < 0) //error
     {
       return false;
     }
-    gsl_vector_set(raw_signal->signal, i, (double)v);
+    gsl_vector_set(original_signal_channel_one->signal, i, (double)v[0]);
+    gsl_vector_set(original_signal_channel_two->signal, i, (double)v[1]);
   }
   for (i = 0; i < nr_samples; i++)
   {
