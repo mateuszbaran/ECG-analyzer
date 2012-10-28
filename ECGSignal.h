@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector/gsl_vector.h>
-#include <vector/gsl_vector_int.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_vector_int.h>
 #include <boost/shared_ptr.hpp>
 
 /**
