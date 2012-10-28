@@ -64,6 +64,10 @@ private:
   void setTwaveAltNotRunned();
   void setHRTNotRunned();
 
+  //original data
+  ECGSignal original_signal_channel_one;
+  ECGSignal original_signal_channel_two;
+
   //data
   ECGSignal raw_signal;
   ECGSignal filtered_signal;
