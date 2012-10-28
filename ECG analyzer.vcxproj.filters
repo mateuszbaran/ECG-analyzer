@@ -107,7 +107,7 @@
     <ClCompile Include="wfdb\wfdbio.c">
       <Filter>Source Files\wfdb</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="ECGChannelInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="wfdb\wfdblib.h">
       <Filter>Header Files\wfdb</Filter>
+    </ClInclude>
+    <ClInclude Include="ECGChannelInfo.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

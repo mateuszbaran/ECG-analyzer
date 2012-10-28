@@ -10,6 +10,7 @@
 #include "ECGHRT.h"
 #include "ECGST.h"
 #include "ECGTWave.h"
+#include "ECGChannelInfo.h"
 
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
@@ -50,6 +51,9 @@ public:
   void runSTInterval();
   void runTwaveAlt();
   void runHRT();
+
+  ECGChannelInfo channel_one_info;
+  ECGChannelInfo channel_two_info;
 
 private:
   //method for setting not runned
