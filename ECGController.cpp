@@ -271,11 +271,9 @@ bool ECGController::readFile(std::string filename)
   //read channels info
   channel_one_info.filename = s[0].fname;
   channel_one_info.description = s[0].desc;
-  channel_one_info.units = s[0].units;
 
   channel_two_info.filename = s[1].fname;
   channel_two_info.description = s[1].desc;
-  channel_two_info.units = s[1].units;
  
   //set signal
   nr_samples = s[0].nsamp; //we assume that both channels are equal.
