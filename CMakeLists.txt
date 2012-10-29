@@ -94,4 +94,5 @@ link_libraries(${LIBS})
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} 
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS})
 
-TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES})
+TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS}
+  ${FFTW_LIBRARIES} wfdb)
