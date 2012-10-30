@@ -35,7 +35,7 @@ typedef boost::shared_ptr<WrappedVectorInt> IntSignal;
 struct ECGSignal
 {
 public:
-  void setSize(int n);
+  void setSize(size_t n);
   ECGSignalChannel channel_one;
   ECGSignalChannel channel_two;
 };
