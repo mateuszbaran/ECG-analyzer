@@ -52,8 +52,7 @@ public:
   void runTwaveAlt();
   void runHRT();
 
-  ECGChannelInfo channel_one_info;
-  ECGChannelInfo channel_two_info;
+  ECGInfo ecg_info;
 
 private:
   //method for setting not runned
@@ -67,11 +66,7 @@ private:
   void setSTIntervalNotRunned();
   void setTwaveAltNotRunned();
   void setHRTNotRunned();
-
-  //original data
-  ECGSignal original_signal_channel_one;
-  ECGSignal original_signal_channel_two;
-
+  
   //data
   ECGSignal raw_signal;
   ECGSignal filtered_signal;

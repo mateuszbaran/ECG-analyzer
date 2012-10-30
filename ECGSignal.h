@@ -28,7 +28,16 @@ public:
   gsl_vector_int* signal;
 };
 
-typedef boost::shared_ptr<WrappedVector> ECGSignal;
+typedef boost::shared_ptr<WrappedVector> ECGSignalChannel;
 typedef boost::shared_ptr<WrappedVector> OtherSignal;
 typedef boost::shared_ptr<WrappedVectorInt> IntSignal;
+
+struct ECGSignal
+{
+public:
+  void setSize(int n);
+  ECGSignalChannel channel_one;
+  ECGSignalChannel channel_two;
+};
+
 

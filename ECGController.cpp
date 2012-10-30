@@ -2,11 +2,7 @@
 
 #include "wfdb\wfdb.h"
 
-ECGController::ECGController (void) :
-  raw_signal(ECGSignal(new WrappedVector())),
-  filtered_signal(ECGSignal(new WrappedVector())),
-  original_signal_channel_one(ECGSignal(new WrappedVector())),
-  original_signal_channel_two(ECGSignal(new WrappedVector()))
+ECGController::ECGController (void)
 {
   //TODO: create modules objects
 }
@@ -269,19 +265,18 @@ bool ECGController::readFile(std::string filename)
     return false;
   }
   //read channels info
-  channel_one_info.filename = s[0].fname;
-  channel_one_info.description = s[0].desc;
+  ecg_info.channel_one.filename = s[0].fname;
+  ecg_info.channel_two.description = s[0].desc;
 
-  channel_two_info.filename = s[1].fname;
-  channel_two_info.description = s[1].desc;
+  ecg_info.channel_one.filename = s[1].fname;
+  ecg_info.channel_two.description = s[1].desc;
  
   //set signal
   nr_samples = s[0].nsamp; //we assume that both channels are equal.
-  original_signal_channel_one->signal = gsl_vector_alloc(nr_samples);
-  original_signal_channel_two->signal = gsl_vector_alloc(nr_samples);
+  raw_signal.setSize(nr_samples);
 
   //alocate memory for filtered signal
-  filtered_signal->signal = gsl_vector_alloc(nr_samples);
+  filtered_signal.setSize(nr_samples);
 
   //read signals
   for (i = 0; i < nr_samples; i++)
@@ -290,8 +285,8 @@ bool ECGController::readFile(std::string filename)
     {
       return false;
     }
-    gsl_vector_set(original_signal_channel_one->signal, i, (double)v[0]);
-    gsl_vector_set(original_signal_channel_two->signal, i, (double)v[1]);
+    gsl_vector_set(raw_signal.channel_one->signal, i, (double)v[0]);
+    gsl_vector_set(raw_signal.channel_two->signal, i, (double)v[1]);
   }
   return true;
 }
