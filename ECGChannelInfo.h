@@ -5,9 +5,13 @@
 struct ECGChannelInfo
 {
 public:
-
   std::string filename;
   std::string description;
-  std::string units;
 };
 
+struct ECGInfo
+{
+public:
+  ECGChannelInfo channel_one;
+  ECGChannelInfo channel_two;
+};

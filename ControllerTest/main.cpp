@@ -9,12 +9,12 @@ protected:
   ECGController controller;
 };
 
-TEST_F(ECGControllerTest, ReadFileValidTest)
+TEST_F(ECGControllerTest, ReadFileInvalidTest)
 {
   EXPECT_EQ(false, controller.readFile("no_file_QWE"));
 }
 
-TEST_F(ECGControllerTest, ReadFileInvalidTest)
+TEST_F(ECGControllerTest, ReadFileValidTest)
 {
   EXPECT_EQ(true, controller.readFile("100"));
 }
