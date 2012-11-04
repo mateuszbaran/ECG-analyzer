@@ -52,6 +52,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -69,6 +70,9 @@
       </DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,10 +80,24 @@
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;gsl.lib;cblas.lib;libfftw3-3.lib;qwt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ecganalyzer.cpp" />
+    <ClCompile Include="ECGChannelInfo.cpp" />
+    <ClCompile Include="ECGClasses.cpp" />
+    <ClCompile Include="ECGController.cpp" />
+    <ClCompile Include="ECGHRT.cpp" />
+    <ClCompile Include="ECGHRV1.cpp" />
+    <ClCompile Include="ECGHRV2.cpp" />
+    <ClCompile Include="ECGHRVDFA.cpp" />
+    <ClCompile Include="ECGRs.cpp" />
+    <ClCompile Include="ECGSignal.cpp" />
+    <ClCompile Include="ECGST.cpp" />
+    <ClCompile Include="ECGTWave.cpp" />
+    <ClCompile Include="ECGWaves.cpp" />
+    <ClCompile Include="EGHRVDFT.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_ecganalyzer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -93,6 +111,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="QRSClass.cpp" />
+    <ClCompile Include="wfdb\annot.c" />
+    <ClCompile Include="wfdb\calib.c" />
+    <ClCompile Include="wfdb\signal.c" />
+    <ClCompile Include="wfdb\wfdbinit.c" />
+    <ClCompile Include="wfdb\wfdbio.c" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -120,7 +144,27 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ECGChannelInfo.h" />
+    <ClInclude Include="ECGClasses.h" />
+    <ClInclude Include="ECGController.h" />
+    <ClInclude Include="ECGHRT.h" />
+    <ClInclude Include="ECGHRV1.h" />
+    <ClInclude Include="ECGHRV2.h" />
+    <ClInclude Include="ECGHRVDFA.h" />
+    <ClInclude Include="ECGRs.h" />
+    <ClInclude Include="ECGSignal.h" />
+    <ClInclude Include="ECGST.h" />
+    <ClInclude Include="ECGTWave.h" />
+    <ClInclude Include="ECGWaves.h" />
+    <ClInclude Include="EGHRVDFT.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
+    <ClInclude Include="ModulesInterfaces.h" />
+    <ClInclude Include="ModulesMethods.h" />
+    <ClInclude Include="QRSClass.h" />
+    <ClInclude Include="wfdb\ecgcodes.h" />
+    <ClInclude Include="wfdb\ecgmap.h" />
+    <ClInclude Include="wfdb\wfdb.h" />
+    <ClInclude Include="wfdb\wfdblib.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.qrc">

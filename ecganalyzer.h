@@ -4,6 +4,8 @@
 #include <QtGui/QMainWindow>
 #include "ui_ecganalyzer.h"
 
+#include "ECGController.h"
+
 class ECGanalyzer : public QMainWindow
 {
 	Q_OBJECT
@@ -21,6 +23,8 @@ private slots:
 
 private:
 	Ui::ECGanalyzerClass ui;
+
+  ECGController contr;
 };
 
 #endif // ECGANALYZER_H
