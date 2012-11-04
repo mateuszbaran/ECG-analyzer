@@ -143,3 +143,4 @@ moc_*.cxx
 GeneratedFiles/
 
 *.depends
+GeneratedFiles
