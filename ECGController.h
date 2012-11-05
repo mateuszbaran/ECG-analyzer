@@ -54,8 +54,6 @@ public:
 
   ECGInfo ecg_info;
 
-  ECGInfo ecg_info;
-
 private:
   //method for setting not runned
   void setECGBaselineNotRunned();
