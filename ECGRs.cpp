@@ -25,7 +25,7 @@ ECGRs::ECGRs (IntSignal filteredSignal, R_PEAKS_DETECTION_METHOD detectionMethod
 ECGRs::~ECGRs (void)
 {}
 
-bool ECGRs::isDetected()
+bool ECGRs::areRsDetected()
 {
 	return rsDetected;
 }
