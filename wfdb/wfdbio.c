@@ -725,10 +725,11 @@ void wfdb_error(char *format, ...)
 	(void)fflush(stderr);
     }
 #else				/* MS Windows variant: use message box */
-    (void)wvsprintf(error_message, format, arguments);
+    //do nothing, handled by ECGController
+    /*(void)wvsprintf(error_message, format, arguments);
     if (error_print)
 	MessageBox(GetFocus(), error_message, "WFDB Library Error",
-		    MB_ICONASTERISK | MB_OK);
+		    MB_ICONASTERISK | MB_OK);*/
 #endif
     va_end(arguments);
 }

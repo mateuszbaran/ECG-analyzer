@@ -147,3 +147,5 @@ GeneratedFiles/
 *.dll
 doc_pieciak
 nbproject
+100.*
+ECG Analyzer.lib
