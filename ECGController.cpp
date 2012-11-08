@@ -1,7 +1,10 @@
 #include "ECGController.h"
 
-ECGController::ECGController (void) {
-  //int i = isigopen("100s", NULL, 0);
+#include "wfdb\wfdb.h"
+
+ECGController::ECGController (void)
+{
+  //TODO: create modules objects
 }
 
 ECGController::~ECGController (void) { }
@@ -241,4 +244,49 @@ void ECGController::setTwaveAltNotRunned()
 void ECGController::setHRTNotRunned()
 {
   hrt_module->runned = false;
+}
+
+bool ECGController::readFile(std::string filename)
+{
+  //check filename to be correct with WFDB
+  int pos;
+  if ((pos = filename.find('.')) != std::string::npos)
+  {
+    filename = filename.substr(0, pos);
+  }
+
+  int nr_samples;
+
+  size_t i;
+  WFDB_Sample v[2];
+  WFDB_Siginfo s[2];
+  if (isigopen(const_cast<char*> (filename.c_str()), s, 2) < 2)
+  {
+    return false;
+  }
+  //read channels info
+  ecg_info.channel_one.filename = s[0].fname;
+  ecg_info.channel_two.description = s[0].desc;
+
+  ecg_info.channel_one.filename = s[1].fname;
+  ecg_info.channel_two.description = s[1].desc;
+ 
+  //set signal
+  nr_samples = s[0].nsamp; //we assume that both channels are equal.
+  raw_signal.setSize(nr_samples);
+
+  //alocate memory for filtered signal
+  filtered_signal.setSize(nr_samples);
+
+  //read signals
+  for (i = 0; i < nr_samples; i++)
+  {
+    if (getvec(v) < 0) //error
+    {
+      return false;
+    }
+    gsl_vector_set(raw_signal.channel_one->signal, i, (double)v[0]);
+    gsl_vector_set(raw_signal.channel_two->signal, i, (double)v[1]);
+  }
+  return true;
 }

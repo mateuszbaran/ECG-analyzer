@@ -17,3 +17,11 @@ WrappedVectorInt::~WrappedVectorInt()
 {
 	if (signal) gsl_vector_int_free (signal);
 }
+
+void ECGSignal::setSize(size_t n)
+{
+  channel_one = ECGSignalChannel(new WrappedVector);
+  channel_one->signal = gsl_vector_alloc(n);
+  channel_two = ECGSignalChannel(new WrappedVector);
+  channel_two->signal = gsl_vector_alloc(n);
+}
