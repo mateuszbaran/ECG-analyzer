@@ -10,3 +10,12 @@ enum ECG_BASELINE_METHOD
   //example method
   BUTTERWORTH
 };
+
+/**
+ * R_PEAKS methods.
+ */
+enum R_PEAKS_DETECTION_METHOD
+{
+	PAN_TOMPKINS,
+	HILBERT
+};
