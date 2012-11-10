@@ -112,6 +112,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QRSClass.cpp" />
+    <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="wfdb\annot.c" />
     <ClCompile Include="wfdb\calib.c" />
     <ClCompile Include="wfdb\signal.c" />
@@ -161,6 +162,7 @@
     <ClInclude Include="ModulesInterfaces.h" />
     <ClInclude Include="ModulesMethods.h" />
     <ClInclude Include="QRSClass.h" />
+    <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="wfdb\ecgcodes.h" />
     <ClInclude Include="wfdb\ecgmap.h" />
     <ClInclude Include="wfdb\wfdb.h" />
