@@ -1,6 +1,6 @@
 #include "ECGController.h"
 
-#include "wfdb\wfdb.h"
+#include "wfdb/wfdb.h"
 
 ECGController::ECGController (void)
 {
