@@ -19,9 +19,9 @@ typedef std::map<std::string, double> ParametersTypes;
 class GlobalInterface
 {
 public:
-  GlobalInterface() : runned(false) {}
+  GlobalInterface() : run_(false) {}
   virtual void setParams (ParametersTypes &) = 0;
-  bool runned;
+  bool run_;
 };
 
 class ECGBaselineModule : public GlobalInterface
