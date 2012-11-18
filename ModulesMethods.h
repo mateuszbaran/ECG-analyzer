@@ -5,8 +5,7 @@
 /**
  * ECG_BASALINE methods.
  */
-enum ECG_BASELINE_METHOD
+enum BASELINE_REMOVAL_METHOD
 {
-  //example method
-  BUTTERWORTH
+  MOVING_AVERAGE, BUTTERWORTH
 };
