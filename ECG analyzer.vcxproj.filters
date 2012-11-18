@@ -113,6 +113,9 @@
     <ClCompile Include="ECGChannelInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BaselineRemoval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -187,6 +190,9 @@
       <Filter>Header Files\wfdb</Filter>
     </ClInclude>
     <ClInclude Include="ECGChannelInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaselineRemoval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
