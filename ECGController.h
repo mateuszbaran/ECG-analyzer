@@ -11,7 +11,6 @@
 #include "ECGST.h"
 #include "ECGTWave.h"
 #include "ECGChannelInfo.h"
-
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 
