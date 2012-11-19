@@ -61,6 +61,12 @@ private:
   */
   R_PEAKS_DETECTION_METHOD detectionMethod;
 
+  
+  /**
+  *  PanTompkins movingh window lenght
+  */
+  int panTompkinsMovinghWindowLenght;
+
   /**
   *  PanTompkins R peaks method detection
   *  @param pointer to ECG signal
