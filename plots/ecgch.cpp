@@ -14,11 +14,13 @@ EcgCh::EcgCh(QWidget *parent) :
      replot();
 }
 
-void EcgCh::setSignal(double *x, int size)
+void EcgCh::setSignal(ECGSignalChannel signal)
 {
+    gsl_vector *v = signal->signal;
+    int size = int(v->size);
     samples->clear();
     for (int i = 0; i < size; i++)
-        samples->push_back(QPointF(float(i), float(x[i])));
+        samples->push_back(QPointF(float(i), float(v->data[i*v->stride])));
     data->setSamples(*samples);
     curve->setData(data);
 }

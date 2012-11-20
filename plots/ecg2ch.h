@@ -3,11 +3,13 @@
 
 #include <QWidget>
 
+#include <QFileDialog>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QToolBar>
 #include <QToolButton>
 #include "ecgch.h"
+#include "../ECGController.h"
 
 class Ecg2Ch : public QWidget
 {
@@ -20,7 +22,7 @@ public:
 signals:
     
 public slots:
-    void setSignal(double *x, int size); // -> ECGSignal
+    void setSignal(ECGSignal *signal);
     void redraw();
     void test();
 

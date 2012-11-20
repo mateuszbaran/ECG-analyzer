@@ -1,6 +1,7 @@
 #ifndef ECGCH_H
 #define ECGCH_H
 
+#include "../ECGSignal.h"
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_series_data.h>
@@ -15,7 +16,7 @@ public:
 signals:
     
 public slots:
-    void setSignal(double *x, int size); // -> ECGSignal
+    void setSignal(ECGSignalChannel signal);
     void redraw();
 
 private:

@@ -34,10 +34,10 @@ Ecg2Ch::~Ecg2Ch()
     delete ch2;
 }
 
-void Ecg2Ch::setSignal(double *x, int size)
+void Ecg2Ch::setSignal(ECGSignal *signal)
 {
-    ch1->setSignal(x, size);
-    ch2->setSignal(x, size);
+    ch1->setSignal(signal->channel_one);
+    ch2->setSignal(signal->channel_two);
     return;
 }
 
@@ -50,11 +50,10 @@ void Ecg2Ch::redraw()
 
 void Ecg2Ch::test()
 {
-    const int size = 500;
-    double *x = new double[size];
-    for (int i = 0; i < size; i++)
-        x[i] = 2.0 * sin((3.0 * 3.14 / double(size)) * double(i));
-    setSignal(x, size);
+    QString fileName = QFileDialog::getOpenFileName(this);
+    ECGController *controller = new ECGController;
+    controller->readFile(fileName.toStdString()); // why?
+    setSignal(&(controller->raw_signal));
     redraw();
-    delete[] x;
+    delete controller;
 }
