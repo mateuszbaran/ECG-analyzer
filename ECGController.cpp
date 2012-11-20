@@ -1,8 +1,11 @@
 #include "ECGController.h"
 
+#include "BaselineRemoval.h"
+
 #include "wfdb/wfdb.h"
 
-ECGController::ECGController (void)
+ECGController::ECGController (void) :
+  ecg_baseline_module(new BaselineRemoval())
 {
   //TODO: create modules objects
 }
