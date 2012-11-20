@@ -1,6 +1,6 @@
 #include "ECGController.h"
 
-#include "wfdb\wfdb.h"
+#include "wfdb/wfdb.h"
 
 ECGController::ECGController (void)
 {
@@ -12,72 +12,72 @@ ECGController::~ECGController (void) { }
 void ECGController::setParamsECGBaseline (ParametersTypes & params)
 {
   ecg_baseline_module->setParams(params);
-  setECGBaselineNotRunned();
+  setECGBaselineNotRun();
 }
 
 void ECGController::setParamsRPeaks (ParametersTypes & params)
 {
   rpeaks_module->setParams(params);
-  setRPeaksNotRunned();
+  setRPeaksNotRun();
 }
 
 void ECGController::setParamsnWaves (ParametersTypes & params)
 {
   waves_module->setParams(params);
-  setWavesNotRunned();
+  setWavesNotRun();
 }
 
 void ECGController::setParamsHRV1 (ParametersTypes & params)
 {
   hrv1_module->setParams(params);
-  setHRV1NotRunned();
+  setHRV1NotRun();
 }
 
 void ECGController::setParamsHRV2 (ParametersTypes & params)
 {
   hrv2_module->setParams(params);
-  setHRV2NotRunned();
+  setHRV2NotRun();
 }
 
 void ECGController::setParamsHRVDFA (ParametersTypes & params)
 {
   hrv_dfa_module->setParams(params);
-  setHRVDFANotRunned();
+  setHRVDFANotRun();
 }
 
 void ECGController::setParamsQRSClass (ParametersTypes & params)
 {
   qrs_class_module->setParams(params);
-  setQRSClassNotRunned();
+  setQRSClassNotRun();
 }
 
 void ECGController::setParamsSTInterval (ParametersTypes & params)
 {
   st_interval_module->setParams(params);
-  setSTIntervalNotRunned();
+  setSTIntervalNotRun();
 }
 
 void ECGController::setParamsTwaveAlt (ParametersTypes & params)
 {
   t_wave_alt_module->setParams(params);
-  setTwaveAltNotRunned();
+  setTwaveAltNotRun();
 }
 
 void ECGController::setParamsHRT (ParametersTypes & params)
 {
   hrt_module->setParams(params);
-  setHRTNotRunned();
+  setHRTNotRun();
 }
 
 void ECGController::runECGBaseline ()
 {
   ecg_baseline_module->runModule(raw_signal, filtered_signal);
-  ecg_baseline_module->runned = true;
+  ecg_baseline_module->run_ = true;
 }
 
 void ECGController::runRPeaks ()
 {
-  if (!ecg_baseline_module->runned)
+  if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
   }
@@ -86,11 +86,11 @@ void ECGController::runRPeaks ()
 
 void ECGController::runWaves ()
 {
-  if (!ecg_baseline_module->runned)
+  if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
   }
-  if (!rpeaks_module->runned) 
+  if (!rpeaks_module->run_) 
   {
     runRPeaks();
   }
@@ -99,7 +99,7 @@ void ECGController::runWaves ()
 
 void ECGController::runHRV1 ()
 {
-  if (!rpeaks_module->runned)
+  if (!rpeaks_module->run_)
   {
     runRPeaks();
   }
@@ -108,7 +108,7 @@ void ECGController::runHRV1 ()
 
 void ECGController::runHRV2 ()
 {
-  if (!rpeaks_module->runned)
+  if (!rpeaks_module->run_)
   {
     runRPeaks();
   }
@@ -117,7 +117,7 @@ void ECGController::runHRV2 ()
 
 void ECGController::runHRVDFA ()
 {
-  if (!rpeaks_module->runned)
+  if (!rpeaks_module->run_)
   {
     runRPeaks();
   }
@@ -126,11 +126,11 @@ void ECGController::runHRVDFA ()
 
 void ECGController::runQRSClass ()
 {
-  if (!ecg_baseline_module->runned)
+  if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
   }
-  if (!waves_module->runned)
+  if (!waves_module->run_)
   {
     runWaves();
   }
@@ -139,11 +139,11 @@ void ECGController::runQRSClass ()
 
 void ECGController::runSTInterval ()
 {
-  if (!ecg_baseline_module->runned)
+  if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
   }
-  if (!waves_module->runned)
+  if (!waves_module->run_)
   {
     runWaves();
   }
@@ -152,11 +152,11 @@ void ECGController::runSTInterval ()
 
 void ECGController::runTwaveAlt ()
 {
-  if (!ecg_baseline_module->runned)
+  if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
   }
-  if (!waves_module->runned)
+  if (!waves_module->run_)
   {
     runWaves();
   }
@@ -165,85 +165,85 @@ void ECGController::runTwaveAlt ()
 
 void ECGController::runHRT ()
 {
-  if (!ecg_baseline_module->runned)
+  if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
   }
-  if (!waves_module->runned)
+  if (!waves_module->run_)
   {
     runWaves();
   }
-  if (!qrs_class_module->runned)
+  if (!qrs_class_module->run_)
   {
     runQRSClass();
   }
   hrt_module->runModule(waves_data, r_peaks_data, filtered_signal, hrt_data);
 }
 
-void ECGController::setECGBaselineNotRunned()
+void ECGController::setECGBaselineNotRun()
 {
-  ecg_baseline_module->runned = false;
-  setRPeaksNotRunned();
-  setQRSClassNotRunned();
-  setSTIntervalNotRunned();
-  setTwaveAltNotRunned();
-  setHRTNotRunned();
-  setWavesNotRunned();
+  ecg_baseline_module->run_ = false;
+  setRPeaksNotRun();
+  setQRSClassNotRun();
+  setSTIntervalNotRun();
+  setTwaveAltNotRun();
+  setHRTNotRun();
+  setWavesNotRun();
 }
 
-void ECGController::setRPeaksNotRunned()
+void ECGController::setRPeaksNotRun()
 {
-  rpeaks_module->runned = false;
-  setHRTNotRunned();
-  setWavesNotRunned();
-  setHRV1NotRunned();
-  setHRV2NotRunned();
-  setHRVDFANotRunned();
+  rpeaks_module->run_ = false;
+  setHRTNotRun();
+  setWavesNotRun();
+  setHRV1NotRun();
+  setHRV2NotRun();
+  setHRVDFANotRun();
 }
 
-void ECGController::setWavesNotRunned()
+void ECGController::setWavesNotRun()
 {
-  waves_module->runned = false;
-  setQRSClassNotRunned();
-  setSTIntervalNotRunned();
-  setTwaveAltNotRunned();
-  setHRTNotRunned();
+  waves_module->run_ = false;
+  setQRSClassNotRun();
+  setSTIntervalNotRun();
+  setTwaveAltNotRun();
+  setHRTNotRun();
 }
 
-void ECGController::setHRV1NotRunned()
+void ECGController::setHRV1NotRun()
 {
-  hrv1_module->runned = false;
+  hrv1_module->run_ = false;
 }
 
-void ECGController::setHRV2NotRunned()
+void ECGController::setHRV2NotRun()
 {
-  hrv2_module->runned = false;
+  hrv2_module->run_ = false;
 }
 
-void ECGController::setHRVDFANotRunned()
+void ECGController::setHRVDFANotRun()
 {
-  hrv_dfa_module->runned = false;
+  hrv_dfa_module->run_ = false;
 }
 
-void ECGController::setQRSClassNotRunned()
+void ECGController::setQRSClassNotRun()
 {
-  qrs_class_module->runned = false;
-  setHRTNotRunned();
+  qrs_class_module->run_ = false;
+  setHRTNotRun();
 }
 
-void ECGController::setSTIntervalNotRunned()
+void ECGController::setSTIntervalNotRun()
 {
-  st_interval_module->runned = false;
+  st_interval_module->run_ = false;
 }
 
-void ECGController::setTwaveAltNotRunned()
+void ECGController::setTwaveAltNotRun()
 {
-  t_wave_alt_module->runned = false;
+  t_wave_alt_module->run_ = false;
 }
 
-void ECGController::setHRTNotRunned()
+void ECGController::setHRTNotRun()
 {
-  hrt_module->runned = false;
+  hrt_module->run_ = false;
 }
 
 bool ECGController::readFile(std::string filename)

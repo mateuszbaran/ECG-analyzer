@@ -11,11 +11,10 @@
 #include "ECGST.h"
 #include "ECGTWave.h"
 #include "ECGChannelInfo.h"
-
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 
-#include <boost\scoped_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 
 /**
  * @class Class which controls executing all modules.
@@ -52,22 +51,8 @@ public:
   void runTwaveAlt();
   void runHRT();
 
-  ECGInfo ecg_info;
-
-private:
-  //method for setting not runned
-  void setECGBaselineNotRunned();
-  void setRPeaksNotRunned();
-  void setWavesNotRunned();
-  void setHRV1NotRunned();
-  void setHRV2NotRunned();
-  void setHRVDFANotRunned();
-  void setQRSClassNotRunned();
-  void setSTIntervalNotRunned();
-  void setTwaveAltNotRunned();
-  void setHRTNotRunned();
-  
   //data
+  ECGInfo ecg_info;
   ECGSignal raw_signal;
   ECGSignal filtered_signal;
   ECGRs r_peaks_data;
@@ -79,6 +64,20 @@ private:
   ECGST st_data;
   ECGTWave twave_data;
   ECGHRT hrt_data;
+
+private:
+  //method for setting not run
+  void setECGBaselineNotRun();
+  void setRPeaksNotRun();
+  void setWavesNotRun();
+  void setHRV1NotRun();
+  void setHRV2NotRun();
+  void setHRVDFANotRun();
+  void setQRSClassNotRun();
+  void setSTIntervalNotRun();
+  void setTwaveAltNotRun();
+  void setHRTNotRun();
+  
 
   //modules
   boost::scoped_ptr<ECGBaselineModule> ecg_baseline_module;

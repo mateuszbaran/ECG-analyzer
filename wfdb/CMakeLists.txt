@@ -1,7 +1,7 @@
-project(ecg-analyzer)
+project(wfdb)
 cmake_minimum_required(VERSION 2.6)
 
-set(ecg-analyzer_SOURCES ${ecg-analyzer_SOURCES}
+set(wfdb_SOURCES ${wfdb_SOURCES}
 annot.c
 calib.c
 signal.c
@@ -9,9 +9,12 @@ wfdbinit.c
 wfdbio.c
   )
 
-set(ecg-analyzer_HEADERS ${ecg-analyzer_HEADERS}
+set(wfdb_HEADERS ${wfdb_HEADERS}
 ecgcodes.h
 ecgmap.h
 wfdb.h
 wfdblib.h
   )
+
+
+add_library(wfdb ${wfdb_SOURCES})
