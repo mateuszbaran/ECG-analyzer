@@ -2,7 +2,7 @@
 #include "ModulesMethods.h"
 #include "ModulesInterfaces.h"
 
-class BaselineRemoval : ECGBaselineModule 
+class BaselineRemoval : public ECGBaselineModule 
 {
 public:
 	BaselineRemoval();
