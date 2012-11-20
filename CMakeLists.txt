@@ -70,14 +70,11 @@ QRSClass.h
 #ui_ecganalyzer.h
   )
 
-FILE(GLOB plots_HEADERS plots/*.h)
-FILE(GLOB plots_SOURCES plots/*.cpp)
-
 SET(ecg-analyzer_FORMS ecganalyzer.ui)
 
 SET(ecg-analyzer_RESOURCES ecganalyzer.qrc)
 
-QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_HEADERS} ${plots_HEADERS})
+QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_HEADERS})
 QT4_WRAP_UI(ecg-analyzer_FORMS_HEADERS ${ecg-analyzer_FORMS})
 QT4_ADD_RESOURCES(ecg-analyzer_RESOURCES_RCC ${ecg-analyzer_RESOURCES})
 
@@ -91,11 +88,10 @@ add_subdirectory(wfdb)
 
 include_directories(${CMAKE_HOME_DIRECTORY} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${QWT_INCLUDE_DIR})
+
 link_libraries(${LIBS})
 
-ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
+ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} 
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS})
 
-TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb)
+TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES})
