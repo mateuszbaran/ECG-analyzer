@@ -48,6 +48,19 @@ void Ecg2Ch::redraw()
     return;
 }
 
+/* Funkcja testująca funkcjonalność widżetu.
+ * Wywoływana przyciskiem "test()".
+ * Wywołuje modealne okienko wyboru pliku.
+ * Trzeba wskazać poprawny plik z sygnałem EKG,
+ * możliwy do wczytania przez bibliotekę WFDB,
+ * czyli jeden z trzech plików: .dat .hea .atr
+ * o współnym przedrostku zgodnym z jakimś id wewnątrz.
+ * Plik zostanie wczytany i wyświetlone zostaną dane
+ * z obu kanałów.
+ * Zaznaczenie fragmenu wykresu myszą przybliża go.
+ * Można wtedy przewijać wykres środkowym przyciskiem myszy.
+ * Oddala się prawym, ew. z wciśniętym klawiszem Ctrl (jest bug).
+ */
 void Ecg2Ch::test()
 {
     QString fileName = QFileDialog::getOpenFileName(this);
