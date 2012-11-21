@@ -54,12 +54,12 @@ private:
   *  PanTompkins R peaks method detection
   *  @param pointer to ECG signal
   */
-  void panTompkinsRPeaksDetection(ECGSignal *signal);
+  bool panTompkinsRPeaksDetection(ECGSignal *signal);
   
   /**
   *  Hilbert R peaks method detection
   *  @param pointer to ECG signal
   */
-  void hilbertRPeaksDetection(ECGSignal *signal);
+  bool hilbertRPeaksDetection(ECGSignal *signal);
 };
 

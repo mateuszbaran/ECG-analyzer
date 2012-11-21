@@ -17,6 +17,10 @@ void RPeaksDetector::runModule(const ECGSignal &filteredSignal, ECGRs &ecgRs)
 	this->rsPositions = ecgRs;
 
 	bool success = this->detectRPeaks();
+	if(!success)
+	{
+		//TODO Throw exception os sth like that
+	}
 }
 
 void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
@@ -31,19 +35,17 @@ bool RPeaksDetector::detectRPeaks()
 {
 	if(detectionMethod == PAN_TOMPKINS)
 	{
-		panTompkinsRPeaksDetection(&filteredSignal);
-		return true;
+		return panTompkinsRPeaksDetection(&filteredSignal);
 	}
 	else if (detectionMethod == HILBERT)
 	{
-		hilbertRPeaksDetection(&filteredSignal);
-		return true;
+		return hilbertRPeaksDetection(&filteredSignal);
 	}
 	else
 		return false;
 }
 
-void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
+bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 {
 	//Convolution [-0.125 -0.25 0.25 0.125] (Tutaj gubimy 4 probki sygna³u)
 	ECGSignal diffSig;
@@ -162,43 +164,59 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 	int leftPointsCountChannelTwo = 0;
 	int rightPointsCountChannelTwo = 0;
 
+	gsl_vector* copiedChannelOne = gsl_vector_calloc(sigSize + 1);
+	gsl_vector* copiedChannelTwo = gsl_vector_calloc(sigSize + 1);
+
+	if (gsl_vector_memcpy(copiedChannelOne, overThersold.channel_one->signal) != sigSize)
+	{
+		return false;
+	}
+
+	if (gsl_vector_memcpy(copiedChannelTwo, overThersold.channel_two->signal) != sigSize)
+	{
+		return false;
+	}
+
 	for(int i = 0; i < sigSize - 1; i++)
 	{
-		auto inputValueChannelOne = gsl_vector_get (overThersold.channel_one->signal, i);
-		auto inputValueChannelOneIndexPlus = gsl_vector_get (overThersold.channel_one->signal, i + 1);	
+		auto inputValueChannelOne = gsl_vector_get (copiedChannelOne, i);
+		auto inputValueChannelOneIndexPlus = gsl_vector_get (copiedChannelOne, i + 1);
+		auto reversedInputValueChannelOne = gsl_vector_get(copiedChannelOne, sigSize - i);
+		auto reversedInputValueChannelOneIndexMinus = gsl_vector_get (copiedChannelOne, sigSize - (i + 1));
 
-		auto inputValueChannelTwo = gsl_vector_get (overThersold.channel_two->signal, i);				
-		auto inputValueChannelTwoIndexPlus = gsl_vector_get (overThersold.channel_two->signal, i + 1);
-		
-		//TODO Translate matlab equation to c
-		//leftPoints;// = find(diff([0 overThersold])==1);
-		//rightPoints;// = find(diff([overThersold 0])==-1);
+		auto inputValueChannelTwo = gsl_vector_get (copiedChannelTwo, i);				
+		auto inputValueChannelTwoIndexPlus = gsl_vector_get (copiedChannelTwo, i + 1);
+		auto reversedInputValueChannelTwo = gsl_vector_get(copiedChannelTwo, sigSize - i);
+		auto reversedInputValueChannelTwoIndexMinus = gsl_vector_get (copiedChannelTwo, sigSize - (i + 1));
 
 		// Channel one
-		if(true/*diff([0 overThersold])==1*/)
+		if((inputValueChannelOneIndexPlus - inputValueChannelOne) == 1)
 		{
 			gsl_vector_set(leftPoints.channel_one->signal, leftPointsCountChannelOne, i);
 			leftPointsCountChannelOne++;
 		}
-		if(true/*diff([overThersold 0])==-1*/)
+
+		if((reversedInputValueChannelOneIndexMinus - reversedInputValueChannelOne) == -1)
 		{
 			gsl_vector_set(rightPoints.channel_one->signal, rightPointsCountChannelOne, i);
 			rightPointsCountChannelOne++;
 		}
 
 		// Channel two
-		if(true/*diff([0 overThersold])==1*/)
+		if((inputValueChannelTwoIndexPlus - inputValueChannelTwo) == 1)
 		{
 			gsl_vector_set(leftPoints.channel_two->signal, leftPointsCountChannelTwo, i);
 			leftPointsCountChannelTwo++;
 		}
-		if(true/*diff([overThersold 0])==-1*/)
+		if((reversedInputValueChannelTwoIndexMinus - reversedInputValueChannelTwo) == -1)
 		{
 			gsl_vector_set(rightPoints.channel_two->signal, rightPointsCountChannelTwo, i);
 			rightPointsCountChannelTwo++;
 		}
 	}
 
+	gsl_vector_free(copiedChannelOne);
+	gsl_vector_free(copiedChannelTwo);
 	
 	//R peaks detection
 	IntSignal rPosChanOne;
@@ -247,10 +265,12 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 	rsPositions.setRsChannelOne(rPosChanOne);
 	rsPositions.setRsChannelTwo(rPosChanTwo);
 	rsDetected = true;
+	return true;
 }
 
-void RPeaksDetector::hilbertRPeaksDetection(ECGSignal *signal)
+bool RPeaksDetector::hilbertRPeaksDetection(ECGSignal *signal)
 {
 	//TODO Body of Hilbert method
 	rsDetected = true;
+	return true;
 }
