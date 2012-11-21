@@ -28,7 +28,7 @@ if(CMAKE_CXX_COMPILER MATCHES ".*clang")
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-    set(CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wextra -Wpointer-arith -Wno-switch -Wno-sign-compare -Wno-unused-parameter -Wno-overloaded-virtual")
+    set(CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wextra -Wpointer-arith -Wno-switch -Wno-sign-compare -Wno-unused-parameter -Wno-overloaded-virtual -fpermissive")
 endif()
 
 # use this to regenerate: ls -al | grep \\.cpp | tr -s ' ' | cut -d ' ' -f 9
@@ -48,6 +48,7 @@ ECGWaves.cpp
 EGHRVDFT.cpp
 main.cpp
 QRSClass.cpp
+BaselineRemoval.cpp
   )
 
 set(ecg-analyzer_HEADERS
@@ -67,6 +68,7 @@ EGHRVDFT.h
 ModulesInterfaces.h
 ModulesMethods.h
 QRSClass.h
+BaselineRemoval.h 
 #ui_ecganalyzer.h
   )
 
