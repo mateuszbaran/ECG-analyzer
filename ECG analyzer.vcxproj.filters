@@ -39,6 +39,12 @@
     <Filter Include="Source Files\wfdb">
       <UniqueIdentifier>{a935d3d4-7e1b-41b1-936e-649463f6a776}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\plots">
+      <UniqueIdentifier>{cb0cd8ff-fb42-497c-919b-2b8fffbad31c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\plots">
+      <UniqueIdentifier>{5c274814-a3fa-4742-80e6-d84443733e12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,6 +122,24 @@
     <ClCompile Include="BaselineRemoval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ecg2ch.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ecg2ch.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ecgch.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ecgch.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\ecg2ch.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\ecgch.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -126,6 +150,12 @@
     </CustomBuild>
     <CustomBuild Include="ecganalyzer.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\ecg2ch.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\ecgch.h">
+      <Filter>Header Files\plots</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
