@@ -1,9 +1,13 @@
 #include "ecganalyzer.h"
 #include <qmessagebox.h>
+#include <qtextcodec.h>
 
 ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
 	ui.setupUi(this);
 }
 

@@ -11,11 +11,10 @@
 #include "ECGST.h"
 #include "ECGTWave.h"
 #include "ECGChannelInfo.h"
-
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 
-#include <boost/scoped_ptr.hpp>
+#include <boost\scoped_ptr.hpp>
 
 /**
  * @class Class which controls executing all modules.
