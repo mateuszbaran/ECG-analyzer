@@ -1,5 +1,6 @@
 #pragma once
 #include "modulesinterfaces.h"
+#include "ModulesMethods.h"
 
 /**
  * Class RPeaksDetector provides set of method to detect R peaks in ECG signal.
@@ -14,24 +15,6 @@ public:
 
 	void runModule(const ECGSignal &, ECGRs &);
 	void setParams(ParametersTypes &);
-
-  /**
-  *  Check R peaks detection status
-  *  @return true if detection is finisched
-  */
-  bool areRsDetected();
-
-  /**
-  *  Set new filtered method
-  *  @param detectionMethod detection method
-  */
-  void setDetectionMethod(R_PEAKS_DETECTION_METHOD detectionMethod);
-
-  /**
-  *  Get current filtered method
-  *  @return filtered method
-  */
-  R_PEAKS_DETECTION_METHOD getDetectionMethod();
 
   /**
   *  Execute R peaks detection

@@ -17,10 +17,6 @@ void RPeaksDetector::runModule(const ECGSignal &filteredSignal, ECGRs &ecgRs)
 	this->rsPositions = ecgRs;
 
 	bool success = this->detectRPeaks();
-
-	//TODO What should I do if module cannot executed?
-	if(!success)
-		return;
 }
 
 void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
@@ -29,21 +25,6 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 	//TODo Allot to set moving window size if PanTompkins method
 	this->detectionMethod = PAN_TOMPKINS;
 	this->panTompkinsMovinghWindowLenght = 25;
-}
-
-bool RPeaksDetector::areRsDetected()
-{
-	return this->rsDetected;
-}
-
-void RPeaksDetector::setDetectionMethod(R_PEAKS_DETECTION_METHOD detectionMethod)
-{
-	this->detectionMethod = detectionMethod;
-}
-
-R_PEAKS_DETECTION_METHOD RPeaksDetector::getDetectionMethod()
-{
-	return this->detectionMethod;
 }
 
 bool RPeaksDetector::detectRPeaks()
@@ -62,10 +43,9 @@ bool RPeaksDetector::detectRPeaks()
 		return false;
 }
 
-//TODO Signal shift after operations not compensated!
 void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 {
-	//Convolution [-0.125 -0.25 0.25 0.125]
+	//Convolution [-0.125 -0.25 0.25 0.125] (Tutaj gubimy 4 probki sygna³u)
 	ECGSignal diffSig;
 	auto sigSize = signal->channel_one->signal->size;
 	double filter[] = {-0.125, -0.25, 0.25, 0.125};
@@ -96,7 +76,7 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 		gsl_vector_set(powSig.channel_two->signal, i, pow(inputValueChannelTwo, 2));
 	}
 
-	//Moving window integration
+	//Moving window integration (tutaj gubimy 'movinghWindowLenght' próbek sygna³u)
 	ECGSignal integrSig;
 	sigSize = powSig.channel_one->signal->size;
 	auto movinghWindowLenght = 25;
@@ -119,7 +99,7 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 	}
 
 	//Calculating detection thersold
-	//TODO Try to find another way to calcutale thersold position, maybe dynamic thersold?
+	//TODO (Not important now) Try to find another way to calcutale thersold position, maybe dynamic thersold?
 	sigSize = integrSig.channel_one->signal->size;
 	auto sigMaxValCHannelOne = 0;
 	auto sigMaxValCHannelTwo = 0;
@@ -144,7 +124,7 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 	meanChannelOne = meanChannelOne/sigSize;
 	meanChannelTwo = meanChannelTwo/sigSize;
 
-	//TODO Try use callculated thersold if not working use constant values;
+	// Try use callculated thersold if not working use constant values;
 	auto thresholdCHannelOne = meanChannelOne;
 	auto thresholdCHannelTwo = meanChannelTwo;
 	//auto thresholdCHannelOne = 0.2;
@@ -162,7 +142,6 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 		}
 		else
 		{
-			//TODO Check if this is necessary
 			gsl_vector_set(overThersold.channel_one->signal, i, 0);
 		}
 		if(inputValueChannelTwo > thresholdCHannelOne * sigMaxValCHannelTwo)
@@ -171,28 +150,102 @@ void RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 		}
 		else
 		{
-			//TODO Check if this is necessary
 			gsl_vector_set(overThersold.channel_one->signal, i, 0);
 		}
 	}
-	//TODO Translate matlab equation to c
-	ECGSignal leftPoints;// = find(diff([0 overThersold])==1);
-	ECGSignal rightPoints;// = find(diff([overThersold 0])==-1);
 
-	//R peaks detection
-	sigSize = leftPoints.channel_one->signal->size;
-	for(int i = 0; i < sigSize; i++)
+	ECGSignal leftPoints;
+	ECGSignal rightPoints;
+	sigSize = overThersold.channel_one->signal->size;
+	int leftPointsCountChannelOne = 0;
+	int rightPointsCountChannelOne = 0;
+	int leftPointsCountChannelTwo = 0;
+	int rightPointsCountChannelTwo = 0;
+
+	for(int i = 0; i < sigSize - 1; i++)
 	{
-		//TODO Translate matlab equation to c
-		//Rposition(i) = max( abs(signal(leftPoints(i):rightPoints(i))) );
-		//Rposition(i) = Rposition(i)-1+leftPoints(i);
-		//if(signal(Rposition(i)) < 0)
-		//	Rvalue(i) = -Rvalue(i);
+		auto inputValueChannelOne = gsl_vector_get (overThersold.channel_one->signal, i);
+		auto inputValueChannelOneIndexPlus = gsl_vector_get (overThersold.channel_one->signal, i + 1);	
 
-		rsPositions.setRChannelOne(i,0/*value*/);
-		rsPositions.setRChannelTwo(i,0/*value*/);
+		auto inputValueChannelTwo = gsl_vector_get (overThersold.channel_two->signal, i);				
+		auto inputValueChannelTwoIndexPlus = gsl_vector_get (overThersold.channel_two->signal, i + 1);
+		
+		//TODO Translate matlab equation to c
+		//leftPoints;// = find(diff([0 overThersold])==1);
+		//rightPoints;// = find(diff([overThersold 0])==-1);
+
+		// Channel one
+		if(true/*diff([0 overThersold])==1*/)
+		{
+			gsl_vector_set(leftPoints.channel_one->signal, leftPointsCountChannelOne, i);
+			leftPointsCountChannelOne++;
+		}
+		if(true/*diff([overThersold 0])==-1*/)
+		{
+			gsl_vector_set(rightPoints.channel_one->signal, rightPointsCountChannelOne, i);
+			rightPointsCountChannelOne++;
+		}
+
+		// Channel two
+		if(true/*diff([0 overThersold])==1*/)
+		{
+			gsl_vector_set(leftPoints.channel_two->signal, leftPointsCountChannelTwo, i);
+			leftPointsCountChannelTwo++;
+		}
+		if(true/*diff([overThersold 0])==-1*/)
+		{
+			gsl_vector_set(rightPoints.channel_two->signal, rightPointsCountChannelTwo, i);
+			rightPointsCountChannelTwo++;
+		}
 	}
 
+	
+	//R peaks detection
+	IntSignal rPosChanOne;
+	IntSignal rPosChanTwo;
+	sigSize = leftPoints.channel_one->signal->size;
+	int partLength;
+	double tmpMax;
+	int tmpMaxIndex;
+	for(int i = 0; i < sigSize; i++)
+	{
+		// Chanel one
+		partLength = gsl_vector_get (rightPoints.channel_one->signal, i) - gsl_vector_get (leftPoints.channel_one->signal, i);
+		tmpMax = 0;
+		tmpMaxIndex = 0;
+		for(int j = 0; j < partLength; j++)
+		{
+			int sigIndex = gsl_vector_get (leftPoints.channel_one->signal, i) + j;
+			auto sigVal = gsl_vector_get(signal->channel_one->signal, sigIndex);
+			if(sigVal > tmpMax)
+			{
+				tmpMax = sigVal;
+				tmpMaxIndex = sigIndex;
+			}
+
+		}
+		gsl_vector_int_set(rPosChanOne->signal, i, tmpMaxIndex);
+
+		//Channel two
+		partLength = gsl_vector_get(rightPoints.channel_two->signal, i) - gsl_vector_get(leftPoints.channel_two->signal, i);
+		tmpMax = 0;
+		tmpMaxIndex = 0;
+		for(int j = 0; j < partLength; j++)
+		{
+			int sigIndex = gsl_vector_get (leftPoints.channel_two->signal, i) + j;
+			auto sigVal = gsl_vector_get(signal->channel_two->signal, sigIndex);
+			if(sigVal > tmpMax)
+			{
+				tmpMax = sigVal;
+				tmpMaxIndex = sigIndex;
+			}
+
+		}
+		gsl_vector_int_set(rPosChanTwo->signal, i, tmpMaxIndex);
+	}
+
+	rsPositions.setRsChannelOne(rPosChanOne);
+	rsPositions.setRsChannelTwo(rPosChanTwo);
 	rsDetected = true;
 }
 
