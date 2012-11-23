@@ -33,7 +33,7 @@ void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal,
 	{
 		if(index < span/2 || index > signalLength - span/2) 
 		{
-			auto inputValueChannelOne = gsl_vector_get (inputSignal.channel_one -> signal, index);			
+			auto inputValueChannelOne = gsl_vector_get (inputSignal.channel_one -> signal, index);
 			auto inputValueChannelTwo = gsl_vector_get (inputSignal.channel_two -> signal, index);
 
 			gsl_vector_set(outputSignal.channel_one -> signal, index, inputValueChannelOne);
