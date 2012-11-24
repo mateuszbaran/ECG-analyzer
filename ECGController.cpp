@@ -1,11 +1,13 @@
 #include "ECGController.h"
 
 #include "BaselineRemoval.h"
+#include "RPeaksDetector.h"
 
 #include "wfdb/wfdb.h"
 
 ECGController::ECGController (void) :
-  ecg_baseline_module(new BaselineRemoval())
+  ecg_baseline_module(new BaselineRemoval()),
+  rpeaks_module(new RPeaksDetector())
 {
   //TODO: create modules objects
 }
