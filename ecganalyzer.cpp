@@ -1,9 +1,13 @@
 #include "ecganalyzer.h"
 #include <qmessagebox.h>
+#include <qtextcodec.h>
 
 ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
 	ui.setupUi(this);
 }
 
@@ -21,9 +25,9 @@ void ECGanalyzer::on_actionO_Programie_triggered()
 {
     QMessageBox::about(this, tr("About ECG Analyzer"),
             tr("<h2>ECG Analyzer</h2>"
-               "<p>Wydzia≥ Elektrotechniki, Automatyki"
-               "Informatyki i Inøynierii Biomedycznej</p>"
-               "<p>2012/2013 AGH KrakÛw</p>"));
+               "<p>Wydzia≈Ç Elektrotechniki, Automatyki"
+               "Informatyki i In≈ºynierii Biomedycznej</p>"
+               "<p>2012/2013 AGH Krak√≥w</p>"));
 }
 
 void ECGanalyzer::on_actionWyjd_triggered()

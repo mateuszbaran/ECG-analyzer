@@ -13,10 +13,13 @@ public:
 
   IntSignal GetRs () const
   {
-    return rs;
+    return rsco;
   }
 
-private:
-  IntSignal rs;
-};
+  void setRsChannelOne(IntSignal rs);
+  void setRsChannelTwo(IntSignal rs);
 
+private:
+  IntSignal rsco;
+  IntSignal rsct;
+};

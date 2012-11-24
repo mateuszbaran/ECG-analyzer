@@ -1,8 +1,13 @@
 #include "ECGController.h"
 
+#include "BaselineRemoval.h"
+#include "RPeaksDetector.h"
+
 #include "wfdb/wfdb.h"
 
-ECGController::ECGController (void)
+ECGController::ECGController (void) :
+  ecg_baseline_module(new BaselineRemoval()),
+  rpeaks_module(new RPeaksDetector())
 {
   //TODO: create modules objects
 }
@@ -264,12 +269,31 @@ bool ECGController::readFile(std::string filename)
   {
     return false;
   }
+
   //read channels info
   ecg_info.channel_one.filename = s[0].fname;
   ecg_info.channel_two.description = s[0].desc;
 
   ecg_info.channel_one.filename = s[1].fname;
   ecg_info.channel_two.description = s[1].desc;
+
+  ecg_info.channel_one.frequecy = 360; //from mit-bih description
+  ecg_info.channel_two.frequecy = 360; //from mit-bih description
+
+  ecg_info.channel_one.gain = s[0].gain;
+  ecg_info.channel_two.gain = s[1].gain;
+
+  ecg_info.channel_one.nr_samples = s[0].nsamp;
+  ecg_info.channel_two.nr_samples = s[1].nsamp;
+
+  ecg_info.channel_one.range = 10;
+  ecg_info.channel_two.range = 10;
+
+  ecg_info.channel_one.signal_resolution = s[0].adcres;
+  ecg_info.channel_two.signal_resolution = s[1].adcres;
+  
+  ecg_info.channel_one.zero_signal = s[0].adczero;
+  ecg_info.channel_two.zero_signal = s[1].adczero;
  
   //set signal
   nr_samples = s[0].nsamp; //we assume that both channels are equal.

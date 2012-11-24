@@ -2,7 +2,7 @@
 #define ECGANALYZER_H
 
 #include <QtGui/QMainWindow>
-#include "ui_ecganalyzer.h"
+#include "GeneratedFiles/ui_ecganalyzer.h"
 
 #include "ECGController.h"
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>817</width>
+    <width>862</width>
     <height>554</height>
    </rect>
   </property>
@@ -14,176 +14,198 @@
    <string>ECGanalyzer</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="maximumSize">
     <size>
-     <width>817</width>
+     <width>16777215</width>
      <height>16777215</height>
     </size>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+    <property name="spacing">
+     <number>5</number>
+    </property>
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMaximumSize</enum>
+    </property>
     <property name="margin">
-     <number>6</number>
+     <number>5</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
+     <widget class="QGroupBox" name="groupBoxDigitalFilters">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-          <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="title">
-         <string>Digital filters:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>3</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>598</width>
-          <height>465</height>
-         </size>
-        </property>
-        <property name="title">
-         <string>Signal:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QTabWidget" name="tabWidget">
+      <property name="title">
+       <string>Digital filters:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBoxSignal">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>3</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Signal:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>99999</width>
+           <height>99999</height>
+          </size>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="tabShape">
+          <enum>QTabWidget::Rounded</enum>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <property name="elideMode">
+          <enum>Qt::ElideNone</enum>
+         </property>
+         <widget class="QWidget" name="tabECGSignal">
+          <attribute name="title">
+           <string>ECG Signal</string>
+          </attribute>
+          <widget class="Ecg2Ch" name="rawPlotWidget" native="true">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>611</width>
+             <height>381</height>
+            </rect>
+           </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>200</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>99999</width>
-             <height>99999</height>
-            </size>
-           </property>
-           <property name="autoFillBackground">
-            <bool>false</bool>
-           </property>
-           <property name="tabShape">
-            <enum>QTabWidget::Rounded</enum>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <property name="elideMode">
-            <enum>Qt::ElideNone</enum>
-           </property>
-           <widget class="QWidget" name="tab">
-            <attribute name="title">
-             <string>ECG Signal</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
-             <item>
-              <widget class="Ecg2Ch" name="widget" native="true"/>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="tab_2">
-            <attribute name="title">
-             <string>HRV Analysis</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <item>
-              <widget class="QGroupBox" name="groupBox_3">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>5</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="title">
-                <string>Tachogram:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTabWidget" name="tabWidget_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>5</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="currentIndex">
-                <number>3</number>
-               </property>
-               <widget class="QWidget" name="tab_7">
-                <attribute name="title">
-                 <string>Statistical Parameters</string>
-                </attribute>
-               </widget>
-               <widget class="QWidget" name="tab_8">
-                <attribute name="title">
-                 <string>Frequency Parameters</string>
-                </attribute>
-               </widget>
-               <widget class="QWidget" name="tab_9">
-                <attribute name="title">
-                 <string>Geometrical Parameters</string>
-                </attribute>
-               </widget>
-               <widget class="QWidget" name="tab_10">
-                <attribute name="title">
-                 <string>DFA Analysis</string>
-                </attribute>
-               </widget>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="tab_3">
-            <attribute name="title">
-             <string>QRS Classification</string>
-            </attribute>
-           </widget>
-           <widget class="QWidget" name="tab_4">
-            <attribute name="title">
-             <string>HRT Analysis</string>
-            </attribute>
-           </widget>
-           <widget class="QWidget" name="tab_5">
-            <attribute name="title">
-             <string>ST Segment</string>
-            </attribute>
-           </widget>
-           <widget class="QWidget" name="tab_6">
-            <attribute name="title">
-             <string>QT Interval</string>
-            </attribute>
-           </widget>
           </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
+         </widget>
+         <widget class="QWidget" name="tabHRVAnalysis">
+          <attribute name="title">
+           <string>HRV Analysis</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>5</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Tachogram:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTabWidget" name="tabWidget_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>5</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
+              <attribute name="title">
+               <string>Statistical Parameters</string>
+              </attribute>
+             </widget>
+             <widget class="QWidget" name="tabHRVAnalysisFrequencyParameters">
+              <attribute name="title">
+               <string>Frequency Parameters</string>
+              </attribute>
+             </widget>
+             <widget class="QWidget" name="tabHRVAnalysisGeometricalParameters">
+              <attribute name="title">
+               <string>Geometrical Parameters</string>
+              </attribute>
+             </widget>
+             <widget class="QWidget" name="tabHRVAnalysisDFAAnalysis">
+              <attribute name="title">
+               <string>DFA Analysis</string>
+              </attribute>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tabQRSClassification">
+          <attribute name="title">
+           <string>QRS Classification</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabHRTAnalysis">
+          <attribute name="title">
+           <string>HRT Analysis</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabQTSegment">
+          <attribute name="title">
+           <string>ST Segment</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabQTInterval">
+          <attribute name="title">
+           <string>QT Interval</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -192,8 +214,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>817</width>
-     <height>20</height>
+     <width>862</width>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlik">
@@ -293,7 +315,7 @@
   <customwidget>
    <class>Ecg2Ch</class>
    <extends>QWidget</extends>
-   <header>ecg2ch.h</header>
+   <header>../plots/ecg2ch.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
