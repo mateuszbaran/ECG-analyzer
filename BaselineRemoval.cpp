@@ -4,7 +4,7 @@ BaselineRemoval::BaselineRemoval(){}
 
 BaselineRemoval::~BaselineRemoval(){}
 
-void BaselineRemoval::runModule(const ECGSignal &inputSignal, ECGSignal &outputSignal)
+void BaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo & ecgi, ECGSignal &outputSignal)
 {
 	if(baselineRemovalMethod == MOVING_AVERAGE)
 	{
