@@ -24,8 +24,15 @@ TEST_F(ECGControllerTest, ReadFileValidWithExtensionTest)
   EXPECT_EQ(true, controller.readFile("100.hea"));
 }
 
+TEST_F(ECGControllerTest, RPeaksTest)
+{
+	controller.readFile("100");
+	controller.runRPeaks();
+}
+
 int main(int argc, char** argv) 
 { 
     testing::InitGoogleTest(&argc, argv); 
     RUN_ALL_TESTS(); 
+	std::getchar();
 }

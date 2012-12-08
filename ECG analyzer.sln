@@ -1,12 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ECG analyzer", "ECG analyzer.vcxproj", "{E8BE2FF3-BBC0-4CF3-BF91-27E52C8D07D4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ControllerTest", "ControllerTest\ControllerTest.vcxproj", "{E6D0E838-7166-4B26-8A70-BD7BE1111999}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E8BE2FF3-BBC0-4CF3-BF91-27E52C8D07D4} = {E8BE2FF3-BBC0-4CF3-BF91-27E52C8D07D4}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
