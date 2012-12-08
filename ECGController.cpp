@@ -76,7 +76,7 @@ void ECGController::setParamsHRT (ParametersTypes & params)
 
 void ECGController::runECGBaseline ()
 {
-  ecg_baseline_module->runModule(raw_signal, filtered_signal);
+  ecg_baseline_module->runModule(raw_signal, ecg_info, filtered_signal);
   ecg_baseline_module->run_ = true;
 }
 
@@ -86,7 +86,8 @@ void ECGController::runRPeaks ()
   {
     runECGBaseline();
   }
-  rpeaks_module->runModule(filtered_signal, r_peaks_data);
+  rpeaks_module->runModule(filtered_signal, ecg_info, r_peaks_data);
+  rpeaks_module->run_ = true;
 }
 
 void ECGController::runWaves ()
@@ -99,7 +100,8 @@ void ECGController::runWaves ()
   {
     runRPeaks();
   }
-  waves_module->runModule(filtered_signal, r_peaks_data, waves_data);
+  waves_module->runModule(filtered_signal, ecg_info, r_peaks_data, waves_data);
+  waves_module->run_ = true;
 }
 
 void ECGController::runHRV1 ()
@@ -109,6 +111,7 @@ void ECGController::runHRV1 ()
     runRPeaks();
   }
   hrv1_module->runModule(r_peaks_data, hrv1_data);
+  hrv1_module->run_ = true;
 }
 
 void ECGController::runHRV2 ()
@@ -118,6 +121,7 @@ void ECGController::runHRV2 ()
     runRPeaks();
   }
   hrv2_module->runModule(r_peaks_data, hrv2_data);
+  hrv2_module->run_ = true;
 }
 
 void ECGController::runHRVDFA ()
@@ -127,6 +131,7 @@ void ECGController::runHRVDFA ()
     runRPeaks();
   }
   hrv_dfa_module->runModule(r_peaks_data, hrv_dfa_data);
+  hrv_dfa_module->run_ = true;
 }
 
 void ECGController::runQRSClass ()
@@ -139,7 +144,8 @@ void ECGController::runQRSClass ()
   {
     runWaves();
   }
-  qrs_class_module->runModule(waves_data, filtered_signal, classes_data);
+  qrs_class_module->runModule(waves_data, filtered_signal, ecg_info, classes_data);
+  qrs_class_module->run_ = true;
 }
 
 void ECGController::runSTInterval ()
@@ -152,7 +158,8 @@ void ECGController::runSTInterval ()
   {
     runWaves();
   }
-  st_interval_module->runModule(waves_data, filtered_signal, st_data);
+  st_interval_module->runModule(waves_data, filtered_signal, ecg_info, st_data);
+  st_interval_module->run_ = true;
 }
 
 void ECGController::runTwaveAlt ()
@@ -165,7 +172,8 @@ void ECGController::runTwaveAlt ()
   {
     runWaves();
   }
-  t_wave_alt_module->runModule(waves_data, filtered_signal, twave_data);
+  t_wave_alt_module->runModule(waves_data, filtered_signal, ecg_info, twave_data);
+  t_wave_alt_module->run_ = true;
 }
 
 void ECGController::runHRT ()
@@ -182,7 +190,8 @@ void ECGController::runHRT ()
   {
     runQRSClass();
   }
-  hrt_module->runModule(waves_data, r_peaks_data, filtered_signal, hrt_data);
+  hrt_module->runModule(waves_data, r_peaks_data, filtered_signal, ecg_info, hrt_data);
+  hrt_module->run_ = true;
 }
 
 void ECGController::setECGBaselineNotRun()

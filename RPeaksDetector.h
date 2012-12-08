@@ -1,5 +1,5 @@
 #pragma once
-#include "modulesinterfaces.h"
+#include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 
 /**
@@ -13,7 +13,7 @@ public:
 	RPeaksDetector();
 	~RPeaksDetector();
 
-	void runModule(const ECGSignal &, ECGRs &);
+	void runModule(const ECGSignal &, const ECGInfo &, ECGRs &);
 	void setParams(ParametersTypes &);
 
   /**

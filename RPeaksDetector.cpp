@@ -11,7 +11,7 @@ RPeaksDetector::RPeaksDetector()
 RPeaksDetector::~RPeaksDetector()
 {}
 
-void RPeaksDetector::runModule(const ECGSignal &filteredSignal, ECGRs &ecgRs)
+void RPeaksDetector::runModule(const ECGSignal &filteredSignal, const ECGInfo & ecgi, ECGRs &ecgRs)
 {
 	this->filteredSignal = filteredSignal;
 	this->rsPositions = ecgRs;

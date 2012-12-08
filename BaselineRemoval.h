@@ -8,7 +8,7 @@ public:
 	BaselineRemoval();
 	~BaselineRemoval();
 
-	void runModule(const ECGSignal &, ECGSignal &);
+	void runModule(const ECGSignal &, const ECGInfo &, ECGSignal &);
  	void setParams(ParametersTypes &);
 
 private:
