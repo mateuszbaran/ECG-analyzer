@@ -96,6 +96,13 @@ TEST_F(ECGControllerTest, RUNWAVES)
 
 int main(int argc, char** argv) 
 { 
+	char current_path[256];
+    getcwd(current_path, 255);
+	printf("Current working directory:");
+    printf("\n%s\n", current_path);
+	printf("\nStarting tests...\n\n");
+
     testing::InitGoogleTest(&argc, argv); 
-    RUN_ALL_TESTS(); 
+    RUN_ALL_TESTS();
+	std::getchar();
 }
