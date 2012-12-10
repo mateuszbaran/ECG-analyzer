@@ -495,7 +495,7 @@ int wfdb_parse_path(char *p)
 		break;
 	    case ';':	/* definitely a component delimiter */
 	    case ' ':
-	    case '\t':
+	//    case '\t':
 	    case '\n':
 	    case '\r':
 	    case '\0':
