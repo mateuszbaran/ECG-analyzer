@@ -95,7 +95,7 @@ TEST_F(ECGControllerTest, RUNRPEAKS)
 
 TEST_F(ECGControllerTest, RUNMOCKEDRPEAKS)
 {
-  EXPECT_NO_THROW(controller.runRPeaks());
+  controller.runRPeaks();
 }
 
 TEST_F(ECGControllerTest, RUNWAVES)
