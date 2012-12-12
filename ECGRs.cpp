@@ -6,12 +6,12 @@ ECGRs::ECGRs ()
 ECGRs::~ECGRs (void)
 {}
 
-void ECGRs::setRsChannelOne(IntSignal rs)
+void ECGRs::setRsChannelOne(gsl_vector_int* rs)
 {
 	rsco = rs;
 }
 
-void ECGRs::setRsChannelTwo(IntSignal rs)
+void ECGRs::setRsChannelTwo(gsl_vector_int* rs)
 {
 	rsct = rs;
 }

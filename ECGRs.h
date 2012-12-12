@@ -11,15 +11,15 @@ public:
   ECGRs (void);
   ~ECGRs (void);
 
-  IntSignal GetRs () const
+  gsl_vector_int* GetRs () const
   {
     return rsco;
   }
 
-  void setRsChannelOne(IntSignal rs);
-  void setRsChannelTwo(IntSignal rs);
+  void setRsChannelOne(gsl_vector_int* rs);
+  void setRsChannelTwo(gsl_vector_int* rs);
 
 private:
-  IntSignal rsco;
-  IntSignal rsct;
+  gsl_vector_int* rsco;
+  gsl_vector_int* rsct;
 };

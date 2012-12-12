@@ -1,7 +1,10 @@
 #pragma once
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
-
+#define DEBUG
+#define DEBUG_SIGNAL
+//#define DEBUG_SIGNAL_DETAILS
+#define USE_MOCKED_SIGNAL
 /**
  * Class RPeaksDetector provides set of method to detect R peaks in ECG signal.
  * @class RPeaksDetector
@@ -61,5 +64,15 @@ private:
   *  @param pointer to ECG signal
   */
   bool hilbertRPeaksDetection(ECGSignal *signal);
+
+  ECGSignal getMockedSignal();
+};
+
+class RPeaksDetectionException
+{
+  virtual const char* what() const throw()
+  {
+    return "Error during execution R preaks detection.";
+  }
 };
 

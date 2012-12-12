@@ -93,6 +93,11 @@ TEST_F(ECGControllerTest, RUNRPEAKS)
   EXPECT_NO_THROW(controller.runRPeaks());
 }
 
+TEST_F(ECGControllerTest, RUNMOCKEDRPEAKS)
+{
+  EXPECT_NO_THROW(controller.runRPeaks());
+}
+
 TEST_F(ECGControllerTest, RUNWAVES)
 {
   ASSERT_EQ(true, controller.readFile("ecgSignals/100"));
