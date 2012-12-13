@@ -5,83 +5,101 @@
 
 #include "wfdb/wfdb.h"
 
+#include "tri_logger.hpp"
+
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector())
 {
+  TRI_LOG_STR("ECGController created");
   //TODO: create modules objects
 }
 
-ECGController::~ECGController (void) { }
+ECGController::~ECGController (void)
+{
+  TRI_LOG_STR("ECGController destroyed");
+}
 
 void ECGController::setParamsECGBaseline (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   ecg_baseline_module->setParams(params);
   setECGBaselineNotRun();
 }
 
 void ECGController::setParamsRPeaks (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   rpeaks_module->setParams(params);
   setRPeaksNotRun();
 }
 
 void ECGController::setParamsnWaves (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   waves_module->setParams(params);
   setWavesNotRun();
 }
 
 void ECGController::setParamsHRV1 (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrv1_module->setParams(params);
   setHRV1NotRun();
 }
 
 void ECGController::setParamsHRV2 (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrv2_module->setParams(params);
   setHRV2NotRun();
 }
 
 void ECGController::setParamsHRVDFA (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrv_dfa_module->setParams(params);
   setHRVDFANotRun();
 }
 
 void ECGController::setParamsQRSClass (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   qrs_class_module->setParams(params);
   setQRSClassNotRun();
 }
 
 void ECGController::setParamsSTInterval (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   st_interval_module->setParams(params);
   setSTIntervalNotRun();
 }
 
 void ECGController::setParamsTwaveAlt (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   t_wave_alt_module->setParams(params);
   setTwaveAltNotRun();
 }
 
 void ECGController::setParamsHRT (ParametersTypes & params)
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrt_module->setParams(params);
   setHRTNotRun();
 }
 
 void ECGController::runECGBaseline ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   ecg_baseline_module->runModule(raw_signal, ecg_info, filtered_signal);
   ecg_baseline_module->run_ = true;
 }
 
 void ECGController::runRPeaks ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
@@ -92,6 +110,7 @@ void ECGController::runRPeaks ()
 
 void ECGController::runWaves ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
@@ -106,6 +125,7 @@ void ECGController::runWaves ()
 
 void ECGController::runHRV1 ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!rpeaks_module->run_)
   {
     runRPeaks();
@@ -116,6 +136,7 @@ void ECGController::runHRV1 ()
 
 void ECGController::runHRV2 ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!rpeaks_module->run_)
   {
     runRPeaks();
@@ -126,6 +147,7 @@ void ECGController::runHRV2 ()
 
 void ECGController::runHRVDFA ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!rpeaks_module->run_)
   {
     runRPeaks();
@@ -136,6 +158,7 @@ void ECGController::runHRVDFA ()
 
 void ECGController::runQRSClass ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
@@ -150,6 +173,7 @@ void ECGController::runQRSClass ()
 
 void ECGController::runSTInterval ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
@@ -164,6 +188,7 @@ void ECGController::runSTInterval ()
 
 void ECGController::runTwaveAlt ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
@@ -178,6 +203,7 @@ void ECGController::runTwaveAlt ()
 
 void ECGController::runHRT ()
 {
+  TRI_LOG_STR(__FUNCTION__);
   if (!ecg_baseline_module->run_)
   {
     runECGBaseline();
@@ -196,6 +222,7 @@ void ECGController::runHRT ()
 
 void ECGController::setECGBaselineNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   ecg_baseline_module->run_ = false;
   setRPeaksNotRun();
   setQRSClassNotRun();
@@ -207,6 +234,7 @@ void ECGController::setECGBaselineNotRun()
 
 void ECGController::setRPeaksNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   rpeaks_module->run_ = false;
   setHRTNotRun();
   setWavesNotRun();
@@ -217,6 +245,7 @@ void ECGController::setRPeaksNotRun()
 
 void ECGController::setWavesNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   waves_module->run_ = false;
   setQRSClassNotRun();
   setSTIntervalNotRun();
@@ -226,42 +255,50 @@ void ECGController::setWavesNotRun()
 
 void ECGController::setHRV1NotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrv1_module->run_ = false;
 }
 
 void ECGController::setHRV2NotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrv2_module->run_ = false;
 }
 
 void ECGController::setHRVDFANotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrv_dfa_module->run_ = false;
 }
 
 void ECGController::setQRSClassNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   qrs_class_module->run_ = false;
   setHRTNotRun();
 }
 
 void ECGController::setSTIntervalNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   st_interval_module->run_ = false;
 }
 
 void ECGController::setTwaveAltNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   t_wave_alt_module->run_ = false;
 }
 
 void ECGController::setHRTNotRun()
 {
+  TRI_LOG_STR(__FUNCTION__);
   hrt_module->run_ = false;
 }
 
 bool ECGController::readFile(std::string filename)
 {
+  TRI_LOG_STR(__FUNCTION__);
   //check filename to be correct with WFDB
   int pos;
   if ((pos = filename.find('.')) != std::string::npos)
@@ -276,8 +313,15 @@ bool ECGController::readFile(std::string filename)
   WFDB_Siginfo s[2];
   if (isigopen(const_cast<char*> (filename.c_str()), s, 2) < 2)
   {
+    TRI_LOG_STR("File");
+    TRI_LOG(filename);
+    TRI_LOG_STR("Not loaded");
     return false;
   }
+  TRI_LOG_STR("File: ");
+  TRI_LOG(filename);
+  TRI_LOG_STR("loaded");
+  TRI_LOG(s[0].nsamp);
 
   //read channels info
   ecg_info.channel_one.filename = s[0].fname;
@@ -316,10 +360,13 @@ bool ECGController::readFile(std::string filename)
   {
     if (getvec(v) < 0) //error
     {
+      TRI_LOG_STR("Error during reading signal");
       return false;
     }
     gsl_vector_set(raw_signal.channel_one->signal, i, (double)v[0]);
     gsl_vector_set(raw_signal.channel_two->signal, i, (double)v[1]);
   }
+  TRI_LOG_STR(__FUNCTION__);
+  TRI_LOG_STR(" returns true");
   return true;
 }
