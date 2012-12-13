@@ -93,9 +93,28 @@ TEST_F(ECGControllerTest, RUNRPEAKS)
   EXPECT_NO_THROW(controller.runRPeaks());
 }
 
-TEST_F(ECGControllerTest, RUNMOCKEDRPEAKS)
+TEST_F(ECGControllerTest, RPEAKS_SET_PARAMS)
 {
-  controller.runRPeaks();
+  ParametersTypes pt;
+  pt["detection_method"] = PAN_TOMPKINS;
+  pt["window_size"] = 15;
+  pt["thersold_size"] = 0.1;
+
+  ASSERT_EQ(true, controller.readFile("ecgSignals/100"));
+  EXPECT_NO_THROW(controller.setParamsRPeaks(pt));
+  EXPECT_NO_THROW(controller.runRPeaks());
+
+  pt["detection_method"] = HILBERT;
+  //TODO More parameters for hilbert method?
+  EXPECT_NO_THROW(controller.setParamsRPeaks(pt));
+  EXPECT_NO_THROW(controller.runRPeaks());
+
+  pt["detection_method"] = PAN_TOMPKINS;
+  pt["window_size"] = 30;
+  pt["thersold_size"] = 0.5;
+  EXPECT_NO_THROW(controller.setParamsRPeaks(pt));
+  EXPECT_NO_THROW(controller.runRPeaks());
+
 }
 
 TEST_F(ECGControllerTest, RUNWAVES)
