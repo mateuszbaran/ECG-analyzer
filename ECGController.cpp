@@ -25,6 +25,7 @@ void ECGController::setParamsECGBaseline (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   ecg_baseline_module->setParams(params);
   setECGBaselineNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsRPeaks (ParametersTypes & params)
@@ -32,6 +33,7 @@ void ECGController::setParamsRPeaks (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   rpeaks_module->setParams(params);
   setRPeaksNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsnWaves (ParametersTypes & params)
@@ -39,6 +41,7 @@ void ECGController::setParamsnWaves (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   waves_module->setParams(params);
   setWavesNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsHRV1 (ParametersTypes & params)
@@ -46,6 +49,7 @@ void ECGController::setParamsHRV1 (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   hrv1_module->setParams(params);
   setHRV1NotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsHRV2 (ParametersTypes & params)
@@ -53,6 +57,7 @@ void ECGController::setParamsHRV2 (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   hrv2_module->setParams(params);
   setHRV2NotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsHRVDFA (ParametersTypes & params)
@@ -60,6 +65,7 @@ void ECGController::setParamsHRVDFA (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   hrv_dfa_module->setParams(params);
   setHRVDFANotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsQRSClass (ParametersTypes & params)
@@ -67,6 +73,7 @@ void ECGController::setParamsQRSClass (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   qrs_class_module->setParams(params);
   setQRSClassNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsSTInterval (ParametersTypes & params)
@@ -74,6 +81,7 @@ void ECGController::setParamsSTInterval (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   st_interval_module->setParams(params);
   setSTIntervalNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsTwaveAlt (ParametersTypes & params)
@@ -81,6 +89,7 @@ void ECGController::setParamsTwaveAlt (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   t_wave_alt_module->setParams(params);
   setTwaveAltNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setParamsHRT (ParametersTypes & params)
@@ -88,6 +97,7 @@ void ECGController::setParamsHRT (ParametersTypes & params)
   TRI_LOG_STR(__FUNCTION__);
   hrt_module->setParams(params);
   setHRTNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runECGBaseline ()
@@ -95,6 +105,7 @@ void ECGController::runECGBaseline ()
   TRI_LOG_STR(__FUNCTION__);
   ecg_baseline_module->runModule(raw_signal, ecg_info, filtered_signal);
   ecg_baseline_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runRPeaks ()
@@ -106,6 +117,7 @@ void ECGController::runRPeaks ()
   }
   rpeaks_module->runModule(filtered_signal, ecg_info, r_peaks_data);
   rpeaks_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runWaves ()
@@ -121,6 +133,7 @@ void ECGController::runWaves ()
   }
   waves_module->runModule(filtered_signal, ecg_info, r_peaks_data, waves_data);
   waves_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runHRV1 ()
@@ -132,6 +145,7 @@ void ECGController::runHRV1 ()
   }
   hrv1_module->runModule(r_peaks_data, hrv1_data);
   hrv1_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runHRV2 ()
@@ -143,6 +157,7 @@ void ECGController::runHRV2 ()
   }
   hrv2_module->runModule(r_peaks_data, hrv2_data);
   hrv2_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runHRVDFA ()
@@ -154,6 +169,7 @@ void ECGController::runHRVDFA ()
   }
   hrv_dfa_module->runModule(r_peaks_data, hrv_dfa_data);
   hrv_dfa_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runQRSClass ()
@@ -169,6 +185,7 @@ void ECGController::runQRSClass ()
   }
   qrs_class_module->runModule(waves_data, filtered_signal, ecg_info, classes_data);
   qrs_class_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runSTInterval ()
@@ -184,6 +201,7 @@ void ECGController::runSTInterval ()
   }
   st_interval_module->runModule(waves_data, filtered_signal, ecg_info, st_data);
   st_interval_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runTwaveAlt ()
@@ -199,6 +217,7 @@ void ECGController::runTwaveAlt ()
   }
   t_wave_alt_module->runModule(waves_data, filtered_signal, ecg_info, twave_data);
   t_wave_alt_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::runHRT ()
@@ -218,6 +237,7 @@ void ECGController::runHRT ()
   }
   hrt_module->runModule(waves_data, r_peaks_data, filtered_signal, ecg_info, hrt_data);
   hrt_module->run_ = true;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setECGBaselineNotRun()
@@ -230,6 +250,7 @@ void ECGController::setECGBaselineNotRun()
   setTwaveAltNotRun();
   setHRTNotRun();
   setWavesNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setRPeaksNotRun()
@@ -241,6 +262,7 @@ void ECGController::setRPeaksNotRun()
   setHRV1NotRun();
   setHRV2NotRun();
   setHRVDFANotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setWavesNotRun()
@@ -251,24 +273,28 @@ void ECGController::setWavesNotRun()
   setSTIntervalNotRun();
   setTwaveAltNotRun();
   setHRTNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRV1NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
   hrv1_module->run_ = false;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRV2NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
   hrv2_module->run_ = false;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRVDFANotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
   hrv_dfa_module->run_ = false;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setQRSClassNotRun()
@@ -276,24 +302,28 @@ void ECGController::setQRSClassNotRun()
   TRI_LOG_STR(__FUNCTION__);
   qrs_class_module->run_ = false;
   setHRTNotRun();
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setSTIntervalNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
   st_interval_module->run_ = false;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setTwaveAltNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
   t_wave_alt_module->run_ = false;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRTNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
   hrt_module->run_ = false;
+  TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 bool ECGController::readFile(std::string filename)
@@ -316,6 +346,7 @@ bool ECGController::readFile(std::string filename)
     TRI_LOG_STR("File");
     TRI_LOG(filename);
     TRI_LOG_STR("Not loaded");
+    TRI_LOG_STR("END: "__FUNCTION__);
     return false;
   }
   TRI_LOG_STR("File: ");
@@ -366,7 +397,7 @@ bool ECGController::readFile(std::string filename)
     gsl_vector_set(raw_signal.channel_one->signal, i, (double)v[0]);
     gsl_vector_set(raw_signal.channel_two->signal, i, (double)v[1]);
   }
-  TRI_LOG_STR(__FUNCTION__);
+  TRI_LOG_STR("END: "__FUNCTION__);
   TRI_LOG_STR(" returns true");
   return true;
 }
