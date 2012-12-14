@@ -384,7 +384,8 @@ bool ECGController::readFile(std::string filename)
   raw_signal.setSize(nr_samples);
 
   //alocate memory for filtered signal
-  filtered_signal.setSize(nr_samples);
+  filtered_signal = ECGSignalChannel(new WrappedVector);
+  filtered_signal->signal = gsl_vector_alloc(nr_samples);
 
   //read signals
   for (i = 0; i < nr_samples; i++)

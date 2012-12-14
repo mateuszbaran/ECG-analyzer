@@ -54,7 +54,7 @@ public:
   //data
   ECGInfo ecg_info;
   ECGSignal raw_signal;
-  ECGSignal filtered_signal;
+  ECGSignalChannel filtered_signal;
   ECGRs r_peaks_data;
   ECGWaves waves_data;
   ECGHRV1 hrv1_data;
