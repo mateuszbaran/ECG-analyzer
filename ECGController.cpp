@@ -2,13 +2,14 @@
 
 #include "BaselineRemoval.h"
 #include "RPeaksDetector.h"
+#include "HRV1Analyzer.h"
 
 #include "wfdb/wfdb.h"
 
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
-  hrv1_module(new ECGHRV1())
+  hrv1_module(new HRV1Analyzer())
 {
   //TODO: create modules objects
 }
