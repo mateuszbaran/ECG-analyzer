@@ -49,6 +49,7 @@ EGHRVDFT.cpp
 main.cpp
 QRSClass.cpp
 BaselineRemoval.cpp
+RPeaksDetector.cpp
   )
 
 set(ecg-analyzer_HEADERS
@@ -69,6 +70,7 @@ ModulesInterfaces.h
 ModulesMethods.h
 QRSClass.h
 BaselineRemoval.h 
+RPeaksDetector.h
 #ui_ecganalyzer.h
   )
 

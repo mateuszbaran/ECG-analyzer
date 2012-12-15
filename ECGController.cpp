@@ -7,7 +7,8 @@
 
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
-  rpeaks_module(new RPeaksDetector())
+  rpeaks_module(new RPeaksDetector()),
+  hrv1_module(new ECGHRV1())
 {
   //TODO: create modules objects
 }
