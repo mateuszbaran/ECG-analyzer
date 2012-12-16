@@ -139,10 +139,20 @@
     </ClCompile>
     <ClCompile Include="plots\ecgch.cpp">
       <Filter>Source Files\plots</Filter>
+<<<<<<< HEAD
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+=======
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tri_logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+>>>>>>> f0930aaf5e09aa52174bc9aee637933bc013c223
     <ClCompile Include="tri_logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

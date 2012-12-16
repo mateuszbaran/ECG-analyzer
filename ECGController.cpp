@@ -268,7 +268,7 @@ void ECGController::setRPeaksNotRun()
 void ECGController::setWavesNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  waves_module->run_ = false;
+  //waves_module->run_ = false;
   setQRSClassNotRun();
   setSTIntervalNotRun();
   setTwaveAltNotRun();
@@ -279,28 +279,28 @@ void ECGController::setWavesNotRun()
 void ECGController::setHRV1NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv1_module->run_ = false;
+  //hrv1_module->run_ = false;
   TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRV2NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv2_module->run_ = false;
+  //hrv2_module->run_ = false;
   TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRVDFANotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv_dfa_module->run_ = false;
+  //hrv_dfa_module->run_ = false;
   TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setQRSClassNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  qrs_class_module->run_ = false;
+  //qrs_class_module->run_ = false;
   setHRTNotRun();
   TRI_LOG_STR("END: "__FUNCTION__);
 }
@@ -308,21 +308,21 @@ void ECGController::setQRSClassNotRun()
 void ECGController::setSTIntervalNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  st_interval_module->run_ = false;
+  //st_interval_module->run_ = false;
   TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setTwaveAltNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  t_wave_alt_module->run_ = false;
+  //t_wave_alt_module->run_ = false;
   TRI_LOG_STR("END: "__FUNCTION__);
 }
 
 void ECGController::setHRTNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrt_module->run_ = false;
+  //hrt_module->run_ = false;
   TRI_LOG_STR("END: "__FUNCTION__);
 }
 
