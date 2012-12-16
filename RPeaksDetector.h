@@ -6,6 +6,8 @@
 //#define DEBUG_SIGNAL_DETAILS
 //#define USE_MOCKED_SIGNAL
 
+using namespace std;
+
 /**
  * Class RPeaksDetector provides set of method to detect R peaks in ECG signal.
  * @class RPeaksDetector
@@ -90,9 +92,17 @@ private:
  */
 class RPeaksDetectionException
 {
-  virtual const char* what() const throw()
+public:
+  RPeaksDetectionException(string cause)
   {
-    return "Error during execution R preaks module.";
+    this->cause = cause;
   }
-};
 
+  virtual const string what() const throw()
+  {
+    return "Error during execution R preaks module cause: " + cause;
+  }
+
+private:
+	string cause;
+};

@@ -143,6 +143,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tri_logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -229,6 +232,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BaselineRemoval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nullstream.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tri_logger.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
