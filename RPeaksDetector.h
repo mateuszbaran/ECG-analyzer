@@ -6,6 +6,8 @@
 //#define DEBUG_SIGNAL_DETAILS
 //#define USE_MOCKED_SIGNAL
 
+using namespace std;
+
 /**
  * Class RPeaksDetector provides set of method to detect R peaks in ECG signal.
  * @class RPeaksDetector
@@ -17,7 +19,7 @@ public:
 	RPeaksDetector();
 	~RPeaksDetector();
 
-	void runModule(const ECGSignal &, const ECGInfo &, ECGRs &);
+	void runModule(const ECGSignalChannel &, const ECGInfo &, ECGRs &);
 	void setParams(ParametersTypes &);
 
   /**
@@ -41,7 +43,7 @@ private:
   /**
   *  Filtered signal from 'ECG_BASALINE'
   */
-  ECGSignal filteredSignal;
+  ECGSignalChannel filteredSignal;
 
   /**
   *  R peaks vector
@@ -67,19 +69,19 @@ private:
   *  PanTompkins R peaks method detection
   *  @param pointer to ECG signal
   */
-  bool panTompkinsRPeaksDetection(ECGSignal *signal);
+  bool panTompkinsRPeaksDetection(ECGSignalChannel *signal);
   
   /**
   *  Hilbert R peaks method detection
   *  @param pointer to ECG signal
   */
-  bool hilbertRPeaksDetection(ECGSignal *signal);
+  bool hilbertRPeaksDetection(ECGSignalChannel *signal);
 
   /*
   * Returns a part of filtered signal
   * This function is used only for tests!
   */
-  ECGSignal getMockedSignal();
+  ECGSignalChannel getMockedSignal();
 
 };
 
@@ -90,9 +92,18 @@ private:
  */
 class RPeaksDetectionException
 {
-  virtual const char* what() const throw()
+public:
+  RPeaksDetectionException(string cause)
   {
-    return "Error during execution R preaks module.";
+    this->cause = cause;
   }
+
+  virtual const string what() const throw()
+  {
+    return "Error during execution R preaks module cause: " + cause;
+  }
+
+private:
+	string cause;
 };
 

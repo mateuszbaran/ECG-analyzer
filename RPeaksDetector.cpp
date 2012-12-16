@@ -12,7 +12,7 @@ RPeaksDetector::RPeaksDetector()
 RPeaksDetector::~RPeaksDetector()
 {}
 
-void RPeaksDetector::runModule(const ECGSignal &filteredSignal, const ECGInfo & ecgi, ECGRs &ecgRs)
+void RPeaksDetector::runModule(const ECGSignalChannel &filteredSignal, const ECGInfo & ecgi, ECGRs &ecgRs)
 {
 	try{
 		this->filteredSignal = filteredSignal;
@@ -25,15 +25,15 @@ void RPeaksDetector::runModule(const ECGSignal &filteredSignal, const ECGInfo & 
 		if(!success)
 		{
 			#ifdef DEBUG
-				std::cout << "R peaks cetedtion module fails" << std::endl;
+				cout << "R peaks detection fails" << endl;
 			#endif
-			throw new RPeaksDetectionException;
+			throw new RPeaksDetectionException("R peaks detection method fails");
 		}
 	} catch (...) {
 		#ifdef DEBUG
-			std::cout << "R peaks cetedtion module fails" << std::endl;
+			cout << "R peaks cetedtion module fails" << endl;
 		#endif
-		throw new RPeaksDetectionException;
+		throw new RPeaksDetectionException("Unknown exception during execution R peaks detection method");
 	}
 }
 
@@ -53,16 +53,16 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 		else
 		{
 			#ifdef DEBUG
-				std::cout << "Unknown detection method" << std::endl;
+				cout << "Unknown detection method" << endl;
 			#endif
-			throw new RPeaksDetectionException;
+			throw new RPeaksDetectionException("Unknown detection method.");
 		}
 	}
 	else {
 		#ifdef DEBUG
-			std::cout << "Unknown detection method" << std::endl;
+			cout << "Unknown detection method" << endl;
 		#endif
-		throw new RPeaksDetectionException;
+		throw new RPeaksDetectionException("Parameter: detection method not found");
 	}
 	
 	if(parameterTypes.find("window_size") != parameterTypes.end())
@@ -71,7 +71,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 	}
 	else {
 		#ifdef DEBUG
-			std::cout << "Window size not found, use default falue 25" << std::endl;
+			cout << "Window size not found, use default falue 25" << endl;
 		#endif
 		this->panTompkinsMovinghWindowLenght = 25;
 	}
@@ -82,27 +82,27 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 	}
 	else {
 		#ifdef DEBUG
-			std::cout << "Thersold size not found, use default falue 0.1" << std::endl;
+			cout << "Thersold size not found, use default falue 0.1" << endl;
 		#endif
 		this->panTompkinsThersold = 0.1;
 	}
 	this->customParameters = true;
 
 	#ifdef DEBUG
-			std::cout << "Input parameters for R peaks module:" << std::endl;
+			cout << "Input parameters for R peaks module:" << endl;
 			if(this->detectionMethod == PAN_TOMPKINS)
 			{
-				std::cout << "Detection method: PanTompkins" << std::endl
-						  << "Moving window size: " << this->panTompkinsMovinghWindowLenght << std::endl
-						  << "Thersold size: " << panTompkinsThersold << std::endl;
+				cout << "Detection method: PanTompkins" << endl
+						  << "Moving window size: " << this->panTompkinsMovinghWindowLenght << endl
+						  << "Thersold size: " << panTompkinsThersold << endl;
 			} 
 			else if (this->detectionMethod == HILBERT)
 			{
-				std::cout << "Detection method: Hilbert" << std::endl;
+				cout << "Detection method: Hilbert" << endl;
 			}
 			else
 			{
-				std::cout << "Unknown detection method" << std::endl;
+				cout << "Unknown detection method" << endl;
 			}
 	#endif
 }
@@ -112,11 +112,11 @@ bool RPeaksDetector::detectRPeaks()
 	#ifdef DEBUG
 		if(this->customParameters)
 		{
-			std::cout << "Running module with custom parameters" << std::endl;
+			cout << "Running module with custom parameters" << endl;
 		}
 		else
 		{
-			std::cout << "Running module with default parameters" << std::endl;
+			cout << "Running module with default parameters" << endl;
 		}
 	#endif
 
@@ -133,517 +133,366 @@ bool RPeaksDetector::detectRPeaks()
 	return false;
 }
 
-bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
+bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 {
-	int sigSize = signal->channel_one->signal->size;
-	if(!sigSize > 0)
+	ECGSignalChannel sig;
+	sig = *signal;
+	int sigSize = 0;
+	sigSize = sig->signal->size;
+	if(sigSize > 0)
 	{
 		#ifdef DEBUG
-			std::cout << "Input signal size is 0" << std::endl;
+			cout << "Input signal size is 0" << endl;
 		#endif
 		return false;
-	} // end if
+	}
 
 	// UNECESSARY This part probably is unecessary 
 	#ifdef DEBUG
-		std::cout << "DC cancelation and normalization" << std::endl;
+		cout << "DC cancelation and normalization" << endl;
 	#endif
-	double sigSumValChannelOne = 0;
-	double sigSumValChannelTwo = 0;
-	double sigMaxValCHannelOne = 0;
-	double sigMaxValCHannelTwo = 0;
+	double sigSumVal = 0;
+	double sigMaxVal = 0;
 	for(int i = 0; i < sigSize; i++)
 	{
-		// Channel one
-		double inputValueChannelOne = gsl_vector_get (signal->channel_one->signal, i);			
-		sigSumValChannelOne += inputValueChannelOne;
-		if(abs(inputValueChannelOne) > sigMaxValCHannelOne)
+		double inputValue = gsl_vector_get (sig->signal, i);			
+		sigSumVal += inputValue;
+		if(abs(inputValue) > sigMaxVal)
 		{
-			sigMaxValCHannelOne = abs(inputValueChannelOne);
+			sigMaxVal = abs(inputValue);
 			#ifdef DEBUG_SIGNAL
-				std::cout << "New max signal value for channel one: " << inputValueChannelOne << std::endl;
+				cout << "New max signal value: " << inputValue << endl;
 			#endif
-		} // end if
-
-		// Channel two
-		double inputValueChannelTwo = gsl_vector_get (signal->channel_two->signal, i);
-		sigSumValChannelTwo += inputValueChannelTwo;
-		if(abs(inputValueChannelTwo) > sigMaxValCHannelTwo)
-		{
-			sigMaxValCHannelTwo = abs(inputValueChannelTwo);
-		} // end if
+		}
 	}
 	#ifdef DEBUG
-		std::cout << "Signal sum for channel one: " << sigSumValChannelOne << std::endl
-				  << "Final signal max value for channel one: " <<  sigMaxValCHannelOne << std::endl;
+		cout << "Signal sum: " << sigSumVal << endl
+				  << "Final signal max value: " <<  sigMaxVal << endl;
 	#endif
 				
-	ECGSignal normSig;
-	normSig.setSize(sigSize);
+	ECGSignalChannel normSig;
+	normSig->signal = gsl_vector_alloc(sigSize);
 	for(int i = 0; i < sigSize; i++)
 	{
-		// Channel one
-		double inputValueChannelOne = gsl_vector_get (signal->channel_one->signal, i);				
-		double chanOne = inputValueChannelOne - (sigSumValChannelOne / sigSize);	
+		double inputValue = gsl_vector_get (sig->signal, i);				
+		double chanOne = inputValue - (sigSumVal / sigSize);	
 		#ifdef DEBUG_SIGNAL
-			std::cout << "DC cancel value for channel one: " << chanOne << std::endl;
+			cout << "DC cancel value: " << chanOne << endl;
 		#endif
-		chanOne = chanOne / sigMaxValCHannelOne;	
-		gsl_vector_set(normSig.channel_one->signal, i, chanOne);
+		chanOne = chanOne / sigMaxVal;	
+		gsl_vector_set(normSig->signal, i, chanOne);
 		#ifdef DEBUG_SIGNAL
-			std::cout << "Normalized value for channel one: " << chanOne << std::endl;
+			cout << "Normalized value: " << chanOne << endl;
 		#endif
-
-		// Channel two
-		double inputValueChannelTwo = gsl_vector_get (signal->channel_two->signal, i);
-		double chanTwo = inputValueChannelTwo - (sigSumValChannelTwo / sigSize);
-		chanTwo = chanTwo / sigMaxValCHannelTwo;
-		gsl_vector_set(normSig.channel_two->signal, i, chanOne);
-	} // end for
+	}
 	//END OF UNECESSARY
 
 	//Convolution [-0.125 -0.25 0.25 0.125] (Here we lose 4 signal samples)	
 	#ifdef DEBUG
-		std::cout << "Convolution [-0.125 -0.25 0.25 0.125]" << std::endl << "Orginal signal size: " << sigSize << std::endl;
+		cout << "Convolution [-0.125 -0.25 0.25 0.125]" << endl << "Orginal signal size: " << sigSize << endl;
 	#endif
 	int newSigSize = 0;
-	ECGSignal diffSig;
-	diffSig.setSize(sigSize);
+	ECGSignalChannel diffSig;
+	diffSig->signal = gsl_vector_alloc(sigSize);
 	double filter[] = {-0.125, -0.25, 0.25, 0.125};
 	int filterSize = 4;
 	for(int i = 0; i < sigSize - filterSize; i++)
 	{
-		double tmpSumChannelOne = 0;
-		double tmpSumChannelTwo = 0;
+		double tmpSum = 0;
 		for(int j = 0; j < filterSize; j++)
 		{
-			double inputValueChannelOne = gsl_vector_get (signal->channel_one->signal, i + j);			
-			double inputValueChannelTwo = gsl_vector_get (signal->channel_two->signal, i + j);
-			tmpSumChannelOne += inputValueChannelOne * filter[j];
-			tmpSumChannelTwo += inputValueChannelTwo * filter[j];
+			double inputValue = gsl_vector_get (sig->signal, i + j);			
+			tmpSum += inputValue * filter[j];
 			#ifdef DEBUG_SIGNAL_DETAILS
-				std::cout << "Signal: " << inputValueChannelOne << " Filter: " << filter[j] << " Sum: " << tmpSumChannelOne << std::endl;
+				cout << "Signal: " << inputValue << " Filter: " << filter[j] << " Sum: " << tmpSum << endl;
 			#endif
-		} // end for
+		}
 		#ifdef DEBUG_SIGNAL
-			std::cout << "Final val: " << tmpSumChannelOne << " at index: " << i << std::endl;
+			cout << "Final val: " << tmpSum << " at index: " << i << endl;
 		#endif
-		gsl_vector_set(diffSig.channel_one->signal, i, tmpSumChannelOne);
-		gsl_vector_set(diffSig.channel_two->signal, i, tmpSumChannelTwo);
+		gsl_vector_set(diffSig->signal, i, tmpSum);
 		newSigSize++;
-	} // end for
+	}
 	
 	//Exponentiation
 	sigSize = newSigSize;
 	#ifdef DEBUG
-		std::cout << "Exponentiation ^2" << std::endl << "Signal size after convolution: " << sigSize << std::endl;
+		cout << "Exponentiation ^2" << endl << "Signal size after convolution: " << sigSize << endl;
 	#endif
-	ECGSignal powSig;
-	powSig.setSize(sigSize);
+	ECGSignalChannel powSig;
+	powSig->signal = gsl_vector_alloc(sigSize);
 	for(int i = 0; i < sigSize; i++)
 	{
-		double inputValueChannelOne = gsl_vector_get (diffSig.channel_one->signal, i);			
-		double inputValueChannelTwo = gsl_vector_get (diffSig.channel_two->signal, i);
-		double powChanOne = pow(inputValueChannelOne, 2);
-		double poeChanTwo = pow(inputValueChannelTwo, 2);
-		gsl_vector_set(powSig.channel_one->signal, i, powChanOne);
-		gsl_vector_set(powSig.channel_two->signal, i, poeChanTwo);
+		double inputValue = gsl_vector_get (diffSig->signal, i);			
+		double powVal = pow(inputValue, 2);
+		gsl_vector_set(powSig->signal, i, powVal);
 		#ifdef DEBUG_SIGNAL
-				std::cout << " Pow: "<< powChanOne << " at index: " << i  << std::endl;
+				cout << " Pow: "<< powVal << " at index: " << i  << endl;
 		#endif
-	} // end for
+	}
 
 	//Moving window integration (Here we lose "movinghWindowLenght" signal samples)	
 	#ifdef DEBUG
-		std::cout << "Moving window integration" << std::endl << "Window size: " << panTompkinsMovinghWindowLenght << std::endl
-				  << "Signal size after exponentiation: " << sigSize << std::endl;
+		cout << "Moving window integration" << endl << "Window size: " << panTompkinsMovinghWindowLenght << endl
+				  << "Signal size after exponentiation: " << sigSize << endl;
 	#endif
-	ECGSignal integrSig;
-	integrSig.setSize(sigSize);
+	ECGSignalChannel integrSig;
+	integrSig->signal = gsl_vector_alloc(sigSize);
 	newSigSize = 0;
 	int movinghWindowLenght = panTompkinsMovinghWindowLenght;
-	double tmpSumChannelOne = 0;
-	double tmpSumChannelTwo = 0;
+	double tmpSum = 0;
 
 	for(int i = movinghWindowLenght; i < sigSize; i++)
 	{
 		for(int j = movinghWindowLenght - 1; j >= 0 ; j--)
 		{
-			double inputValueChannelOne = gsl_vector_get (powSig.channel_one->signal, i - j);			
-			double inputValueChannelTwo = gsl_vector_get (powSig.channel_two->signal, i - j);
-			tmpSumChannelOne += inputValueChannelOne;
-			tmpSumChannelTwo += inputValueChannelTwo;
+			double inputValue = gsl_vector_get (powSig->signal, i - j);			
+			tmpSum += inputValue;
 			#ifdef DEBUG_SIGNAL_DETAILS
-				std::cout << "Signal: " << inputValueChannelOne << " Sum: " << tmpSumChannelOne << std::endl;
+				cout << "Signal: " << inputValue << " Sum: " << tmpSum << endl;
 			#endif
-		} // end for
+		}
 		int index = i - movinghWindowLenght;
 		// TODO Why this is not working? (To small values and all are save as zero)
-		//double mwico = (1/movinghWindowLenght) * tmpSumChannelOne;
-		//double mwict = (1/movinghWindowLenght) * tmpSumChannelTwo;
-		double mwico =  tmpSumChannelOne;
-		double mwict =  tmpSumChannelTwo;
+		//double mwico = (1/movinghWindowLenght) * tmpSum;
+		double mwico =  tmpSum;
 		#ifdef DEBUG_SIGNAL
-			std::cout << "Final val: " << mwico << " at index: " << index << std::endl;
+			cout << "Final val: " << mwico << " at index: " << index << endl;
 		#endif
-		gsl_vector_set(integrSig.channel_one->signal, index, mwico);
-		gsl_vector_set(integrSig.channel_two->signal, index, mwict);
-		tmpSumChannelOne = 0;
-		tmpSumChannelTwo = 0;
+		gsl_vector_set(integrSig->signal, index, mwico);
+		tmpSum = 0;
 		newSigSize++;
-	} // end for
+	}
 
 	//Calculating detection thersold
 	//TODO (Not important now) Try to find another way to calcutale thersold position, maybe dynamic thersold?
 	sigSize = newSigSize;
 	#ifdef DEBUG
-		std::cout << "Calculating detection thersold" << std::endl << "After moving window integration signal size: " << sigSize << std::endl;
+		cout << "Calculating detection thersold" << endl << "After moving window integration signal size: " << sigSize << endl;
 	#endif
-	sigMaxValCHannelOne = 0;
-	sigMaxValCHannelTwo = 0;
-	double meanChannelOne = 0;
-	double meanChannelTwo = 0;
+	sigMaxVal = 0;
+	double meanVal = 0;
+
 	for(int i = 0; i < sigSize; i++)
 	{
-		// Channel one
-		double inputValueChannelOne = gsl_vector_get (integrSig.channel_one->signal, i);					
-		if(inputValueChannelOne > sigMaxValCHannelOne)
+		double inputValue = gsl_vector_get (integrSig->signal, i);					
+		if(inputValue > sigMaxVal)
 		{
-			sigMaxValCHannelOne = inputValueChannelOne;
+			sigMaxVal = inputValue;
 			#ifdef DEBUG_SIGNAL
-				std::cout << "New max signal value for channel one: " << inputValueChannelOne << std::endl;
+				cout << "New max signal value: " << inputValue << endl;
 			#endif
 		}
-		meanChannelOne += inputValueChannelOne;
-
-		// Channel two
-		double inputValueChannelTwo = gsl_vector_get (integrSig.channel_two->signal, i);
-		if(inputValueChannelTwo > sigMaxValCHannelTwo)
-		{
-			sigMaxValCHannelTwo = inputValueChannelTwo;
-		} // end if
-		meanChannelTwo += inputValueChannelTwo;
+		meanVal += inputValue;
 	}
 	
-	meanChannelOne = meanChannelOne/sigSize;
-	meanChannelTwo = meanChannelTwo/sigSize;
+	meanVal = meanVal / sigSize;
 
 	#ifdef DEBUG
-		std::cout << "Final max value for channel one: " << sigMaxValCHannelOne << std::endl 
-				  << "Final max value for channel two: " << sigMaxValCHannelTwo << std::endl 
-				  << "Final mean value for channel one: " << meanChannelOne << std::endl 
-				  << "Final mean value for channel two: " << meanChannelTwo << std::endl;
+		cout << "Final max value for channel one: " << sigMaxVal << endl 
+	         << "Final mean value: " << meanVal << endl;
+
 	#endif
 
 	// Select automatic or manual thersold
-	double thresholdCHannelOne = 0;
-	double thresholdCHannelTwo = 0;
+	double threshold = 0;
 	if( this->panTompkinsThersold == 0)
 	{
-		thresholdCHannelOne = meanChannelOne;
-		thresholdCHannelTwo = meanChannelTwo;
+		threshold = meanVal;
 	}
 	else
 	{
-		thresholdCHannelOne = this->panTompkinsThersold;
-		thresholdCHannelTwo = this->panTompkinsThersold;
+		threshold = this->panTompkinsThersold;
 	}
 
 	//Looking for points over thersold
 	#ifdef DEBUG
-		std::cout << "Looking for points over thersold" << std::endl;
+		cout << "Looking for points over thersold" << endl;
 	#endif
-	ECGSignal overThersold;
-	overThersold.setSize(sigSize);
+	ECGSignalChannel overThersold;
+	overThersold->signal = gsl_vector_alloc(sigSize);
 	for(int i = 0; i < sigSize; i++)
 	{
-		// Channel one
-		double inputValueChannelOne = gsl_vector_get (integrSig.channel_one->signal, i);			
-		if(inputValueChannelOne > thresholdCHannelOne * sigMaxValCHannelOne)
+		double inputValue = gsl_vector_get (integrSig->signal, i);			
+		if(inputValue > threshold * sigMaxVal)
 		{
-			gsl_vector_set(overThersold.channel_one->signal, i, 1);
+			gsl_vector_set(overThersold->signal, i, 1);
 			#ifdef DEBUG_SIGNAL
-				std::cout << "Value over thersold for channel one at index: " << i << std::endl;
+				cout << "Value over thersold at index: " << i << endl;
 			#endif
-		} // end if
+		}
 		else
 		{
-			gsl_vector_set(overThersold.channel_one->signal, i, 0);
-		} // end else
-
-		// Channel two
-		double inputValueChannelTwo = gsl_vector_get (integrSig.channel_two->signal, i);
-		if(inputValueChannelTwo > thresholdCHannelTwo * sigMaxValCHannelTwo)
-		{
-			gsl_vector_set(overThersold.channel_two->signal, i, 1);
-		} // end if
-		else
-		{
-			gsl_vector_set(overThersold.channel_two->signal, i, 0);
-		} // end else
+			gsl_vector_set(overThersold->signal, i, 0);
+		}
 	}
 	#ifdef DEBUG_SIGNAL
-		std::cout << "Signal with points over thersold" << std::endl;
+		cout << "Signal with points over thersold" << endl;
 		for(int i = 0; i < sigSize; i++)
 		{
-			std::cout << gsl_vector_get(overThersold.channel_one->signal, i);
+			cout << gsl_vector_get(overThersold->signal, i);
 		}
 	#endif
 	#ifdef DEBUG
-		std::cout << "Detect begin and end of QRS complex" << std::endl;
+		cout << "Detect begin and end of QRS complex" << endl;
 	#endif
-	ECGSignal leftPoints;
-	ECGSignal tmpRightPoints;
-	leftPoints.setSize(sigSize);
-	tmpRightPoints.setSize(sigSize);
-	int leftPointsCountChannelOne = 0;
-	int rightPointsCountChannelOne = 0;
-	int leftPointsCountChannelTwo = 0;
-	int rightPointsCountChannelTwo = 0;
+	ECGSignalChannel leftPoints;
+	ECGSignalChannel tmpRightPoints;
+	leftPoints->signal = gsl_vector_alloc(sigSize);
+	tmpRightPoints->signal = gsl_vector_alloc(sigSize);
+	int leftPointsCount = 0;
+	int rightPointsCount = 0;
 
-	gsl_vector* copiedChannelOne = gsl_vector_calloc(sigSize);
-	gsl_vector* copiedChannelTwo = gsl_vector_calloc(sigSize);
-
-	gsl_vector_memcpy(copiedChannelOne, overThersold.channel_one->signal);
-	gsl_vector_memcpy(copiedChannelTwo, overThersold.channel_two->signal);
+	gsl_vector* copiedSig = gsl_vector_calloc(sigSize);
+	gsl_vector_memcpy(copiedSig, overThersold->signal);
 
 	// Boundary values
-	if(gsl_vector_get (copiedChannelOne, 0) == 1)
+	if(gsl_vector_get (copiedSig, 0) == 1)
 	{
-		gsl_vector_set(leftPoints.channel_one->signal, leftPointsCountChannelOne, 0);
-		leftPointsCountChannelOne++;
+		gsl_vector_set(leftPoints->signal, leftPointsCount, 0);
+		leftPointsCount++;
 		#ifdef DEBUG_SIGNAL
-			std::cout << "QRS complex left point for channel one at index: " << 0 << std::endl;
-		#endif
-	}
-	if(gsl_vector_get (copiedChannelTwo, 0) == 1)
-	{
-		gsl_vector_set(leftPoints.channel_two->signal, leftPointsCountChannelTwo, 0);
-		leftPointsCountChannelTwo++;
-		#ifdef DEBUG_SIGNAL
-			std::cout << "QRS complex left point for channel two at index: " << 0 << std::endl;
+			cout << "QRS complex left point at index: " << 0 << endl;
 		#endif
 	}
 	
-	if(gsl_vector_get (copiedChannelOne, sigSize - 1) == 1)
+	if(gsl_vector_get (copiedSig, sigSize - 1) == 1)
 	{
-		gsl_vector_set(tmpRightPoints.channel_one->signal, rightPointsCountChannelOne, sigSize - 1);
-		rightPointsCountChannelOne++;
+		gsl_vector_set(tmpRightPoints->signal, rightPointsCount, sigSize - 1);
+		rightPointsCount++;
 		#ifdef DEBUG_SIGNAL
-			std::cout << "QRS complex right point for channel one at index: " << sigSize - 1 << std::endl;
+			cout << "QRS complex right point at index: " << sigSize - 1 << endl;
 		#endif
 	}
-	if(gsl_vector_get (copiedChannelTwo, sigSize - 1) == 1)
-	{
-		gsl_vector_set(tmpRightPoints.channel_two->signal, rightPointsCountChannelTwo, sigSize - 1);
-		rightPointsCountChannelTwo++;
-		#ifdef DEBUG_SIGNAL
-			std::cout << "QRS complex right point for channel two at index: " << sigSize - 1 << std::endl;
-		#endif
-	}
+
 	// Other values
 	for(int i = 0; i < sigSize - 1; i++)
 	{
-		// Channel one
-		double inputValueChannelOne = gsl_vector_get (copiedChannelOne, i);
-		double inputValueChannelOneIndexPlus = gsl_vector_get (copiedChannelOne, i + 1);
-		if((inputValueChannelOneIndexPlus - inputValueChannelOne) == 1)
+		double inputValue = gsl_vector_get (copiedSig, i);
+		double inputValueIndexPlus = gsl_vector_get (copiedSig, i + 1);
+		if((inputValueIndexPlus - inputValue) == 1)
 		{
-			gsl_vector_set(leftPoints.channel_one->signal, leftPointsCountChannelOne, i);
-			leftPointsCountChannelOne++;
+			gsl_vector_set(leftPoints->signal, leftPointsCount, i);
+			leftPointsCount++;
 			#ifdef DEBUG_SIGNAL
-				std::cout << "QRS complex left point for channel one at index: " << i << std::endl;
+				cout << "QRS complex left point at index: " << i << endl;
 			#endif
-		} // end if
-
-		// Channel two	
-		double inputValueChannelTwo = gsl_vector_get (copiedChannelTwo, i);				
-		double inputValueChannelTwoIndexPlus = gsl_vector_get (copiedChannelTwo, i + 1);
-		if((inputValueChannelTwoIndexPlus - inputValueChannelTwo) == 1)
-		{
-			gsl_vector_set(leftPoints.channel_two->signal, leftPointsCountChannelTwo, i);
-			leftPointsCountChannelTwo++;
-		} // end if
-	}// end for
+		}
+	}
 
 	for(int i = sigSize - 1; i > 0; i--)
 	{
-		// Channel one
-		double reversedInputValueChannelOne = gsl_vector_get(copiedChannelOne, i);
-		double reversedInputValueChannelOneIndexMinus = gsl_vector_get (copiedChannelOne, i - 1);
-		if((reversedInputValueChannelOneIndexMinus - reversedInputValueChannelOne) == 1)
+		double reversedInput = gsl_vector_get(copiedSig, i);
+		double reversedInputIndexMinus = gsl_vector_get (copiedSig, i - 1);
+		if((reversedInputIndexMinus - reversedInput) == 1)
 		{
-			gsl_vector_set(tmpRightPoints.channel_one->signal, rightPointsCountChannelOne, i);
-			rightPointsCountChannelOne++;
+			gsl_vector_set(tmpRightPoints->signal, rightPointsCount, i);
+			rightPointsCount++;
 			#ifdef DEBUG_SIGNAL
-				std::cout << "QRS complex right point for channel one at index: " << i << std::endl;
+				cout << "QRS complex right at index: " << i << endl;
 			#endif
-		} // end if
-		// Channel two	
-		double reversedInputValueChannelTwo = gsl_vector_get(copiedChannelTwo, i);
-		double reversedInputValueChannelTwoIndexMinus = gsl_vector_get (copiedChannelTwo, i - 1);
-		if((reversedInputValueChannelTwoIndexMinus - reversedInputValueChannelTwo) == 1)
-		{
-			gsl_vector_set(tmpRightPoints.channel_two->signal, rightPointsCountChannelTwo, i);
-			rightPointsCountChannelTwo++;
-		} // end if
-	} // end for
+		}
+	}
 
 	#ifdef DEBUG_SIGNAL
-		std::cout << "Vector with left points for channel one" << std::endl;
-		for(int i = 0; i < leftPointsCountChannelOne; i++)
+		cout << "Vector with left points:" << endl;
+		for(int i = 0; i < leftPointsCount; i++)
 		{
-			std::cout << gsl_vector_get(leftPoints.channel_one->signal, i) << ' ';
+			cout << gsl_vector_get(leftPoints->signal, i) << ' ';
 		}
-		std::cout << std::endl << "Vector with left points for channel two" << std::endl;
-		for(int i = 0; i < leftPointsCountChannelTwo; i++)
+		cout << endl << "Vector with right points:" << endl;
+		for(int i = 0; i < rightPointsCount; i++)
 		{
-			std::cout << gsl_vector_get(leftPoints.channel_two->signal, i) << ' ';
+			cout << gsl_vector_get(tmpRightPoints->signal, i) << ' ';
 		}
-		std::cout << std::endl << "Vector with right points for channel one" << std::endl;
-		for(int i = 0; i < rightPointsCountChannelOne; i++)
-		{
-			std::cout << gsl_vector_get(tmpRightPoints.channel_one->signal, i) << ' ';
-		}
-		std::cout << std::endl << "Vector with right points for channel two" << std::endl;
-		for(int i = 0; i < rightPointsCountChannelTwo; i++)
-		{
-			std::cout << gsl_vector_get(tmpRightPoints.channel_two->signal, i) << ' ';
-		}
-		std::cout << std::endl;
+		cout << endl;
 	#endif
 	// Invert vector with rightPoints
-	ECGSignal rightPoints;
-	rightPoints.setSize(sigSize);
-	for(int i = 0; i < rightPointsCountChannelOne; i++)
+	ECGSignalChannel rightPoints;
+	rightPoints->signal = gsl_vector_alloc(sigSize);
+	for(int i = 0; i < rightPointsCount; i++)
 	{
-		double tmp = gsl_vector_get(tmpRightPoints.channel_one->signal, rightPointsCountChannelOne - i - 1);
-		gsl_vector_set(rightPoints.channel_one->signal, i, tmp );
+		double tmp = gsl_vector_get(tmpRightPoints->signal, rightPointsCount - i - 1);
+		gsl_vector_set(rightPoints->signal, i, tmp );
 	}
-	for(int i = 0; i < rightPointsCountChannelTwo; i++)
+	for(int i = 0; i < rightPointsCount; i++)
 	{
-		double tmp = gsl_vector_get(tmpRightPoints.channel_two->signal, rightPointsCountChannelTwo - i - 1);
-		gsl_vector_set(rightPoints.channel_two->signal, i, tmp );
+		double tmp = gsl_vector_get(tmpRightPoints->signal, rightPointsCount - i - 1);
+		gsl_vector_set(rightPoints->signal, i, tmp );
 	}
 	#ifdef DEBUG_SIGNAL
-		std::cout << "After vector invertion" << std::endl;
-		std::cout << "Vector with left points for channel one" << std::endl;
-		for(int i = 0; i < leftPointsCountChannelOne; i++)
+		cout << "After vector invertion" << endl;
+		cout << "Vector with left points:" << endl;
+		for(int i = 0; i < leftPointsCount; i++)
 		{
-			std::cout << gsl_vector_get(leftPoints.channel_one->signal, i) << ' ';
+			cout << gsl_vector_get(leftPoints->signal, i) << ' ';
 		}
-		std::cout << std::endl << "Vector with left points for channel two" << std::endl;
-		for(int i = 0; i < leftPointsCountChannelTwo; i++)
+		cout << endl << "Vector with right points:" << endl;
+		for(int i = 0; i < rightPointsCount; i++)
 		{
-			std::cout << gsl_vector_get(leftPoints.channel_two->signal, i) << ' ';
+			cout << gsl_vector_get(rightPoints->signal, i) << ' ';
 		}
-		std::cout << std::endl << "Vector with right points for channel one" << std::endl;
-		for(int i = 0; i < rightPointsCountChannelOne; i++)
-		{
-			std::cout << gsl_vector_get(rightPoints.channel_one->signal, i) << ' ';
-		}
-		std::cout << std::endl << "Vector with right points for channel two" << std::endl;
-		for(int i = 0; i < rightPointsCountChannelTwo; i++)
-		{
-			std::cout << gsl_vector_get(rightPoints.channel_two->signal, i) << ' ';
-		}
-		std::cout << std::endl;
+		cout << endl;
 	#endif
 	#ifdef DEBUG
-		std::cout << "Channel one:" << std::endl 
-				  << "Number of left points: " << leftPointsCountChannelOne << std::endl
-				  << "Number of right points: " << rightPointsCountChannelOne << std::endl
-				  << "Channel two:" << std::endl 
-				  << "Number of left points: " << leftPointsCountChannelTwo << std::endl
-				  << "Number of right points: " << rightPointsCountChannelTwo << std::endl;
+		cout << "Number of left points: " << leftPointsCount << endl
+			 << "Number of right points: " << rightPointsCount << endl;
 	#endif
-	gsl_vector_free(copiedChannelOne);
-	gsl_vector_free(copiedChannelTwo);
+	gsl_vector_free(copiedSig);
 
 	//R peaks detection
 	#ifdef DEBUG
-		std::cout << "Final R peaks detection" << std::endl;
+		cout << "Final R peaks detection" << endl;
 	#endif
 
 	int partLength;
 	double tmpMax;
 	int tmpMaxIndex;
-	gsl_vector_int* rco;
-	gsl_vector_int* rct;
+	IntSignal rs;
 
 	// Chanel one
-	if(leftPointsCountChannelOne > 0 )
+	if(leftPointsCount > 0 )
 	{
-		rco = gsl_vector_int_alloc(leftPointsCountChannelOne);
-		for(int i = 0; i < leftPointsCountChannelOne; i++)
+		rs->signal = gsl_vector_int_alloc(leftPointsCount);
+		for(int i = 0; i < leftPointsCount; i++)
 		{		
-			partLength = gsl_vector_get (rightPoints.channel_one->signal, i) - gsl_vector_get (leftPoints.channel_one->signal, i);
+			partLength = gsl_vector_get (rightPoints->signal, i) - gsl_vector_get(leftPoints->signal, i);
 			tmpMax = 0;
 			tmpMaxIndex = 0;
 			for(int j = 0; j < partLength; j++)
 			{
-				int sigIndex = gsl_vector_get (leftPoints.channel_one->signal, i) + j;
-				double sigVal = gsl_vector_get(signal->channel_one->signal, sigIndex);
+				int sigIndex = gsl_vector_get (leftPoints->signal, i) + j;
+				double sigVal = gsl_vector_get(sig->signal, sigIndex);
 				if(sigVal > tmpMax)
 				{
 					tmpMax = sigVal;
 					tmpMaxIndex = sigIndex;
-				} // end if
+				}
 
-			} // end for
-			gsl_vector_int_set(rco, i, tmpMaxIndex);
+			}
+			gsl_vector_int_set(rs->signal, i, tmpMaxIndex);
 			#ifdef DEBUG_SIGNAL
-				std::cout << "R point for channel one at index: " << tmpMaxIndex 
-					<< " signal value: " << gsl_vector_get(signal->channel_one->signal, tmpMaxIndex) << std::endl;
+				cout << "R point at index: " << tmpMaxIndex 
+					<< " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex) << endl;
 			#endif
-		} // end for
-		rsPositions.setRsChannelOne(rco);
-	} // end if
-
-	//Channel two
-	if(leftPointsCountChannelTwo > 0 )
-	{
-		rct = gsl_vector_int_alloc(leftPointsCountChannelTwo);
-		for(int i = 0; i < leftPointsCountChannelTwo; i++)
-		{	
-			partLength = gsl_vector_get(rightPoints.channel_two->signal, i) - gsl_vector_get(leftPoints.channel_two->signal, i);
-			tmpMax = 0;
-			tmpMaxIndex = 0;
-			for(int j = 0; j < partLength; j++)
-			{
-				int sigIndex = gsl_vector_get (leftPoints.channel_two->signal, i) + j;
-				double sigVal = gsl_vector_get(signal->channel_two->signal, sigIndex);
-				if(sigVal > tmpMax)
-				{
-					tmpMax = sigVal;
-					tmpMaxIndex = sigIndex;
-				} // end if
-
-			} // end for
-			gsl_vector_int_set(rct, i, tmpMaxIndex);
-			#ifdef DEBUG_SIGNAL
-				std::cout << "R point for channel two at index: " << tmpMaxIndex 
-					<< " signal value: " << gsl_vector_get(signal->channel_two->signal, tmpMaxIndex) << std::endl;
-			#endif
-		} // end for
-		rsPositions.setRsChannelTwo(rct);
-	} // end if
-
+		}
+		rsPositions.setRs(&rs);
+	}
 	rsDetected = true;
 	#ifdef DEBUG
-		std::cout << "Done" << std::endl;
+		cout << "Done" << endl;
 	#endif
 	return true;
 }
 
-bool RPeaksDetector::hilbertRPeaksDetection(ECGSignal *signal)
+bool RPeaksDetector::hilbertRPeaksDetection(ECGSignalChannel *signal)
 {
 	//TODO Body of Hilbert method
 	rsDetected = true;
 	return true;
 }
 
-ECGSignal RPeaksDetector::getMockedSignal()
+ECGSignalChannel RPeaksDetector::getMockedSignal()
 {
 	double signal[] = {
    -0.0000,
@@ -1648,14 +1497,13 @@ ECGSignal RPeaksDetector::getMockedSignal()
    -0.1299,
    };
 
-	ECGSignal mockedSignal;
+	ECGSignalChannel mockedSignal;
 	int length = 1000;
-	mockedSignal.setSize(length);
+	mockedSignal->signal = gsl_vector_alloc(length);
 
 	for(int i = 0; i < length; i++)
 	{
-		gsl_vector_set(mockedSignal.channel_one->signal, i, signal[i]);
-		gsl_vector_set(mockedSignal.channel_two->signal, i, signal[i]);
+		gsl_vector_set(mockedSignal->signal, i, signal[i]);
 	}
 
 	return mockedSignal;
