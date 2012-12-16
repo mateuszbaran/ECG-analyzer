@@ -138,13 +138,16 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	ECGSignalChannel sig;
 	sig = *signal;
 	int sigSize = 0;
-	sigSize = sig->signal->size;
-	if(sigSize > 0)
+	if(sig->signal->size != NULL)
 	{
 		#ifdef DEBUG
 			cout << "Input signal size is 0" << endl;
 		#endif
 		return false;
+	}
+	else
+	{
+		sigSize = sig->signal->size;
 	}
 
 	// UNECESSARY This part probably is unecessary 
