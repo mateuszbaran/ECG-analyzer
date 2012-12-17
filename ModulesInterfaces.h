@@ -22,7 +22,9 @@ class GlobalInterface
 public:
   GlobalInterface() : run_(false) {}
   virtual void setParams (ParametersTypes &) = 0;
+private:
   bool run_;
+  friend class ECGController;
 };
 
 class ECGBaselineModule : public GlobalInterface

@@ -11,15 +11,13 @@ public:
   ECGRs (void);
   ~ECGRs (void);
 
-  IntSignal GetRs () const
+  IntSignal* GetRs () const
   {
-    return rsco;
+    return rs;
   }
 
-  void setRsChannelOne(IntSignal rs);
-  void setRsChannelTwo(IntSignal rs);
+  void setRs(IntSignal* rs);
 
 private:
-  IntSignal rsco;
-  IntSignal rsct;
+  IntSignal* rs;
 };
