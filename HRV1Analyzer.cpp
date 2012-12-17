@@ -15,7 +15,7 @@ void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
 
 void HRV1Analyzer::run() {
 
-	gsl_vector_int* rs = rPeaksData.GetRs()->signal;
+	gsl_vector_int* rs = (*rPeaksData.GetRs())->signal;
 	int signalSize = rs->size-1;
 
 	double *sig = new double[signalSize-1];
