@@ -24,9 +24,9 @@ TEST_F(ECGControllerTest, ReadFileValidWithExtensionTest)
   EXPECT_EQ(true, controller.readFile("100.hea"));
 }
 
-TEST_F(ECGControllerTest, ReadFileValidWithExtensionFullPathTest)
+TEST_F(ECGControllerTest, ReadFileValidWithSpaces)
 {
-  EXPECT_EQ(true, controller.readFile("C:/Users/Tomko/Documents/GitHub/ECG-analyzer/100.hea"));
+  EXPECT_EQ(true, controller.readFile("with spaces\\100.hea"));
 }
 
 TEST_F(ECGControllerTest, ReadAllFiles)
