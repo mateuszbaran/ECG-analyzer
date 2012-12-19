@@ -24,12 +24,16 @@ private slots:
 
     void on_actionO_Programie_triggered();
 
-    void on_actionWyjd_triggered();
+    void on_actionWczytaj_plik_z_sygnalem_triggered();
+
+    void on_actionWyjdz_triggered();
 
 private:
 	Ui::ECGanalyzerClass ui;
 
-  ECGController contr;
+
+	ECGController _ECGcontroller;
+	//Ecg2Ch _ecg2ch;
 };
 
 #endif // ECGANALYZER_H
