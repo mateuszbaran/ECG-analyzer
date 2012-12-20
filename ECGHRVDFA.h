@@ -26,12 +26,15 @@ public:
   {
     return table;
   }
+	
+  void setDFA_scaling_factor(double DFA_scaling_factor);
 
 private:
   //for plotting
   OtherSignal dfa_x;
   OtherSignal dfa_y;
   //table
+  double DFA_scaling_factor;
   std::vector<std::vector<std::string >> table;
 };
 
