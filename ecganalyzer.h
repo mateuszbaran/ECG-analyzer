@@ -28,6 +28,10 @@ private slots:
 
     void on_actionWyjdz_triggered();
 
+    void on_radioButtonMovingAverage_toggled(bool checked);
+
+    void on_radioButtonButterworthFilter_toggled(bool checked);
+
 private:
 	Ui::ECGanalyzerClass ui;
 

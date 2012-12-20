@@ -1,7 +1,8 @@
 #include "ecganalyzer.h"
 #include <qmessagebox.h>
 #include <qtextcodec.h>
-#include "BaselineRemoval.h"
+
+using namespace std;
 
 ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -53,6 +54,41 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
         _ECGcontroller.readFile(fileName.toStdString()); // why?
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal));
         ui.rawPlotWidget->redraw();
+
+
+
+		QTableWidgetItem *fileName = new QTableWidgetItem();
+		fileName->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.filename) );
+		ui.tableWidgetSignalInfo->setItem(0, 0, fileName);
+
+		QTableWidgetItem *description = new QTableWidgetItem();
+		description->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.description) );
+		ui.tableWidgetSignalInfo->setItem(1, 0, description);
+
+		QTableWidgetItem *signalResolution = new QTableWidgetItem();
+		signalResolution->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.signal_resolution) );
+		ui.tableWidgetSignalInfo->setItem(2, 0, signalResolution);
+
+		QTableWidgetItem *zeroSignal = new QTableWidgetItem();
+		zeroSignal->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.zero_signal) );
+		ui.tableWidgetSignalInfo->setItem(3, 0, zeroSignal);
+
+		QTableWidgetItem *gain = new QTableWidgetItem();
+		gain->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.gain) );
+		ui.tableWidgetSignalInfo->setItem(4, 0, gain);
+
+		QTableWidgetItem *numberOfSamples = new QTableWidgetItem();
+		numberOfSamples->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.nr_samples) );
+		ui.tableWidgetSignalInfo->setItem(5, 0, numberOfSamples);
+
+		QTableWidgetItem *frequency = new QTableWidgetItem();
+		frequency->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.frequecy) );
+		ui.tableWidgetSignalInfo->setItem(6, 0, frequency);
+
+		QTableWidgetItem *range = new QTableWidgetItem();
+		range->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.range) );
+		ui.tableWidgetSignalInfo->setItem(7, 0, range);
+
     }
 }
 
