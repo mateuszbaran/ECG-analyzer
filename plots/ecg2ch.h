@@ -10,6 +10,7 @@
 #include <QToolButton>
 #include "ecgch.h"
 #include "../ECGController.h"
+#include "synczoomer.h"
 
 class Ecg2Ch : public QWidget
 {
@@ -25,10 +26,13 @@ public slots:
     void setSignal(ECGSignal *signal);
     void redraw();
     void test();
+protected slots:
+    void enableSync(bool enable);
 
 private:
     EcgCh *ch1;
     EcgCh *ch2;
+    SyncZoomer *zoomer;
 
 };
 

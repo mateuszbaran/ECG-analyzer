@@ -38,9 +38,9 @@ private:
     QwtPlotCurve* curve;
     QwtPointSeriesData* data;
     QVector<QPointF>* samples;
-    QwtPlotZoomer *zoomer[2];
-    QwtPlotPicker *picker;
-    QwtPlotPanner *panner;
+//    QwtPlotZoomer *zoomer[2];
+//    QwtPlotPicker *picker;
+//    QwtPlotPanner *panner;
     
 };
 

@@ -6,10 +6,17 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
     QToolBar *toolBar = new QToolBar(this);
-    QToolButton *toolButton = new QToolButton(toolBar);
-    toolButton->setText("test()");
-    toolBar->addWidget(toolButton);
+    QToolButton *testButton = new QToolButton(toolBar);
+        testButton->setText("test()");
+        toolBar->addWidget(testButton);
+    QToolButton *syncButton = new QToolButton(toolBar);
+        syncButton->setText("sync");
+        syncButton->setCheckable(true);
+        toolBar->addWidget(syncButton);
     mainLayout->addWidget(toolBar);
+
+    connect(testButton, SIGNAL(clicked()), SLOT(test()));
+    connect(syncButton, SIGNAL(toggled(bool)), SLOT(enableSync(bool)));
 
     QWidget *plotsWidget = new QWidget(this);
     QVBoxLayout *plotsLayout = new QVBoxLayout(plotsWidget);
@@ -24,8 +31,9 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
 
     ch1 = plot1;
     ch2 = plot2;
+    zoomer = new SyncZoomer(plot1->canvas(), plot2->canvas());
 
-    connect(toolButton, SIGNAL(clicked()), SLOT(test()));
+
 }
 
 Ecg2Ch::~Ecg2Ch()
@@ -38,6 +46,7 @@ void Ecg2Ch::setSignal(ECGSignal *signal)
 {
     ch1->setSignal(signal->channel_one);
     ch2->setSignal(signal->channel_two);
+    zoomer->setZoomBase();
     return;
 }
 
@@ -46,6 +55,11 @@ void Ecg2Ch::redraw()
     ch1->redraw();
     ch2->redraw();
     return;
+}
+
+void Ecg2Ch::enableSync(bool enable)
+{
+    zoomer->enableSync(enable);
 }
 
 /* Funkcja testująca funkcjonalność widżetu.
