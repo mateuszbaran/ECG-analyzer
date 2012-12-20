@@ -20,16 +20,21 @@
 #include <qwt_plot_panner.h>
 #endif
 
-class SyncZoomer : public QObject
+class PlotControl : public QObject
 {
     Q_OBJECT
 public:
-    SyncZoomer(QwtPlotCanvas *canvas1, QwtPlotCanvas *canvas2);
+    PlotControl(QwtPlot *plot1, QwtPlot *plot2);
     void setZoomBase();
+public slots:
     void enableSync(bool enable);
 private:
+    QwtPlot *plot1;
+    QwtPlot *plot2;
     QwtPlotZoomer *zoomer1;
     QwtPlotZoomer *zoomer2;
+    QwtPlotPanner *panner1;
+    QwtPlotPanner *panner2;
 };
 
 #endif // SYNCZOOMER_H

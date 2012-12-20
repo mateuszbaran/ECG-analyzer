@@ -2,6 +2,7 @@
 #define ECGCH_H
 
 #include "../ECGSignal.h"
+#include "../ECGChannelInfo.h"
 #ifdef WIN32
 #define QWT_DLL
 #include <qwt6/qwt_plot.h>
@@ -31,16 +32,14 @@ public:
 signals:
     
 public slots:
-    void setSignal(ECGSignalChannel signal);
+    void setSignal(ECGSignalChannel signal, ECGChannelInfo info);
     void redraw();
 
 private:
     QwtPlotCurve* curve;
     QwtPointSeriesData* data;
     QVector<QPointF>* samples;
-//    QwtPlotZoomer *zoomer[2];
 //    QwtPlotPicker *picker;
-//    QwtPlotPanner *panner;
     
 };
 

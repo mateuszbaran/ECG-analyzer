@@ -23,16 +23,14 @@ public:
 signals:
     
 public slots:
-    void setSignal(ECGSignal *signal);
+    void setSignal(ECGSignal *signal, ECGInfo *info);
     void redraw();
     void test();
-protected slots:
-    void enableSync(bool enable);
 
 private:
     EcgCh *ch1;
     EcgCh *ch2;
-    SyncZoomer *zoomer;
+    PlotControl *control;
 
 };
 

@@ -15,9 +15,6 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
         toolBar->addWidget(syncButton);
     mainLayout->addWidget(toolBar);
 
-    connect(testButton, SIGNAL(clicked()), SLOT(test()));
-    connect(syncButton, SIGNAL(toggled(bool)), SLOT(enableSync(bool)));
-
     QWidget *plotsWidget = new QWidget(this);
     QVBoxLayout *plotsLayout = new QVBoxLayout(plotsWidget);
     EcgCh *plot1 = new EcgCh(plotsWidget);
@@ -31,8 +28,10 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
 
     ch1 = plot1;
     ch2 = plot2;
-    zoomer = new SyncZoomer(plot1->canvas(), plot2->canvas());
+    control = new PlotControl(plot1, plot2);
 
+    connect(testButton, SIGNAL(clicked()), SLOT(test()));
+    connect(syncButton, SIGNAL(toggled(bool)), control, SLOT(enableSync(bool)));
 
 }
 
@@ -42,11 +41,11 @@ Ecg2Ch::~Ecg2Ch()
     delete ch2;
 }
 
-void Ecg2Ch::setSignal(ECGSignal *signal)
+void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info)
 {
-    ch1->setSignal(signal->channel_one);
-    ch2->setSignal(signal->channel_two);
-    zoomer->setZoomBase();
+    ch1->setSignal(signal->channel_one, info->channel_one);
+    ch2->setSignal(signal->channel_two, info->channel_two);
+    control->setZoomBase();
     return;
 }
 
@@ -55,11 +54,6 @@ void Ecg2Ch::redraw()
     ch1->redraw();
     ch2->redraw();
     return;
-}
-
-void Ecg2Ch::enableSync(bool enable)
-{
-    zoomer->enableSync(enable);
 }
 
 /* Funkcja testująca funkcjonalność widżetu.
@@ -80,7 +74,7 @@ void Ecg2Ch::test()
     QString fileName = QFileDialog::getOpenFileName(this);
     ECGController *controller = new ECGController;
     controller->readFile(fileName.toStdString()); // why?
-    setSignal(&(controller->raw_signal));
+    setSignal(&(controller->raw_signal), &(controller->ecg_info));
     redraw();
     delete controller;
 }
