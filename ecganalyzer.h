@@ -32,6 +32,8 @@ private slots:
 
     void on_radioButtonButterworthFilter_toggled(bool checked);
 
+    void on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked);
+
 private:
 	Ui::ECGanalyzerClass ui;
 

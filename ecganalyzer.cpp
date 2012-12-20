@@ -112,3 +112,8 @@ void ECGanalyzer::on_radioButtonButterworthFilter_toggled(bool checked)
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked)
+{
+	ui.doubleSpinBoxRPeaksThreshold->setEnabled(!checked);
+}
