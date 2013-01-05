@@ -774,8 +774,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionWczytaj_plik_z_sygnalem"/>
-   <addaction name="separator"/>
    <addaction name="actionZapiszPlik"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrzeprowadzPonownieAnalizeSygnalu"/>
    <addaction name="separator"/>
    <addaction name="actionO_Programie"/>
    <addaction name="actionWyjdz"/>
@@ -839,6 +840,18 @@
    </property>
    <property name="text">
     <string>Zapisz jako...</string>
+   </property>
+  </action>
+  <action name="actionPrzeprowadzPonownieAnalizeSygnalu">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="ecganalyzer.qrc">
+     <normaloff>:/ECGanalyzer/icons/restart.png</normaloff>:/ECGanalyzer/icons/restart.png</iconset>
+   </property>
+   <property name="text">
+    <string>PrzeprowadźPonownieAnalizęSygnału</string>
    </property>
   </action>
  </widget>
