@@ -54,6 +54,7 @@ include_directories(${GSL_INCLUDE_DIRS} ${GSLCBLAS_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES} ${GSLCBLAS_LIBRARIES})
 
 add_subdirectory(wfdb)
+add_subdirectory(fft)
 
 include_directories(${CMAKE_HOME_DIRECTORY} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
@@ -66,4 +67,4 @@ link_libraries(${LIBS})
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
-TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb)
+TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb kissfft)
