@@ -66,7 +66,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ui.tableWidgetSignalInfo->setItem(1, 0, description);
 
 		QTableWidgetItem *signalResolution = new QTableWidgetItem();
-		signalResolution->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.signal_resolution) );
+		signalResolution->setText(QString().sprintf("%d bits", _ECGcontroller.ecg_info.channel_one.signal_resolution) );
 		ui.tableWidgetSignalInfo->setItem(2, 0, signalResolution);
 
 		QTableWidgetItem *zeroSignal = new QTableWidgetItem();
@@ -82,7 +82,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ui.tableWidgetSignalInfo->setItem(5, 0, numberOfSamples);
 
 		QTableWidgetItem *frequency = new QTableWidgetItem();
-		frequency->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.frequecy) );
+		frequency->setText(QString().sprintf("%d Hz", _ECGcontroller.ecg_info.channel_one.frequecy) );
 		ui.tableWidgetSignalInfo->setItem(6, 0, frequency);
 
 		QTableWidgetItem *range = new QTableWidgetItem();
