@@ -86,7 +86,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ui.tableWidgetSignalInfo->setItem(6, 0, frequency);
 
 		QTableWidgetItem *range = new QTableWidgetItem();
-		range->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.range) );
+		range->setText(QString().sprintf("%d mV", _ECGcontroller.ecg_info.channel_one.range) );
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
 
     }
