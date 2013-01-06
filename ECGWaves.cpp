@@ -109,23 +109,25 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 		gsl_vector_set(ts4Sig.channel_two->signal, i, (pre_fqtValueChannelTwo>0.05)?pre_fqtValueChannelTwo:0 );
 	}
 
-	rPeak->GetRs();
-	//TODO
-	int rPeakCount = 10;
-	for(int i = 0;i<rPeakCount;i++){
-		//TODI
-		int rPeak = 1;
-		for(int j = i;j>i-100;j--){
+	gsl_vector_int *v = rPeak->GetRs()->signal;
+    int size = int(v->size);
+	for(int ithRpeak = 0;ithRpeak<size;ithRpeak++){
+
+		int rPeak = gsl_vector_int_get (v, ithRpeak);
+
+		for(int j = rPeak;j>rPeak-100;j--){
 			auto value = gsl_vector_get (ts4Sig.channel_one->signal, j);
 			if(j==0){
 				//we have QRS_onset
+				gsl_vector_int_set(QRS_onset->signal,ithRpeak,j);
 				break;
 			}
 		}
-		for(int j = i;j<i+100;j++){
+		for(int j = rPeak;j<rPeak+100;j++){
 			auto value = gsl_vector_get (ts4Sig.channel_one->signal, j);
 			if(j==0){
 				//we have QRS_end
+				gsl_vector_int_set(QRS_end->signal,ithRpeak,j);
 				break;
 			}
 		}
@@ -135,14 +137,14 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 
 bool ECGWaves::detectPT(ECGSignal *signal){
 
-	double qrsCount = 350;//QRS_onset.get
+	double qrsCount = QRS_onset->signal->size;
 	ECGSignal allPTSig;
 
 	for(int i = 0; i < qrsCount-1; i++)
 	{
-		auto qrsOnset = 1;// gsl_vector_get (QRS_onset->signal, i);			
-		auto qrsEnd = 12;//gsl_vector_get (QRS_end, i);
-		auto qrsEnd_2 = 14;//gsl_vector_get (QRS_end, i+1);
+		auto qrsOnset =  gsl_vector_int_get (QRS_onset->signal, i);			
+		auto qrsEnd = gsl_vector_int_get (QRS_end->signal, i);
+		auto qrsEnd_2 = gsl_vector_int_get (QRS_end->signal, i+1);
 
 		double sum1 = 0,sum2,mean1,mean2 = 0;
 		ECGSignal tmpPTSig;
