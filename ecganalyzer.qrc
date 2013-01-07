@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="ECGanalyzer">
+    <file>icons/restart.png</file>
     <file>icons/info.png</file>
     <file>icons/3floppy_unmount.png</file>
     <file>icons/exit.png</file>

@@ -46,7 +46,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FTLOG=log;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\qtmain;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -123,11 +123,13 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ecgch.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="HRV1Analyzer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plots\ecg2ch.cpp" />
     <ClCompile Include="plots\ecgch.cpp" />
     <ClCompile Include="QRSClass.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
+    <ClCompile Include="tri_logger.cpp" />
     <ClCompile Include="wfdb\annot.c" />
     <ClCompile Include="wfdb\calib.c" />
     <ClCompile Include="wfdb\signal.c" />
@@ -176,6 +178,7 @@
     <ClInclude Include="ECGWaves.h" />
     <ClInclude Include="EGHRVDFT.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
+    <ClInclude Include="HRV1Analyzer.h" />
     <ClInclude Include="ModulesInterfaces.h" />
     <ClInclude Include="ModulesMethods.h" />
     <CustomBuild Include="plots\ecg2ch.h">
@@ -198,8 +201,10 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I." "-I." "-I." "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="nullstream.hpp" />
     <ClInclude Include="QRSClass.h" />
     <ClInclude Include="RPeaksDetector.h" />
+    <ClInclude Include="tri_logger.hpp" />
     <ClInclude Include="wfdb\ecgcodes.h" />
     <ClInclude Include="wfdb\ecgmap.h" />
     <ClInclude Include="wfdb\wfdb.h" />
@@ -217,6 +222,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -143,6 +143,12 @@
     <ClCompile Include="plots\ecgch.cpp">
       <Filter>Source Files\plots</Filter>
     </ClCompile>
+    <ClCompile Include="tri_logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HRV1Analyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -231,5 +237,17 @@
     <ClInclude Include="BaselineRemoval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nullstream.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tri_logger.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HRV1Analyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

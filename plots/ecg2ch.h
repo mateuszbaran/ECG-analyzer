@@ -24,7 +24,6 @@ signals:
 public slots:
     void setSignal(ECGSignal *signal);
     void redraw();
-    void test();
 
 private:
     EcgCh *ch1;
