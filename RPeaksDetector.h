@@ -1,7 +1,7 @@
 #pragma once
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
-//#define DEBUG
+#define DEBUG
 //#define DEBUG_SIGNAL
 //#define DEBUG_SIGNAL_DETAILS
 //#define USE_MOCKED_SIGNAL
