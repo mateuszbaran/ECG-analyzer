@@ -22,10 +22,10 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 	}
 
 	//gradient
-	 ECGSignal gradSig =gradient(&powerSig);
+	ECGSignal gradSig =gradient(&powerSig);
 
-	 //average
-	 ECGSignal fg1Sig = averageFilter(&gradSig);
+	//average
+	ECGSignal fg1Sig = averageFilter(&gradSig);
 
 	//exp
 	ECGSignal expSig;
@@ -39,10 +39,10 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 	}
 
 	//gradient
-	 gradSig =gradient(&expSig);
+	gradSig =gradient(&expSig);
 
-	 //average
-	 ECGSignal fg2Sig = averageFilter(&gradSig);
+	//average
+	ECGSignal fg2Sig = averageFilter(&gradSig);
 
 	ECGSignal ts3Sig;
 
@@ -56,8 +56,8 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 		gsl_vector_set(ts3Sig.channel_two->signal, i, originaltValueChannelTwo * inputValueChannelTwo );
 	}
 
-		//gradient
-	 gradSig =gradient(&expSig);
+	//gradient
+    gradSig =gradient(&expSig);
 
 	//average
 	ECGSignal fg3 =averageFilter(&gradSig);;
@@ -74,18 +74,15 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 		gsl_vector_set(ts4Sig.channel_two->signal, i, fg1tValueChannelTwo + fg3ValueChannelTwo );
 	}
 
-	//mediana
-	ECGSignal ts4mSig = ts4Sig;
-
 	//normalizacja
 	ECGSignal pre_fq;
-	double max_absoluteC1 =gsl_vector_get (ts4mSig.channel_one->signal, 0);
-	double max_absoluteC2 =gsl_vector_get (ts4mSig.channel_two->signal, 0);
+	double max_absoluteC1 =gsl_vector_get (ts4Sig.channel_one->signal, 0);
+	double max_absoluteC2 =gsl_vector_get (ts4Sig.channel_two->signal, 0);
 
 	for(int i = 0; i < signalSize; i++)
 	{
-		auto ValueChannelOne = gsl_vector_get (ts4mSig.channel_one->signal, i);			
-		auto ValueChannelTwo = gsl_vector_get (ts4mSig.channel_two->signal, i);
+		auto ValueChannelOne = gsl_vector_get (ts4Sig.channel_one->signal, i);			
+		auto ValueChannelTwo = gsl_vector_get (ts4Sig.channel_two->signal, i);
 		if(abs(ValueChannelOne)> abs(max_absoluteC1)) max_absoluteC1 = ValueChannelOne;
 		if(abs(ValueChannelTwo)> abs(max_absoluteC2)) max_absoluteC2 = ValueChannelTwo;
 	}
@@ -93,8 +90,8 @@ bool ECGWaves::detectQRS(ECGSignal *signal,ECGRs * rPeak){
 	
 	for(int i = 0; i < signalSize; i++)
 	{
-		auto ValueChannelOne = gsl_vector_get (ts4mSig.channel_one->signal, i);			
-		auto ValueChannelTwo = gsl_vector_get (ts4mSig.channel_two->signal, i);
+		auto ValueChannelOne = gsl_vector_get (ts4Sig.channel_one->signal, i);			
+		auto ValueChannelTwo = gsl_vector_get (ts4Sig.channel_two->signal, i);
 		gsl_vector_set(pre_fq.channel_one->signal, i, ValueChannelOne / max_absoluteC1);
 		gsl_vector_set(pre_fq.channel_two->signal, i, ValueChannelTwo /  max_absoluteC2);
 	}
@@ -140,73 +137,100 @@ bool ECGWaves::detectPT(ECGSignal *signal){
 	double qrsCount = QRS_onset->signal->size;
 	ECGSignal allPTSig;
 
-	for(int i = 0; i < qrsCount-1; i++)
-	{
-		auto qrsOnset =  gsl_vector_int_get (QRS_onset->signal, i);			
+	for(int i = 0; i < qrsCount-2; i++)
+	{	
+		auto qrsOnset = gsl_vector_int_get (QRS_onset->signal, i+1);
 		auto qrsEnd = gsl_vector_int_get (QRS_end->signal, i);
+	    auto qrsOnset2 = gsl_vector_int_get (QRS_onset->signal, i+1);
 		auto qrsEnd_2 = gsl_vector_int_get (QRS_end->signal, i+1);
+		double cycleSize = qrsOnset2 - qrsEnd;
 
-		double sum1 = 0,sum2,mean1,mean2 = 0;
-		ECGSignal tmpPTSig;
 
-		for(int i = qrsOnset; i < qrsEnd_2; i++)
+		double min,max = 0;
+		min = gsl_vector_get (signal->channel_one->signal, qrsEnd);
+
+		ECGSignal cycleSig;
+		for(int j = qrsEnd; j < qrsOnset2; j++)
 		{
-			sum1 += gsl_vector_get (signal->channel_one->signal, i);
-			gsl_vector_set(tmpPTSig.channel_one->signal, i, mean1);
+			auto value = gsl_vector_get (signal->channel_one->signal, j);
+			max = (max>value)? max:value;
+			min = (min<value)? min:value;
 		}
 
-		//TODO mean2
-		mean1 = sum1/(qrsEnd_2-qrsEnd);
-		mean2 = sum1/(qrsEnd_2-qrsEnd);
-
-		for(int i = 0; i < qrsCount; i++)
+		for(int j = qrsOnset; j < qrsEnd; j++)
 		{
-		gsl_vector_set(tmpPTSig.channel_one->signal, i, mean1);
-		gsl_vector_set(tmpPTSig.channel_two->signal, i, mean2);
+			gsl_vector_set(allPTSig.channel_one->signal, j, 0);
+		}
+		for(int j = qrsEnd;j < qrsOnset2; j++)
+		{
+			auto value = gsl_vector_get (signal->channel_one->signal, j);
+			value = (value-min)/max;
+			gsl_vector_set(allPTSig.channel_one->signal, j, value);
+			gsl_vector_set(cycleSig.channel_one->signal, j-qrsEnd, value);
+		}
+
+		//finding median 
+		gsl_sort_vector(cycleSig.channel_one->signal);
+		double median = gsl_vector_get (cycleSig.channel_one->signal, cycleSize/2);
+
+		for(int j = qrsEnd; j < qrsOnset2; j++)
+		{
+			auto value = gsl_vector_get (signal->channel_one->signal, j);
+			gsl_vector_set(allPTSig.channel_one->signal, j, value-median);
 		}
 
 
-		double minimal = gsl_vector_get (tmpPTSig.channel_one->signal, qrsOnset);;
-		//normalizacja
-		for(int i = qrsOnset+1; i < qrsEnd_2; i++)
+		for(int j = qrsEnd; j < qrsOnset2; j++)
 		{
-			auto tmp = gsl_vector_get (tmpPTSig.channel_one->signal, i);
-			if(tmp<minimal){
-				minimal = tmp;
+			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);			
+			gsl_vector_set(allPTSig.channel_one->signal, j, (value>0.07)?1:0);
+		}
+
+		//finding points 
+		gsl_vector_int_set(T_end->signal,i,qrsEnd);
+		double p1=0,p2=0;
+		//T is in first 75%
+		for(int j = qrsEnd; j < qrsOnset2*3/4; j++)
+		{
+			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);	
+			if(p1==0){
+				if(value>0){
+					p1=value;
+				}
+			}else if(value <1){
+				p2 = value;
+			}
+
+			if(p2-p1>90){
+				gsl_vector_int_set(T_end->signal,i,j);
+				break;
+			}else{
+			p1 = p2 =0;
 			}
 		}
-		if(minimal<0){
-			minimal = -1*minimal;
-		}
+		//p in last 23%
+		gsl_vector_int_set(P_onset->signal,i,qrsOnset2);
+		gsl_vector_int_set(P_end->signal,i,qrsOnset2);
+		for(int j = qrsEnd*3/4; j < qrsOnset2; j++)
+		{
+			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);	
+			if(p1==0){
+				if(value>0){
+					p1=value;
+				}
+			}else if(value <1){
+				p2 = value;
+			}
 
-		for(int i = qrsOnset+1; i < qrsEnd_2; i++)
-		{
-			auto tmp = gsl_vector_get (tmpPTSig.channel_one->signal, i);
-			gsl_vector_set(tmpPTSig.channel_one->signal, i, tmp+minimal);
-		}
-		
-		double maximal = gsl_vector_get (tmpPTSig.channel_one->signal, qrsOnset);;
-		for(int i = qrsOnset+1; i < qrsEnd_2; i++)
-		{
-			auto tmp = gsl_vector_get (tmpPTSig.channel_one->signal, i);
-			if(tmp<maximal){
-				maximal = tmp;
+			if(p2-p1>9){
+				gsl_vector_int_set(P_onset->signal,i,p1);
+				gsl_vector_int_set(P_end->signal,i,p2);
+				break;
+			}else{
+			p1 = p2 =0;
 			}
 		}
-		for(int i = qrsOnset+1; i < qrsEnd_2; i++)
-		{
-			auto tmp = gsl_vector_get (tmpPTSig.channel_one->signal, i);
-			gsl_vector_set(tmpPTSig.channel_one->signal, i, tmp/maximal);
-		}
 
-		//znormalizowany sygnal
-		for(int i = 0; i < qrsEnd_2; i++)
-		{
-			auto pre_fqValueChannelOne = gsl_vector_get (tmpPTSig.channel_one->signal, i);			
-			auto pre_fqtValueChannelTwo = gsl_vector_get (tmpPTSig.channel_one->signal, i);
-			gsl_vector_set(allPTSig.channel_one->signal, i, (pre_fqValueChannelOne>0.05)?1:0);
-			gsl_vector_set(allPTSig.channel_two->signal, i, (pre_fqtValueChannelTwo>0.05)?1:0 );
-		}
 	}
 	return true;
 }
@@ -259,7 +283,6 @@ ECGSignal ECGWaves::averageFilter(ECGSignal * signal){
 	
 	ECGSignal tmpSig;
 	auto signalSize = signal->channel_one->signal->size;
-	//okno o rozmiarze 11, zoptymalizowany czas obliczeñ z 10 na 2 operacje przy ka¿dym przejœciu pêtli
 	int limit=signalSize-5;
 	double sumC1=0;
 	double sumC2=0;
@@ -282,8 +305,8 @@ ECGSignal ECGWaves::averageFilter(ECGSignal * signal){
 	gsl_vector_set(tmpSig.channel_two->signal, 5, sumC2/11);
 
 	for (int i=6;i<limit;i++){
-		sumC1 = sumC1 - gsl_vector_get (signal->channel_one->signal, i-6) + gsl_vector_get (signal->channel_one->signal, i+5); //od sumy któr¹ obliczy³ w poprzednim przejœciu odejmuje piewszy z tamtej kolejki i dodaje nowy (ostatni), 
-		gsl_vector_set(tmpSig.channel_one->signal, 5, sumC1/11);					 //dziêki temy nie liczy zowu sumy od 0 do 11 tylko korzyta z sumy dla 10 œrodkowych liczb z poprzedniego przejœcia pêtli
+		sumC1 = sumC1 - gsl_vector_get (signal->channel_one->signal, i-6) + gsl_vector_get (signal->channel_one->signal, i+5); 
+		gsl_vector_set(tmpSig.channel_one->signal, 5, sumC1/11);					 
 		
 		sumC2 = sumC2 - gsl_vector_get (signal->channel_two->signal, i-6) + gsl_vector_get (signal->channel_two->signal, i+5); 
 		gsl_vector_set(tmpSig.channel_two->signal, 5, sumC2/11);
@@ -345,21 +368,4 @@ double* findMaximum (ECGSignal *signal,int forBegin, int forEnd) {
 	result[1] = maxChannelTwo;
 
 	return result;
-}
-
-float findMedian(float * table, int size){
-	
-	float median;
-	for (int i=0;i<size-2;i++)
-		for( int j=size-1;j>0;j--) 
-				if (table[j-1]>table[j]){
-					float aa=table[j];
-					table[j]=table[j-1];
-					table[j-1]=aa;
-				}
-       
-	 if ( (size/2) % 2) median = ((table[size/2]) + (table[size/2 + 1])) / 2;  
-	 else median= table[size/2];
-
-	 return median;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gsl/gsl_sort_vector.h>
 #include "ECGSignal.h"
 #include "ECGRs.h"
 
