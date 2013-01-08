@@ -349,6 +349,9 @@
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+               </property>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
@@ -357,6 +360,15 @@
                </property>
               </spacer>
              </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_4">
+            <property name="title">
+             <string>R Peaks:</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <property name="topMargin">
@@ -456,6 +468,9 @@
               </layout>
              </item>
             </layout>
+            <zorder></zorder>
+            <zorder></zorder>
+            <zorder></zorder>
            </widget>
           </item>
          </layout>
@@ -585,7 +600,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">
