@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>862</width>
-    <height>530</height>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -543,7 +543,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -586,16 +586,31 @@
             <number>6</number>
            </property>
            <item>
-            <widget class="QGroupBox" name="groupBox_3">
+            <widget class="QTabWidget" name="tabWidget_3">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
-               <verstretch>5</verstretch>
+               <verstretch>6</verstretch>
               </sizepolicy>
              </property>
-             <property name="title">
-              <string>Tachogram:</string>
+             <property name="currentIndex">
+              <number>1</number>
              </property>
+             <widget class="QWidget" name="tab">
+              <attribute name="title">
+               <string>Tachogram</string>
+              </attribute>
+             </widget>
+             <widget class="QWidget" name="tab_2">
+              <attribute name="title">
+               <string>HRV Triangle</string>
+              </attribute>
+             </widget>
+             <widget class="QWidget" name="tab_3">
+              <attribute name="title">
+               <string>Poincare</string>
+              </attribute>
+             </widget>
             </widget>
            </item>
            <item>
@@ -607,7 +622,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">
