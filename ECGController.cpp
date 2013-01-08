@@ -383,6 +383,7 @@ bool ECGController::readFile(std::string filename)
   ecg_info.channel_one.zero_signal = s[0].adczero;
   ecg_info.channel_two.zero_signal = s[1].adczero;
  
+
   //set signal
   nr_samples = s[0].nsamp; //we assume that both channels are equal.
   raw_signal.setSize(nr_samples);

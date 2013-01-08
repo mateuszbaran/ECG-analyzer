@@ -136,7 +136,7 @@ bool RPeaksDetector::detectRPeaks()
 bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 {
 	int sigSize = 0;
-	if(signal->channel_one->signal->size != NULL)
+	if(signal->channel_one->signal->size == NULL || signal->channel_one->signal->size == 0)
 	{
 		#ifdef DEBUG
 			cout << "Input signal size is 0" << endl;
@@ -578,6 +578,8 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 	// Chanel one
 	if(leftPointsCountChannelOne > 0 )
 	{
+		
+		rco = IntSignal(new WrappedVectorInt);
 		rco->signal = gsl_vector_int_alloc(leftPointsCountChannelOne);
 		for(int i = 0; i < leftPointsCountChannelOne; i++)
 		{		
@@ -607,6 +609,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 	//Channel two
 	if(leftPointsCountChannelTwo > 0 )
 	{
+		rct = IntSignal(new WrappedVectorInt);
 		rct->signal = gsl_vector_int_alloc(leftPointsCountChannelTwo);
 		for(int i = 0; i < leftPointsCountChannelTwo; i++)
 		{	
