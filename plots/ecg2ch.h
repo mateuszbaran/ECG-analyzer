@@ -10,6 +10,7 @@
 #include <QToolButton>
 #include "ecgch.h"
 #include "../ECGController.h"
+#include "synczoomer.h"
 
 class Ecg2Ch : public QWidget
 {
@@ -22,12 +23,13 @@ public:
 signals:
     
 public slots:
-    void setSignal(ECGSignal *signal);
+    void setSignal(ECGSignal *signal, ECGInfo *info);
     void redraw();
 
 private:
     EcgCh *ch1;
     EcgCh *ch2;
+    PlotControl *control;
 
 };
 
