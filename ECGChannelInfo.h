@@ -16,6 +16,9 @@ public:
   /* this is not present in WFDB Siginfo - value from description mit-bih, value in mV
   */
   int range; 
+
+  /* in msec */
+  unsigned int signal_duration;
 };
 
 struct ECGInfo

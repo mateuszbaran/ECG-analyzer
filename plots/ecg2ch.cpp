@@ -6,9 +6,6 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
     QToolBar *toolBar = new QToolBar(this);
-    QToolButton *testButton = new QToolButton(toolBar);
-        testButton->setText("test()");
-        toolBar->addWidget(testButton);
     QToolButton *syncButton = new QToolButton(toolBar);
         syncButton->setText("sync");
         syncButton->setCheckable(true);
@@ -33,6 +30,9 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     connect(testButton, SIGNAL(clicked()), SLOT(test()));
     connect(syncButton, SIGNAL(toggled(bool)), control, SLOT(enableSync(bool)));
 
+    control = new PlotControl(plot1, plot2);
+
+    connect(syncButton, SIGNAL(toggled(bool)), control, SLOT(enableSync(bool)));
 }
 
 Ecg2Ch::~Ecg2Ch()
@@ -54,27 +54,4 @@ void Ecg2Ch::redraw()
     ch1->redraw();
     ch2->redraw();
     return;
-}
-
-/* Funkcja testująca funkcjonalność widżetu.
- * Wywoływana przyciskiem "test()".
- * Wywołuje modealne okienko wyboru pliku.
- * Trzeba wskazać poprawny plik z sygnałem EKG,
- * możliwy do wczytania przez bibliotekę WFDB,
- * czyli jeden z trzech plików: .dat .hea .atr
- * o współnym przedrostku zgodnym z jakimś id wewnątrz.
- * Plik zostanie wczytany i wyświetlone zostaną dane
- * z obu kanałów.
- * Zaznaczenie fragmenu wykresu myszą przybliża go.
- * Można wtedy przewijać wykres środkowym przyciskiem myszy.
- * Oddala się prawym, ew. z wciśniętym klawiszem Ctrl (jest bug).
- */
-void Ecg2Ch::test()
-{
-    QString fileName = QFileDialog::getOpenFileName(this);
-    ECGController *controller = new ECGController;
-    controller->readFile(fileName.toStdString()); // why?
-    setSignal(&(controller->raw_signal), &(controller->ecg_info));
-    redraw();
-    delete controller;
 }

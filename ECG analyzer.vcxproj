@@ -123,6 +123,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ecgch.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="HRV1Analyzer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plots\ecg2ch.cpp" />
     <ClCompile Include="plots\ecgch.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="ECGWaves.h" />
     <ClInclude Include="EGHRVDFT.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
+    <ClInclude Include="HRV1Analyzer.h" />
     <ClInclude Include="ModulesInterfaces.h" />
     <ClInclude Include="ModulesMethods.h" />
     <CustomBuild Include="plots\ecg2ch.h">
@@ -220,6 +222,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
