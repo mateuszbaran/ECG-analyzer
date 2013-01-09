@@ -27,7 +27,6 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     ch2 = plot2;
     control = new PlotControl(plot1, plot2);
 
-    connect(testButton, SIGNAL(clicked()), SLOT(test()));
     connect(syncButton, SIGNAL(toggled(bool)), control, SLOT(enableSync(bool)));
 
     control = new PlotControl(plot1, plot2);
