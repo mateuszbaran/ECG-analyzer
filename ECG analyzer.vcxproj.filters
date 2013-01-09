@@ -158,6 +158,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_AboutWindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_synczoomer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_synczoomer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\synczoomer.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -180,6 +189,9 @@
     </CustomBuild>
     <CustomBuild Include="AboutWindow.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\synczoomer.h">
+      <Filter>Header Files\plots</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
