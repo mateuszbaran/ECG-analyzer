@@ -33,11 +33,15 @@ signals:
     
 public slots:
     void setSignal(ECGSignalChannel signal, ECGChannelInfo info);
+    void setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks);
 
 private:
     QwtPlotCurve* curve;
+    QwtPlotCurve* peaksCurve;
     QwtPointSeriesData* data;
+    QwtPointSeriesData* peaksData;
     QVector<QPointF>* samples;
+    QVector<QPointF>* peaksSamples;
 //    QwtPlotPicker *picker;
     
 };

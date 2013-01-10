@@ -28,10 +28,6 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     control = new PlotControl(plot1, plot2);
 
     connect(syncButton, SIGNAL(toggled(bool)), control, SLOT(enableSync(bool)));
-
-    control = new PlotControl(plot1, plot2);
-
-    connect(syncButton, SIGNAL(toggled(bool)), control, SLOT(enableSync(bool)));
 }
 
 Ecg2Ch::~Ecg2Ch()
@@ -44,6 +40,14 @@ void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info)
 {
     ch1->setSignal(signal->channel_one, info->channel_one);
     ch2->setSignal(signal->channel_two, info->channel_two);
+    control->setZoomBase();
+    return;
+}
+
+void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks)
+{
+    ch1->setSignal(signal->channel_one, info->channel_one, peaks->GetRs());
+    ch2->setSignal(signal->channel_two, info->channel_two, peaks->GetRs());
     control->setZoomBase();
     return;
 }

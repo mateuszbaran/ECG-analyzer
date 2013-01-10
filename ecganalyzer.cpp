@@ -52,7 +52,8 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
     if(!fileName.isNull() &&  !fileName.isEmpty())
     {
         _ECGcontroller.readFile(fileName.toStdString()); // why?
-        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info));
+        _ECGcontroller.runECGBaseline();
+        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
 
 

@@ -41,7 +41,7 @@ void PlotControl::enableSync(bool enable)
 {
     if (enable)
     {
-        plot1->enableAxis(QwtPlot::xBottom, false); // TODO! wymiarowanie się psuje
+//        plot1->enableAxis(QwtPlot::xBottom, false); // TODO! wymiarowanie się psuje
         connect(zoomer1, SIGNAL(zoomed(QRectF)), zoomer2, SLOT(zoom(QRectF)));
         connect(zoomer2, SIGNAL(zoomed(QRectF)), zoomer1, SLOT(zoom(QRectF)));
         connect(panner1, SIGNAL(panned(int,int)), panner2, SLOT(moveCanvas(int,int)));
