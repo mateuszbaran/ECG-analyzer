@@ -136,6 +136,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_synczoomer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeometricAnalysis.cpp" />
     <ClCompile Include="HRV1Analyzer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plots\ecg2ch.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="EGHRVDFT.h" />
     <ClInclude Include="GeneratedFiles\ui_AboutWindow.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
+    <ClInclude Include="GeometricAnalysis.h" />
     <ClInclude Include="HRV1Analyzer.h" />
     <ClInclude Include="ModulesInterfaces.h" />
     <ClInclude Include="ModulesMethods.h" />

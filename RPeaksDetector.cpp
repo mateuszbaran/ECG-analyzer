@@ -22,6 +22,7 @@ void RPeaksDetector::runModule(const ECGSignal &filteredSignal, const ECGInfo & 
 		this->rsPositions = ecgRs;
 	
 		bool success = this->detectRPeaks();
+		//ecgRs = this->rsPositions;
 		if(!success)
 		{
 			#ifdef DEBUG

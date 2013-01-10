@@ -12,9 +12,9 @@
 
 
 #include "ECGController.h"
-#include "hrt.h"
-#include "plotpoincare.h"
-#include "plothrvtriangle.h"
+//#include "hrt.h"
+//#include "plotpoincare.h"
+//#include "plothrvtriangle.h"
 #include "AboutWindow.h"
 
 

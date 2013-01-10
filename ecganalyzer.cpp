@@ -72,7 +72,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
         _ECGcontroller.readFile(fileName.toStdString()); // why?
         _ECGcontroller.runECGBaseline();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
-
+		//_ECGcontroller.runRPeaks();
 
 
 		QTableWidgetItem *fileName = new QTableWidgetItem();
@@ -119,7 +119,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		hrt_data.rr.push_back(QPointF(6.0, 9.0));
 		hrt_data.rr.push_back(QPointF(7.0, 7.0));
 		hrt_data.ts.setLine(2.0, 3.0, 5.0, 16.0);
-		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
+		/*QVBoxLayout *plotHARTLayout = new QVBoxLayout;
 		PlotHRT *plotHRT = new PlotHRT(this);
 		plotHARTLayout->addWidget(plotHRT);
 		plotHRT->setData(hrt_data);
@@ -140,7 +140,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		plotPoincareLayout->addWidget(plotPoincare);
 		//plotPoincare->setData(hrv2_data);
 		ui.tab_3->setLayout(plotPoincareLayout);
-		
+		*/
 		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
 		

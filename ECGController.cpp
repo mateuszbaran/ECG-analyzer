@@ -3,6 +3,7 @@
 #include "BaselineRemoval.h"
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "GeometricAnalysis.h"
 
 #include "wfdb/wfdb.h"
 
@@ -13,7 +14,8 @@
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
-  hrv1_module(new HRV1Analyzer())
+  hrv1_module(new HRV1Analyzer()),
+  hrv2_module(new GeometricAnalysis())
 {
   TRI_LOG_STR("ECGController created, 20:51 17-12-2012");
   //TODO: create modules objects
@@ -159,7 +161,7 @@ void ECGController::runHRV2 ()
   {
     runRPeaks();
   }
-  hrv2_module->runModule(r_peaks_data, hrv2_data);
+  hrv2_module->runModule(ecg_info, r_peaks_data, hrv2_data);
   hrv2_module->run_ = true;
   LOG_END
 }
