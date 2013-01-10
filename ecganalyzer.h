@@ -3,9 +3,11 @@
 
 #include <QtGui/QMainWindow>
 #ifdef WIN32
- #include "GeneratedFiles/ui_ecganalyzer.h"
+	#include "GeneratedFiles/ui_ecganalyzer.h"
+	#include "GeneratedFiles/ui_AboutWindow.h"
 #else
  #include "ui_ecganalyzer.h"
+ #include "ui_AboutWindow.h"
 #endif
 
 
@@ -13,6 +15,8 @@
 #include "hrt.h"
 #include "plotpoincare.h"
 #include "plothrvtriangle.h"
+#include "AboutWindow.h"
+
 
 class ECGanalyzer : public QMainWindow
 {
@@ -39,6 +43,7 @@ private slots:
 
 private:
 	Ui::ECGanalyzerClass ui;
+	AboutWindow aboutWindow;
 
 
 	ECGController _ECGcontroller;

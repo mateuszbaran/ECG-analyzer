@@ -25,11 +25,29 @@ void ECGanalyzer::on_actionO_Qt_triggered()
 
 void ECGanalyzer::on_actionO_Programie_triggered()
 {
-    QMessageBox::about(this, tr("About ECG Analyzer"),
-            tr("<h2>ECG Analyzer</h2>"
-               "<p>Wydział Elektrotechniki, Automatyki"
-               "Informatyki i Inżynierii Biomedycznej</p>"
-               "<p>2012/2013 AGH Kraków</p>"));
+	aboutWindow.show();
+   // QMessageBox::about(this, tr("About ECG Analyzer"),
+   //         tr("<h2><div align=\"center\">ECG Analyzer</div></h2>"
+			//"<br/><b>Moduły:</b>"
+			//"<ul><li>ECG Baseline: Weronika Łabaj, Piotr Matuszkiewicz"
+			//"R Peaks: Paweł Maślanka, Norbert Pabian<ul>"
+			//"<li>Waves: Agata Sitnik, Łukasz Zieńkowski<ul>"
+			//"<li>QRS class: Krzysztof Bębenek, Aleksander Steliga"
+			//"<ul><li>HRT: Łukasz Kutrzuba, Mateusz Krasucki</li></ul>"
+			//"</li>"
+			//"<li>ST interval: Krzysiek Piekutowski, Bartłomiej Bułat</li>"
+			//"<li>T Wave alt: Grzegorz Pietrzyk, Łukasz Krzyżek</li>"
+			//"</ul>"
+			//"</li>"
+			//"<li>HRV 1: Łukasz Jaromi, Leszek Sosnowski</li>"
+			//"<li>HRV 2: Krzysztof Farganus</li>"
+			//"<li>HRV DFA: Mikołaj Rzepka, Szczepan Czaicki</li>"
+			//"</ul>"
+			//"</li></ul>"
+			////"</li></ul>"
+			//"<br/><div align=\"center\"><p>Wydział Elektrotechniki, Automatyki, "
+   //         "Informatyki i Inżynierii Biomedycznej</p>"
+   //         "<p>2012/2013 AGH Kraków</p></div>"));
 }
 
 

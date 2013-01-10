@@ -37,11 +37,13 @@ FILE(GLOB plots_HEADERS plots/*.h)
 FILE(GLOB plots_SOURCES plots/*.cpp)
 
 SET(ecg-analyzer_FORMS ecganalyzer.ui)
+SET(ecg-analyzer_AboutWindow_FORMS AboutWindow.ui)
 
 SET(ecg-analyzer_RESOURCES ecganalyzer.qrc)
 
 QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_HEADERS} ${plots_HEADERS})
 QT4_WRAP_UI(ecg-analyzer_FORMS_HEADERS ${ecg-analyzer_FORMS})
+QT4_WRAP_UI(ecg-analyzer_AboutWindow_FORMS_HEADERS ${ecg-analyzer_AboutWindow_FORMS})
 QT4_ADD_RESOURCES(ecg-analyzer_RESOURCES_RCC ${ecg-analyzer_RESOURCES})
 
 INCLUDE(${QT_USE_FILE})
@@ -64,6 +66,6 @@ include_directories(plots)
 link_libraries(${LIBS})
 
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
-    ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
+    ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
 TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb)
