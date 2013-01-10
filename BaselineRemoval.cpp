@@ -1,11 +1,24 @@
 #include "BaselineRemoval.h"
+#include "Butterworth.h"
+#include "Filter.h"
 
 BaselineRemoval::BaselineRemoval(){}
 
 BaselineRemoval::~BaselineRemoval(){}
 
-void BaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo & ecgi, ECGSignalChannel &outputSignal)
+void BaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo & ecgi, ECGSignal &outputSignal)
 {
+	
+	switch(baselineRemovalMethod){
+		case MOVING_AVERAGE:
+			movingAverageBaselineRemoval(inputSignal, outputSignal, 5);
+			break;
+		case BUTTERWORTH_2D:
+			butterworthBaselineRemoval(inputSignal, outputSignal, ecgi, 5);
+			break;
+	}
+
+
 	if(baselineRemovalMethod == MOVING_AVERAGE)
 	{
 		movingAverageBaselineRemoval(inputSignal, outputSignal, 5);
@@ -26,26 +39,26 @@ void BaselineRemoval::setParams(ParametersTypes &params)
 	(--->>> it can be parametrized and number of neighbours might be passed from GUI)
 	for edge points the output values are copies of the corresponding input values
 */
-void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int span)
+void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignal &outputSignal, int span)
 {
-	auto signalLength = outputSignal-> signal -> size;
+	auto signalLength = outputSignal.channel_one -> signal -> size;
 	for(int index = 0; index<signalLength; index++)
 	{
 		if(index < span/2 || index > signalLength - span/2) 
 		{
 			auto inputValueChannelOne = gsl_vector_get (inputSignal.channel_one -> signal, index);
-			//auto inputValueChannelTwo = gsl_vector_get (inputSignal.channel_two -> signal, index);
+			auto inputValueChannelTwo = gsl_vector_get (inputSignal.channel_two -> signal, index);
 
-			gsl_vector_set(outputSignal -> signal, index, inputValueChannelOne);
-			//gsl_vector_set(outputSignal.channel_two -> signal, index, inputValueChannelTwo);
+			gsl_vector_set(outputSignal.channel_one -> signal, index, inputValueChannelOne);
+			gsl_vector_set(outputSignal.channel_two -> signal, index, inputValueChannelTwo);
 		}
 		else
 		{
 			auto avgValueChannelOne = calculateAvgValueOfNeighbours(inputSignal.channel_one -> signal, index, span);
-			//auto avgValueCahnnelTwo = calculateAvgValueOfNeighbours(inputSignal.channel_two -> signal, index, span);
+			auto avgValueCahnnelTwo = calculateAvgValueOfNeighbours(inputSignal.channel_two -> signal, index, span);
 			
-			gsl_vector_set (outputSignal -> signal, index, avgValueChannelOne) ;
-			//gsl_vector_set (outputSignal.channel_two -> signal, index, avgValueCahnnelTwo) ;
+			gsl_vector_set (outputSignal.channel_one -> signal, index, avgValueChannelOne) ;
+			gsl_vector_set (outputSignal.channel_two -> signal, index, avgValueCahnnelTwo) ;
 		}
 	}
 }
@@ -59,4 +72,14 @@ double BaselineRemoval::calculateAvgValueOfNeighbours(gsl_vector *signal, int cu
 		sum += gsl_vector_get (signal, currentIndex + i);
 	}
 	return sum/span;
+}
+
+void BaselineRemoval::butterworthBaselineRemoval(const ECGSignal &inputSignal, ECGSignal &outputSignal, const ECGInfo &ecgInfo, int cutoffFreq)
+{
+	int sampleFreq = ecgInfo.channel_one.frequecy;
+	Butterworth * butterworth = new Butterworth();
+	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, cutoffFreq, sampleFreq, 0);
+	
+	Filter * filter = new Filter();
+	filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2);
 }

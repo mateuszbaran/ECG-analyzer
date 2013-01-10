@@ -14,6 +14,7 @@ public:
 private:
 	BASELINE_REMOVAL_METHOD baselineRemovalMethod;
 
-	void movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int span);
+	void butterworthBaselineRemoval(const ECGSignal &inputSignal, ECGSignal &outputSignal, const ECGInfo &ecgInfo, int cutoffFreq);
+	void movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignal &outputSignal, int span);
 	double calculateAvgValueOfNeighbours(gsl_vector *signal, int currentIndex, int span);
 };
