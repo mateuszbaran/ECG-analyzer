@@ -48,9 +48,3 @@ void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info)
     return;
 }
 
-void Ecg2Ch::redraw()
-{
-    ch1->redraw();
-    ch2->redraw();
-    return;
-}

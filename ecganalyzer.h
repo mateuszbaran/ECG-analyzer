@@ -10,6 +10,8 @@
 
 
 #include "ECGController.h"
+#include "hrt.h"
+#include "plotpoincare.h"
 
 class ECGanalyzer : public QMainWindow
 {

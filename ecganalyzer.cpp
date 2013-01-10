@@ -53,7 +53,6 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
     {
         _ECGcontroller.readFile(fileName.toStdString()); // why?
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info));
-        ui.rawPlotWidget->redraw();
 
 
 
@@ -88,7 +87,35 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		QTableWidgetItem *range = new QTableWidgetItem();
 		range->setText(QString().sprintf("%d mV", _ECGcontroller.ecg_info.channel_one.range) );
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
-
+		
+		
+		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
+		PlotHRT *plotHRT = new PlotHRT(this);
+		plotHARTLayout->addWidget(plotHRT);
+		ECGHRT hrt_data;
+		hrt_data.offset = 3;
+		hrt_data.rr.push_back(QPointF(0.0, 2.0));
+		hrt_data.rr.push_back(QPointF(1.0, 0.0));
+		hrt_data.rr.push_back(QPointF(2.0, 5.0));
+		hrt_data.rr.push_back(QPointF(3.0, 3.0));
+		hrt_data.rr.push_back(QPointF(4.0, 10.0));
+		hrt_data.rr.push_back(QPointF(5.0, 4.0));
+		hrt_data.rr.push_back(QPointF(6.0, 9.0));
+		hrt_data.rr.push_back(QPointF(7.0, 7.0));
+		hrt_data.ts.setLine(2.0, 3.0, 5.0, 16.0);
+		plotHRT->setData(hrt_data);
+		ui.groupBox->setLayout(plotHARTLayout);
+		
+		
+		QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
+		PlotPoincare *plotPoincare = new PlotPoincare(this);
+		plotPoincareLayout->addWidget(plotPoincare);
+		ECGHRV2 hrv2_data;
+		// ...
+		plotPoincare->setData(hrv2_data);
+		ui.groupBox->setLayout(plotPoincareLayout);
+		
+		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
 		
     }

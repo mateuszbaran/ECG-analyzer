@@ -36,9 +36,5 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info)
         samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
     data->setSamples(*samples);
     curve->setData(data);
-}
-
-void EcgCh::redraw()
-{
-    replot();
+	replot();
 }

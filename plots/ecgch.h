@@ -33,7 +33,6 @@ signals:
     
 public slots:
     void setSignal(ECGSignalChannel signal, ECGChannelInfo info);
-    void redraw();
 
 private:
     QwtPlotCurve* curve;
