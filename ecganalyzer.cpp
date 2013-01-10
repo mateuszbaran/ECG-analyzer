@@ -89,9 +89,6 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
 		
 		
-		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
-		PlotHRT *plotHRT = new PlotHRT(this);
-		plotHARTLayout->addWidget(plotHRT);
 		ECGHRT hrt_data;
 		hrt_data.offset = 3;
 		hrt_data.rr.push_back(QPointF(0.0, 2.0));
@@ -103,17 +100,27 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		hrt_data.rr.push_back(QPointF(6.0, 9.0));
 		hrt_data.rr.push_back(QPointF(7.0, 7.0));
 		hrt_data.ts.setLine(2.0, 3.0, 5.0, 16.0);
+		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
+		PlotHRT *plotHRT = new PlotHRT(this);
+		plotHARTLayout->addWidget(plotHRT);
 		plotHRT->setData(hrt_data);
 		ui.groupBox->setLayout(plotHARTLayout);
 		
 		
+		ECGHRV2 hrv2_data;
+		// ...
+		
+		QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
+		PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
+		plotHRVTriangleLayout->addWidget(plotHRVTriangle);
+		//plotHRVTriangle->setData(hrv2_data);
+		ui.tab_2->setLayout(plotHRVTriangleLayout);
+		
 		QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
 		PlotPoincare *plotPoincare = new PlotPoincare(this);
 		plotPoincareLayout->addWidget(plotPoincare);
-		ECGHRV2 hrv2_data;
-		// ...
-		plotPoincare->setData(hrv2_data);
-		ui.groupBox->setLayout(plotPoincareLayout);
+		//plotPoincare->setData(hrv2_data);
+		ui.tab_3->setLayout(plotPoincareLayout);
 		
 		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
