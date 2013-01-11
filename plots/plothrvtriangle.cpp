@@ -80,8 +80,12 @@ void PlotHRVTriangle::setData(ECGHRV2 &data)
 	}
 	rr->setSamples(peaks);
 	
-	QVector<QPointF> vxn = {QPointF(x, y), QPointF(n, 0.0)};
-	QVector<QPointF> vxm = {QPointF(x, y), QPointF(m, 0.0)};
+	QVector<QPointF> vxn;
+	vxn.push_back(QPointF(x, y));
+	vxn.push_back(QPointF(n, 0.0));
+	QVector<QPointF> vxm;
+	vxm.push_back(QPointF(x, y));
+	vxm.push_back(QPointF(m, 0.0));
 	xn->setSamples(vxn);
 	xm->setSamples(vxm);
     mx->setValue(x, y);
