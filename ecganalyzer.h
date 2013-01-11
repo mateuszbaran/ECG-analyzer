@@ -41,6 +41,10 @@ private slots:
 
     void on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked);
 
+    void on_actionPrzeprowadzPonownieAnalizeSygnalu_triggered();
+
+    void on_actionZatrzymajPonownaAnalizeSygnalu_triggered();
+
 private:
 	Ui::ECGanalyzerClass ui;
 	AboutWindow aboutWindow;

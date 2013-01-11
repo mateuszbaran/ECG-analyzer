@@ -1,6 +1,7 @@
 #include "ecganalyzer.h"
 #include <qmessagebox.h>
 #include <qtextcodec.h>
+#include <QThread>
 
 using namespace std;
 
@@ -69,7 +70,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
     if(!fileName.isNull() &&  !fileName.isEmpty())
     {
-        if(_ECGcontroller.readFile(fileName.toStdString()) ) // why?
+        if(!_ECGcontroller.readFile(fileName.toStdString()) ) // why?
 		{
 			QMessageBox::critical(NULL, "Błąd", "Nie udało się wczytać sygnału");
 			return;//throw new exception("Nie udało się wczytać sygnału");
@@ -176,4 +177,23 @@ void ECGanalyzer::on_radioButtonButterworthFilter_toggled(bool checked)
 void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked)
 {
 	ui.doubleSpinBoxRPeaksThreshold->setEnabled(!checked);
+}
+
+void ECGanalyzer::on_actionPrzeprowadzPonownieAnalizeSygnalu_triggered()
+{
+	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(true);
+	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(false);
+
+	//TODO: Tu ma być procedura analizy sygnału
+
+
+	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(false);
+	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
+
+}
+
+void ECGanalyzer::on_actionZatrzymajPonownaAnalizeSygnalu_triggered()
+{
+	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(false);
+	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
 }

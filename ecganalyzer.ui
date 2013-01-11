@@ -62,7 +62,7 @@
          <enum>QTabWidget::West</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabSignalInfo">
          <attribute name="title">
@@ -188,7 +188,7 @@
                     <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderVisible">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </attribute>
                    <attribute name="verticalHeaderCascadingSectionResizes">
                     <bool>false</bool>
@@ -1248,6 +1248,9 @@
    <addaction name="menuPomoc"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -1258,6 +1261,7 @@
    <addaction name="actionZapiszPlik"/>
    <addaction name="separator"/>
    <addaction name="actionPrzeprowadzPonownieAnalizeSygnalu"/>
+   <addaction name="actionZatrzymajPonownaAnalizeSygnalu"/>
    <addaction name="separator"/>
    <addaction name="actionO_Programie"/>
    <addaction name="actionWyjdz"/>
@@ -1329,10 +1333,22 @@
    </property>
    <property name="icon">
     <iconset resource="ecganalyzer.qrc">
-     <normaloff>:/ECGanalyzer/icons/restart.png</normaloff>:/ECGanalyzer/icons/restart.png</iconset>
+     <normaloff>:/ECGanalyzer/icons/player_play.png</normaloff>:/ECGanalyzer/icons/player_play.png</iconset>
    </property>
    <property name="text">
     <string>PrzeprowadźPonownieAnalizęSygnału</string>
+   </property>
+  </action>
+  <action name="actionZatrzymajPonownaAnalizeSygnalu">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="ecganalyzer.qrc">
+     <normaloff>:/ECGanalyzer/icons/player_stop.png</normaloff>:/ECGanalyzer/icons/player_stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zatrzymaj Ponowną Analizę Sygnału</string>
    </property>
   </action>
  </widget>
