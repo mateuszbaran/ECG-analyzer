@@ -42,8 +42,12 @@ void PlotPoincare::setData(ECGHRV2 &data)
 		points.push_back(QPointF(float(px->data[i*px->stride]), float(py->data[i*py->stride])));
 	}
 	rr->setSamples(points);
-	QVector<QPointF> l1 = {QPointF(x,y), QPointF(x-s1,y+s1)};
-	QVector<QPointF> l2 = {QPointF(x,y), QPointF(x+s2,y+s2)};
+	QVector<QPointF> l1;
+	l1.push_back(QPointF(x,y));
+	l1.push_back(QPointF(x-s1,y+s1));
+	QVector<QPointF> l2;
+	l2.push_back(QPointF(x,y));
+	l2.push_back(QPointF(x+s2,y+s2));
 	sd1->setSamples(l1);
 	sd1->setSamples(l2);
 	replot();

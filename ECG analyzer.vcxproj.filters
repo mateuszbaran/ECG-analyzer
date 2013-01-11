@@ -167,6 +167,33 @@
     <ClCompile Include="plots\synczoomer.cpp">
       <Filter>Source Files\plots</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_hrt.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_hrt.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plothrvtriangle.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plothrvtriangle.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plotpoincare.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plotpoincare.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\hrt.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plothrvtriangle.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plotpoincare.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -191,6 +218,15 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\synczoomer.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\hrt.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plothrvtriangle.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plotpoincare.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
   </ItemGroup>

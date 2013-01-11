@@ -67,7 +67,10 @@ void PlotHRT::setData(ECGHRT &data)
 	offset = data.offset;
 	setAxisScaleDraw(QwtPlot::xBottom, new LabeledScaleDraw(offset));
 	rr->setSamples(data.rr);
-	QVector<QPointF> data_ts = {data.ts.p1(), data.ts.p2()};
+	QVector<QPointF> data_ts;
+	data_ts.push_back(data.ts.p1());
+	data_ts.push_back(data.ts.p2());
+
 	ts->setSamples(data_ts);
 	replot();
 }
