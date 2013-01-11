@@ -62,7 +62,7 @@
          <enum>QTabWidget::West</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tabSignalInfo">
          <attribute name="title">
@@ -188,7 +188,7 @@
                     <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderVisible">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderCascadingSectionResizes">
                     <bool>false</bool>
@@ -354,9 +354,6 @@
               <spacer name="verticalSpacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Expanding</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -798,7 +795,7 @@
                 <bool>false</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
-                <bool>true</bool>
+                <bool>false</bool>
                </attribute>
                <row>
                 <property name="text">
@@ -922,7 +919,7 @@
                      <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderVisible">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderCascadingSectionResizes">
                      <bool>false</bool>
@@ -1139,7 +1136,7 @@
                    <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderVisible">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderCascadingSectionResizes">
                    <bool>false</bool>

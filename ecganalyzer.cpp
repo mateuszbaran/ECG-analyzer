@@ -69,7 +69,12 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
     if(!fileName.isNull() &&  !fileName.isEmpty())
     {
-        _ECGcontroller.readFile(fileName.toStdString()); // why?
+        if(_ECGcontroller.readFile(fileName.toStdString()) ) // why?
+		{
+			QMessageBox::critical(NULL, "Błąd", "Nie udało się wczytać sygnału");
+			return;//throw new exception("Nie udało się wczytać sygnału");
+		}
+
         _ECGcontroller.runECGBaseline();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
