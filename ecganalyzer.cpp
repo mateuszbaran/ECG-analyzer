@@ -2,6 +2,7 @@
 #include <qmessagebox.h>
 #include <qtextcodec.h>
 #include <QThread>
+#include <functional>
 
 using namespace std;
 
@@ -181,19 +182,30 @@ void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool che
 
 void ECGanalyzer::on_actionPrzeprowadzPonownieAnalizeSygnalu_triggered()
 {
-	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(true);
-	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(false);
-
+	using namespace std::placeholders;
+	updateRunButtons(true);
 	//TODO: Tu ma być procedura analizy sygnału
-
-
-	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(false);
-	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
+	_ECGcontroller.rerunAnalysis(std::bind(&ECGanalyzer::updateAnalysisStatus, this, _1),
+		std::bind(&ECGanalyzer::updateRunButtons, this, false));
 
 }
 
 void ECGanalyzer::on_actionZatrzymajPonownaAnalizeSygnalu_triggered()
 {
+	updateRunButtons(false);
 	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(false);
 	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
+
+	_ECGcontroller.rerunAnalysis(NULL, NULL);
+}
+
+void ECGanalyzer::updateAnalysisStatus(std::string status)
+{
+	//TODO
+}
+
+void ECGanalyzer::updateRunButtons( bool analysisOngoing )
+{
+	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
+	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
 }

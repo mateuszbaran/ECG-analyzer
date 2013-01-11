@@ -48,7 +48,7 @@ private:
   /**
   *  R peaks vector
   */
-  ECGRs rsPositions;
+  ECGRs * rsPositions;
 
   /**
   *  R peaks detection method

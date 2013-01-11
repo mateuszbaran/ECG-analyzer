@@ -49,6 +49,9 @@ private:
 	Ui::ECGanalyzerClass ui;
 	AboutWindow aboutWindow;
 
+	void updateRunButtons(bool analysisOngoing);
+
+	void updateAnalysisStatus(std::string status);
 
 	ECGController _ECGcontroller;
 	//Ecg2Ch _ecg2ch;
