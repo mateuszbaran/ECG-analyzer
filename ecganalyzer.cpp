@@ -202,6 +202,7 @@ void ECGanalyzer::on_actionZatrzymajPonownaAnalizeSygnalu_triggered()
 void ECGanalyzer::updateAnalysisStatus(std::string status)
 {
 	//TODO
+	ui.statusBar->setStatusTip(QString("%s,status"));
 }
 
 void ECGanalyzer::updateRunButtons( bool analysisOngoing )
