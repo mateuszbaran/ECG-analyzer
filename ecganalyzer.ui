@@ -109,7 +109,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>218</width>
+                  <width>201</width>
                   <height>240</height>
                  </rect>
                 </property>
@@ -540,7 +540,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>4</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -1203,6 +1203,19 @@
           <attribute name="title">
            <string>ST Segment</string>
           </attribute>
+          <widget class="QPushButton" name="run_st_analysis_button">
+           <property name="geometry">
+            <rect>
+             <x>60</x>
+             <y>50</y>
+             <width>98</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>RUN</string>
+           </property>
+          </widget>
          </widget>
          <widget class="QWidget" name="tabQTInterval">
           <attribute name="title">
@@ -1222,7 +1235,7 @@
      <x>0</x>
      <y>0</y>
      <width>862</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlik">

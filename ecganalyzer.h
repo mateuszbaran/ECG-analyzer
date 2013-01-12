@@ -44,6 +44,8 @@ private slots:
     void on_actionPrzeprowadzPonownieAnalizeSygnalu_triggered();
 
     void on_actionZatrzymajPonownaAnalizeSygnalu_triggered();
+    
+    void on_run_st_analysis_button_clicked();
 
 private:
 	Ui::ECGanalyzerClass ui;

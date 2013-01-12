@@ -3,6 +3,7 @@
 #include "BaselineRemoval.h"
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "STAnalysis.h"
 
 #include "wfdb/wfdb.h"
 
@@ -16,6 +17,7 @@ ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
   hrv1_module(new HRV1Analyzer()),
+  st_interval_module(new STAnalysis()),
   analysisCompl(false),
   computation(NULL)
 {
@@ -204,11 +206,15 @@ void ECGController::runSTInterval ()
   {
     runECGBaseline();
   }
-  if (!waves_module->run_)
+  if (!rpeaks_module->run_)
   {
-    runWaves();
+    runRPeaks();
   }
-  st_interval_module->runModule(waves_data, filtered_signal, ecg_info, st_data);
+  //if (!waves_module->run_)
+  //{
+    //runWaves();
+  //}
+  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }

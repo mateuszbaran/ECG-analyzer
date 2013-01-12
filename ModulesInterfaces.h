@@ -80,7 +80,7 @@ class STIntervalModule : public GlobalInterface
 {
 public:
   STIntervalModule() : GlobalInterface() {}
-  virtual void runModule (const ECGWaves &, const ECGSignal &, const ECGInfo &, ECGST &) = 0;
+  virtual void runModule (const ECGRs&, const ECGWaves &, const ECGSignal &, const ECGInfo &, ECGST &) = 0;
 };
 
 class TWaveAltModule : public GlobalInterface

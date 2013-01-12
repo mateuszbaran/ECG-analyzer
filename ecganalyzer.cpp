@@ -99,7 +99,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ui.tableWidgetSignalInfo->setItem(3, 0, zeroSignal);
 
 		QTableWidgetItem *gain = new QTableWidgetItem();
-		gain->setText(QString().sprintf("%d", _ECGcontroller.ecg_info.channel_one.gain) );
+		gain->setText(QString().sprintf("%f", _ECGcontroller.ecg_info.channel_one.gain) );
 		ui.tableWidgetSignalInfo->setItem(4, 0, gain);
 
 		QTableWidgetItem *numberOfSamples = new QTableWidgetItem();
@@ -153,6 +153,14 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		
     }
 }
+
+void ECGanalyzer::on_run_st_analysis_button_clicked()
+{
+  ParametersTypes st_params;
+  _ECGcontroller.setParamsSTInterval(st_params);
+  _ECGcontroller.runSTInterval();
+}
+
 
 void ECGanalyzer::on_actionWyjdz_triggered()
 {
