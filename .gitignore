@@ -151,3 +151,29 @@ nbproject
 ECG Analyzer.lib
 
 ecgSignals
+
+#tex
+doc/*.aux
+doc/*.glo
+doc/*.idx
+doc/*.log
+doc/*.toc
+doc/*.ist
+doc/*.acn
+doc/*.acr
+doc/*.alg
+doc/*.bbl
+doc/*.blg
+doc/*.dvi
+doc/*.glg
+doc/*.gls
+doc/*.ilg
+doc/*.ind
+doc/*.lof
+doc/*.lot
+doc/*.maf
+doc/*.mtc
+doc/*.mtc1
+doc/*.out
+doc/*.synctex.gz
+doc/*.pdf

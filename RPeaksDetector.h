@@ -48,7 +48,7 @@ private:
   /**
   *  R peaks vector
   */
-  ECGRs rsPositions;
+  ECGRs * rsPositions;
 
   /**
   *  R peaks detection method
@@ -98,12 +98,11 @@ public:
     this->cause = cause;
   }
 
+private:
+	string cause;
+
   virtual const string what() const throw()
   {
     return "Error during execution R preaks module cause: " + cause;
   }
-
-private:
-	string cause;
 };
-

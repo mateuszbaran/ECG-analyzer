@@ -16,6 +16,11 @@
 
 #include <boost/scoped_ptr.hpp>
 
+namespace boost
+{
+	class thread;
+}
+
 /**
  * @class Class which controls executing all modules.
  */
@@ -39,6 +44,7 @@ public:
   void setParamsTwaveAlt(ParametersTypes & params);
   void setParamsHRT(ParametersTypes & params);
   
+  void rerunAnalysis(std::function<void(std::string)> statusUpdate, std::function<void()> analysisComplete); //if analysis is running, then it's interrupted
   //methods for running modules
   void runECGBaseline();
   void runRPeaks();
@@ -77,7 +83,6 @@ private:
   void setSTIntervalNotRun();
   void setTwaveAltNotRun();
   void setHRTNotRun();
-  
 
   //modules
   boost::scoped_ptr<ECGBaselineModule> ecg_baseline_module;
@@ -90,5 +95,9 @@ private:
   boost::scoped_ptr<STIntervalModule> st_interval_module;
   boost::scoped_ptr<TWaveAltModule> t_wave_alt_module;
   boost::scoped_ptr<HRTModule> hrt_module;
+
+  //computing thread
+  boost::thread * computation;
+  bool analysisCompl;
 };
 

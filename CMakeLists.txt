@@ -6,11 +6,14 @@ INCLUDE(CheckLibraryExists)
 # Additional CMake modules for 3rd party library checks reside here
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_admin")
 
-find_package(Boost 1.48 REQUIRED)
+set(Boost_USE_MULTITHREADED ON)
+
+find_package(Boost 1.48 REQUIRED COMPONENTS thread system)
 find_package(Qt4 4.8 REQUIRED)
 find_package(Qwt 6 REQUIRED)
 find_package(gsl REQUIRED)
 find_package(fftw 3.3 REQUIRED)
+find_package(Threads REQUIRED)
 
 #check if some platform-specific libraries are needed for linking client and server
 CHECK_LIBRARY_EXISTS(rt shm_open "" HAVE_RT_LIB)
@@ -31,60 +34,26 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
     set(CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wextra -Wpointer-arith -Wno-switch -Wno-sign-compare -Wno-unused-parameter -Wno-overloaded-virtual -fpermissive")
 endif()
 
-# use this to regenerate: ls -al | grep \\.cpp | tr -s ' ' | cut -d ' ' -f 9
-set(ecg-analyzer_SOURCES
-ecganalyzer.cpp
-ECGClasses.cpp
-ECGController.cpp
-ECGHRT.cpp
-ECGHRV1.cpp
-ECGHRV2.cpp
-ECGHRVDFA.cpp
-ECGRs.cpp
-ECGSignal.cpp
-ECGST.cpp
-ECGTWave.cpp
-ECGWaves.cpp
-EGHRVDFT.cpp
-main.cpp
-QRSClass.cpp
-BaselineRemoval.cpp
-  )
-
-set(ecg-analyzer_HEADERS
-ecganalyzer.h
-ECGClasses.h
-ECGController.h
-ECGHRT.h
-ECGHRV1.h
-ECGHRV2.h
-ECGHRVDFA.h
-ECGRs.h
-ECGSignal.h
-ECGST.h
-ECGTWave.h
-ECGWaves.h
-EGHRVDFT.h
-ModulesInterfaces.h
-ModulesMethods.h
-QRSClass.h
-BaselineRemoval.h 
-#ui_ecganalyzer.h
-  )
-
+FILE(GLOB ecg-analyzer_HEADERS *.h *.hpp)
+FILE(GLOB ecg-analyzer_SOURCES *.cpp)
 FILE(GLOB plots_HEADERS plots/*.h)
 FILE(GLOB plots_SOURCES plots/*.cpp)
 
 SET(ecg-analyzer_FORMS ecganalyzer.ui)
+SET(ecg-analyzer_AboutWindow_FORMS AboutWindow.ui)
 
 SET(ecg-analyzer_RESOURCES ecganalyzer.qrc)
 
 QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_HEADERS} ${plots_HEADERS})
 QT4_WRAP_UI(ecg-analyzer_FORMS_HEADERS ${ecg-analyzer_FORMS})
+QT4_WRAP_UI(ecg-analyzer_AboutWindow_FORMS_HEADERS ${ecg-analyzer_AboutWindow_FORMS})
 QT4_ADD_RESOURCES(ecg-analyzer_RESOURCES_RCC ${ecg-analyzer_RESOURCES})
 
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
+
+# Controls behaviour of logger - possible values: -DCLEANTLOG, -DFTLOG, -DETLOG, -DTLOG
+ADD_DEFINITIONS("-DCLEANTLOG")
 
 include_directories(${GSL_INCLUDE_DIRS} ${GSLCBLAS_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES} ${GSLCBLAS_LIBRARIES})
@@ -100,6 +69,7 @@ include_directories(plots)
 link_libraries(${LIBS})
 
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
-    ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS})
+    ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
-TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb)
+TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS}
+  ${FFTW_LIBRARIES} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} wfdb)

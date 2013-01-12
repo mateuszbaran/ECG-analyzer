@@ -19,13 +19,13 @@ void RPeaksDetector::runModule(const ECGSignalChannel &filteredSignal, const ECG
 		#ifdef USE_MOCKED_SIGNAL
 			this->filteredSignal = getMockedSignal();
 		#endif
-		this->rsPositions = ecgRs;
+		this->rsPositions = &ecgRs;
 	
 		bool success = this->detectRPeaks();
 		if(!success)
 		{
 			#ifdef DEBUG
-				cout << "R peaks detection fails" << endl;
+				cout << "R peaks cetedtion module fails" << endl;
 			#endif
 			throw new RPeaksDetectionException("R peaks detection method fails");
 		}
@@ -164,7 +164,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		{
 			sigMaxVal = abs(inputValue);
 			#ifdef DEBUG_SIGNAL
-				cout << "New max signal value: " << inputValue << endl;
+				cout << "New max signal value for channel one: " << inputValueChannelOne << endl;
 			#endif
 		}
 	}
@@ -479,7 +479,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 					<< " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex) << endl;
 			#endif
 		}
-		rsPositions.setRs(&rs);
+		rsPositions->setRs(rs);
 	}
 	rsDetected = true;
 	#ifdef DEBUG
@@ -1511,4 +1511,3 @@ ECGSignalChannel RPeaksDetector::getMockedSignal()
 
 	return mockedSignal;
 }  
-
