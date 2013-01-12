@@ -31,12 +31,12 @@ public:
     return poincare_y;
   }
 
-  OtherSignal GetTriple_index_x () const
+  double GetTriple_index_x () const
   {
     return triple_index_x;
   }
 
-  OtherSignal GetTriple_index_y () const
+  double GetTriple_index_y () const
   {
     return triple_index_y;
   }
@@ -52,8 +52,8 @@ private:
   IntSignal histogram_x;
   IntSignal histogram_y;
   //data for plotting triple index (?)
-  OtherSignal triple_index_x;
-  OtherSignal triple_index_y;
+  double triple_index_x;
+  double triple_index_y;
   //data for plotting Poincare
   IntSignal poincare_x;
   IntSignal poincare_y;

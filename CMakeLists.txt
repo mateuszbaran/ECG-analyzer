@@ -6,11 +6,14 @@ INCLUDE(CheckLibraryExists)
 # Additional CMake modules for 3rd party library checks reside here
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_admin")
 
-find_package(Boost 1.48 REQUIRED)
+set(Boost_USE_MULTITHREADED ON)
+
+find_package(Boost 1.48 REQUIRED COMPONENTS thread system)
 find_package(Qt4 4.8 REQUIRED)
 find_package(Qwt 6 REQUIRED)
 find_package(gsl REQUIRED)
 find_package(fftw 3.3 REQUIRED)
+find_package(Threads REQUIRED)
 
 #check if some platform-specific libraries are needed for linking client and server
 CHECK_LIBRARY_EXISTS(rt shm_open "" HAVE_RT_LIB)
@@ -37,11 +40,13 @@ FILE(GLOB plots_HEADERS plots/*.h)
 FILE(GLOB plots_SOURCES plots/*.cpp)
 
 SET(ecg-analyzer_FORMS ecganalyzer.ui)
+SET(ecg-analyzer_AboutWindow_FORMS AboutWindow.ui)
 
 SET(ecg-analyzer_RESOURCES ecganalyzer.qrc)
 
 QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_HEADERS} ${plots_HEADERS})
 QT4_WRAP_UI(ecg-analyzer_FORMS_HEADERS ${ecg-analyzer_FORMS})
+QT4_WRAP_UI(ecg-analyzer_AboutWindow_FORMS_HEADERS ${ecg-analyzer_AboutWindow_FORMS})
 QT4_ADD_RESOURCES(ecg-analyzer_RESOURCES_RCC ${ecg-analyzer_RESOURCES})
 
 INCLUDE(${QT_USE_FILE})
@@ -64,6 +69,7 @@ include_directories(plots)
 link_libraries(${LIBS})
 
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
-    ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
+    ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
-TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb)
+TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS}
+  ${FFTW_LIBRARIES} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} wfdb)

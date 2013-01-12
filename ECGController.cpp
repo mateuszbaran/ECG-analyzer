@@ -8,12 +8,16 @@
 
 #include "tri_logger.hpp"
 
+#include <boost/thread.hpp>
+
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
-  hrv1_module(new HRV1Analyzer())
+  hrv1_module(new HRV1Analyzer()),
+  analysisCompl(false),
+  computation(NULL)
 {
   TRI_LOG_STR("ECGController created, 20:51 17-12-2012");
   //TODO: create modules objects
@@ -22,6 +26,7 @@ ECGController::ECGController (void) :
 ECGController::~ECGController (void)
 {
   TRI_LOG_STR("ECGController destroyed");
+  delete computation;
 }
 
 void ECGController::setParamsECGBaseline (ParametersTypes & params)
@@ -405,4 +410,52 @@ bool ECGController::readFile(std::string filename)
   LOG_END
   TRI_LOG_STR(" returns true");
   return true;
+}
+
+void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate, std::function<void()> analysisComplete )
+{
+	TRI_LOG_STR(__FUNCTION__);
+
+	//cleaning after previous computation
+	if(computation && analysisCompl)
+	{
+		delete computation;
+		analysisCompl = false;
+	}
+
+	if(computation)
+	{
+		computation->interrupt();
+		computation->join();
+		delete computation;
+		computation = NULL;
+	}
+	else
+	{
+
+#define HANDLE_INTERRUPTION							\
+	try {											\
+		boost::this_thread::interruption_point(); } \
+	catch(...) {									\
+		return;										\
+	}
+
+		analysisCompl = false;
+		computation = new boost::thread([=](){
+			statusUpdate("Analysis begins");
+			runECGBaseline();
+			HANDLE_INTERRUPTION
+			statusUpdate("Baseline removal completed; R peaks detection ongoing.");
+			runRPeaks();
+			HANDLE_INTERRUPTION
+			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
+			runHRV1();
+			HANDLE_INTERRUPTION
+			statusUpdate("Analysis complete!");
+			analysisComplete();
+			analysisCompl = true;
+		});
+	}
+	
+#undef HANDLE_INTERRUPTION
 }

@@ -1,6 +1,8 @@
 #include "ecganalyzer.h"
 #include <qmessagebox.h>
 #include <qtextcodec.h>
+#include <QThread>
+#include <functional>
 
 using namespace std;
 
@@ -25,11 +27,29 @@ void ECGanalyzer::on_actionO_Qt_triggered()
 
 void ECGanalyzer::on_actionO_Programie_triggered()
 {
-    QMessageBox::about(this, tr("About ECG Analyzer"),
-            tr("<h2>ECG Analyzer</h2>"
-               "<p>Wydział Elektrotechniki, Automatyki"
-               "Informatyki i Inżynierii Biomedycznej</p>"
-               "<p>2012/2013 AGH Kraków</p>"));
+	aboutWindow.show();
+   // QMessageBox::about(this, tr("About ECG Analyzer"),
+   //         tr("<h2><div align=\"center\">ECG Analyzer</div></h2>"
+			//"<br/><b>Moduły:</b>"
+			//"<ul><li>ECG Baseline: Weronika Łabaj, Piotr Matuszkiewicz"
+			//"R Peaks: Paweł Maślanka, Norbert Pabian<ul>"
+			//"<li>Waves: Agata Sitnik, Łukasz Zieńkowski<ul>"
+			//"<li>QRS class: Krzysztof Bębenek, Aleksander Steliga"
+			//"<ul><li>HRT: Łukasz Kutrzuba, Mateusz Krasucki</li></ul>"
+			//"</li>"
+			//"<li>ST interval: Krzysiek Piekutowski, Bartłomiej Bułat</li>"
+			//"<li>T Wave alt: Grzegorz Pietrzyk, Łukasz Krzyżek</li>"
+			//"</ul>"
+			//"</li>"
+			//"<li>HRV 1: Łukasz Jaromi, Leszek Sosnowski</li>"
+			//"<li>HRV 2: Krzysztof Farganus</li>"
+			//"<li>HRV DFA: Mikołaj Rzepka, Szczepan Czaicki</li>"
+			//"</ul>"
+			//"</li></ul>"
+			////"</li></ul>"
+			//"<br/><div align=\"center\"><p>Wydział Elektrotechniki, Automatyki, "
+   //         "Informatyki i Inżynierii Biomedycznej</p>"
+   //         "<p>2012/2013 AGH Kraków</p></div>"));
 }
 
 
@@ -51,9 +71,14 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
     if(!fileName.isNull() &&  !fileName.isEmpty())
     {
-        _ECGcontroller.readFile(fileName.toStdString()); // why?
-        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal));
-        ui.rawPlotWidget->redraw();
+        if(!_ECGcontroller.readFile(fileName.toStdString()) ) // why?
+		{
+			QMessageBox::critical(NULL, "Błąd", "Nie udało się wczytać sygnału");
+			return;//throw new exception("Nie udało się wczytać sygnału");
+		}
+
+        _ECGcontroller.runECGBaseline();
+        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
 
 
@@ -88,7 +113,42 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		QTableWidgetItem *range = new QTableWidgetItem();
 		range->setText(QString().sprintf("%d mV", _ECGcontroller.ecg_info.channel_one.range) );
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
-
+		
+		
+		ECGHRT hrt_data;
+		hrt_data.offset = 3;
+		hrt_data.rr.push_back(QPointF(0.0, 2.0));
+		hrt_data.rr.push_back(QPointF(1.0, 0.0));
+		hrt_data.rr.push_back(QPointF(2.0, 5.0));
+		hrt_data.rr.push_back(QPointF(3.0, 3.0));
+		hrt_data.rr.push_back(QPointF(4.0, 10.0));
+		hrt_data.rr.push_back(QPointF(5.0, 4.0));
+		hrt_data.rr.push_back(QPointF(6.0, 9.0));
+		hrt_data.rr.push_back(QPointF(7.0, 7.0));
+		hrt_data.ts.setLine(2.0, 3.0, 5.0, 16.0);
+		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
+		PlotHRT *plotHRT = new PlotHRT(this);
+		plotHARTLayout->addWidget(plotHRT);
+		plotHRT->setData(hrt_data);
+		ui.groupBox->setLayout(plotHARTLayout);
+		
+		
+		ECGHRV2 hrv2_data;
+		// ...
+		
+		QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
+		PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
+		plotHRVTriangleLayout->addWidget(plotHRVTriangle);
+		//plotHRVTriangle->setData(hrv2_data);
+		ui.tab_2->setLayout(plotHRVTriangleLayout);
+		
+		QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
+		PlotPoincare *plotPoincare = new PlotPoincare(this);
+		plotPoincareLayout->addWidget(plotPoincare);
+		//plotPoincare->setData(hrv2_data);
+		ui.tab_3->setLayout(plotPoincareLayout);
+		
+		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
 		
     }
@@ -118,4 +178,34 @@ void ECGanalyzer::on_radioButtonButterworthFilter_toggled(bool checked)
 void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked)
 {
 	ui.doubleSpinBoxRPeaksThreshold->setEnabled(!checked);
+}
+
+void ECGanalyzer::on_actionPrzeprowadzPonownieAnalizeSygnalu_triggered()
+{
+	using namespace std::placeholders;
+	updateRunButtons(true);
+	//TODO: Tu ma być procedura analizy sygnału
+	_ECGcontroller.rerunAnalysis(std::bind(&ECGanalyzer::updateAnalysisStatus, this, _1),
+		std::bind(&ECGanalyzer::updateRunButtons, this, false));
+
+}
+
+void ECGanalyzer::on_actionZatrzymajPonownaAnalizeSygnalu_triggered()
+{
+	updateRunButtons(false);
+	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(false);
+	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
+
+	_ECGcontroller.rerunAnalysis(NULL, NULL);
+}
+
+void ECGanalyzer::updateAnalysisStatus(std::string status)
+{
+	//TODO
+}
+
+void ECGanalyzer::updateRunButtons( bool analysisOngoing )
+{
+	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
+	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
 }

@@ -19,7 +19,7 @@ void RPeaksDetector::runModule(const ECGSignal &filteredSignal, const ECGInfo & 
 		#ifdef USE_MOCKED_SIGNAL
 			this->filteredSignal = getMockedSignal();
 		#endif
-		this->rsPositions = ecgRs;
+		this->rsPositions = &ecgRs;
 	
 		bool success = this->detectRPeaks();
 		if(!success)
@@ -603,7 +603,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignal *signal)
 					<< " signal value: " << gsl_vector_get(signal->channel_one->signal, tmpMaxIndex) << endl;
 			#endif
 		} // end for
-		rsPositions.setRs(rco);
+		rsPositions->setRs(rco);
 	} // end if
 
 	//Channel two
