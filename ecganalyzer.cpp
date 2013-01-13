@@ -183,25 +183,14 @@ void ECGanalyzer::on_st_select_algorithm_currentIndexChanged(int value)
 
 void ECGanalyzer::on_st_intervals_table_cellDoubleClicked(int row, int col)
 {
-  double dt = 1.0f / ( (double) _ECGcontroller.ecg_info.channel_one.frequecy);
   auto _section = _ECGcontroller.st_data.getIntervalBeginAndEnd(row);
   ui.st_plot->zoomX(_section.first, _section.second);
-  
-  auto interval = _ECGcontroller.st_data.getIntervals().at(row);
-  ui.st_plot_info->clear();
-  ui.st_plot_info->setRowCount(2);
-  ui.st_plot_info->setColumnCount(1);
-  ui.st_plot_info->setItem(0,0, new QTableWidgetItem(  QString::number(( (double) interval.jpoint*dt), 'f', 2) + " s" ) );
-  ui.st_plot_info->setItem(1,0, new QTableWidgetItem(  QString::number(( (double) interval.stpoint*dt), 'f', 2) + " s" ) );
-  ui.st_plot_info->setVerticalHeaderItem(0, new QTableWidgetItem( "ST onset" ));
-  ui.st_plot_info->setVerticalHeaderItem(1, new QTableWidgetItem( "ST end" ));
 }
 
 void ECGanalyzer::on_st_episodes_table_cellDoubleClicked(int row, int col)
 {
   auto _section = _ECGcontroller.st_data.getEpisodeBeginAndEnd(row);
   ui.st_plot->zoomX(_section.first, _section.second);
-  ui.st_plot_info->clear();
 
 }
 
@@ -295,16 +284,6 @@ void ECGanalyzer::updateSTIntervalTab()
     ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it->slope) ));
     ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it->offset) ));
   }
-  
-  auto interval = intervals.at(0);
-  ui.st_plot_info->clear();
-  ui.st_plot_info->setRowCount(2);
-  ui.st_plot_info->setColumnCount(1);
-  ui.st_plot_info->setItem(0,0, new QTableWidgetItem(  QString::number(( (double) interval.jpoint*dt), 'f', 2) + " s" ) );
-  ui.st_plot_info->setItem(1,0, new QTableWidgetItem(  QString::number(( (double) interval.stpoint*dt), 'f', 2) + " s" ) );
-  ui.st_plot_info->setVerticalHeaderItem(0, new QTableWidgetItem( "ST onset" ));
-  ui.st_plot_info->setVerticalHeaderItem(1, new QTableWidgetItem( "ST end" ));
-  
   
   std::vector<ECGST::Episode> episodes = st_data.getEpisodes();
   ui.st_episodes_table->clear();
