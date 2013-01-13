@@ -89,7 +89,7 @@ ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
   
   info.name = "atr";
   info.stat = WFDB_READ;
-  if( (err = annopen(file.c_str(), &info, 1)) < 0 ) {
+  if( (err = annopen(const_cast<char*>(file.c_str()), &info, 1)) < 0 ) {
     printf("ANNOPEN error %d\n", err);
     return rs;
   }
@@ -98,7 +98,7 @@ ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
     if (ann.anntyp == NORMAL) rpeaks_size++;
   }
   
-  if( (err = annopen(file.c_str(), &info, 1)) < 0 ) {
+  if( (err = annopen(const_cast<char*>(file.c_str()), &info, 1)) < 0 ) {
     printf("ANNOPEN error %d\n", err);
     return rs;
   }

@@ -8,7 +8,7 @@ class STAnalysis : public STIntervalModule
 {
 
 public:
-  enum class AlgorithmType {
+  enum AlgorithmType {
     Simple,
     Complex
   };
