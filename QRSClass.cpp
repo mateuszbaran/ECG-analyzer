@@ -8,8 +8,54 @@ QRSClass::~QRSClass (void)
 
 bool QRSClass::classQRS(ECGSignal &signal,ECGWaves &waves){
 
+	auto size = 
+
 }
 
+double * QRSClass::pole(ECGSignal * signal){
+
+	auto size = signal->channel_one->signal->size;
+
+	double* result = new double[2];
+	result[0] = 0;
+	result[1] = 0;
+
+	for(int i=0;i<size;i++){
+		result[0] += gsl_vector_get(signal->channel_one->signal,i);
+		result[1] += gsl_vector_get(signal->channel_two->signal,i);
+	}
+
+	return result;
+}
+double * QRSClass::dlugosc(ECGSignal * signal){
+
+	auto size = signal->channel_one->signal->size;
+
+	double* result = new double[2];
+	result[0] = 0;
+	result[1] = 0;
+
+	double y1;
+	double y2;
+
+	double tmp1 = gsl_vector_get(signal->channel_one->signal,i);
+	double tmp2 = gsl_vector_get(signal->channel_two->signal,i);
+	double tmp3;
+	double tmp4;
+
+	for(int i=1;i<size;i++){
+		tmp3 = tmp1;
+		tmp4 = tmp2;
+		tmp1 = gsl_vector_get(signal->channel_one->signal,i);
+		tmp2 = gsl_vector_get(signal->channel_two->signal,i);
+		result[0] += sqrt(1 + (tmp1-tmp3)*(tmp1-tmp3));
+		result[1] += sqrt(1 + (tmp2-tmp4)*(tmp2-tmp4));
+	}
+
+	return result;
+}
+
+/*
 ECGSignal QRSClass::derivates(ECGSignal * signal){
 	
 	auto size = signal->channel_one->signal->size;
@@ -94,29 +140,13 @@ ECGSignal QRSClass::hist(ECGSignal * signal){
 
 }
 
-ECGSignal QRSClass::pca(ECGSignal * signal){
-
-	auto size = signal->channel_one->signal->size;
-	int level = 50;
-	ECGSignal tmpSig;
-	tmpSig.setSize(level);
-
-	for (int i=0;i<level;i++){
-		int one = 0;
-		int two = 0;
-		for(int j=0;j<size;j++){
-			if(gsl_vector_get(signal->channel_one->signal,j)==i) one++;
-			if(gsl_vector_get(signal->channel_two->signal,j)==i) two++;
-		}
-		gsl_vector_set(tmpSig.channel_one->signal,i,one);
-		gsl_vector_set(tmpSig.channel_two->signal,i,two);
-	}
-
-	return tmpSig;
-
+double ** QRSClass::pca(ECGSignal * signal){
 }
 
-
+double * QRSClass::kmeans(double ** signal){
+}
+*/
+/*
 double* findMinimum (ECGSignal *signal,int forBegin, int forEnd) {
 
 
@@ -160,3 +190,4 @@ double* findMaximum (ECGSignal *signal,int forBegin, int forEnd) {
 
 	return result;
 }
+*/
