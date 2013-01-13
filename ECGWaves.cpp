@@ -1,5 +1,7 @@
 #include "ECGWaves.h"
 
+double* findMinimum (ECGSignal *signal,int forBegin, int forEnd);
+double* findMaximum (ECGSignal *signal,int forBegin, int forEnd);
 
 ECGWaves::ECGWaves (void)
 {}
