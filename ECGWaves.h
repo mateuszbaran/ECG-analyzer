@@ -4,6 +4,8 @@
 #include "ECGSignal.h"
 #include "ECGRs.h"
 
+using namespace std;
+
 /**
  * @class Class for storing QRS parameters.
  */
@@ -13,12 +15,15 @@ public:
   ECGWaves (void);
   ~ECGWaves (void);
 
-  bool detectQRS(ECGSignal *signal,ECGRs * rPeak);
-  bool detectPT(ECGSignal *signal);
+  bool detectQRS(ECGSignal &signal,ECGRs &rPeak);
+  bool detectPT(ECGSignal &signal);
   ECGSignal gradient(ECGSignal *signal);
   ECGSignal averageFilter(ECGSignal *signal);
   friend double* findMinimum (ECGSignal *signal,int forBegin, int forEnd);
   friend double* findMaximum (ECGSignal *signal,int forBegin, int forEnd);
+
+  ECGSignal getMockedSignal();
+  ECGRs getMockedRPeak();
 
   IntSignal GetP_end () const
   {
