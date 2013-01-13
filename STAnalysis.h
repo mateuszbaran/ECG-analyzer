@@ -8,6 +8,13 @@ class STAnalysis : public STIntervalModule
 {
 
 public:
+  enum class AlgorithmType {
+    Simple,
+    Complex
+  };
+  
+  STAnalysis();
+  
   virtual void runModule(const ECGRs&, const ECGWaves&, const ECGSignal&, const ECGInfo&, ECGST&);
   void setParams(ParametersTypes& );
   
@@ -26,9 +33,13 @@ private:
   };
   
   AbstractAnalizator * analizator;
-  void setAnalizator(STAnalysis::AbstractAnalizator* a = NULL);
+  double thresh;
+  void setAnalizator(STAnalysis::AbstractAnalizator* a = nullptr);
+  void setAnalizator(AlgorithmType atype = AlgorithmType::Simple);
   
-  IntSignal read_normal_r_peaks(char * filename);
+  AlgorithmType algorithmTypeFromInt(int value = 0) const;
+  
+  ECGRs read_normal_r_peaks(std::string path, std::string filename);
 };
 
 #endif // STANALYSIS_H

@@ -2,33 +2,36 @@
 #include "wfdb/wfdb.h"
 #include "wfdb/ecgcodes.h"
 #include "ECGST.h"
+#include "ECGSignal.h"
 #include <cstdio>
 #include <cstdlib>
 
+STAnalysis::STAnalysis() :
+  analizator(nullptr)
+{
+  setAnalizator(AlgorithmType::Simple);
+}
+
+
 STAnalysis::~STAnalysis()
 {
-  setAnalizator();
+  if (analizator) delete analizator;
 }
 
 void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const ECGSignal& signal, const ECGInfo& ecg_info, ECGST& output)
-{
-  printf("RUN ST MODULE\n");
+{ 
+  //For tests: ECGRs my_rpeaks = read_normal_r_peaks("ecgSignals", ecg_info.channel_one.filename);
   
-  printf("%s\n", ecg_info.channel_one.filename.c_str());
-  IntSignal rs = read_normal_r_peaks("ecgSignals/100");
-  ECGRs my_rpeaks;
-  my_rpeaks.setRs(rs);
-  
-  int N = my_rpeaks.GetRs()->signal->size;
-  //Should be: int N = rpeaks.GetRs()->signal->size;
+  //For tests: int N = my_rpeaks.GetRs()->signal->size;
+  int N = rpeaks.GetRs()->signal->size;
   
   for(int i=0; i < N; i++) {
-    ECGST::Interval interval = analizator->analyse(i, my_rpeaks, waves, signal, ecg_info);
-    //Shoud be: ECGST::Interval interval = analizator->analyse(i, rpeaks, waves, signal, ecg_info);
+    //For tests: ECGST::Interval interval = analizator->analyse(i, my_rpeaks, waves, signal, ecg_info);
+    ECGST::Interval interval = analizator->analyse(i, rpeaks, waves, signal, ecg_info);
     output.addInterval(interval);
   }
   
-  output.episodeAnalysis(ecg_info.channel_one.frequecy);
+  output.episodeAnalysis(ecg_info.channel_one.frequecy, thresh);
 }
 
 
@@ -37,7 +40,7 @@ ECGST::Interval STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs&
   ECGST::Interval interval;
   
   double invgain = 1.0 / float(info.channel_one.gain);
-  int rpeak = gsl_vector_int_get(rpeaks.GetRs()->signal, it);
+  int rpeak = rpeaks.GetRs()->get(it);
   int _45ms_in_samles = static_cast<int>(info.channel_one.frequecy*45.0f/1000.0f);
   int _60ms_in_samles = static_cast<int>(info.channel_one.frequecy*60.0f/1000.0f);
   
@@ -48,8 +51,8 @@ ECGST::Interval STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs&
   if ( interval.stpoint > signal.channel_one->signal->size) {
     
   } else {
-    interval.offset = (gsl_vector_get(signal.channel_one->signal, isopoint) - gsl_vector_get(signal.channel_one->signal, interval.stpoint))*invgain;
-    double diff = gsl_vector_get(signal.channel_one->signal, interval.stpoint) - gsl_vector_get(signal.channel_one->signal, interval.jpoint);
+    interval.offset = (signal.channel_one->get(isopoint) - signal.channel_one->get(interval.stpoint))*invgain;
+    double diff = signal.channel_one->get(interval.stpoint) - signal.channel_one->get(interval.jpoint);
     double invdist = 1/( ( (double) interval.stpoint ) - ( (double) interval.jpoint ) );
     interval.slope = diff*invdist*invgain;
   }
@@ -58,50 +61,87 @@ ECGST::Interval STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs&
 
 }
 
-void STAnalysis::setParams(ParametersTypes& )
+void STAnalysis::setParams(ParametersTypes& p)
 {
-  setAnalizator(new SimpleAnalizator());
+  auto algorithm = p.find("algorithm");
+  if (algorithm != p.end()) {
+    AlgorithmType atype = algorithmTypeFromInt((int) algorithm->second);
+    setAnalizator(atype);
+  }
+  
+  thresh = ECGST::Interval::thresh;
+  auto thresh_it = p.find("simple_thresh");
+  if (thresh_it != p.end()) {
+    thresh = thresh_it->second;
+  }
 }
 
-IntSignal STAnalysis::read_normal_r_peaks(char* filename)
+ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
 {
   WFDB_anninfo info;
   WFDB_Annotation ann;
-  int err; 
+  int err;
+  ECGRs rs;
   IntSignal rpeaks(new WrappedVectorInt());
- 
+  
+  size_t dot_pos = filename.rfind('.');
+  std::string file = path + "/" + filename.substr(0, dot_pos);
+  
   info.name = "atr";
   info.stat = WFDB_READ;
-  if( (err = annopen(filename, &info, 1)) < 0 ) {
+  if( (err = annopen(file.c_str(), &info, 1)) < 0 ) {
     printf("ANNOPEN error %d\n", err);
-    return rpeaks;
+    return rs;
   }
   int  rpeaks_size = 0;
   while (getann(0, &ann) == 0) {
     if (ann.anntyp == NORMAL) rpeaks_size++;
   }
   
-  if( (err = annopen(filename, &info, 1)) < 0 ) {
+  if( (err = annopen(file.c_str(), &info, 1)) < 0 ) {
     printf("ANNOPEN error %d\n", err);
-    return rpeaks;
+    return rs;
   }
   
   rpeaks->signal = gsl_vector_int_alloc(rpeaks_size);
   int it = 0;
   while (getann(0, &ann) == 0) {
     if (ann.anntyp == NORMAL) {
-      gsl_vector_int_set(rpeaks->signal, it, ann.time);
+      rpeaks->set(it, ann.time);
       it++;
     }
   }
-  return rpeaks;
+  rs.setRs(rpeaks);
+  return rs;
 }
 
 void STAnalysis::setAnalizator(STAnalysis::AbstractAnalizator * a)
 {
-  if (analizator) delete analizator;
+  if (analizator) {
+    delete analizator;
+    
+  }
   analizator = a;
 }
 
+void STAnalysis::setAnalizator(STAnalysis::AlgorithmType atype)
+{
+  switch(atype) {
+    case AlgorithmType::Complex:
+    case AlgorithmType::Simple:
+    default:
+      setAnalizator(new SimpleAnalizator()); break;
+  }
+}
 
+STAnalysis::AlgorithmType STAnalysis::algorithmTypeFromInt(int value) const
+{
+  switch(value) {
+    case 1:
+      return AlgorithmType::Complex;
+    case 0:
+    default:
+      return AlgorithmType::Simple;
+  }
+}
 

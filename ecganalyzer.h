@@ -45,7 +45,11 @@ private slots:
 
     void on_actionZatrzymajPonownaAnalizeSygnalu_triggered();
     
+    // For actions in ST interval module tab
     void on_run_st_analysis_button_clicked();
+    void on_st_select_algorithm_currentIndexChanged(int value);    
+    void on_st_intervals_table_cellDoubleClicked(int,int);
+    void on_st_episodes_table_cellDoubleClicked(int,int);
 
 private:
 	Ui::ECGanalyzerClass ui;
@@ -54,6 +58,22 @@ private:
 	void updateRunButtons(bool analysisOngoing);
 
 	void updateAnalysisStatus(std::string status);
+    
+    void setModulesParams();
+    
+    /**
+     * Set params for ST interval analysis module
+     * 
+     * Should be run *before* analysis
+     */
+    void setSTIntervalParams();
+    
+    /**
+     * Updates ST interval Tab with data form ST analysis.
+     * 
+     * Should be run *only* after analysis completed!
+     */
+    void updateSTIntervalTab();
 
 	ECGController _ECGcontroller;
 	//Ecg2Ch _ecg2ch;
