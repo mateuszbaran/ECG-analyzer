@@ -214,7 +214,7 @@ void ECGController::runSTInterval ()
   //{
     //runWaves();
   //}
-  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal, ecg_info, st_data);
+  st_interval_module->runModule(r_peaks_data, waves_data, filtered_signal, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
@@ -400,7 +400,8 @@ bool ECGController::readFile(std::string filename)
   raw_signal.setSize(nr_samples);
 
   //alocate memory for filtered signal
-  filtered_signal.setSize(nr_samples);
+  filtered_signal = ECGSignalChannel(new WrappedVector);
+  filtered_signal->signal = gsl_vector_alloc(nr_samples);
 
   //read signals
   for (i = 0; i < nr_samples; i++)

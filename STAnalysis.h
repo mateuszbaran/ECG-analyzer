@@ -15,7 +15,7 @@ public:
   
   STAnalysis();
   
-  virtual void runModule(const ECGRs&, const ECGWaves&, const ECGSignal&, const ECGInfo&, ECGST&);
+  virtual void runModule(const ECGRs&, const ECGWaves&, const ECGSignalChannel&, const ECGInfo&, ECGST&);
   void setParams(ParametersTypes& );
   
   virtual ~STAnalysis();
@@ -23,13 +23,13 @@ public:
 private:
   class AbstractAnalizator {
   public:
-    virtual ECGST::Interval analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignal& signal, const ECGInfo& info) = 0;
+    virtual ECGST::Interval analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info) = 0;
     virtual ~AbstractAnalizator() {};
   };
   
   class SimpleAnalizator: public AbstractAnalizator {
   public:
-    virtual ECGST::Interval analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignal& signal, const ECGInfo& info);
+    virtual ECGST::Interval analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info);
   };
   
   AbstractAnalizator * analizator;

@@ -18,7 +18,7 @@ STAnalysis::~STAnalysis()
   if (analizator) delete analizator;
 }
 
-void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const ECGSignal& signal, const ECGInfo& ecg_info, ECGST& output)
+void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& ecg_info, ECGST& output)
 { 
   //For tests: ECGRs my_rpeaks = read_normal_r_peaks("ecgSignals", ecg_info.channel_one.filename);
   
@@ -35,7 +35,7 @@ void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const EC
 }
 
 
-ECGST::Interval STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignal& signal, const ECGInfo& info)
+ECGST::Interval STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info)
 {
   ECGST::Interval interval;
   
@@ -48,11 +48,11 @@ ECGST::Interval STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs&
   interval.jpoint = rpeak + _45ms_in_samles;
   interval.stpoint = interval.jpoint + _60ms_in_samles;
   
-  if ( interval.stpoint > signal.channel_one->signal->size) {
+  if ( interval.stpoint > signal->signal->size) {
     
   } else {
-    interval.offset = (signal.channel_one->get(isopoint) - signal.channel_one->get(interval.stpoint))*invgain;
-    double diff = signal.channel_one->get(interval.stpoint) - signal.channel_one->get(interval.jpoint);
+    interval.offset = (signal->get(isopoint) - signal->get(interval.stpoint))*invgain;
+    double diff = signal->get(interval.stpoint) - signal->get(interval.jpoint);
     double invdist = 1/( ( (double) interval.stpoint ) - ( (double) interval.jpoint ) );
     interval.slope = diff*invdist*invgain;
   }
