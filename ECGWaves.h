@@ -1,6 +1,8 @@
 #pragma once
 
+#include <gsl/gsl_sort_vector.h>
 #include "ECGSignal.h"
+#include "ECGRs.h"
 
 /**
  * @class Class for storing QRS parameters.
@@ -10,6 +12,13 @@ class ECGWaves
 public:
   ECGWaves (void);
   ~ECGWaves (void);
+
+  bool detectQRS(ECGSignal *signal,ECGRs * rPeak);
+  bool detectPT(ECGSignal *signal);
+  ECGSignal gradient(ECGSignal *signal);
+  ECGSignal averageFilter(ECGSignal *signal);
+  friend double* findMinimum (ECGSignal *signal,int forBegin, int forEnd);
+  friend double* findMaximum (ECGSignal *signal,int forBegin, int forEnd);
 
   IntSignal GetP_end () const
   {
