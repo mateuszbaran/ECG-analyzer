@@ -8,7 +8,18 @@ QRSClass::~QRSClass (void)
 
 bool QRSClass::classQRS(ECGSignal &signal,ECGWaves &waves){
 
-	auto size = 
+	auto signalSize = signal.channel_one->signal->size;
+	gsl_vector_int *QRS_onset = waves.GetQRS_onset()->signal;
+	gsl_vector_int *QRS_end = waves.GetQRS_end()->signal;
+	int size = int(QRS_onset->size);
+	QRS_class = IntSignal(new WrappedVectorInt);
+	QRS_class->signal = gsl_vector_int_alloc(size);
+
+	for(int i=0;i<size;i++){
+
+	}
+
+
 
 }
 
