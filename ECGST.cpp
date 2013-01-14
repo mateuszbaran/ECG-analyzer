@@ -27,11 +27,40 @@ bool ECGST::Interval::normal(const double &thresh) const
   return !(lower(thresh) || higher(thresh));
 }
 
-void ECGST::addInterval(ECGST::Interval interval)
+std::pair< int, int > ECGST::Interval::span() const
 {
-  //printf("ST interval info: J: %d, ST %d, slope: %f offset: %f\n", interval.jpoint, interval.stpoint, interval.slope, interval.offset);
+  //TODO: Smarter span, independent from jpoint and stpoint
+  return std::make_pair(jpoint - 50, stpoint+20);
+}
+
+
+std::pair< int, int > ECGST::Episode::span() const
+{
+  return std::make_pair(start-40, end+10);
+}
+
+
+const ECGST::Episode& ECGST::getEpisodeAt(int i) const
+{
+  return episodes.at(i);
+}
+
+const ECGST::Interval& ECGST::getIntervalAt(int i) const
+{
+  return intervals.at(i);
+}
+
+
+void ECGST::addInterval(const ECGST::Interval& interval)
+{
   intervals.push_back(interval);
 }
+
+void ECGST::addEpisode(const ECGST::Episode& ep)
+{
+  episodes.push_back(ep);
+}
+
 
 const std::vector< ECGST::Interval >& ECGST::getIntervals() const
 {
@@ -53,41 +82,12 @@ ECGST::Episode::Episode(int s, int e):
 
 std::pair< int, int > ECGST::getIntervalBeginAndEnd(int i) const
 {
-  auto interval = intervals.at(i);
-  return std::make_pair(interval.jpoint - 50, interval.stpoint+20);
+  return intervals.at(i).span();
 }
 
 std::pair< int, int > ECGST::getEpisodeBeginAndEnd(int i) const
 {
-  auto ep = episodes.at(i);
-  return std::make_pair(ep.start-40, ep.end+10);
+  return episodes.at(i).span();
 }
-
-
-void ECGST::episodeAnalysis(int freq, double thresh)
-{
-  int _60s_in_samples = freq*60;
-  
-  bool episode = false;
-  int start = 0;
-  
-  for(auto it = intervals.begin(); it != intervals.end(); ++it) {
-    if (episode && it->normal(thresh)) {
-      //printf("BACK TO NORMAL %d (%d)\n", it->stpoint, it->stpoint - start);
-      if (it->stpoint - start > _60s_in_samples) {
-        //printf("FOUND EPISODE! %d - %d\n", start, it->jpoint);
-        episodes.push_back(Episode(start, it->stpoint));
-      }
-      episode = false;
-    }
-    
-    if (!episode && ! it->normal()) {
-      //printf("STH wrong! %d %F\n", it->jpoint, it->offset);
-      start = it->jpoint;
-      episode = true;
-    } 
-  }
-}
-
 
 

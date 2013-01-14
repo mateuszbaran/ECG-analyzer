@@ -208,7 +208,7 @@ void ECGController::runSTInterval ()
   }
   if (!rpeaks_module->run_)
   {
-    runRPeaks();
+    //runRPeaks();
   }
   //if (!waves_module->run_)
   //{
