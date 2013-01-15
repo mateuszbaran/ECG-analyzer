@@ -22,6 +22,7 @@ private:
   QwtPlotCurve* ISOPoints;
   QwtPlotCurve* JPoints;
   QwtPlotCurve* STPoints;
+  QwtPlotCurve* RPoints;
   QwtPlotZoomer * zoomer;
   std::pair< double, double > minMaxValueIn(int from, int to);
 };

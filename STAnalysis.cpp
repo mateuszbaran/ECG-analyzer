@@ -48,12 +48,13 @@ void STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, co
   
   int rpeak = rpeaks.GetRs()->get(it);
   
-  int isopoint = rpeak - _45ms_in_samples;
+  interval.rpoint = rpeak;
+  interval.isopoint = rpeak - _45ms_in_samples;
   interval.jpoint = rpeak + _45ms_in_samples;
   interval.stpoint = interval.jpoint + _60ms_in_samples;
   
   if ( interval.stpoint <= signal->signal->size) {
-    interval.offset = (signal->get(isopoint) - signal->get(interval.stpoint))*invgain;
+    interval.offset = (signal->get(interval.isopoint) - signal->get(interval.stpoint))*invgain;
     double diff = signal->get(interval.stpoint) - signal->get(interval.jpoint);
     double invdist = 1/( ( (double) interval.stpoint ) - ( (double) interval.jpoint ) );
     interval.slope = diff*invdist*invgain;
@@ -106,12 +107,12 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
   
   int rpeak = rpeaks.GetRs()->get(it);
   
-  int isopoint = rpeak - _45ms_in_samples;
+  interval.isopoint = rpeak - _45ms_in_samples;
   interval.jpoint = rpeak + _45ms_in_samples;
   interval.stpoint = interval.jpoint + _60ms_in_samples;
   
   if ( interval.stpoint <= signal->signal->size) {
-    interval.offset = (signal->get(isopoint) - signal->get(interval.stpoint))*invgain;
+    interval.offset = (signal->get(interval.isopoint) - signal->get(interval.stpoint))*invgain;
     double diff = signal->get(interval.stpoint) - signal->get(interval.jpoint);
     double invdist = 1/( ( (double) interval.stpoint ) - ( (double) interval.jpoint ) );
     interval.slope = diff*invdist*invgain;

@@ -8,8 +8,8 @@ ECGST::~ECGST (void) { }
 
 double ECGST::Interval::thresh = 0.05;
 
-ECGST::Interval::Interval(int iso, int j, int st, double sl, double of) :
-  isopoint(iso), jpoint(j), stpoint(st), slope(sl), offset(of)
+ECGST::Interval::Interval(int r, int iso, int j, int st, double sl, double of) :
+  rpoint(r), isopoint(iso), jpoint(j), stpoint(st), slope(sl), offset(of)
 { }
 
 bool ECGST::Interval::higher(const double &thresh) const
@@ -29,8 +29,7 @@ bool ECGST::Interval::normal(const double &thresh) const
 
 std::pair< int, int > ECGST::Interval::span() const
 {
-  //TODO: Smarter span, independent from jpoint and stpoint
-  return std::make_pair(jpoint - 50, stpoint+20);
+  return std::make_pair(rpoint - 20, rpoint + 45);
 }
 
 
