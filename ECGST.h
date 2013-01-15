@@ -20,7 +20,9 @@ public:
   
   class Interval {
   public:
-    Interval(int iso = 0, int j = 0, int st = 0, double sl = 0.0, double of = 0.0);
+    Interval(int r = 0, int iso = 0, int j = 0, int st = 0, double sl = 0.0, double of = 0.0);
+    string description;
+    int rpoint;
     int isopoint;
     int jpoint;
     int stpoint;

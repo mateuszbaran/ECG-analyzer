@@ -35,7 +35,13 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   STPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::red), QColor(Qt::red), QSize(5, 5)));
   STPoints->setYAxis(QwtPlot::yLeft);
   STPoints->attach(this);
-  
+
+  RPoints = new QwtPlotCurve("R");
+  RPoints->setStyle(QwtPlotCurve::NoCurve);
+  RPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::yellow), QColor(Qt::yellow), QSize(5, 5)));
+  RPoints->setYAxis(QwtPlot::yLeft);
+  RPoints->attach(this);
+
   QwtLegend * legend = new QwtLegend();
   legend->setItemMode(QwtLegend::ReadOnlyItem);
   legend->setWhatsThis("Click on an item to show/hide the plot");
@@ -60,6 +66,7 @@ StPlot::~StPlot()
   delete ISOPoints;
   delete JPoints;
   delete STPoints;
+  delete RPoints;
 }
 
 void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& info, const ECGST& stdata)
@@ -75,17 +82,20 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   QVector<QPointF>* ISOVector = new QVector<QPointF>;
   QVector<QPointF>* JVector = new QVector<QPointF>;
   QVector<QPointF>* STVector = new QVector<QPointF>;
+  QVector<QPointF>* RVector = new QVector<QPointF>;
   const std::vector<ECGST::Interval> intervals = stdata.getIntervals();
   for (std::vector<ECGST::Interval>::const_iterator it = intervals.begin() ; it != intervals.end(); ++it)
   {
     ISOVector->push_back(QPointF(float(it->isopoint)*dt, float(v->data[(it->isopoint)*v->stride]*invgain)));
     JVector->push_back(QPointF(float(it->jpoint)*dt, float(v->data[(it->jpoint)*v->stride]*invgain)));
-    STVector->push_back(QPointF(float(it->stpoint)*dt, float(v->data[(it->stpoint)*v->stride]*invgain))); 
+    STVector->push_back(QPointF(float(it->stpoint)*dt, float(v->data[(it->stpoint)*v->stride]*invgain)));
+    RVector->push_back(QPointF(float(it->rpoint)*dt, float(v->data[(it->rpoint)*v->stride]*invgain)));
   }
   
   ISOPoints->setSamples(*ISOVector);
   JPoints->setSamples(*JVector);
   STPoints->setSamples(*STVector);
+  RPoints->setSamples(*RVector);
   data->setSamples(*samples);
   curve->setData(data);
   zoomer->setZoomBase();
