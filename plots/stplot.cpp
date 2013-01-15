@@ -1,5 +1,6 @@
 #include "stplot.h"
 #include <qwt_symbol.h> 
+#include <qwt_legend.h> 
 
 StPlot::StPlot(QWidget* parent): QwtPlot(parent)
 {
@@ -17,23 +18,28 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   curve->setYAxis(QwtPlot::yLeft);
   curve->attach(this);
 
-  ISOPoints = new QwtPlotCurve("signal");
+  ISOPoints = new QwtPlotCurve("ISO");
   ISOPoints->setStyle(QwtPlotCurve::NoCurve);
   ISOPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::green), QColor(Qt::green), QSize(5, 5)));
   ISOPoints->setYAxis(QwtPlot::yLeft);
   ISOPoints->attach(this);
   
-  JPoints = new QwtPlotCurve("signal");
+  JPoints = new QwtPlotCurve("J");
   JPoints->setStyle(QwtPlotCurve::NoCurve);
   JPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::blue), QColor(Qt::blue), QSize(5, 5)));
   JPoints->setYAxis(QwtPlot::yLeft);
   JPoints->attach(this);
   
-  STPoints = new QwtPlotCurve("signal");
+  STPoints = new QwtPlotCurve("ST");
   STPoints->setStyle(QwtPlotCurve::NoCurve);
   STPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::red), QColor(Qt::red), QSize(5, 5)));
   STPoints->setYAxis(QwtPlot::yLeft);
   STPoints->attach(this);
+  
+  QwtLegend * legend = new QwtLegend();
+  legend->setItemMode(QwtLegend::ReadOnlyItem);
+  legend->setWhatsThis("Click on an item to show/hide the plot");
+  this->insertLegend(legend, QwtPlot::RightLegend);
   
   samples = new QVector<QPointF>;
   data = new QwtPointSeriesData;
