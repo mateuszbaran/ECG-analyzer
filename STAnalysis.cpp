@@ -5,6 +5,8 @@
 #include "ECGSignal.h"
 #include <cstdio>
 #include <cstdlib>
+//#include <gsl/gsl_vector.h>
+//#include <gsl/gsl_vector_int.h>
 
 STAnalysis::STAnalysis() :
   analizator(nullptr)
@@ -62,18 +64,31 @@ void STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, co
   }
   
   if (during_episode && interval.normal(thresh)) {
-      if (interval.stpoint - start > _60s_in_samples) {
-        ep.start = start;
-        ep.end = interval.stpoint;
-        output.addEpisode(ep);
-      }
-      during_episode = false;
+    if (interval.stpoint - start > _60s_in_samples) {
+      ep.start = start;
+      ep.end = interval.stpoint;
+      output.addEpisode(ep);
     }
+    during_episode = false;
+  }
+
+  if (interval.normal(thresh))
+  {
+    interval.description = string("normal");
+  } 
+  else if (interval.higher(thresh))
+  {
+    interval.description = string("higher");
+  }
+  else if (interval.lower(thresh))
+  { 
+    interval.description = string("lower");
+  }
     
-    if (!during_episode && ! interval.normal()) {
-      start = interval.jpoint;
-      during_episode = true;
-    }
+  if (!during_episode && ! interval.normal()) {
+    start = interval.jpoint;
+    during_episode = true;
+  }
 
 }
 
@@ -94,6 +109,29 @@ void STAnalysis::SimpleAnalizator::setParams(ParametersTypes& p)
 STAnalysis::ComplexAnalizator::ComplexAnalizator() :
   thresh(0.05), start(0), during_episode(false) {}
   
+std::pair<int, double> STAnalysis::ComplexAnalizator::maxDistanceSample(OtherSignal sig)
+{
+  int indexMax = 0;
+  double distMax = 0.0;
+  
+  int size = sig->signal->size;
+  double first = sig->get(0),
+    A = (first - sig->get(size - 1))/double(size),
+    ABsqrt = std::sqrt(A*A+1);
+  
+  for (int i = 0; i < size; i++)
+  {
+    double d = (A * i + sig->get(i) - first)/ABsqrt;
+    if (d > distMax)
+    {
+      distMax = d;
+      indexMax = i;
+    }
+  }
+  
+  return std::pair<int, double>(indexMax, distMax);
+}
+
 void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output)
 {
   ECGST::Interval interval;
@@ -117,19 +155,6 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
     double invdist = 1/( ( (double) interval.stpoint ) - ( (double) interval.jpoint ) );
     interval.slope = diff*invdist*invgain;
     output.addInterval(interval);
-  }
-
-  if (interval.normal(thresh))
-  {
-    interval.description = string("normal");
-  } 
-  else if (interval.higher(thresh))
-  {
-    interval.description = string("higher");
-  }
-  else if (interval.lower(thresh))
-  { 
-    interval.description = string("lower");
   }
   
   if (during_episode && interval.normal(thresh)) {

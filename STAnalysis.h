@@ -47,6 +47,7 @@ private:
     void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output);
     virtual void setParams(ParametersTypes& );
   private:
+    std::pair<int, double> maxDistanceSample(OtherSignal);
     double thresh;
     int start;
     bool during_episode;
