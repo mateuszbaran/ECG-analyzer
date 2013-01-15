@@ -187,6 +187,7 @@ void ECGanalyzer::on_st_select_algorithm_currentIndexChanged(int value)
 
 void ECGanalyzer::on_st_intervals_table_cellDoubleClicked(int row, int col)
 {
+  printf("Intervals %d, %d\n", row, col);
   auto _section = _ECGcontroller.st_data.getIntervalBeginAndEnd(row);
   ui.st_plot->zoomX(_section.first, _section.second);
 }
@@ -272,21 +273,23 @@ void ECGanalyzer::updateSTIntervalTab()
   
   std::vector<ECGST::Interval> intervals = st_data.getIntervals();
   ui.st_intervals_table->clear();
-  ui.st_intervals_table->setColumnCount(4);
+  ui.st_intervals_table->setColumnCount(5);
   ui.st_intervals_table->setRowCount(intervals.size());
   
   ui.st_intervals_table->setHorizontalHeaderItem(0, new QTableWidgetItem( "ST onset" ));
   ui.st_intervals_table->setHorizontalHeaderItem(1, new QTableWidgetItem( "ST end" ));
   ui.st_intervals_table->setHorizontalHeaderItem(2, new QTableWidgetItem( "Slope" ));
   ui.st_intervals_table->setHorizontalHeaderItem(3, new QTableWidgetItem( "Offset" ));
+  ui.st_intervals_table->setHorizontalHeaderItem(4, new QTableWidgetItem( "Description" ));
   
   auto it = intervals.begin();
-  int i =0;
+  int i = 0;
   for(; it != intervals.end(); ++it, ++i) {
     ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( QString::number(( (double) it->jpoint*dt), 'f', 2) + " s" ) );
     ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( QString::number(( (double) it->stpoint*dt), 'f', 2) + " s" ) );
     ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it->slope) ));
     ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it->offset) ));
+    ui.st_intervals_table->setItem(i,4, new QTableWidgetItem( it->description.c_str() ));
   }
   
   std::vector<ECGST::Episode> episodes = st_data.getEpisodes();
@@ -316,7 +319,8 @@ void ECGanalyzer::setSTIntervalParams()
   st_params["algorithm"] = (double) ui.st_select_algorithm->currentIndex();
   st_params["simple_thresh"] = ui.st_simple_thresh->value();
   st_params["complex_thresh"] = ui.st_complex_thresh->value();
-  st_params["complex_other"] = ui.st_complex_other->value();
+  st_params["type_thresh"] = ui.st_complex_other->value();
+  st_params["slope_thresh"] = ui.st_complex_slope->value();
   _ECGcontroller.setParamsSTInterval(st_params);
 }
 

@@ -14,7 +14,7 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   setAxisTitle(QwtPlot::xBottom, "Czas [s]");
   setAxisTitle(QwtPlot::yLeft, "Amplituda [mv]");
   
-  curve = new QwtPlotCurve("signal");
+  curve = new QwtPlotCurve("Filtered signal");
   curve->setYAxis(QwtPlot::yLeft);
   curve->attach(this);
 
@@ -40,7 +40,7 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   RPoints->setStyle(QwtPlotCurve::NoCurve);
   RPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::yellow), QColor(Qt::yellow), QSize(5, 5)));
   RPoints->setYAxis(QwtPlot::yLeft);
-  RPoints->attach(this);
+  //RPoints->attach(this);
 
   QwtLegend * legend = new QwtLegend();
   legend->setItemMode(QwtLegend::ReadOnlyItem);
@@ -66,7 +66,7 @@ StPlot::~StPlot()
   delete ISOPoints;
   delete JPoints;
   delete STPoints;
-  delete RPoints;
+  //delete RPoints;
 }
 
 void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& info, const ECGST& stdata)
@@ -76,26 +76,26 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   dt = 1.0 / float(info.frequecy);
   int size = int(v->size);
   samples->clear();
+  
   for (int i = 0; i < size; i++)
     samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
   
   QVector<QPointF>* ISOVector = new QVector<QPointF>;
   QVector<QPointF>* JVector = new QVector<QPointF>;
   QVector<QPointF>* STVector = new QVector<QPointF>;
-  QVector<QPointF>* RVector = new QVector<QPointF>;
+  //QVector<QPointF>* RVector = new QVector<QPointF>;
   const std::vector<ECGST::Interval> intervals = stdata.getIntervals();
   for (std::vector<ECGST::Interval>::const_iterator it = intervals.begin() ; it != intervals.end(); ++it)
   {
     ISOVector->push_back(QPointF(float(it->isopoint)*dt, float(v->data[(it->isopoint)*v->stride]*invgain)));
     JVector->push_back(QPointF(float(it->jpoint)*dt, float(v->data[(it->jpoint)*v->stride]*invgain)));
     STVector->push_back(QPointF(float(it->stpoint)*dt, float(v->data[(it->stpoint)*v->stride]*invgain)));
-    RVector->push_back(QPointF(float(it->rpoint)*dt, float(v->data[(it->rpoint)*v->stride]*invgain)));
+    //RVector->push_back(QPointF(float(it->rpoint)*dt, float(v->data[(it->rpoint)*v->stride]*invgain)));
   }
-  
   ISOPoints->setSamples(*ISOVector);
   JPoints->setSamples(*JVector);
   STPoints->setSamples(*STVector);
-  RPoints->setSamples(*RVector);
+  //RPoints->setSamples(*RVector);
   data->setSamples(*samples);
   curve->setData(data);
   zoomer->setZoomBase();
@@ -108,7 +108,6 @@ void StPlot::zoomX(int from, int to, bool vscale)
 {
   QRectF rect = zoomer->zoomBase();
   
-  
   rect.setLeft(from*dt);
   rect.setRight(to*dt);
   
@@ -119,6 +118,7 @@ void StPlot::zoomX(int from, int to, bool vscale)
   }
   
   zoomer->zoom(rect);
+  replot();
 }
 
 std::pair<double, double> StPlot::minMaxValueIn(int from, int to)

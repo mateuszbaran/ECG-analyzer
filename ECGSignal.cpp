@@ -20,7 +20,6 @@ void WrappedVector::set(size_t it, double value)
 }
 
 
-
 WrappedVectorInt::WrappedVectorInt( gsl_vector_int * _signal /*= NULL*/ )
 	: signal(_signal)
 {}
