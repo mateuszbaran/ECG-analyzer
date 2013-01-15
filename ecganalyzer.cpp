@@ -13,6 +13,10 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 	ui.setupUi(this);
+    
+#ifndef DEVELOPMENT
+    ui.run_st_analysis_button->setProperty('visible', false);
+#endif
 }
 
 ECGanalyzer::~ECGanalyzer()

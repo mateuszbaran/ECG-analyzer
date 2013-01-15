@@ -20,13 +20,20 @@ STAnalysis::~STAnalysis()
 
 void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info, ECGST& output)
 { 
+#ifdef DEVELOPMENT
   ECGRs my_rpeaks = read_normal_r_peaks("ecgSignals", info.channel_one.filename); //For tests
   int N = my_rpeaks.count(); //For tests
-  //int N = rpeaks.count(); //For real
+#else
+  int N = rpeaks.count(); //For real
+#endif
   
   for(int i=0; i < N; i++) {
-    //analizator->analyse(i, rpeaks, waves, signal, info.channel_one, output); //For real
+#ifdef DEVELOPMENT
     analizator->analyse(i, my_rpeaks, waves, signal, info.channel_one, output); // For tests
+#else
+    analizator->analyse(i, rpeaks, waves, signal, info.channel_one, output); //For real
+#endif
+
   }
 }
 
@@ -49,8 +56,13 @@ void STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, co
   int rpeak = rpeaks.GetRs()->get(it);
   
   interval.rpoint = rpeak;
+#ifdef DEVELOPMENT
   interval.isopoint = rpeak - _45ms_in_samples;
   interval.jpoint = rpeak + _45ms_in_samples;
+#else
+  interval.isopoint = waves.GetQRS_onset()->get(it);
+  interval.jpoint = waves.GetQRS_end()->get(it);
+#endif
   interval.stpoint = interval.jpoint + _60ms_in_samples;
   
   if ( interval.stpoint <= signal->signal->size) {
@@ -59,6 +71,19 @@ void STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, co
     double invdist = 1/( ( (double) interval.stpoint ) - ( (double) interval.jpoint ) );
     interval.slope = diff*invdist*invgain;
     output.addInterval(interval);
+  }
+  
+  if (interval.normal(thresh))
+  {
+    interval.description = string("normal");
+  } 
+  else if (interval.higher(thresh))
+  {
+    interval.description = string("higher");
+  }
+  else if (interval.lower(thresh))
+  { 
+    interval.description = string("lower");
   }
   
   if (during_episode && interval.normal(thresh)) {
@@ -107,8 +132,13 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
   
   int rpeak = rpeaks.GetRs()->get(it);
   
+#ifdef DEVELOPMENT
   interval.isopoint = rpeak - _45ms_in_samples;
   interval.jpoint = rpeak + _45ms_in_samples;
+#else
+  interval.isopoint = waves.GetQRS_onset()->get(it);
+  interval.jpoint = waves.GetQRS_end()->get(it);
+#endif
   interval.stpoint = interval.jpoint + _60ms_in_samples;
   
   if ( interval.stpoint <= signal->signal->size) {
@@ -168,6 +198,8 @@ void STAnalysis::setParams(ParametersTypes& p)
   analizator->setParams(p);
 }
 
+#ifdef DEVELOPMENT
+
 ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
 {
   WFDB_anninfo info;
@@ -206,6 +238,8 @@ ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
   rs.setRs(rpeaks);
   return rs;
 }
+
+#endif
 
 void STAnalysis::setAnalizator(STAnalysis::AbstractAnalizator * a)
 {

@@ -59,8 +59,10 @@ private:
   void setAnalizator(AlgorithmType atype = AlgorithmType::Simple);
   
   AlgorithmType algorithmTypeFromInt(int value = 0) const;
-  
+
+#ifdef DEVELOPMENT
   ECGRs read_normal_r_peaks(std::string path, std::string filename);
+#endif
 };
 
 #endif // STANALYSIS_H
