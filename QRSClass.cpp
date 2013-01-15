@@ -17,9 +17,27 @@ bool QRSClass::classQRS(ECGSignal &signal,ECGWaves &waves){
 
 	for(int i=0;i<size;i++){
 
+		int start,stop;
+		start = gsl_vector_int_get(QRS_onset,i);
+		stop = gsl_vector_int_get(QRS_end,i);
+		ECGSignal tmpSig;
+		tmpSig.setSize(stop-start);
+
+		for(int j=start;j<=stop;j++){
+			gsl_vector_set(tmpSig.channel_one->signal, i,gsl_vector_get(signal.channel_one->signal,j));
+			gsl_vector_set(tmpSig.channel_two->signal, i,gsl_vector_get(signal.channel_two->signal,j));
+		}
+
+		double * poleV = pole(&tmpSig);
+		double * dlugoscV = dlugosc(&tmpSig);
+		double rm1 = (dlugoscV[0]/2*sqrt(3.14*poleV[0]))-1;
+		double rm2 = (dlugoscV[1]/2*sqrt(3.14*poleV[1]))-1;
+
+		gsl_vector_int_set (QRS_class->signal,i,rm1);
+
 	}
 
-
+	return true;
 
 }
 
@@ -49,8 +67,8 @@ double * QRSClass::dlugosc(ECGSignal * signal){
 	double y1;
 	double y2;
 
-	double tmp1 = gsl_vector_get(signal->channel_one->signal,i);
-	double tmp2 = gsl_vector_get(signal->channel_two->signal,i);
+	double tmp1 = gsl_vector_get(signal->channel_one->signal,0);
+	double tmp2 = gsl_vector_get(signal->channel_two->signal,0);
 	double tmp3;
 	double tmp4;
 

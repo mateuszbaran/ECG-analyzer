@@ -40,31 +40,13 @@ public:
     this->id = id;
   }
 
-  void SetType (QRSType type)
-  {
-    this->type = type;
-  }
-
-  OtherSignal GetExample () const
-  {
-    return example;
-  }
-
   int GetId () const
   {
     return id;
   }
 
-  QRSType GetType () const
-  {
-    return type;
-  }
-
-
 private:
   int id;
   IntSignal QRS_class;
-  QRSType type;
-  OtherSignal example;
 };
 
