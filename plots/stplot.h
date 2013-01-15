@@ -19,6 +19,9 @@ private:
   QwtPlotCurve* curve;
   QwtPointSeriesData* data;
   QVector<QPointF>* samples;
+  QwtPlotCurve* ISOPoints;
+  QwtPlotCurve* JPoints;
+  QwtPlotCurve* STPoints;
   QwtPlotZoomer * zoomer;
   std::pair< double, double > minMaxValueIn(int from, int to);
 };

@@ -1,4 +1,5 @@
 #include "stplot.h"
+#include <qwt_symbol.h> 
 
 StPlot::StPlot(QWidget* parent): QwtPlot(parent)
 {
@@ -11,9 +12,29 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   grid->attach(this);
   setAxisTitle(QwtPlot::xBottom, "Czas [s]");
   setAxisTitle(QwtPlot::yLeft, "Amplituda [mv]");
+  
   curve = new QwtPlotCurve("signal");
   curve->setYAxis(QwtPlot::yLeft);
   curve->attach(this);
+
+  ISOPoints = new QwtPlotCurve("signal");
+  ISOPoints->setStyle(QwtPlotCurve::NoCurve);
+  ISOPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::green), QColor(Qt::green), QSize(5, 5)));
+  ISOPoints->setYAxis(QwtPlot::yLeft);
+  ISOPoints->attach(this);
+  
+  JPoints = new QwtPlotCurve("signal");
+  JPoints->setStyle(QwtPlotCurve::NoCurve);
+  JPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::blue), QColor(Qt::blue), QSize(5, 5)));
+  JPoints->setYAxis(QwtPlot::yLeft);
+  JPoints->attach(this);
+  
+  STPoints = new QwtPlotCurve("signal");
+  STPoints->setStyle(QwtPlotCurve::NoCurve);
+  STPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::red), QColor(Qt::red), QSize(5, 5)));
+  STPoints->setYAxis(QwtPlot::yLeft);
+  STPoints->attach(this);
+  
   samples = new QVector<QPointF>;
   data = new QwtPointSeriesData;
   replot();
@@ -30,6 +51,9 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
 StPlot::~StPlot()
 {
   if(zoomer) delete zoomer;
+  delete ISOPoints;
+  delete JPoints;
+  delete STPoints;
 }
 
 void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& info, const ECGST& stdata)
@@ -40,7 +64,22 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   int size = int(v->size);
   samples->clear();
   for (int i = 0; i < size; i++)
-      samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
+    samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
+  
+  QVector<QPointF>* ISOVector = new QVector<QPointF>;
+  QVector<QPointF>* JVector = new QVector<QPointF>;
+  QVector<QPointF>* STVector = new QVector<QPointF>;
+  const std::vector<ECGST::Interval> intervals = stdata.getIntervals();
+  for (std::vector<ECGST::Interval>::const_iterator it = intervals.begin() ; it != intervals.end(); ++it)
+  {
+    ISOVector->push_back(QPointF(float(it->isopoint)*dt, float(v->data[(it->isopoint)*v->stride]*invgain)));
+    JVector->push_back(QPointF(float(it->jpoint)*dt, float(v->data[(it->jpoint)*v->stride]*invgain)));
+    STVector->push_back(QPointF(float(it->stpoint)*dt, float(v->data[(it->stpoint)*v->stride]*invgain))); 
+  }
+  
+  ISOPoints->setSamples(*ISOVector);
+  JPoints->setSamples(*JVector);
+  STPoints->setSamples(*STVector);
   data->setSamples(*samples);
   curve->setData(data);
   zoomer->setZoomBase();
