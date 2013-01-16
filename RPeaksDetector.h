@@ -1,10 +1,12 @@
 #pragma once
+#include <fstream>
+#include <sstream>
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 //#define DEBUG
 //#define DEBUG_SIGNAL
 //#define DEBUG_SIGNAL_DETAILS
-//#define USE_MOCKED_SIGNAL
+#define USE_MOCKED_SIGNAL
 
 using namespace std;
 
@@ -19,7 +21,7 @@ public:
 	RPeaksDetector();
 	~RPeaksDetector();
 
-	void runModule(const ECGSignal &, const ECGInfo &, ECGRs &);
+	void runModule(const ECGSignalChannel &, const ECGInfo &, ECGRs &);
 	void setParams(ParametersTypes &);
 
   /**
@@ -43,12 +45,12 @@ private:
   /**
   *  Filtered signal from 'ECG_BASALINE'
   */
-  ECGSignal filteredSignal;
+  ECGSignalChannel filteredSignal;
 
   /**
   *  R peaks vector
   */
-  ECGRs rsPositions;
+  ECGRs * rsPositions;
 
   /**
   *  R peaks detection method
@@ -69,19 +71,25 @@ private:
   *  PanTompkins R peaks method detection
   *  @param pointer to ECG signal
   */
-  bool panTompkinsRPeaksDetection(ECGSignal *signal);
+  bool panTompkinsRPeaksDetection(ECGSignalChannel *signal);
   
   /**
   *  Hilbert R peaks method detection
   *  @param pointer to ECG signal
   */
-  bool hilbertRPeaksDetection(ECGSignal *signal);
+  bool hilbertRPeaksDetection(ECGSignalChannel *signal);
+
+
+  /**
+  *  Filtered mocked signal
+  */
+  ECGSignalChannel mockedSignal;
 
   /*
   * Returns a part of filtered signal
   * This function is used only for tests!
   */
-  ECGSignal getMockedSignal();
+  ECGSignalChannel getMockedSignal();
 
 };
 
@@ -98,11 +106,11 @@ public:
     this->cause = cause;
   }
 
+private:
+	string cause;
+
   virtual const string what() const throw()
   {
     return "Error during execution R preaks module cause: " + cause;
   }
-
-private:
-	string cause;
 };

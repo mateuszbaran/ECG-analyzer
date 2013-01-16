@@ -3,17 +3,23 @@
 #include "BaselineRemoval.h"
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "STAnalysis.h"
 
 #include "wfdb/wfdb.h"
 
 #include "tri_logger.hpp"
+
+#include <boost/thread.hpp>
 
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
-  hrv1_module(new HRV1Analyzer())
+  hrv1_module(new HRV1Analyzer()),
+  st_interval_module(new STAnalysis()),
+  analysisCompl(false),
+  computation(NULL)
 {
   TRI_LOG_STR("ECGController created, 20:51 17-12-2012");
   //TODO: create modules objects
@@ -22,6 +28,7 @@ ECGController::ECGController (void) :
 ECGController::~ECGController (void)
 {
   TRI_LOG_STR("ECGController destroyed");
+  delete computation;
 }
 
 void ECGController::setParamsECGBaseline (ParametersTypes & params)
@@ -199,11 +206,15 @@ void ECGController::runSTInterval ()
   {
     runECGBaseline();
   }
-  if (!waves_module->run_)
+  if (!rpeaks_module->run_)
   {
-    runWaves();
+    runRPeaks();
   }
-  st_interval_module->runModule(waves_data, filtered_signal, ecg_info, st_data);
+  //if (!waves_module->run_)
+  //{
+    //runWaves();
+  //}
+  st_interval_module->runModule(r_peaks_data, waves_data, filtered_signal, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
@@ -383,12 +394,14 @@ bool ECGController::readFile(std::string filename)
   ecg_info.channel_one.zero_signal = s[0].adczero;
   ecg_info.channel_two.zero_signal = s[1].adczero;
  
+
   //set signal
   nr_samples = s[0].nsamp; //we assume that both channels are equal.
   raw_signal.setSize(nr_samples);
 
   //alocate memory for filtered signal
-  filtered_signal.setSize(nr_samples);
+  filtered_signal = ECGSignalChannel(new WrappedVector);
+  filtered_signal->signal = gsl_vector_alloc(nr_samples);
 
   //read signals
   for (i = 0; i < nr_samples; i++)
@@ -404,4 +417,52 @@ bool ECGController::readFile(std::string filename)
   LOG_END
   TRI_LOG_STR(" returns true");
   return true;
+}
+
+void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate, std::function<void()> analysisComplete )
+{
+	TRI_LOG_STR(__FUNCTION__);
+
+	//cleaning after previous computation
+	if(computation && analysisCompl)
+	{
+		delete computation;
+		analysisCompl = false;
+	}
+
+	if(computation)
+	{
+		computation->interrupt();
+		computation->join();
+		delete computation;
+		computation = NULL;
+	}
+	else
+	{
+
+#define HANDLE_INTERRUPTION							\
+	try {											\
+		boost::this_thread::interruption_point(); } \
+	catch(...) {									\
+		return;										\
+	}
+
+		analysisCompl = false;
+		computation = new boost::thread([=](){
+			statusUpdate("Analysis begins");
+			runECGBaseline();
+			HANDLE_INTERRUPTION
+			statusUpdate("Baseline removal completed; R peaks detection ongoing.");
+			runRPeaks();
+			HANDLE_INTERRUPTION
+			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
+			runHRV1();
+			HANDLE_INTERRUPTION
+			statusUpdate("Analysis complete!");
+			analysisComplete();
+			analysisCompl = true;
+		});
+	}
+	
+#undef HANDLE_INTERRUPTION
 }
