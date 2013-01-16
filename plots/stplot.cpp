@@ -1,4 +1,4 @@
-#include "stplot.h"
+#include "../plots/stplot.h"
 
 StPlot::StPlot(QWidget* parent): QwtPlot(parent)
 {
