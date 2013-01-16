@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+#include <sstream>
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 #define DEBUG
@@ -76,6 +78,12 @@ private:
   *  @param pointer to ECG signal
   */
   bool hilbertRPeaksDetection(ECGSignalChannel *signal);
+
+
+  /**
+  *  Filtered mocked signal
+  */
+  ECGSignalChannel mockedSignal;
 
   /*
   * Returns a part of filtered signal
