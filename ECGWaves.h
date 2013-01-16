@@ -3,6 +3,8 @@
 #include <gsl/gsl_sort_vector.h>
 #include "ECGSignal.h"
 #include "ECGRs.h"
+//#include "ECGChannelInfo.h"
+//#include "ModulesInterfaces.h"
 
 using namespace std;
 
@@ -15,12 +17,11 @@ public:
   ECGWaves (void);
   ~ECGWaves (void);
 
+  //void runModule(const ECGSignal &, const ECGInfo &, const ECGRs &, ECGWaves &);
+  //void setParams(ParametersTypes &);
+
   bool detectQRS(ECGSignal &signal,ECGRs &rPeak);
   bool detectPT(ECGSignal &signal);
-  ECGSignal gradient(ECGSignal *signal);
-  ECGSignal averageFilter(ECGSignal *signal);
-  friend double* findMinimum (ECGSignal *signal,int forBegin, int forEnd);
-  friend double* findMaximum (ECGSignal *signal,int forBegin, int forEnd);
 
   ECGSignal getMockedSignal();
   ECGRs getMockedRPeak();
@@ -56,5 +57,11 @@ private:
   IntSignal T_end;
   IntSignal P_onset;
   IntSignal P_end;
+
+  ECGSignal gradient(ECGSignal *signal);
+  ECGSignal averageFilter(ECGSignal *signal);
+  friend double* findMinimum (ECGSignal *signal,int forBegin, int forEnd);
+  friend double* findMaximum (ECGSignal *signal,int forBegin, int forEnd);
+
 };
 

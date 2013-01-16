@@ -7,6 +7,10 @@ ECGWaves::ECGWaves (void)
 ECGWaves::~ECGWaves (void)
 {}
 
+//void ECGWaves::setParams(ParametersTypes &parameterTypes){}
+
+//void ECGWaves::runModule(const ECGSignal &filteredSignal, const ECGInfo & ecgi, const ECGRs &ecgRs, ECGWaves &ecgWaves){}
+
 bool ECGWaves::detectQRS(ECGSignal &signal,ECGRs &rPeak){
 
 	auto signalSize = signal.channel_one->signal->size;
@@ -175,9 +179,9 @@ bool ECGWaves::detectPT(ECGSignal &signal){
 	ECGSignal allPTSig;
 	allPTSig.setSize(signalSize);
 
-	for(int i = 0; i < qrsCount-2; i++)
+	for(int i = 0; i < qrsCount-1; i++)
 	{	
-		auto qrsOnset = gsl_vector_int_get (QRS_onset->signal, i+1);
+		auto qrsOnset = gsl_vector_int_get (QRS_onset->signal, i);
 		auto qrsEnd = gsl_vector_int_get (QRS_end->signal, i);
 	    auto qrsOnset2 = gsl_vector_int_get (QRS_onset->signal, i+1);
 		auto qrsEnd_2 = gsl_vector_int_get (QRS_end->signal, i+1);
@@ -188,8 +192,8 @@ bool ECGWaves::detectPT(ECGSignal &signal){
 		min = gsl_vector_get (signal.channel_one->signal, qrsEnd);
 
 		ECGSignal cycleSig;
-		cycleSig.setSize(signalSize);
-		for(int j = qrsEnd; j < qrsOnset2; j++)
+		cycleSig.setSize(cycleSize);
+		for(int j = qrsEnd+10; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (signal.channel_one->signal, j);
 			max = (max>value)? max:value;
@@ -203,7 +207,7 @@ bool ECGWaves::detectPT(ECGSignal &signal){
 		for(int j = qrsEnd;j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (signal.channel_one->signal, j);
-			value = (value-min)/max;
+			value = (value-min)/(max-min);
 			gsl_vector_set(allPTSig.channel_one->signal, j, value);
 			gsl_vector_set(cycleSig.channel_one->signal, j-qrsEnd, value);
 		}
@@ -211,62 +215,65 @@ bool ECGWaves::detectPT(ECGSignal &signal){
 		//finding median 
 		gsl_sort_vector(cycleSig.channel_one->signal);
 		double median = gsl_vector_get (cycleSig.channel_one->signal, cycleSize/2);
-
 		for(int j = qrsEnd; j < qrsOnset2; j++)
 		{
-			auto value = gsl_vector_get (signal.channel_one->signal, j);
+			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);
 			gsl_vector_set(allPTSig.channel_one->signal, j, value-median);
 		}
 
 
 		for(int j = qrsEnd; j < qrsOnset2; j++)
 		{
-			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);			
-			gsl_vector_set(allPTSig.channel_one->signal, j, (value>0.07)?1:0);
+			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);	
+			double afterTresholding = (value>0.05)?1:0;
+			gsl_vector_set(allPTSig.channel_one->signal, j, afterTresholding);
 		}
 
 		//finding points 
 		gsl_vector_int_set(T_end->signal,i,qrsEnd);
 		double p1=0,p2=0;
 		//T is in first 75%
-		for(int j = qrsEnd; j < qrsOnset2*3/4; j++)
+		for(int j = qrsEnd; j < qrsEnd+cycleSize*3/4; j++)
 		{
 			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);	
 			if(p1==0){
 				if(value>0){
-					p1=value;
+					p1=j;
 				}
 			}else if(value <1){
-				p2 = value;
-			}
+				p2 = j;
+			
 
-			if(p2-p1>90){
+			if(p2-p1>cycleSize/100*15){
 				gsl_vector_int_set(T_end->signal,i,j);
 				break;
 			}else{
 			p1 = p2 =0;
 			}
+			}
 		}
 		//p in last 23%
 		gsl_vector_int_set(P_onset->signal,i,qrsOnset2);
 		gsl_vector_int_set(P_end->signal,i,qrsOnset2);
-		for(int j = qrsEnd*3/4; j < qrsOnset2; j++)
+		p1 = p2 =0;
+		for(int j = qrsEnd+cycleSize*3/4; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (allPTSig.channel_one->signal, j);	
 			if(p1==0){
 				if(value>0){
-					p1=value;
+					p1=j;
 				}
 			}else if(value <1){
-				p2 = value;
-			}
+				p2 = j;
+			
 
-			if(p2-p1>9){
+			if(p2-p1>cycleSize/100*3){
 				gsl_vector_int_set(P_onset->signal,i,p1);
 				gsl_vector_int_set(P_end->signal,i,p2);
 				break;
 			}else{
 			p1 = p2 =0;
+			}
 			}
 		}
 
