@@ -168,6 +168,7 @@ void ECGanalyzer::on_run_st_analysis_button_clicked()
   _ECGcontroller.runSTInterval();
   
   updateSTIntervalTab();
+  updateAnalysisStatus("ST Analysis Ended!");
 }
 
 void ECGanalyzer::on_st_select_algorithm_currentIndexChanged(int value)
@@ -187,7 +188,6 @@ void ECGanalyzer::on_st_select_algorithm_currentIndexChanged(int value)
 
 void ECGanalyzer::on_st_intervals_table_cellDoubleClicked(int row, int col)
 {
-  printf("Intervals %d, %d\n", row, col);
   auto _section = _ECGcontroller.st_data.getIntervalBeginAndEnd(row);
   ui.st_plot->zoomX(_section.first, _section.second);
 }

@@ -29,7 +29,7 @@ bool ECGST::Interval::normal(const double &thresh) const
 
 std::pair< int, int > ECGST::Interval::span() const
 {
-  return std::make_pair(rpoint - 20, rpoint + 45);
+  return std::make_pair(isopoint - 10, stpoint + 10);
 }
 
 

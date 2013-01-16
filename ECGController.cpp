@@ -214,7 +214,7 @@ void ECGController::runSTInterval ()
   //{
     //runWaves();
   //}
-  st_interval_module->runModule(r_peaks_data, waves_data, filtered_signal, ecg_info, st_data);
+  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal.channel_one, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
