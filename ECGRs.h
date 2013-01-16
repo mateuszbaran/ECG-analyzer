@@ -11,13 +11,13 @@ public:
   ECGRs (void);
   ~ECGRs (void);
 
-  IntSignal* GetRs () const
+  IntSignal GetRs () const
   {
     return rs;
   }
 
-  void setRs(IntSignal* rs);
+  void setRs(IntSignal rs);
 
 private:
-  IntSignal* rs;
+  IntSignal rs;
 };
