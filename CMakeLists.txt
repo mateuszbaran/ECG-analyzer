@@ -54,6 +54,7 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 # Controls behaviour of logger - possible values: -DCLEANTLOG, -DFTLOG, -DETLOG, -DTLOG
 ADD_DEFINITIONS("-DFTLOG=log")
+
 ADD_DEFINITIONS("-DDEVELOPMENT")
 
 include_directories(${GSL_INCLUDE_DIRS} ${GSLCBLAS_INCLUDE_DIRS})

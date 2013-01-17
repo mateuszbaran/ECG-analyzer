@@ -1468,7 +1468,7 @@
                  <item row="0" column="2">
                   <widget class="QPushButton" name="run_st_analysis_button">
                    <property name="visible">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                    <property name="text">
                     <string>RUN</string>

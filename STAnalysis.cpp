@@ -1,12 +1,15 @@
 #include "STAnalysis.h"
-#include "wfdb/wfdb.h"
-#include "wfdb/ecgcodes.h"
 #include "ECGST.h"
 #include "ECGSignal.h"
+
 #include <cstdio>
 #include <cstdlib>
-//#include <gsl/gsl_vector.h>
-//#include <gsl/gsl_vector_int.h>
+
+#ifdef DEVELOPMENT
+#include "wfdb/wfdb.h"
+#include "wfdb/ecgcodes.h"
+#endif
+
 
 STAnalysis::STAnalysis() :
   analizator(nullptr)
@@ -124,7 +127,7 @@ void STAnalysis::SimpleAnalizator::setParams(ParametersTypes& p)
 }
 
 STAnalysis::ComplexAnalizator::ComplexAnalizator() :
-  thresh(0.1), start(0), during_episode(false), type_thresh(0.15), slope_thresh(0.15) {}
+  thresh(0.1), type_thresh(0.15), slope_thresh(0.15), start(0), during_episode(false) {}
   
 std::pair<int, double> STAnalysis::ComplexAnalizator::maxDistanceSample(const OtherSignal& sig, int from, int to)
 {
@@ -173,7 +176,7 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
   ECGST::Interval interval;
   ECGST::Episode ep;
   
-  double invgain = 1.0 / float(info.gain);
+  double invgain = 1.0f / double(info.gain);
   
   int _60s_in_samples = info.frequecy*60;
   int _20ms_in_samples = static_cast<int>(info.frequecy*20.0f/1000.0f);
@@ -193,9 +196,9 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
 #endif
   
   if ( tend <= signal->signal->size) {
+    int j20point = interval.jpoint + _20ms_in_samples;
     int tpeak = getTPeak(signal, interval.jpoint, tend);
-    //printf("J %d, Tpeak %d, Tend %d\n", interval.jpoint, tpeak, tend);
-    auto max_dist = maxDistanceSample(signal, interval.jpoint + _20ms_in_samples, tpeak);
+    auto max_dist = maxDistanceSample(signal, j20point, tpeak);
     
     interval.stpoint = max_dist.first;
   
@@ -211,13 +214,20 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
       if (interval.lower(thresh)) interval.description = std::string("lower");
       else interval.description = std::string("normal");
       tepoint = interval.stpoint;
-      max_dist = maxDistanceSample(signal, interval.jpoint + _20ms_in_samples, interval.stpoint);
+      max_dist = maxDistanceSample(signal, j20point, interval.stpoint);
     }
     straight = max_dist.second < type_thresh;
     
-    double diff = signal->get(tepoint) - signal->get(interval.jpoint+ _20ms_in_samples);
-    double invdist = 1/( ( (double) tepoint ) - ( (double) interval.jpoint+ _20ms_in_samples ) );
-    interval.slope = diff*invdist*invgain;
+    
+    
+    if (tepoint - j20point > 2) {
+      double diff = signal->get(tepoint) - signal->get(j20point);
+      double invdist = 1.0f/double(tepoint - j20point);
+      interval.slope = diff*invdist*invgain;
+    } else {
+      interval.slope = 0;
+    }
+    
     
     if (straight) {
       interval.description += " straight";
@@ -326,7 +336,7 @@ ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
   size_t dot_pos = filename.rfind('.');
   std::string file = path + "/" + filename.substr(0, dot_pos);
   
-  info.name = "atr";
+  info.name = const_cast<char*>("atr");
   info.stat = WFDB_READ;
   if( (err = annopen(const_cast<char*>(file.c_str()), &info, 1)) < 0 ) {
     printf("ANNOPEN error %d\n", err);
