@@ -19,6 +19,8 @@ public:
 
   /* in msec */
   unsigned int signal_duration;
+
+  std::string sampleToTime(int sample);
 };
 
 struct ECGInfo
