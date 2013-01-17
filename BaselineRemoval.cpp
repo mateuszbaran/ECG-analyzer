@@ -33,6 +33,13 @@ void BaselineRemoval::setParams(ParametersTypes &params)
 	this -> baselineRemovalMethod = MOVING_AVERAGE;
 }
 
+void BaselineRemoval::evaluateSignalChannels(const ECGSignal &inputSignal, ECGSignalChannel &betterChannel)
+{
+	//This method will evaluate which channel is better
+	//For the time being it just returns first channel
+	betterChannel->signal = inputSignal.channel_one->signal;
+}
+
 /**
 	Moving Average algorithm - we assume that 4 neighbours are considered 
 	while calculating average value for any given point,
@@ -41,24 +48,21 @@ void BaselineRemoval::setParams(ParametersTypes &params)
 */
 void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int span)
 {
+	ECGSignalChannel betterChannel;
+	evaluateSignalChannels(inputSignal, betterChannel);
+
 	auto signalLength = outputSignal-> signal -> size;
 	for(int index = 0; index<signalLength; index++)
 	{
 		if(index < span/2 || index > signalLength - span/2) 
 		{
-			auto inputValueChannelOne = gsl_vector_get (inputSignal.channel_one -> signal, index);
-			//auto inputValueChannelTwo = gsl_vector_get (inputSignal.channel_two -> signal, index);
-
-			gsl_vector_set(outputSignal -> signal, index, inputValueChannelOne);
-			//gsl_vector_set(outputSignal.channel_two -> signal, index, inputValueChannelTwo);
+			auto inputValue = gsl_vector_get (betterChannel -> signal, index);
+			gsl_vector_set(outputSignal -> signal, index, inputValue);
 		}
 		else
 		{
-			auto avgValueChannelOne = calculateAvgValueOfNeighbours(inputSignal.channel_one -> signal, index, span);
-			//auto avgValueCahnnelTwo = calculateAvgValueOfNeighbours(inputSignal.channel_two -> signal, index, span);
-			
-			gsl_vector_set (outputSignal -> signal, index, avgValueChannelOne) ;
-			//gsl_vector_set (outputSignal.channel_two -> signal, index, avgValueCahnnelTwo) ;
+			auto avgValue = calculateAvgValueOfNeighbours(betterChannel -> signal, index, span);		
+			gsl_vector_set (outputSignal -> signal, index, avgValue);
 		}
 	}
 }
@@ -76,10 +80,13 @@ double BaselineRemoval::calculateAvgValueOfNeighbours(gsl_vector *signal, int cu
 
 void BaselineRemoval::butterworthBaselineRemoval(const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, int cutoffFreq)
 {
+	ECGSignalChannel betterChannel;
+	evaluateSignalChannels(inputSignal, betterChannel);
+
 	int sampleFreq = ecgInfo.channel_one.frequecy;
 	Butterworth * butterworth = new Butterworth();
 	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, cutoffFreq, sampleFreq, 0);
 	
 	Filter * filter = new Filter();
-	filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2);
+	filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], betterChannel, outputSignal, 2);
 }
