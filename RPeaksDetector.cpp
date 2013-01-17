@@ -1,4 +1,5 @@
 #include "RPeaksDetector.h"
+#include<QDebug>
 #include "tri_logger.hpp"
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
@@ -30,13 +31,13 @@ void RPeaksDetector::runModule(const ECGSignalChannel &filteredSignal, const ECG
 		if(!success)
 		{
 			#ifdef DEBUG
-				cout << "R peaks cetedtion module fails" << endl;
+				qDebug() << "R peaks cetedtion module fails";
 			#endif
 			throw new RPeaksDetectionException("R peaks detection method fails");
 		}
 	} catch (...) {
 		#ifdef DEBUG
-			cout << "R peaks cetedtion module fails" << endl;
+			qDebug() << "R peaks cetedtion module fails";
 		#endif
 		throw new RPeaksDetectionException("Unknown exception during execution R peaks detection method");
 	}
@@ -59,7 +60,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 		else
 		{
 			#ifdef DEBUG
-				cout << "Unknown detection method" << endl;
+				qDebug() << "Unknown detection method";
 			#endif
 			TRI_LOG_STR("Unknown detection method.");
 			throw new RPeaksDetectionException("Unknown detection method.");
@@ -67,7 +68,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 	}
 	else {
 		#ifdef DEBUG
-			cout << "Parameter: detection method not found" << endl;
+			qDebug() << "Parameter: detection method not found";
 		#endif
 		TRI_LOG_STR("Parameter: detection method not found");
 		throw new RPeaksDetectionException("Parameter: detection method not found");
@@ -79,7 +80,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 	}
 	else {
 		#ifdef DEBUG
-			cout << "Window size not found, use default falue 25" << endl;
+			qDebug() << "Window size not found, use default falue 25";
 		#endif
 	}
 
@@ -89,7 +90,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 	}
 	else {
 		#ifdef DEBUG
-			cout << "Thersold size not found, use default falue 0.1" << endl;
+			qDebug() << "Thersold size not found, use default falue 0.1";
 		#endif
 	}
 	this->customParameters = true;
@@ -98,17 +99,17 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 			cout << "Input parameters for R peaks module:" << endl;
 			if(this->detectionMethod == PAN_TOMPKINS)
 			{
-				cout << "Detection method: PanTompkins" << endl
+				qDebug()  << "Detection method: PanTompkins" << endl
 						  << "Moving window size: " << this->panTompkinsMovinghWindowLenght << endl
-						  << "Thersold size: " << panTompkinsThersold << endl;
+						  << "Thersold size: " << panTompkinsThersold;
 			} 
 			else if (this->detectionMethod == HILBERT)
 			{
-				cout << "Detection method: Hilbert" << endl;
+				qDebug() << "Detection method: Hilbert";
 			}
 			else
 			{
-				cout << "Unknown detection method" << endl;
+				qDebug() << "Unknown detection method";
 			}
 	#endif
 	LOG_END;
@@ -120,11 +121,11 @@ bool RPeaksDetector::detectRPeaks()
 	#ifdef DEBUG
 		if(this->customParameters)
 		{
-			cout << "Running module with custom parameters" << endl;
+			qDebug() << "Running module with custom parameters";
 		}
 		else
 		{
-			cout << "Running module with default parameters" << endl;
+			qDebug() << "Running module with default parameters";
 		}
 	#endif
 
@@ -150,7 +151,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	if(sig->signal->size == NULL || sig->signal->size == 0)
 	{
 		#ifdef DEBUG
-			cout << "Input signal size is 0" << endl;
+			qDebug() << "Input signal size is 0";
 		#endif
 		TRI_LOG_STR("Input signal size is 0");
 		return false;
@@ -158,52 +159,19 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	else
 	{
 		sigSize = sig->signal->size;
-	}
-
-	// UNECESSARY This part probably is unecessary, should be done in Baseline module
-	#ifdef DEBUG
-		cout << "DC cancelation and normalization" << endl;
-	#endif
-	double sigSumVal = 0;
-	double sigMaxVal = 0;
-	for(int i = 0; i < sigSize; i++)
-	{
-		double inputValue = gsl_vector_get (sig->signal, i);			
-		sigSumVal += inputValue;
-		if(abs(inputValue) > sigMaxVal)
-		{
-			sigMaxVal = abs(inputValue);
-			#ifdef DEBUG_SIGNAL
-				cout << "New max signal value for channel one: " << inputValueChannelOne << endl;
-			#endif
-		}
-	}
-	#ifdef DEBUG
-		cout << "Signal sum: " << sigSumVal << endl
-		     << "Final signal max value: " <<  sigMaxVal << endl;
-	#endif
-	
-	ECGSignalChannel normSig;
-	normSig = ECGSignalChannel(new WrappedVector);
-	normSig->signal = gsl_vector_alloc(sigSize);
-	for(int i = 0; i < sigSize; i++)
-	{
-		double inputValue = gsl_vector_get (sig->signal, i);				
-		double chanOne = inputValue - (sigSumVal / sigSize);	
 		#ifdef DEBUG_SIGNAL
-			cout << "DC cancel value: " << chanOne << endl;
-		#endif
-		chanOne = chanOne / sigMaxVal;	
-		gsl_vector_set(normSig->signal, i, chanOne);
-		#ifdef DEBUG_SIGNAL
-			cout << "Normalized value: " << chanOne << endl;
+			qDebug() << "Input signal";	
+			for(int i = 0; i < sigSize; i++)
+			{
+				double inputValue = gsl_vector_get (sig->signal, i);	
+				qDebug() << inputValue;	
+			}
 		#endif
 	}
-	//END OF UNECESSARY
 
 	//Convolution [-0.125 -0.25 0.25 0.125] (Here we lose 4 signal samples)	
 	#ifdef DEBUG
-		cout << "Convolution [-0.125 -0.25 0.25 0.125]" << endl << "Orginal signal size: " << sigSize << endl;
+		qDebug() << "Convolution [-0.125 -0.25 0.25 0.125]" << endl << "Orginal signal size: " << sigSize;
 	#endif
 	int newSigSize = 0;
 	ECGSignalChannel diffSig;
@@ -216,14 +184,14 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		double tmpSum = 0;
 		for(int j = 0; j < filterSize; j++)
 		{
-			double inputValue = gsl_vector_get (normSig->signal, i + j);			
+			double inputValue = gsl_vector_get (sig->signal, i + j);			
 			tmpSum += inputValue * filter[j];
 			#ifdef DEBUG_SIGNAL_DETAILS
-				cout << "Signal: " << inputValue << " Filter: " << filter[j] << " Sum: " << tmpSum << endl;
+				qDebug() << "Signal: " << inputValue << " Filter: " << filter[j] << " Sum: " << tmpSum;
 			#endif
 		}
 		#ifdef DEBUG_SIGNAL
-			cout << "Final val: " << tmpSum << " at index: " << i << endl;
+			qDebug() << "Final val: " << tmpSum << " at index: " << i;
 		#endif
 		gsl_vector_set(diffSig->signal, i, tmpSum);
 		newSigSize++;
@@ -232,7 +200,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	//Exponentiation
 	sigSize = newSigSize;
 	#ifdef DEBUG
-		cout << "Exponentiation ^2" << endl << "Signal size after convolution: " << sigSize << endl;
+		qDebug() << "Exponentiation ^2" << endl << "Signal size after convolution: " << sigSize;
 	#endif
 	ECGSignalChannel powSig;
 	powSig = ECGSignalChannel(new WrappedVector);
@@ -243,14 +211,14 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		double powVal = pow(inputValue, 2);
 		gsl_vector_set(powSig->signal, i, powVal);
 		#ifdef DEBUG_SIGNAL
-				cout << " Pow: "<< powVal << " at index: " << i  << endl;
+				qDebug() << " Pow: "<< powVal << " at index: " << i;
 		#endif
 	}
 
 	//Moving window integration (Here we lose "movinghWindowLenght" signal samples)	
 	#ifdef DEBUG
-		cout << "Moving window integration" << endl << "Window size: " << panTompkinsMovinghWindowLenght << endl
-				  << "Signal size after exponentiation: " << sigSize << endl;
+		qDebug() << "Moving window integration" << endl << "Window size: " << panTompkinsMovinghWindowLenght << endl
+				  << "Signal size after exponentiation: " << sigSize;
 	#endif
 	ECGSignalChannel integrSig;
 	integrSig = ECGSignalChannel(new WrappedVector);
@@ -266,7 +234,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 			double inputValue = gsl_vector_get (powSig->signal, i - j);			
 			tmpSum += inputValue;
 			#ifdef DEBUG_SIGNAL_DETAILS
-				cout << "Signal: " << inputValue << " Sum: " << tmpSum << endl;
+				qDebug() << "Signal: " << inputValue << " Sum: " << tmpSum;
 			#endif
 		}
 		int index = i - movinghWindowLenght;
@@ -274,7 +242,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		//double mwico = (1/movinghWindowLenght) * tmpSum;
 		double mwico =  tmpSum;
 		#ifdef DEBUG_SIGNAL
-			cout << "Final val: " << mwico << " at index: " << index << endl;
+			qDebug() << "Final val: " << mwico << " at index: " << index;
 		#endif
 		gsl_vector_set(integrSig->signal, index, mwico);
 		tmpSum = 0;
@@ -285,9 +253,9 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	//TODO (Not important now) Try to find another way to calcutale thersold position, maybe dynamic thersold?
 	sigSize = newSigSize;
 	#ifdef DEBUG
-		cout << "Calculating detection thersold" << endl << "After moving window integration signal size: " << sigSize << endl;
+		qDebug() << "Calculating detection thersold" << endl << "After moving window integration signal size: " << sigSize;
 	#endif
-	sigMaxVal = 0;
+	double sigMaxVal = 0;
 	double meanVal = 0;
 
 	for(int i = 0; i < sigSize; i++)
@@ -297,7 +265,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		{
 			sigMaxVal = inputValue;
 			#ifdef DEBUG_SIGNAL
-				cout << "New max signal value: " << inputValue << endl;
+				qDebug() << "New max signal value: " << inputValue;
 			#endif
 		}
 		meanVal += inputValue;
@@ -305,7 +273,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	meanVal = meanVal / sigSize;
 
 	#ifdef DEBUG
-		cout << "Final max value for channel one: " << sigMaxVal << endl 
+		qDebug() << "Final max value for channel one: " << sigMaxVal << endl
 	         << "Final mean value: " << meanVal << endl;
 
 	#endif
@@ -323,7 +291,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 
 	//Looking for points over thersold
 	#ifdef DEBUG
-		cout << "Looking for points over thersold" << endl;
+		qDebug() << "Looking for points over thersold";
 	#endif
 	ECGSignalChannel overThersold;
 	overThersold = ECGSignalChannel(new WrappedVector);
@@ -335,7 +303,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		{
 			gsl_vector_set(overThersold->signal, i, 1);
 			#ifdef DEBUG_SIGNAL
-				cout << "Value over thersold at index: " << i << endl;
+				qDebug() << "Value over thersold at index: " << i;
 			#endif
 		}
 		else
@@ -344,14 +312,14 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		}
 	}
 	#ifdef DEBUG_SIGNAL
-		cout << "Signal with points over thersold" << endl;
+		qDebug() << "Signal with points over thersold";
 		for(int i = 0; i < sigSize; i++)
 		{
-			cout << gsl_vector_get(overThersold->signal, i);
+			qDebug() << gsl_vector_get(overThersold->signal, i);
 		}
 	#endif
 	#ifdef DEBUG
-		cout << "Detect begin and end of QRS complex" << endl;
+		qDebug() << "Detect begin and end of QRS complex";
 	#endif
 	ECGSignalChannel leftPoints;
 	ECGSignalChannel tmpRightPoints;
@@ -371,7 +339,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		gsl_vector_set(leftPoints->signal, leftPointsCount, 0);
 		leftPointsCount++;
 		#ifdef DEBUG_SIGNAL
-			cout << "QRS complex left point at index: " << 0 << endl;
+			qDebug() << "QRS complex left point at index: " << 0;
 		#endif
 	}
 	
@@ -380,7 +348,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		gsl_vector_set(tmpRightPoints->signal, rightPointsCount, sigSize - 1);
 		rightPointsCount++;
 		#ifdef DEBUG_SIGNAL
-			cout << "QRS complex right point at index: " << sigSize - 1 << endl;
+			qDebug() << "QRS complex right point at index: " << sigSize - 1;
 		#endif
 	}
 
@@ -394,7 +362,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 			gsl_vector_set(leftPoints->signal, leftPointsCount, i);
 			leftPointsCount++;
 			#ifdef DEBUG_SIGNAL
-				cout << "QRS complex left point at index: " << i << endl;
+				qDebug() << "QRS complex left point at index: " << i;
 			#endif
 		}
 	}
@@ -409,7 +377,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 			gsl_vector_set(tmpRightPoints->signal, rightPointsCount, i);
 			rightPointsCount++;
 			#ifdef DEBUG_SIGNAL
-				cout << "QRS complex right at index: " << i << endl;
+				qDebug() << "QRS complex right at index: " << i;
 			#endif
 		}
 	}
@@ -418,12 +386,12 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		cout << "Vector with left points:" << endl;
 		for(int i = 0; i < leftPointsCount; i++)
 		{
-			cout << gsl_vector_get(leftPoints->signal, i) << ' ';
+			qDebug() << gsl_vector_get(leftPoints->signal, i);
 		}
-		cout << endl << "Vector with right points:" << endl;
+		qDebug() << endl << "Vector with right points:";
 		for(int i = 0; i < rightPointsCount; i++)
 		{
-			cout << gsl_vector_get(tmpRightPoints->signal, i) << ' ';
+			qDebug() << gsl_vector_get(tmpRightPoints->signal, i);
 		}
 		cout << endl;
 	#endif
@@ -442,33 +410,33 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		gsl_vector_set(rightPoints->signal, i, tmp );
 	}
 	#ifdef DEBUG_SIGNAL
-		cout << "After vector invertion" << endl;
-		cout << "Vector with left points:" << endl;
+		qDebug() << "After vector invertion" << endl;
+		qDebug() << "Vector with left points:" << endl;
 		for(int i = 0; i < leftPointsCount; i++)
 		{
-			cout << gsl_vector_get(leftPoints->signal, i) << ' ';
+			qDebug() << gsl_vector_get(leftPoints->signal, i);
 		}
-		cout << endl << "Vector with right points:" << endl;
+		qDebug() << endl << "Vector with right points:" << endl;
 		for(int i = 0; i < rightPointsCount; i++)
 		{
-			cout << gsl_vector_get(rightPoints->signal, i) << ' ';
+			qDebug() << gsl_vector_get(rightPoints->signal, i);
 		}
-		cout << endl;
 	#endif
 	#ifdef DEBUG
-		cout << "Number of left points: " << leftPointsCount << endl
-			 << "Number of right points: " << rightPointsCount << endl;
+		qDebug() << "Number of left points: " << leftPointsCount << endl
+			     << "Number of right points: " << rightPointsCount;
 	#endif
 
 	//Final R peaks detection
 	#ifdef DEBUG
-		cout << "Final R peaks detection" << endl;
+		qDebug() << "Final R peaks detection";
 	#endif
 
 	int partLength;
 	double tmpMax;
 	int tmpMaxIndex;
 	IntSignal rs;
+	int numberRs = 0;
 
 	if(leftPointsCount > 0 )
 	{
@@ -491,17 +459,21 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 
 			}
 			gsl_vector_int_set(rs->signal, i, tmpMaxIndex);
+			numberRs++;
 			#ifdef DEBUG_SIGNAL
-				cout << "R point at index: " << tmpMaxIndex 
-					<< " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex) << endl;
+				qDebug() << "R point at index: " << tmpMaxIndex 
+					     << " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex);
 			#endif
 		}
 		rsPositions->setRs(rs);
+		#ifdef DEBUG
+			qDebug() << "Number of detected R-peaks:" << numberRs;
+		#endif
 	}
 	else
 	{
 		#ifdef DEBUG
-			cout << "R peaks not detected. Check input signal." << endl;
+			qDebug() << "R peaks not detected. Check input signal.";
 		#endif
 		TRI_LOG_STR("R peaks not detected. Check input signal.");
 		return false;
@@ -510,7 +482,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 
 	rsDetected = true;
 	#ifdef DEBUG
-		cout << "Done" << endl;
+		qDebug() << "Done";
 	#endif
 	LOG_END;
 	return true;
@@ -535,19 +507,24 @@ ECGSignalChannel RPeaksDetector::getMockedSignal()
 	mockedSignal = ECGSignalChannel(new WrappedVector);
 	mockedSignal->signal = gsl_vector_alloc(length);
 
-	string line;
-    ifstream myfile("FilteredSignal.txt");
-    if (myfile.is_open())
+	string line = "";
+	ifstream myfile;
+	myfile.open("FilteredSignal.txt");
+	if (myfile.is_open())
     {
-		for(int i; i < length; i++)
-        {
-            getline (myfile,line);
-			istringstream stm;
+		int i = 0;
+		while (!myfile.eof())
+		{
+			getline(myfile, line);
+			std::istringstream stm;
 			stm.str(line);
 			double d;
-			stm >> d;
+			stm >>d;
 			gsl_vector_set(mockedSignal->signal, i, d);
-        }
+			i++;
+			if(i == length)
+				break;
+		}
 		myfile.close();
     }
 	else
