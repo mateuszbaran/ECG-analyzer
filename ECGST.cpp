@@ -49,6 +49,12 @@ const ECGST::Interval& ECGST::getIntervalAt(int i) const
   return intervals.at(i);
 }
 
+int ECGST::Interval::length() const
+{
+  return stpoint - jpoint;
+}
+
+
 
 void ECGST::addInterval(const ECGST::Interval& interval)
 {

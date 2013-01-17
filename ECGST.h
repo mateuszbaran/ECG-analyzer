@@ -30,6 +30,7 @@ public:
     double slope;
     double offset;
     static double thresh;
+    int length() const;
     bool lower(const double& thresh = ECGST::Interval::thresh) const;
     bool higher(const double& thresh = ECGST::Interval::thresh) const;
     bool normal(const double& thresh = ECGST::Interval::thresh) const;

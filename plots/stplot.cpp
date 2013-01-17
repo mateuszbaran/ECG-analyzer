@@ -42,7 +42,7 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   RPoints->setYAxis(QwtPlot::yLeft);
   //RPoints->attach(this);
 
-  QwtLegend * legend = new QwtLegend();
+  legend = new QwtLegend();
   legend->setItemMode(QwtLegend::ReadOnlyItem);
   legend->setWhatsThis("Click on an item to show/hide the plot");
   this->insertLegend(legend, QwtPlot::RightLegend);
@@ -100,6 +100,27 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   curve->setData(data);
   zoomer->setZoomBase();
   replot();
+}
+
+void StPlot::showEpisode(const ECGST::Episode& e)
+{
+  ISOPoints->hide();
+  JPoints->hide();
+  STPoints->hide();
+  legend->hide();
+  zoomX(e.start - 10, e.end + 10, true);
+  
+  
+}
+
+void StPlot::showInterval(const ECGST::Interval& it)
+{
+  ISOPoints->show();
+  JPoints->show();
+  STPoints->show();
+  legend->show();
+  auto span = it.span();
+  zoomX(span.first, span.second, true);
 }
 
 

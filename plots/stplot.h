@@ -13,6 +13,8 @@ public:
   StPlot(QWidget* parent = 0);
   virtual ~StPlot();
   void zoomX(int from, int to, bool vscale = true);
+  void showInterval(const ECGST::Interval &);
+  void showEpisode(const ECGST::Episode &);
   void setSignal(const ECGSignalChannel&, const ECGChannelInfo&, const ECGST&);
 private:
   double invgain, dt;
@@ -24,6 +26,7 @@ private:
   QwtPlotCurve* STPoints;
   QwtPlotCurve* RPoints;
   QwtPlotZoomer * zoomer;
+  QwtLegend * legend;
   std::pair< double, double > minMaxValueIn(int from, int to);
 };
 
