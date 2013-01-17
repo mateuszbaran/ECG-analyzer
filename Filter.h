@@ -8,7 +8,7 @@ public:
 	Filter();
 	~Filter();
 
-	void zeroPhase(std::vector<double> b, std::vector<double> a, const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int order);
-	void filter(std::vector<double> b, std::vector<double> a, const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int order);
+	void zeroPhase(std::vector<double> b, std::vector<double> a, ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order);
+	void filter(std::vector<double> b, std::vector<double> a, ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order);
 
 };

@@ -3,13 +3,13 @@
 Filter::Filter(){}
 Filter::~Filter(){}
 
-void Filter::zeroPhase(std::vector<double> b, std::vector<double> a, const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int order)
+void Filter::zeroPhase(std::vector<double> b, std::vector<double> a, ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order)
 {
 	this->filter(b, a, inputSignal, outputSignal, order);
 
-	auto signalLength = inputSignal.channel_one->signal->size;
+	auto signalLength = inputSignal->signal->size;
 
-	ECGSignalChannel reverseSignal = ECGSignalChannel(new WrappedVector);
+	ECGSignalChannel reverseSignal;
 	reverseSignal->signal = gsl_vector_alloc(signalLength);
 
 
@@ -46,12 +46,12 @@ void Filter::zeroPhase(std::vector<double> b, std::vector<double> a, const ECGSi
 	}	
 }
 
-void Filter::filter(std::vector<double> b, std::vector<double> a, const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int order)
+void Filter::filter(std::vector<double> b, std::vector<double> a, ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order)
 {
-	auto signalLength = inputSignal.channel_one -> signal->size;
+	auto signalLength = inputSignal -> signal->size;
 
 	//y[0]=b[0]*x[0];
-	auto x1 = gsl_vector_get(inputSignal.channel_one -> signal, 0);
+	auto x1 = gsl_vector_get(inputSignal -> signal, 0);
 	//auto x2 = gsl_vector_get(inputSignal.channel_two->signal, 0);
 
 	gsl_vector_set (outputSignal -> signal, 0, x1*b[0]);
@@ -68,7 +68,7 @@ void Filter::filter(std::vector<double> b, std::vector<double> a, const ECGSigna
         	//y[i]=y[i]+b[j]*x[i-j];
 			auto y1 = gsl_vector_get(outputSignal -> signal, i);
 			//auto y2 = gsl_vector_get(outputSignal.channel_two->signal, i);
-			auto x1 = gsl_vector_get(inputSignal.channel_one -> signal, i-j);
+			auto x1 = gsl_vector_get(inputSignal -> signal, i-j);
 			//auto x2 = gsl_vector_get(inputSignal.channel_two->signal, i-j);
 
 			gsl_vector_set (outputSignal -> signal, i, y1+b[j]*x1);
@@ -99,7 +99,7 @@ void Filter::filter(std::vector<double> b, std::vector<double> a, const ECGSigna
 			//y[i]=y[i]+b[j]*x[i-j];
 			auto y1 = gsl_vector_get(outputSignal -> signal, i);
 			//auto y2 = gsl_vector_get(outputSignal.channel_two->signal, i);
-			auto x1 = gsl_vector_get(inputSignal.channel_one -> signal, i-j);
+			auto x1 = gsl_vector_get(inputSignal -> signal, i-j);
 			//auto x2 = gsl_vector_get(inputSignal.channel_two->signal, i-j);
 
 			gsl_vector_set (outputSignal -> signal, i, y1+b[j]*x1);
