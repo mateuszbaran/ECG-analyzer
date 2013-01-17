@@ -1,10 +1,12 @@
 #pragma once
+#include <fstream>
+#include <sstream>
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
 //#define DEBUG
 //#define DEBUG_SIGNAL
 //#define DEBUG_SIGNAL_DETAILS
-//#define USE_MOCKED_SIGNAL
+#define USE_MOCKED_SIGNAL
 
 using namespace std;
 
@@ -76,6 +78,12 @@ private:
   *  @param pointer to ECG signal
   */
   bool hilbertRPeaksDetection(ECGSignalChannel *signal);
+
+
+  /**
+  *  Filtered mocked signal
+  */
+  ECGSignalChannel mockedSignal;
 
   /*
   * Returns a part of filtered signal

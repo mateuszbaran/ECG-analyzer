@@ -132,4 +132,3 @@ std::pair<double, double> StPlot::minMaxValueIn(int from, int to)
   });
   return std::make_pair(_minmax.first->y(), _minmax.second->y());
 }
-
