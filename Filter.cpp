@@ -9,7 +9,7 @@ void Filter::zeroPhase(std::vector<double> b, std::vector<double> a, ECGSignalCh
 
 	auto signalLength = inputSignal->signal->size;
 
-	ECGSignalChannel reverseSignal;
+	ECGSignalChannel reverseSignal = ECGSignalChannel(new WrappedVector);
 	reverseSignal->signal = gsl_vector_alloc(signalLength);
 
 
