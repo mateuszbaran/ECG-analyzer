@@ -8,7 +8,9 @@ BaselineRemoval::~BaselineRemoval(){}
 
 void BaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo & ecgi, ECGSignalChannel &outputSignal)
 {
-	
+	//For testing purpose
+	baselineRemovalMethod = MOVING_AVERAGE;
+
 	switch(baselineRemovalMethod){
 		case MOVING_AVERAGE:
 			movingAverageBaselineRemoval(inputSignal, outputSignal, 5);
@@ -37,7 +39,13 @@ void BaselineRemoval::evaluateSignalChannels(const ECGSignal &inputSignal, ECGSi
 {
 	//This method will evaluate which channel is better
 	//For the time being it just returns first channel
-	betterChannel->signal = inputSignal.channel_one->signal;
+	auto size = inputSignal.channel_one->signal->size;
+	betterChannel->signal = gsl_vector_alloc(size);
+	for(int i=0; i<size; i++)
+	{
+		auto value = gsl_vector_get(inputSignal.channel_one->signal, i);
+		gsl_vector_set(betterChannel->signal, i, value);
+	}
 }
 
 /**
@@ -48,11 +56,12 @@ void BaselineRemoval::evaluateSignalChannels(const ECGSignal &inputSignal, ECGSi
 */
 void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int span)
 {
-	ECGSignalChannel betterChannel;
+	ECGSignalChannel betterChannel = ECGSignalChannel(new WrappedVector);
 	evaluateSignalChannels(inputSignal, betterChannel);
 
 	auto signalLength = outputSignal-> signal -> size;
-	for(int index = 0; index<signalLength; index++)
+
+	for(int index = 0; index < signalLength; index++)
 	{
 		if(index < span/2 || index > signalLength - span/2) 
 		{
@@ -75,6 +84,7 @@ double BaselineRemoval::calculateAvgValueOfNeighbours(gsl_vector *signal, int cu
 		sum += gsl_vector_get (signal, currentIndex - i);
 		sum += gsl_vector_get (signal, currentIndex + i);
 	}
+
 	return sum/span;
 }
 
