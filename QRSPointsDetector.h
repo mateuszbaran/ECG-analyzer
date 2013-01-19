@@ -8,7 +8,7 @@
 #include <gsl/gsl_sort_vector.h>
 
 //#define DEBUG
-#define USE_MOCKED_SIGNAL
+//#define USE_MOCKED_SIGNAL
 
 using namespace std;
 
