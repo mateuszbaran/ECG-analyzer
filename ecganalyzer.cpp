@@ -255,8 +255,16 @@ void ECGanalyzer::updateAnalysisStatus(std::string status)
 
 void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 {
-	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
-	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
+	QMetaObject::invokeMethod(ui.actionZatrzymajPonownaAnalizeSygnalu,         // obj
+		"setEnabled", // member
+		Qt::QueuedConnection,     // connection type
+		Q_ARG(bool, analysisOngoing));     // val1
+	//ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
+	QMetaObject::invokeMethod(ui.actionPrzeprowadzPonownieAnalizeSygnalu,         // obj
+		"setEnabled", // member
+		Qt::QueuedConnection,     // connection type
+		Q_ARG(bool, !analysisOngoing));     // val1
+	//ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
 }
 
 void ECGanalyzer::setModulesParams()

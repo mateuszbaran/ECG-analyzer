@@ -425,13 +425,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 {
 	TRI_LOG_STR(__FUNCTION__);
 
-	//cleaning after previous computation
-	if(computation && analysisCompl)
-	{
-		delete computation;
-		analysisCompl = false;
-	}
-
+	//cleaning after previous computation/stopping it
 	if(computation)
 	{
 		computation->interrupt();
@@ -439,7 +433,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 		delete computation;
 		computation = NULL;
 	}
-	else
+	if(statusUpdate && analysisComplete)
 	{
 
 #define HANDLE_INTERRUPTION							\
