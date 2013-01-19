@@ -1,6 +1,7 @@
 #include "BaselineRemoval.h"
 #include "Butterworth.h"
 #include "Filter.h"
+#include "math.h"
 
 BaselineRemoval::BaselineRemoval(){}
 
@@ -61,9 +62,11 @@ void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal,
 
 	auto signalLength = outputSignal-> signal -> size;
 
-	for(int index = 0; index < signalLength; index++)
+	for(long index = 0; index < signalLength; index++)
 	{
-		if(index < span/2 || index > signalLength - span/2) 
+		auto edge = ceil((float)span/2);
+
+		if(index < edge || index > signalLength - edge) 
 		{
 			auto inputValue = gsl_vector_get (betterChannel -> signal, index);
 			gsl_vector_set(outputSignal -> signal, index, inputValue);
