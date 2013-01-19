@@ -16,6 +16,7 @@ public:
   void showInterval(const ECGST::Interval &);
   void showEpisode(const ECGST::Episode &);
   void setSignal(const ECGSignalChannel&, const ECGChannelInfo&, const ECGST&);
+  virtual void resizeEvent(QResizeEvent* e);
 private:
   double invgain, dt;
   QwtPlotCurve* curve;
@@ -27,6 +28,7 @@ private:
   QwtPlotCurve* RPoints;
   QwtPlotZoomer * zoomer;
   QwtLegend * legend;
+  double viewFactor;
   std::pair< double, double > minMaxValueIn(int from, int to);
 };
 

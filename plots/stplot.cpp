@@ -1,8 +1,11 @@
 #include "stplot.h"
 #include <qwt_symbol.h> 
 #include <qwt_legend.h> 
+#include <QResizeEvent>
 
-StPlot::StPlot(QWidget* parent): QwtPlot(parent)
+StPlot::StPlot(QWidget* parent): 
+  QwtPlot(parent),
+  viewFactor(-1.0)
 {
   setMinimumHeight(10);
   setMinimumWidth(10);
@@ -131,6 +134,7 @@ void StPlot::zoomX(int from, int to, bool vscale)
   
   rect.setLeft(from*dt);
   rect.setRight(to*dt);
+  viewFactor = rect.width()/canvas()->width();
   
   if (vscale) {
     auto _minmax = minMaxValueIn(from, to);
@@ -153,3 +157,20 @@ std::pair<double, double> StPlot::minMaxValueIn(int from, int to)
   });
   return std::make_pair(_minmax.first->y(), _minmax.second->y());
 }
+
+void StPlot::resizeEvent(QResizeEvent* e)
+{
+  QwtPlot::resizeEvent(e);
+  if (e->oldSize().width() < 0) return;
+  if (viewFactor > 0) {
+    double diff = (e->size().width() - e->oldSize().width())*viewFactor;
+    auto zoom_rect = zoomer->zoomRect();
+    double nleft = zoom_rect.left() - diff/2.0f;
+    double nright = zoom_rect.right() + diff/2.0f;
+    zoom_rect.setLeft(nleft);
+    zoom_rect.setRight(nright);
+    zoomer->zoom(zoom_rect);
+  }
+  replot();
+}
+
