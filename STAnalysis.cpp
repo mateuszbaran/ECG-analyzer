@@ -45,28 +45,26 @@ void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const EC
   
 }
 
-STAnalysis::SimpleAnalizator::SimpleAnalizator() :
+STAnalysis::SimpleAnalizer::SimpleAnalizer() :
   thresh(0.05), start(0), during_episode(false) {}
 
 
 
-void STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output)
+void STAnalysis::SimpleAnalizer::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output)
 {
   ECGST::Interval interval;
   ECGST::Episode ep;
   
   double invgain = 1.0 / float(info.gain);
   
+  interval.rpoint = rpeaks.GetRs()->get(it);
+  
   int _60s_in_samples = info.frequecy*60;
-  int _45ms_in_samples = static_cast<int>(info.frequecy*45.0f/1000.0f);
   int _60ms_in_samples = static_cast<int>(info.frequecy*60.0f/1000.0f);
-  
-  int rpeak = rpeaks.GetRs()->get(it);
-  
-  interval.rpoint = rpeak;
 #ifdef DEVELOPMENT
-  interval.isopoint = rpeak - _45ms_in_samples;
-  interval.jpoint = rpeak + _45ms_in_samples;
+  int _45ms_in_samples = static_cast<int>(info.frequecy*45.0f/1000.0f);
+  interval.isopoint = interval.rpoint - _45ms_in_samples;
+  interval.jpoint = interval.rpoint + _45ms_in_samples;
 #else
   interval.isopoint = waves.GetQRS_onset()->get(it);
   interval.jpoint = waves.GetQRS_end()->get(it);
@@ -111,14 +109,14 @@ void STAnalysis::SimpleAnalizator::analyse(const int it, const ECGRs& rpeaks, co
 
 }
 
-void STAnalysis::AbstractAnalizator::setParams(ParametersTypes& p)
+void STAnalysis::AbstractAnalizer::setParams(ParametersTypes& p)
 {
   params = p;
 }
 
-void STAnalysis::SimpleAnalizator::setParams(ParametersTypes& p)
+void STAnalysis::SimpleAnalizer::setParams(ParametersTypes& p)
 {
-   STAnalysis::AbstractAnalizator::setParams(p);
+   STAnalysis::AbstractAnalizer::setParams(p);
    auto it = params.find("simple_thresh");
    if (it != params.end()) {
     thresh = it->second;
@@ -126,10 +124,10 @@ void STAnalysis::SimpleAnalizator::setParams(ParametersTypes& p)
    
 }
 
-STAnalysis::ComplexAnalizator::ComplexAnalizator() :
+STAnalysis::ComplexAnalizer::ComplexAnalizer() :
   thresh(0.1), type_thresh(0.15), slope_thresh(0.15), start(0), during_episode(false) {}
   
-std::pair<int, double> STAnalysis::ComplexAnalizator::maxDistanceSample(const OtherSignal& sig, int from, int to)
+std::pair<int, double> STAnalysis::ComplexAnalizer::maxDistanceSample(const OtherSignal& sig, int from, int to)
 {
   int indexMax = from;
   double distMax = 0.0;
@@ -152,7 +150,7 @@ std::pair<int, double> STAnalysis::ComplexAnalizator::maxDistanceSample(const Ot
   return std::pair<int, double>(indexMax, distMax);
 }
 
-std::pair< int, int > STAnalysis::ComplexAnalizator::overBelowSamples(const OtherSignal& sig, int from, int to)
+std::pair< int, int > STAnalysis::ComplexAnalizer::overBelowSamples(const OtherSignal& sig, int from, int to)
 {
   int over = 0, below = 0;
   
@@ -171,21 +169,20 @@ std::pair< int, int > STAnalysis::ComplexAnalizator::overBelowSamples(const Othe
 }
 
 
-void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output)
+void STAnalysis::ComplexAnalizer::analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output)
 {
   ECGST::Interval interval;
   ECGST::Episode ep;
   
   double invgain = 1.0f / double(info.gain);
+  interval.rpoint = rpeaks.GetRs()->get(it);
   
   int _60s_in_samples = info.frequecy*60;
   int _20ms_in_samples = static_cast<int>(info.frequecy*20.0f/1000.0f);
+#ifdef DEVELOPMENT
   int _45ms_in_samples = static_cast<int>(info.frequecy*45.0f/1000.0f);
   int _60ms_in_samples = static_cast<int>(info.frequecy*60.0f/1000.0f);
   
-  interval.rpoint = rpeaks.GetRs()->get(it);
-  
-#ifdef DEVELOPMENT
   interval.isopoint = interval.rpoint - _45ms_in_samples;
   interval.jpoint = interval.rpoint + _45ms_in_samples;
   int tend = interval.rpoint + 4*_60ms_in_samples;
@@ -264,7 +261,7 @@ void STAnalysis::ComplexAnalizator::analyse(const int it, const ECGRs& rpeaks, c
   }
 }
 
-int STAnalysis::ComplexAnalizator::getTPeak(const OtherSignal& sig, int from, int to)
+int STAnalysis::ComplexAnalizer::getTPeak(const OtherSignal& sig, int from, int to)
 {
   int size = sig->signal->size;
   double value = 0.0;
@@ -294,9 +291,9 @@ int STAnalysis::ComplexAnalizator::getTPeak(const OtherSignal& sig, int from, in
 }
 
 
-void STAnalysis::ComplexAnalizator::setParams(ParametersTypes& p)
+void STAnalysis::ComplexAnalizer::setParams(ParametersTypes& p)
 {
-  STAnalysis::AbstractAnalizator::setParams(p);
+  STAnalysis::AbstractAnalizer::setParams(p);
   auto it = params.find("complex_thresh");
   if (it != params.end()) {
     thresh = it->second;
@@ -366,7 +363,7 @@ ECGRs STAnalysis::read_normal_r_peaks(std::string path, std::string filename)
 
 #endif
 
-void STAnalysis::setAnalizator(STAnalysis::AbstractAnalizator * a)
+void STAnalysis::setAnalizator(STAnalysis::AbstractAnalizer * a)
 {
   if (analizator) {
     delete analizator;
@@ -379,10 +376,10 @@ void STAnalysis::setAnalizator(STAnalysis::AlgorithmType atype)
 {
   switch(atype) {
     case AlgorithmType::Complex:
-      setAnalizator(new ComplexAnalizator()); break;
+      setAnalizator(new ComplexAnalizer()); break;
     case AlgorithmType::Simple:
     default:
-      setAnalizator(new SimpleAnalizator()); break;
+      setAnalizator(new SimpleAnalizer()); break;
   }
 }
 

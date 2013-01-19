@@ -21,18 +21,18 @@ public:
   virtual ~STAnalysis();
   
 private:
-  class AbstractAnalizator {
+  class AbstractAnalizer {
   public:
     virtual void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST&) = 0;
     virtual void setParams(ParametersTypes&);
-    virtual ~AbstractAnalizator() {};
+    virtual ~AbstractAnalizer() {};
   protected:
     ParametersTypes params;
   };
   
-  class SimpleAnalizator: public AbstractAnalizator {
+  class SimpleAnalizer: public AbstractAnalizer {
   public:
-    SimpleAnalizator();
+    SimpleAnalizer();
     void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output);
     virtual void setParams(ParametersTypes& );
   private:
@@ -41,9 +41,9 @@ private:
     bool during_episode;
   };
   
-  class ComplexAnalizator: public AbstractAnalizator {
+  class ComplexAnalizer: public AbstractAnalizer {
   public:
-    ComplexAnalizator();
+    ComplexAnalizer();
     void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output);
     virtual void setParams(ParametersTypes& );
   private:
@@ -55,10 +55,10 @@ private:
     bool during_episode;
   };
   
-  AbstractAnalizator * analizator;
+  AbstractAnalizer * analizator;
   double dt;
   double thresh;
-  void setAnalizator(STAnalysis::AbstractAnalizator* a = nullptr);
+  void setAnalizator(STAnalysis::AbstractAnalizer* a = nullptr);
   void setAnalizator(AlgorithmType atype = AlgorithmType::Simple);
   
   AlgorithmType algorithmTypeFromInt(int value = 0) const;

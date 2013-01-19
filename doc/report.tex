@@ -174,6 +174,168 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \subsection{ST interval}
 \label{sec:st_interval}
+Autorzy: Bartłomiej Bułat i Krzysztof Piekutowski.
+
+\subsubsection{Opis zadania}
+\label{sec:st_interval:desc}
+
+\subsubsection{Badania literaturowe}
+\label{sec:st_interval:papers}
+
+\subsubsection{Opis procedur i metod}
+\label{sec:st_interval:procs}
+
+Główna funkcjonalność modułu znajduje się w klasie \verb|STAnalysis|. Klasa ta,
+według przyjętego schematu rozszerza abstrakcyjny moduł analizy odcinka ST. W
+tej klasie znajdują się drzewo klas prywatnych reprezentujących poszczególne
+algorytmy analizy. W szczególności dwie klasy \verb|SimpleAnalizer| oraz
+\verb|ComplexAnalizer|. Pierwsza klasa reprezentuje najprostszy algorytm
+zaprezentowany w \cite[p.~155]{AUGUST1}, druga zaś implementuje lekko
+zmodyfikowany algorytm opisany w \cite{SHEN1}.
+
+%% TODO: mienić nazwę funkcji w programie
+Lista i opis najważniejszych funkcji:
+
+\begin{lstlisting}
+void STAnalysis::SimpleAnalizer::analyse(const int it, const ECGRs& rpeaks,
+  const ECGWaves& waves, const ECGSignalChannel& signal,
+  const  ECGInfo& info, ECGST& output);
+\end{lstlisting}
+
+Funkcja analizująca załamek ST w zespole QRS numer \verb|it|. Wykorzystując
+punkty sygnału obliczone we wcześniejszych modułach (tj. $QRS_{onset}$,
+$QRS_{end}$ oraz $T_{end}$) oblicza koniec odcinka ST i wylicza jego parametry:
+\begin{itemize}
+  \item przesunięcie względem izolinii
+  \item wartość nachylenia w stosunku do izolini
+  \item długość odcinka ST
+\end{itemize}
+Uzywając wczesniej ustawionego parametru \verb|simple_thresh|, odcinek ST
+określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''.
+
+Parametry:
+\begin{itemize}
+  \item \verb|const int it| - numer badanego zespołu QRS, jako liczba
+    porządkowa numerów próbek z tablicy załamków R.
+  \item \verb|const ECGR& rpeaks| - struktura zawierająca tablicę numerów
+    próbek kolejnych załamków R
+  \item \verb|const ECGEaves& waves| - struktura zawierajace tablice
+    przechowujące numery próbek punktów charakterystycznych kolejnych zespołów
+    QRS: $P_{onset}$, $QRS_{onset}$, $QRS_{end}$ oraz $T_{end}$.
+  \item \verb|const ECGSignalChanel& signal| - jeden kanał odfiltrowanego
+    sygnału z usuniętym przesunięciem izolinii.
+  \item \verb|const ECGInfo& info| - struktura zawierająca informacje o badanym
+    sygnale EKG, m.in. częstotliwość.
+  \item \verb|ECGST& output| - parametr wyjściowy, struktura zawierajaca
+    tablice wszystkich interwałów ST wraz z ich parametrami, oraz tablice
+    zarejestrowanych epizodów ST wraz z ich parametrami.
+\end{itemize}
+
+\begin{lstlisting}
+void STAnalysis::ComplexAnalizer::analyse(const int it, const ECGRs& rpeaks,
+  const ECGWaves& waves, const ECGSignalChannel& signal,
+  const  ECGInfo& info, ECGST& output);
+\end{lstlisting}
+
+Funkcja analizująca załamek ST w zespole QRS numer \verb|it|. Wykorzystując
+punkty sygnału obliczone we wcześniejszych modułach (tj. $QRS_{onset}$,
+$QRS_{end}$ oraz $T_{end}$) oblicza koniec odcinka ST (wykorzystując bardziej
+zaawansowane algorytmy od poprzedniej funkcji), a następnie oblicza jego parametry:
+\begin{itemize}
+  \item przesunięcie względem izolinii
+  \item wartość nachylenia w stosunku do izolini
+  \item długość odcinka ST
+  \item klasyfikacja kształtu
+\end{itemize}
+Uzywając wczesniej ustawionego parametru \verb|complex_thresh|, odcinek ST
+określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''. Algorytm
+ocenia również to, czy załamek jest prosty czy zakrzywiony w oparciu o
+wcześniej ustawiony parametr \verb|type_thresh|. Dla prostych odcinków określa
+kierunek, czy narasta, opada czy jest poziomy. Do określenia tej cechy
+wykorzystywany jest parametr \verb|slope_thresh|. Dla zakrzywiony odcinków ST
+oceniana jest wypukłość krzywej. Szczegółowy opis działania znajduje się w
+poprzednim rozdziale.
+
+Parametry:
+\begin{itemize}
+  \item \verb|const int it| - numer badanego zespołu QRS, jako liczba
+    porządkowa numerów próbek z tablicy załamków R.
+  \item \verb|const ECGR& rpeaks| - struktura zawierająca tablicę numerów
+    próbek kolejnych załamków R
+  \item \verb|const ECGEaves& waves| - struktura zawierajace tablice
+    przechowujące numery próbek punktów charakterystycznych kolejnych zespołów
+    QRS: $P_{onset}$, $QRS_{onset}$, $QRS_{end}$ oraz $T_{end}$.
+  \item \verb|const ECGSignalChanel& signal| - jeden kanał odfiltrowanego
+    sygnału z usuniętym przesunięciem izolinii.
+  \item \verb|const ECGInfo& info| - struktura zawierająca informacje o badanym
+    sygnale EKG, m.in. częstotliwość.
+  \item \verb|ECGST& output| - parametr wyjściowy, struktura zawierajaca
+    tablice wszystkich interwałów ST wraz z ich parametrami, oraz tablice
+    zarejestrowanych epizodów ST wraz z ich parametrami.
+\end{itemize}
+
+Funkcje pomocnicze klasy \verb|ComplexAnalizer|:
+
+\begin{lstlisting}
+int STAnalysis::ComplexAnalizer::getTPeak(const OtherSignal& sig,
+  int from, int to);
+\end{lstlisting}
+
+Funkcja wyszukująca położenia punktu $T_{peak}$ na zadanym odcinku sygnału.
+Początkiem wyszukiwania szczytu fali T jest zwykle punkt 20ms za punktem
+$QRS_{end}$, a punktem końcowym jest koniec fali T. Funkcja wykorzystuje
+dyskretną pochodną sygnału.
+
+Parametry:
+\begin{itemize}
+  \item \verb|const OtherSignal& sig| - cały, odfiltrowany sygnał EKG
+  \item \verb|int from| - numer próbki w której należy zacząc poszukiwania
+  \item \verb|int to| - numer próbki w której należy skończyć poszukiwania
+\end{itemize}
+
+
+\begin{lstlisting}
+std::pair<int, double> maxDistanceSample(const OtherSignal& signal, 
+  int from, int to);
+\end{lstlisting}
+
+Funkcja szukająca numeru próbki najbardziej oddalonego od liniowej interpolacji
+fragmentu sygnału miedzy dwoma punktami. Oprócz numeru próbki od początku
+sygnału, zwracana jest wartość największej różnicy miedzy punktem sygnału, a
+prostą interpolacji.
+
+Parametry:
+\begin{itemize}
+  \item \verb|const OtherSignal& signal| - badany sygnał
+  \item \verb|int from| - numer próbki będącej początkiem interesującego
+    fragmentu sygnału, równocześnie, pierwszy punkt interpolacji liniowej.
+  \item \verb|int to| - numer próbki będącej końcem interesującego fragmentu
+    sygnału, równocześnie, drugi punkt interpolacji
+\end{itemize}
+
+\begin{lstlisting}
+std::pair<int, int> overBelowSamples(const OtherSignal& signal,
+  int from, int to);
+\end{lstlisting}
+
+Funkcja obliczająca ilość próbek ponad i poniżej prostej interpolującej sygnał
+miedzy dwoma punktami. Funkcja wykorzystywana jest do określenia wypukłości
+odcinka ST.
+
+Parametry:
+\begin{itemize}
+  \item \verb|const OtherSignal& signal| - badany sygnał
+  \item \verb|int from| - numer próbki będącej początkiem interesującego
+    fragmentu sygnału, równocześnie, pierwszy punkt interpolacji liniowej.
+  \item \verb|int to| - numer próbki będącej końcem interesującego fragmentu
+    sygnału, równocześnie, drugi punkt interpolacji
+\end{itemize}
+
+\subsubsection{Warunki testowania}
+\label{sec:st_interval:tests}
+
+\subsubsection{Wyniki}
+\label{sec:st_interval:results}
 
 \subsection{T wave alt}
 \label{sec:t_wave_alt}
@@ -181,4 +343,6 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 \subsection{HRT}
 \label{sec:hrt}
 
+\bibliographystyle{plain}
+\bibliography{report}
 \end{document}
