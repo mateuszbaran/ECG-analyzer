@@ -170,6 +170,7 @@
     <ClCompile Include="plots\stplot.cpp" />
     <ClCompile Include="plots\synczoomer.cpp" />
     <ClCompile Include="QRSClass.cpp" />
+    <ClCompile Include="QRSPointsDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="STAnalysis.cpp" />
     <ClCompile Include="tri_logger.cpp" />
@@ -307,6 +308,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I." "-I." "-I." "-I." "-I."</Command>
     </CustomBuild>
     <ClInclude Include="QRSClass.h" />
+    <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="STAnalysis.h" />
     <ClInclude Include="tri_logger.hpp" />
