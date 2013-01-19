@@ -15,7 +15,7 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	ui.setupUi(this);
     
 #ifndef DEVELOPMENT
-    ui.run_st_analysis_button->setProperty('visible', false);
+    ui.run_st_analysis_button->setProperty("visible", false);
 #endif
 }
 
