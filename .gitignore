@@ -68,6 +68,11 @@ ipch/
 *.psess
 *.vsp
 
+# Kdevolpe files
+.kdev4
+*.kdev4
+*.pro
+
 # Guidance Automation Toolkit
 *.gpState
 
@@ -135,6 +140,7 @@ install_manifest.txt
 
 # backup files
 *~
+*.swp
 
 # Qt
 moc_*.cpp

@@ -2,14 +2,17 @@
 
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
+#include <fstream>
+#include <sstream>
 
 #include <gsl/gsl_sort_vector.h>
 
-#define DEBUG
+//#define DEBUG
+//#define USE_MOCKED_SIGNAL
 
 using namespace std;
 
-class QRSPointsDetector
+class QRSPointsDetector : public WavesModule
 {
 public:
 	QRSPointsDetector(void);
@@ -29,6 +32,8 @@ private:
   ECGRs  rsPositions;
 
   ECGWaves *  qrsPoints;
+
+  ECGSignalChannel mockedSignal;
 
   bool detectQRS();
   bool detectPT();

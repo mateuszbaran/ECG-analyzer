@@ -3,6 +3,8 @@
 #include "BaselineRemoval.h"
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "STAnalysis.h"
+#include "QRSPointsDetector.h"
 
 #include "wfdb/wfdb.h"
 
@@ -16,6 +18,8 @@ ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
   hrv1_module(new HRV1Analyzer()),
+  st_interval_module(new STAnalysis()),
+  waves_module(new QRSPointsDetector()),
   analysisCompl(false),
   computation(NULL)
 {
@@ -204,11 +208,15 @@ void ECGController::runSTInterval ()
   {
     runECGBaseline();
   }
+  if (!rpeaks_module->run_)
+  {
+    //runRPeaks();
+  }
   if (!waves_module->run_)
   {
     runWaves();
   }
-  st_interval_module->runModule(waves_data, filtered_signal, ecg_info, st_data);
+  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal.channel_one, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
@@ -394,7 +402,8 @@ bool ECGController::readFile(std::string filename)
   raw_signal.setSize(nr_samples);
 
   //alocate memory for filtered signal
-  filtered_signal.setSize(nr_samples);
+  filtered_signal = ECGSignalChannel(new WrappedVector);
+  filtered_signal->signal = gsl_vector_alloc(nr_samples);
 
   //read signals
   for (i = 0; i < nr_samples; i++)

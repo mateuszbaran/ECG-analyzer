@@ -12,7 +12,10 @@ class WrappedVector
 public:
   WrappedVector (gsl_vector * _signal = NULL);
   ~WrappedVector ();
-
+  
+  double get(size_t it);
+  void set(size_t it, double value);
+  
   gsl_vector* signal;
 };
 
@@ -24,6 +27,9 @@ class WrappedVectorInt
 public:
   WrappedVectorInt (gsl_vector_int * _signal = NULL);
   ~WrappedVectorInt ();
+  
+  int get(size_t it);
+  void set(size_t it, int value);
 
   gsl_vector_int* signal;
 };
