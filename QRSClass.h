@@ -29,6 +29,8 @@ public:
   double * QRSClass::pole(ECGSignal * signal);
   double * QRSClass::dlugosc(ECGSignal * signal);
 
+  ECGSignal getMockedSignal();
+
   IntSignal GetQRS_class() const
   {
 	  return QRS_class;
