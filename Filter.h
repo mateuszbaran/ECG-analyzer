@@ -10,5 +10,4 @@ public:
 
 	void zeroPhase(std::vector<double> b, std::vector<double> a, ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order);
 	void filter(std::vector<double> b, std::vector<double> a, ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order);
-
 };
