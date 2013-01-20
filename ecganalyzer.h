@@ -37,6 +37,12 @@ private slots:
 
     void on_radioButtonMovingAverage_toggled(bool checked);
 
+	void enableMovingAverageGUIControls(bool enable);
+
+	void enableButterworthGUIControls(bool enable);
+
+	void enableChebyschevGUIControls(bool enable);
+
     void on_radioButtonButterworthFilter_toggled(bool checked);
 
     void on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked);
@@ -50,6 +56,9 @@ private slots:
     void on_st_select_algorithm_currentIndexChanged(int value);    
     void on_st_intervals_table_cellDoubleClicked(int,int);
     void on_st_episodes_table_cellDoubleClicked(int,int);
+
+
+    void on_radioButtonChebyschevFilter_toggled(bool checked);
 
 private:
 	Ui::ECGanalyzerClass ui;

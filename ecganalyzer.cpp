@@ -205,17 +205,62 @@ void ECGanalyzer::on_radioButtonMovingAverage_toggled(bool checked)
 {
     if(checked)
     {
+		enableMovingAverageGUIControls(true);
+
+		enableChebyschevGUIControls(false);
+		enableButterworthGUIControls(false);
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::enableMovingAverageGUIControls(bool enable)
+{
+    ui.spinBoxMovingAverageSpan->setEnabled(enable);
+}
+
+void ECGanalyzer::enableChebyschevGUIControls(bool enable) 
+{
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+}
+
+void ECGanalyzer::enableButterworthGUIControls(bool enable)
+{
+	ui.doubleSpinBoxAttenuationButterworth->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyButterworth->setEnabled(enable);
+	ui.spinBoxOrderButterworth->setEnabled(enable);
+}
+
 
 void ECGanalyzer::on_radioButtonButterworthFilter_toggled(bool checked)
 {
     if(checked)
     {
+		enableButterworthGUIControls(true);
+
+		enableMovingAverageGUIControls(false);
+		enableChebyschevGUIControls(false);
+		
+
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::on_radioButtonChebyschevFilter_toggled(bool checked)
+{
+    if(checked)
+    {
+		enableChebyschevGUIControls(true);
+
+		enableButterworthGUIControls(false);
+		enableMovingAverageGUIControls(false);
+
+
+        //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
+    }
+}
+
 
 void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked)
 {
@@ -315,5 +360,8 @@ void ECGanalyzer::setSTIntervalParams()
   st_params["complex_other"] = ui.st_complex_other->value();
   _ECGcontroller.setParamsSTInterval(st_params);
 }
+
+
+
 
 
