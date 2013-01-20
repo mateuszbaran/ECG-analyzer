@@ -1,6 +1,12 @@
 #pragma once
 
+#include <gsl/gsl_sort_vector.h>
 #include "ECGSignal.h"
+#include "ECGRs.h"
+
+#define DEBUG
+
+using namespace std;
 
 /**
  * @class Class for storing QRS parameters.
@@ -10,6 +16,14 @@ class ECGWaves
 public:
   ECGWaves (void);
   ~ECGWaves (void);
+
+  void setSize(size_t n);
+  void setQrsOnset(IntSignal rs);
+  void setQrsEnd(IntSignal rs);
+  void setTend(IntSignal rs);
+  void setPonset(IntSignal rs);
+  void setPend(IntSignal rs);
+
 
   IntSignal GetP_end () const
   {

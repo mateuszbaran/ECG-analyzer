@@ -4,7 +4,7 @@ BaselineRemoval::BaselineRemoval(){}
 
 BaselineRemoval::~BaselineRemoval(){}
 
-void BaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo & ecgi, ECGSignal &outputSignal)
+void BaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo & ecgi, ECGSignalChannel &outputSignal)
 {
 	if(baselineRemovalMethod == MOVING_AVERAGE)
 	{
@@ -26,26 +26,26 @@ void BaselineRemoval::setParams(ParametersTypes &params)
 	(--->>> it can be parametrized and number of neighbours might be passed from GUI)
 	for edge points the output values are copies of the corresponding input values
 */
-void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignal &outputSignal, int span)
+void BaselineRemoval::movingAverageBaselineRemoval(const ECGSignal &inputSignal, ECGSignalChannel &outputSignal, int span)
 {
-	auto signalLength = outputSignal.channel_one -> signal -> size;
+	auto signalLength = outputSignal-> signal -> size;
 	for(int index = 0; index<signalLength; index++)
 	{
 		if(index < span/2 || index > signalLength - span/2) 
 		{
 			auto inputValueChannelOne = gsl_vector_get (inputSignal.channel_one -> signal, index);
-			auto inputValueChannelTwo = gsl_vector_get (inputSignal.channel_two -> signal, index);
+			//auto inputValueChannelTwo = gsl_vector_get (inputSignal.channel_two -> signal, index);
 
-			gsl_vector_set(outputSignal.channel_one -> signal, index, inputValueChannelOne);
-			gsl_vector_set(outputSignal.channel_two -> signal, index, inputValueChannelTwo);
+			gsl_vector_set(outputSignal -> signal, index, inputValueChannelOne);
+			//gsl_vector_set(outputSignal.channel_two -> signal, index, inputValueChannelTwo);
 		}
 		else
 		{
 			auto avgValueChannelOne = calculateAvgValueOfNeighbours(inputSignal.channel_one -> signal, index, span);
-			auto avgValueCahnnelTwo = calculateAvgValueOfNeighbours(inputSignal.channel_two -> signal, index, span);
+			//auto avgValueCahnnelTwo = calculateAvgValueOfNeighbours(inputSignal.channel_two -> signal, index, span);
 			
-			gsl_vector_set (outputSignal.channel_one -> signal, index, avgValueChannelOne) ;
-			gsl_vector_set (outputSignal.channel_two -> signal, index, avgValueCahnnelTwo) ;
+			gsl_vector_set (outputSignal -> signal, index, avgValueChannelOne) ;
+			//gsl_vector_set (outputSignal.channel_two -> signal, index, avgValueCahnnelTwo) ;
 		}
 	}
 }
