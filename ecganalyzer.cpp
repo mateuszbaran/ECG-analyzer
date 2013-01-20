@@ -13,6 +13,10 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 	ui.setupUi(this);
+    
+//#ifndef DEVELOPMENT
+//    ui.run_st_analysis_button->setProperty('visible', false);
+//#endif
 }
 
 ECGanalyzer::~ECGanalyzer()
@@ -164,6 +168,7 @@ void ECGanalyzer::on_run_st_analysis_button_clicked()
   _ECGcontroller.runSTInterval();
   
   updateSTIntervalTab();
+  updateAnalysisStatus("ST Analysis Ended!");
 }
 
 void ECGanalyzer::on_st_select_algorithm_currentIndexChanged(int value)
@@ -183,14 +188,14 @@ void ECGanalyzer::on_st_select_algorithm_currentIndexChanged(int value)
 
 void ECGanalyzer::on_st_intervals_table_cellDoubleClicked(int row, int col)
 {
-  auto _section = _ECGcontroller.st_data.getIntervalBeginAndEnd(row);
-  ui.st_plot->zoomX(_section.first, _section.second);
+  const auto & it = _ECGcontroller.st_data.getIntervalAt(row);
+  ui.st_plot->showInterval(it);
 }
 
 void ECGanalyzer::on_st_episodes_table_cellDoubleClicked(int row, int col)
 {
-  auto _section = _ECGcontroller.st_data.getEpisodeBeginAndEnd(row);
-  ui.st_plot->zoomX(_section.first, _section.second);
+  const auto & ep = _ECGcontroller.st_data.getEpisodeAt(row);
+  ui.st_plot->showEpisode(ep);
 
 }
 
@@ -295,8 +300,16 @@ void ECGanalyzer::updateAnalysisStatus(std::string status)
 
 void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 {
-	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
-	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
+	QMetaObject::invokeMethod(ui.actionZatrzymajPonownaAnalizeSygnalu,         // obj
+		"setEnabled", // member
+		Qt::QueuedConnection,     // connection type
+		Q_ARG(bool, analysisOngoing));     // val1
+	//ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
+	QMetaObject::invokeMethod(ui.actionPrzeprowadzPonownieAnalizeSygnalu,         // obj
+		"setEnabled", // member
+		Qt::QueuedConnection,     // connection type
+		Q_ARG(bool, !analysisOngoing));     // val1
+	//ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
 }
 
 void ECGanalyzer::setModulesParams()
@@ -308,26 +321,30 @@ void ECGanalyzer::setModulesParams()
 
 void ECGanalyzer::updateSTIntervalTab()
 {
-  double dt = 1.0f / ( (double) _ECGcontroller.ecg_info.channel_one.frequecy);
   const ECGST & st_data = _ECGcontroller.st_data;
+  const ECGChannelInfo & info = _ECGcontroller.ecg_info.channel_two;
   
   std::vector<ECGST::Interval> intervals = st_data.getIntervals();
   ui.st_intervals_table->clear();
-  ui.st_intervals_table->setColumnCount(4);
+  ui.st_intervals_table->setColumnCount(6);
   ui.st_intervals_table->setRowCount(intervals.size());
   
   ui.st_intervals_table->setHorizontalHeaderItem(0, new QTableWidgetItem( "ST onset" ));
   ui.st_intervals_table->setHorizontalHeaderItem(1, new QTableWidgetItem( "ST end" ));
-  ui.st_intervals_table->setHorizontalHeaderItem(2, new QTableWidgetItem( "Slope" ));
-  ui.st_intervals_table->setHorizontalHeaderItem(3, new QTableWidgetItem( "Offset" ));
+  ui.st_intervals_table->setHorizontalHeaderItem(2, new QTableWidgetItem( "Interval length [ms]" ));
+  ui.st_intervals_table->setHorizontalHeaderItem(3, new QTableWidgetItem( "Slope" ));
+  ui.st_intervals_table->setHorizontalHeaderItem(4, new QTableWidgetItem( "Offset" ));
+  ui.st_intervals_table->setHorizontalHeaderItem(5, new QTableWidgetItem( "Description" ));
   
   auto it = intervals.begin();
-  int i =0;
+  int i = 0;
   for(; it != intervals.end(); ++it, ++i) {
-    ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( QString::number(( (double) it->jpoint*dt), 'f', 2) + " s" ) );
-    ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( QString::number(( (double) it->stpoint*dt), 'f', 2) + " s" ) );
-    ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it->slope) ));
-    ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it->offset) ));
+    ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it->jpoint ).c_str() ));
+    ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it->stpoint ).c_str() ) );
+    ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it->length()) ));
+    ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it->slope) ));
+    ui.st_intervals_table->setItem(i,4, new QTableWidgetItem( QString::number(it->offset) ));
+    ui.st_intervals_table->setItem(i,5, new QTableWidgetItem( it->description.c_str() ));
   }
   
   std::vector<ECGST::Episode> episodes = st_data.getEpisodes();
@@ -340,8 +357,8 @@ void ECGanalyzer::updateSTIntervalTab()
   auto itt = episodes.begin();
   i = 0;
   for(; itt != episodes.end(); ++itt, ++i) {
-    ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( QString::number(( (double) itt->start)*dt, 'f', 2) + " s" ));
-    ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( QString::number( ( (double) itt->end)*dt, 'f', 2) + " s" ));
+    ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( itt->start ).c_str() ));
+    ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  itt->end ).c_str() ));
   }
   
   ui.st_plot->setSignal(_ECGcontroller.raw_signal.channel_one, _ECGcontroller.ecg_info.channel_one, _ECGcontroller.st_data);
@@ -357,7 +374,8 @@ void ECGanalyzer::setSTIntervalParams()
   st_params["algorithm"] = (double) ui.st_select_algorithm->currentIndex();
   st_params["simple_thresh"] = ui.st_simple_thresh->value();
   st_params["complex_thresh"] = ui.st_complex_thresh->value();
-  st_params["complex_other"] = ui.st_complex_other->value();
+  st_params["type_thresh"] = ui.st_complex_other->value();
+  st_params["slope_thresh"] = ui.st_complex_slope->value();
   _ECGcontroller.setParamsSTInterval(st_params);
 }
 

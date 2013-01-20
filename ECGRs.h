@@ -17,6 +17,8 @@ public:
   }
 
   void setRs(IntSignal rs);
+  
+  size_t count() const;
 
 private:
   IntSignal rs;

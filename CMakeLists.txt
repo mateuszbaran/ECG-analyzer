@@ -55,6 +55,8 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 # Controls behaviour of logger - possible values: -DCLEANTLOG, -DFTLOG, -DETLOG, -DTLOG
 ADD_DEFINITIONS("-DFTLOG=log")
 
+# ADD_DEFINITIONS("-DDEVELOPMENT")
+
 include_directories(${GSL_INCLUDE_DIRS} ${GSLCBLAS_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES} ${GSLCBLAS_LIBRARIES})
 
@@ -66,7 +68,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${QWT_INCLUDE_DIR})
 include_directories(plots)
 
-link_libraries(${LIBS})
+
 
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )

@@ -21,25 +21,51 @@ public:
   virtual ~STAnalysis();
   
 private:
-  class AbstractAnalizator {
+  class AbstractAnalizer {
   public:
-    virtual ECGST::Interval analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info) = 0;
-    virtual ~AbstractAnalizator() {};
+    virtual void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST&) = 0;
+    virtual void setParams(ParametersTypes&);
+    virtual ~AbstractAnalizer() {};
+  protected:
+    ParametersTypes params;
   };
   
-  class SimpleAnalizator: public AbstractAnalizator {
+  class SimpleAnalizer: public AbstractAnalizer {
   public:
-    virtual ECGST::Interval analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info);
+    SimpleAnalizer();
+    void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output);
+    virtual void setParams(ParametersTypes& );
+  private:
+    double thresh;
+    int start;
+    bool during_episode;
   };
   
-  AbstractAnalizator * analizator;
+  class ComplexAnalizer: public AbstractAnalizer {
+  public:
+    ComplexAnalizer();
+    void analyse(const int it, const ECGRs& rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGChannelInfo& info, ECGST& output);
+    virtual void setParams(ParametersTypes& );
+  private:
+    std::pair<int, double> maxDistanceSample(const OtherSignal&, int, int);
+    std::pair<int, int> overBelowSamples(const OtherSignal&, int, int);
+    int getTPeak(const OtherSignal&, int, int);
+    double thresh, type_thresh, slope_thresh;
+    int start;
+    bool during_episode;
+  };
+  
+  AbstractAnalizer * analizator;
+  double dt;
   double thresh;
-  void setAnalizator(STAnalysis::AbstractAnalizator* a = nullptr);
+  void setAnalizator(STAnalysis::AbstractAnalizer* a = nullptr);
   void setAnalizator(AlgorithmType atype = AlgorithmType::Simple);
   
   AlgorithmType algorithmTypeFromInt(int value = 0) const;
-  
+
+#ifdef DEVELOPMENT
   ECGRs read_normal_r_peaks(std::string path, std::string filename);
+#endif
 };
 
 #endif // STANALYSIS_H

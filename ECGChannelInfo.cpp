@@ -2,7 +2,7 @@
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/format.hpp"
 
-std::string ECGChannelInfo::sampleToTime( int sample )
+std::string ECGChannelInfo::sampleToTime( int sample ) const
 {
 	auto pow = [](int num, int exp) -> int {
 		int ret = 1;

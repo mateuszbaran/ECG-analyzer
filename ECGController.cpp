@@ -4,6 +4,7 @@
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
 #include "STAnalysis.h"
+#include "QRSPointsDetector.h"
 
 #include "wfdb/wfdb.h"
 
@@ -18,6 +19,7 @@ ECGController::ECGController (void) :
   rpeaks_module(new RPeaksDetector()),
   hrv1_module(new HRV1Analyzer()),
   st_interval_module(new STAnalysis()),
+  waves_module(new QRSPointsDetector()),
   analysisCompl(false),
   computation(NULL)
 {
@@ -208,13 +210,13 @@ void ECGController::runSTInterval ()
   }
   if (!rpeaks_module->run_)
   {
-    runRPeaks();
+    //runRPeaks();
   }
-  //if (!waves_module->run_)
-  //{
-    //runWaves();
-  //}
-  st_interval_module->runModule(r_peaks_data, waves_data, filtered_signal, ecg_info, st_data);
+  if (!waves_module->run_)
+  {
+    runWaves();
+  }
+  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal.channel_one, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
@@ -423,13 +425,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 {
 	TRI_LOG_STR(__FUNCTION__);
 
-	//cleaning after previous computation
-	if(computation && analysisCompl)
-	{
-		delete computation;
-		analysisCompl = false;
-	}
-
+	//cleaning after previous computation/stopping it
 	if(computation)
 	{
 		computation->interrupt();
@@ -437,7 +433,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 		delete computation;
 		computation = NULL;
 	}
-	else
+	if(statusUpdate && analysisComplete)
 	{
 
 #define HANDLE_INTERRUPTION							\

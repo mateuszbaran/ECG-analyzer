@@ -15,7 +15,7 @@ public:
   
   double get(size_t it);
   void set(size_t it, double value);
-
+  
   gsl_vector* signal;
 };
 

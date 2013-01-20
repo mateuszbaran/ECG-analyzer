@@ -1481,7 +1481,7 @@
                            <bool>true</bool>
                           </property>
                           <property name="text">
-                           <string>Threshold</string>
+                           <string>Offset threshold</string>
                           </property>
                          </widget>
                         </item>
@@ -1529,7 +1529,7 @@
                         <item row="0" column="0">
                          <widget class="QLabel" name="st_complex_thresh_label">
                           <property name="text">
-                           <string>Threshold</string>
+                           <string>Offset threshold</string>
                           </property>
                          </widget>
                         </item>
@@ -1565,12 +1565,48 @@
                         <item row="1" column="0">
                          <widget class="QLabel" name="st_complex_other_label">
                           <property name="text">
-                           <string>Other param</string>
+                           <string>Stright/curve threshold</string>
                           </property>
                          </widget>
                         </item>
                         <item row="1" column="2">
-                         <widget class="QDoubleSpinBox" name="st_complex_other"/>
+                         <widget class="QDoubleSpinBox" name="st_complex_other">
+                          <property name="minimum">
+                           <double>-1.000000000000000</double>
+                          </property>
+                          <property name="maximum">
+                           <double>1.000000000000000</double>
+                          </property>
+                          <property name="singleStep">
+                           <double>0.001000000000000</double>
+                          </property>
+                          <property name="value">
+                           <double>0.150000000000000</double>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="st_complex_slope_label">
+                          <property name="text">
+                           <string>Slope direction threshold</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="2">
+                         <widget class="QDoubleSpinBox" name="st_complex_slope">
+                          <property name="minimum">
+                           <double>-1.000000000000000</double>
+                          </property>
+                          <property name="maximum">
+                           <double>1.000000000000000</double>
+                          </property>
+                          <property name="singleStep">
+                           <double>0.001000000000000</double>
+                          </property>
+                          <property name="value">
+                           <double>0.150000000000000</double>
+                          </property>
+                         </widget>
                         </item>
                        </layout>
                       </widget>
@@ -1609,7 +1645,7 @@
                  <string>Intervals</string>
                 </attribute>
                 <layout class="QGridLayout" name="gridLayout_3">
-                 <item row="0" column="0">
+                 <item row="1" column="0">
                   <widget class="QTableWidget" name="st_intervals_table">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1625,6 +1661,13 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_4">
+                   <property name="text">
+                    <string>ST intervals ordered by occurence</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
                <widget class="QWidget" name="st_episodes_tab">
@@ -1632,7 +1675,7 @@
                  <string>Episodes</string>
                 </attribute>
                 <layout class="QGridLayout" name="gridLayout_4">
-                 <item row="0" column="0">
+                 <item row="1" column="0">
                   <widget class="QTableWidget" name="st_episodes_table">
                    <property name="editTriggers">
                     <set>QAbstractItemView::NoEditTriggers</set>
@@ -1642,6 +1685,13 @@
                    </property>
                    <property name="selectionBehavior">
                     <enum>QAbstractItemView::SelectRows</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_5">
+                   <property name="text">
+                    <string>ST episodes ordered by occurence</string>
                    </property>
                   </widget>
                  </item>
@@ -1670,8 +1720,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>922</width>
-     <height>21</height>
+     <width>955</width>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPlik">

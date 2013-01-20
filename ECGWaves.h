@@ -4,6 +4,8 @@
 #include "ECGSignal.h"
 #include "ECGRs.h"
 
+#define DEBUG
+
 using namespace std;
 
 /**
@@ -15,15 +17,13 @@ public:
   ECGWaves (void);
   ~ECGWaves (void);
 
-  bool detectQRS(ECGSignal &signal,ECGRs &rPeak);
-  bool detectPT(ECGSignal &signal);
-  ECGSignal gradient(ECGSignal *signal);
-  ECGSignal averageFilter(ECGSignal *signal);
-  friend double* findMinimum (ECGSignal *signal,int forBegin, int forEnd);
-  friend double* findMaximum (ECGSignal *signal,int forBegin, int forEnd);
+  void setSize(size_t n);
+  void setQrsOnset(IntSignal rs);
+  void setQrsEnd(IntSignal rs);
+  void setTend(IntSignal rs);
+  void setPonset(IntSignal rs);
+  void setPend(IntSignal rs);
 
-  ECGSignal getMockedSignal();
-  ECGRs getMockedRPeak();
 
   IntSignal GetP_end () const
   {

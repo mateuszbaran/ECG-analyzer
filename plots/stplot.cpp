@@ -1,6 +1,16 @@
-#include "../plots/stplot.h"
+#include "stplot.h"
+#ifdef WIN32
+#include <qwt6/qwt_symbol.h>
+#include <qwt6/qwt_legend.h>
+#else
+#include <qwt_symbol.h>
+#include <qwt_legend.h>
+#endif
+#include <QResizeEvent>
 
-StPlot::StPlot(QWidget* parent): QwtPlot(parent)
+StPlot::StPlot(QWidget* parent): 
+  QwtPlot(parent),
+  viewFactor(-1.0)
 {
   setMinimumHeight(10);
   setMinimumWidth(10);
@@ -11,9 +21,40 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
   grid->attach(this);
   setAxisTitle(QwtPlot::xBottom, "Czas [s]");
   setAxisTitle(QwtPlot::yLeft, "Amplituda [mv]");
-  curve = new QwtPlotCurve("signal");
+  
+  curve = new QwtPlotCurve("Filtered signal");
   curve->setYAxis(QwtPlot::yLeft);
   curve->attach(this);
+
+  ISOPoints = new QwtPlotCurve("ISO");
+  ISOPoints->setStyle(QwtPlotCurve::NoCurve);
+  ISOPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::green), QColor(Qt::green), QSize(5, 5)));
+  ISOPoints->setYAxis(QwtPlot::yLeft);
+  ISOPoints->attach(this);
+  
+  JPoints = new QwtPlotCurve("J");
+  JPoints->setStyle(QwtPlotCurve::NoCurve);
+  JPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::blue), QColor(Qt::blue), QSize(5, 5)));
+  JPoints->setYAxis(QwtPlot::yLeft);
+  JPoints->attach(this);
+  
+  STPoints = new QwtPlotCurve("ST");
+  STPoints->setStyle(QwtPlotCurve::NoCurve);
+  STPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::red), QColor(Qt::red), QSize(5, 5)));
+  STPoints->setYAxis(QwtPlot::yLeft);
+  STPoints->attach(this);
+
+  RPoints = new QwtPlotCurve("R");
+  RPoints->setStyle(QwtPlotCurve::NoCurve);
+  RPoints->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::yellow), QColor(Qt::yellow), QSize(5, 5)));
+  RPoints->setYAxis(QwtPlot::yLeft);
+  //RPoints->attach(this);
+
+  legend = new QwtLegend();
+  legend->setItemMode(QwtLegend::ReadOnlyItem);
+  legend->setWhatsThis("Click on an item to show/hide the plot");
+  this->insertLegend(legend, QwtPlot::RightLegend);
+  
   samples = new QVector<QPointF>;
   data = new QwtPointSeriesData;
   replot();
@@ -30,6 +71,10 @@ StPlot::StPlot(QWidget* parent): QwtPlot(parent)
 StPlot::~StPlot()
 {
   if(zoomer) delete zoomer;
+  delete ISOPoints;
+  delete JPoints;
+  delete STPoints;
+  //delete RPoints;
 }
 
 void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& info, const ECGST& stdata)
@@ -39,12 +84,51 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   dt = 1.0 / float(info.frequecy);
   int size = int(v->size);
   samples->clear();
+  
   for (int i = 0; i < size; i++)
-      samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
+    samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
+  
+  QVector<QPointF>* ISOVector = new QVector<QPointF>;
+  QVector<QPointF>* JVector = new QVector<QPointF>;
+  QVector<QPointF>* STVector = new QVector<QPointF>;
+  //QVector<QPointF>* RVector = new QVector<QPointF>;
+  const std::vector<ECGST::Interval> intervals = stdata.getIntervals();
+  for (std::vector<ECGST::Interval>::const_iterator it = intervals.begin() ; it != intervals.end(); ++it)
+  {
+    ISOVector->push_back(QPointF(float(it->isopoint)*dt, float(v->data[(it->isopoint)*v->stride]*invgain)));
+    JVector->push_back(QPointF(float(it->jpoint)*dt, float(v->data[(it->jpoint)*v->stride]*invgain)));
+    STVector->push_back(QPointF(float(it->stpoint)*dt, float(v->data[(it->stpoint)*v->stride]*invgain)));
+    //RVector->push_back(QPointF(float(it->rpoint)*dt, float(v->data[(it->rpoint)*v->stride]*invgain)));
+  }
+  ISOPoints->setSamples(*ISOVector);
+  JPoints->setSamples(*JVector);
+  STPoints->setSamples(*STVector);
+  //RPoints->setSamples(*RVector);
   data->setSamples(*samples);
   curve->setData(data);
   zoomer->setZoomBase();
   replot();
+}
+
+void StPlot::showEpisode(const ECGST::Episode& e)
+{
+  ISOPoints->hide();
+  JPoints->hide();
+  STPoints->hide();
+  legend->hide();
+  zoomX(e.start - 10, e.end + 10, true);
+  
+  
+}
+
+void StPlot::showInterval(const ECGST::Interval& it)
+{
+  ISOPoints->show();
+  JPoints->show();
+  STPoints->show();
+  legend->show();
+  auto span = it.span();
+  zoomX(span.first, span.second, true);
 }
 
 
@@ -53,9 +137,9 @@ void StPlot::zoomX(int from, int to, bool vscale)
 {
   QRectF rect = zoomer->zoomBase();
   
-  
   rect.setLeft(from*dt);
   rect.setRight(to*dt);
+  viewFactor = rect.width()/canvas()->width();
   
   if (vscale) {
     auto _minmax = minMaxValueIn(from, to);
@@ -64,6 +148,7 @@ void StPlot::zoomX(int from, int to, bool vscale)
   }
   
   zoomer->zoom(rect);
+  replot();
 }
 
 std::pair<double, double> StPlot::minMaxValueIn(int from, int to)
@@ -76,5 +161,21 @@ std::pair<double, double> StPlot::minMaxValueIn(int from, int to)
     return a.y() < b.y();
   });
   return std::make_pair(_minmax.first->y(), _minmax.second->y());
+}
+
+void StPlot::resizeEvent(QResizeEvent* e)
+{
+  QwtPlot::resizeEvent(e);
+  if (e->oldSize().width() < 0) return;
+  if (viewFactor > 0) {
+    double diff = (e->size().width() - e->oldSize().width())*viewFactor;
+    auto zoom_rect = zoomer->zoomRect();
+    double nleft = zoom_rect.left() - diff/2.0f;
+    double nright = zoom_rect.right() + diff/2.0f;
+    zoom_rect.setLeft(nleft);
+    zoom_rect.setRight(nright);
+    zoomer->zoom(zoom_rect);
+  }
+  replot();
 }
 
