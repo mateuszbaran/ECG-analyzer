@@ -1699,7 +1699,7 @@
   <customwidget>
    <class>StPlot</class>
    <extends>QWidget</extends>
-   <header>stplot.h</header>
+   <header>../plots/stplot.h</header>
   </customwidget>
  </customwidgets>
  <resources>
