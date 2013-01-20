@@ -3,6 +3,57 @@
 #include "tri_logger.hpp"
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
+double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd) {
+
+    ECGSignalChannel sig;
+    sig = *signal;
+    auto sigSize = sig->signal->size;
+
+    auto minChannelOne = gsl_vector_get (sig->signal, forBegin);
+    for (int i = forBegin; i < forEnd; i++) {
+        auto currentValue = gsl_vector_get (sig->signal, i);
+        if (currentValue<minChannelOne) minChannelOne=currentValue;
+    }
+
+    //auto minChannelTwo = gsl_vector_get (signal->signal, forBegin);
+    //for (int i = forBegin; i < forEnd; i++) {
+    //	auto currentValue = gsl_vector_get (signal->signal, i);
+    //	if (currentValue<minChannelTwo) minChannelTwo=currentValue;
+    //}
+
+    //double* result = new double[2];
+    //result[0] = minChannelOne;
+    //result[1] = minChannelTwo;
+
+    return minChannelOne;
+}
+
+double findMaximum (ECGSignalChannel *signal,int forBegin, int forEnd) {
+
+
+    ECGSignalChannel sig;
+    sig = *signal;
+    auto sigSize = sig->signal->size;
+
+    auto maxChannelOne = gsl_vector_get (sig->signal, forBegin);
+    for (int i = forBegin; i < forEnd; i++) {
+        auto currentValue = gsl_vector_get (sig->signal, i);
+        if (currentValue>maxChannelOne) maxChannelOne=currentValue;
+    }
+
+    //auto maxChannelTwo = gsl_vector_get (signal->channel_two->signal, forBegin);
+    //for (int i = forBegin; i < forEnd; i++) {
+    //	auto currentValue = gsl_vector_get (signal->channel_two->signal, i);
+    //	if (currentValue>maxChannelTwo) maxChannelTwo=currentValue;
+    //}
+
+    //double* result = new double[2];
+    //result[0] = maxChannelOne;
+    //result[1] = maxChannelTwo;
+
+    return maxChannelOne;
+}
+
 
 QRSPointsDetector::QRSPointsDetector(void)
 {
@@ -496,57 +547,6 @@ ECGSignalChannel QRSPointsDetector::averageFilter(ECGSignalChannel * signal){
 	//gsl_vector_set(tmpSig->signal, signalSize-5, sumC2/11);
 
 	return tmpSig;
-}
-
-double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd) {
-
-	ECGSignalChannel sig;
-	sig = *signal;
-	auto sigSize = sig->signal->size;
-
-	auto minChannelOne = gsl_vector_get (sig->signal, forBegin);
-	for (int i = forBegin; i < forEnd; i++) {
-		auto currentValue = gsl_vector_get (sig->signal, i);
-		if (currentValue<minChannelOne) minChannelOne=currentValue;
-	}
-
-	//auto minChannelTwo = gsl_vector_get (signal->signal, forBegin);
-	//for (int i = forBegin; i < forEnd; i++) {
-	//	auto currentValue = gsl_vector_get (signal->signal, i);
-	//	if (currentValue<minChannelTwo) minChannelTwo=currentValue;
-	//}
-
-	//double* result = new double[2];
-	//result[0] = minChannelOne;
-	//result[1] = minChannelTwo;
-
-	return minChannelOne;
-}
-
-double findMaximum (ECGSignalChannel *signal,int forBegin, int forEnd) {
-
-
-	ECGSignalChannel sig;
-	sig = *signal;
-	auto sigSize = sig->signal->size;
-
-	auto maxChannelOne = gsl_vector_get (sig->signal, forBegin);
-	for (int i = forBegin; i < forEnd; i++) {
-		auto currentValue = gsl_vector_get (sig->signal, i);
-		if (currentValue>maxChannelOne) maxChannelOne=currentValue;
-	}
-
-	//auto maxChannelTwo = gsl_vector_get (signal->channel_two->signal, forBegin);
-	//for (int i = forBegin; i < forEnd; i++) {
-	//	auto currentValue = gsl_vector_get (signal->channel_two->signal, i);
-	//	if (currentValue>maxChannelTwo) maxChannelTwo=currentValue;
-	//}
-
-	//double* result = new double[2];
-	//result[0] = maxChannelOne;
-	//result[1] = maxChannelTwo;
-
-	return maxChannelOne;
 }
 
 ECGRs QRSPointsDetector::getMockedRPeak(){
