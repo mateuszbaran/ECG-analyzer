@@ -180,11 +180,11 @@ Autorzy: Krzysztof Bębenek
 \item[Temat] Metody detekcji morfologicznego pochodzenia zespołu QRS.
 \item[Opis] Proces automatycznego klasyfikowania zespołów QRS należy do jednego z trudniejszych procesów podczas przetwarzania sygnałów EKG. Jest jednak on niezbędny w dalszych etapach analizy podczas których brane są pod uwagę tylko niepoprawne pobudzenia. Do prostych sposób oceny morfologi pobudzenia służą:
   \begin{itemize}
-  \item współczynik kształtu Malinowskiej,
+  \item współczynnik kształtu Malinowskiej,
   \item stosunek części ujemnej do dodatniej sygnału,
   \end{itemize}
-\item[Dane] ciąg próbek przefiltrowanego sygnału EKG, wektory QRS_onset oraz QRS_end określające początek oraz koniec zespółu QRS
-\item[Szukane] moduł programu klasyfikujący zespółu QRS na podstawie ich morfologfii 
+\item[Dane] ciąg próbek przefiltrowanego sygnału EKG, wektory QRS\_onset oraz QRS\_end określające początek oraz koniec zespołu QRS
+\item[Szukane] moduł programu klasyfikujący zespołu QRS na podstawie ich morfologii 
 \end{description}
 
 \subsubsection{Badania literaturowe}
@@ -244,18 +244,18 @@ określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const int it| - numer badanego zespołu QRS, jako liczba
+  \item \verb|const int it| -- numer badanego zespołu QRS, jako liczba
     porządkowa numerów próbek z tablicy załamków R.
-  \item \verb|const ECGR& rpeaks| - struktura zawierająca tablicę numerów
+  \item \verb|const ECGR& rpeaks| -- struktura zawierająca tablicę numerów
     próbek kolejnych załamków R
-  \item \verb|const ECGEaves& waves| - struktura zawierajace tablice
+  \item \verb|const ECGEaves& waves| -- struktura zawierająca tablice
     przechowujące numery próbek punktów charakterystycznych kolejnych zespołów
     QRS: $P_{onset}$, $QRS_{onset}$, $QRS_{end}$ oraz $T_{end}$.
-  \item \verb|const ECGSignalChanel& signal| - jeden kanał odfiltrowanego
+  \item \verb|const ECGSignalChanel& signal| -- jeden kanał odfiltrowanego
     sygnału z usuniętym przesunięciem izolinii.
-  \item \verb|const ECGInfo& info| - struktura zawierająca informacje o badanym
+  \item \verb|const ECGInfo& info| -- struktura zawierająca informacje o badanym
     sygnale EKG, m.in. częstotliwość.
-  \item \verb|ECGST& output| - parametr wyjściowy, struktura zawierajaca
+  \item \verb|ECGST& output| -- parametr wyjściowy, struktura zawierająca
     tablice wszystkich interwałów ST wraz z ich parametrami, oraz tablice
     zarejestrowanych epizodów ST wraz z ich parametrami.
 \end{itemize}
@@ -271,12 +271,12 @@ punkty sygnału obliczone we wcześniejszych modułach (tj. $QRS_{onset}$,
 $QRS_{end}$ oraz $T_{end}$) oblicza koniec odcinka ST (wykorzystując bardziej
 zaawansowane algorytmy od poprzedniej funkcji), a następnie oblicza jego parametry:
 \begin{itemize}
-  \item przesunięcie względem izolinii
-  \item wartość nachylenia w stosunku do izolini
-  \item długość odcinka ST
-  \item klasyfikacja kształtu
+  \item przesunięcie względem izolinii,
+  \item wartość nachylenia w stosunku do izolinii,
+  \item długość odcinka ST,
+  \item klasyfikacja kształtu.
 \end{itemize}
-Uzywając wczesniej ustawionego parametru \verb|complex_thresh|, odcinek ST
+Używając wcześniej ustawionego parametru \verb|complex_thresh|, odcinek ST
 określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''. Algorytm
 ocenia również to, czy załamek jest prosty czy zakrzywiony w oparciu o
 wcześniej ustawiony parametr \verb|type_thresh|. Dla prostych odcinków określa
@@ -287,18 +287,18 @@ poprzednim rozdziale.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const int it| - numer badanego zespołu QRS, jako liczba
+  \item \verb|const int it| -- numer badanego zespołu QRS, jako liczba
     porządkowa numerów próbek z tablicy załamków R.
-  \item \verb|const ECGR& rpeaks| - struktura zawierająca tablicę numerów
+  \item \verb|const ECGR& rpeaks| -- struktura zawierająca tablicę numerów
     próbek kolejnych załamków R
-  \item \verb|const ECGEaves& waves| - struktura zawierajace tablice
+  \item \verb|const ECGEaves& waves| -- struktura zawierające tablice
     przechowujące numery próbek punktów charakterystycznych kolejnych zespołów
     QRS: $P_{onset}$, $QRS_{onset}$, $QRS_{end}$ oraz $T_{end}$.
-  \item \verb|const ECGSignalChanel& signal| - jeden kanał odfiltrowanego
+  \item \verb|const ECGSignalChanel& signal| -- jeden kanał odfiltrowanego
     sygnału z usuniętym przesunięciem izolinii.
-  \item \verb|const ECGInfo& info| - struktura zawierająca informacje o badanym
+  \item \verb|const ECGInfo& info| -- struktura zawierająca informacje o badanym
     sygnale EKG, m.in. częstotliwość.
-  \item \verb|ECGST& output| - parametr wyjściowy, struktura zawierajaca
+  \item \verb|ECGST& output| -- parametr wyjściowy, struktura zawierająca
     tablice wszystkich interwałów ST wraz z ich parametrami, oraz tablice
     zarejestrowanych epizodów ST wraz z ich parametrami.
 \end{itemize}
@@ -318,7 +318,7 @@ dyskretną pochodną sygnału.
 Parametry:
 \begin{itemize}
   \item \verb|const OtherSignal& sig| - cały, odfiltrowany sygnał EKG
-  \item \verb|int from| - numer próbki w której należy zacząc poszukiwania
+  \item \verb|int from| - numer próbki w której należy zacząć poszukiwania
   \item \verb|int to| - numer próbki w której należy skończyć poszukiwania
 \end{itemize}
 
