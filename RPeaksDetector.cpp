@@ -1,5 +1,5 @@
 #include "RPeaksDetector.h"
-#include<QDebug>
+#include <QDebug>
 #include "tri_logger.hpp"
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
@@ -7,7 +7,7 @@ RPeaksDetector::RPeaksDetector()
 {
 	this->detectionMethod = PAN_TOMPKINS;
 	this->panTompkinsMovinghWindowLenght = 0;
-	this->panTompkinsThersold = 0;
+	this->panTompkinsThershold = 0;
 	this->customParameters = false;
 }
 
@@ -91,7 +91,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 
 	if(parameterTypes.find("threshold_size") != parameterTypes.end())
 	{
-		panTompkinsMovinghWindowLenght = parameterTypes["threshold_size"];
+		panTompkinsThershold = parameterTypes["threshold_size"];
 	}
 	else {
 		#ifdef DEBUG
@@ -106,7 +106,7 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 			{
 				qDebug()  << "Detection method: PanTompkins" << endl
 						  << "Moving window size: " << this->panTompkinsMovinghWindowLenght << endl
-						  << "Thersold size: " << panTompkinsThersold;
+						  << "Thersold size: " << panTompkinsThershold;
 			} 
 			else if (this->detectionMethod == HILBERT)
 			{
@@ -295,13 +295,13 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 
 	// Select automatic or manual thersold
 	double threshold = 0;
-	if( this->panTompkinsThersold == 0)
+	if( this->panTompkinsThershold == 0)
 	{
 		threshold = sigMaxVal * 0.25;
 	}
 	else
 	{
-		threshold = this->panTompkinsThersold;
+		threshold = this->panTompkinsThershold;
 	}
 
 	//Looking for points over thersold

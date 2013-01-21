@@ -348,7 +348,7 @@ void detekcja_r_hilbert(const std::vector<double> & sygnal,
 
 
 // Test definitions
-#define DEBUG
+//#define DEBUG
 //#define DEBUG_SIGNAL
 //#define DEBUG_SIGNAL_DETAILS
 #define USE_MOCKED_SIGNAL
@@ -412,9 +412,9 @@ private:
   int panTompkinsMovinghWindowLenght;
 
   /**
-  *  PanTompkins thersold size
+  *  PanTompkins thershold size
   */
-  double panTompkinsThersold;
+  double panTompkinsThershold;
 
   /**
   *  PanTompkins R peaks method detection
