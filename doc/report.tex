@@ -21,38 +21,81 @@
 \usepackage{multirow}
 \usepackage{listings}
 
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
 \begin{document}
 
-\title{Raport z projektu Analizatora EKG}
-\author{Mateusz Baran \and
-Krzysztof Bębenek \and
-Bartłomiej Bułat \and
-Szczepan Czaicki \and
-Tomasz Drzewiecki \and
-Krzysztof Farganus \and
-Łukasz Jaromi \and
-Mateusz Krasucki \and
-Łukasz Krzyżek \and
-Łukasz Kutrzuba \and
-Weronika Łabaj \and
-Paweł Maślanka \and
-Piotr Matuszkiewicz \and
-Norbert Pabian \and
-Łukasz Pękala \and
-Krzysztof Piekutowski \and
-Grzegorz Pietrzyk \and
-Łukasz Podolski \and
-Mikołaj Rzepka \and
-Agata Sitnik \and
-Leszek Sosnowski \and
-Aleksander Steliga \and
-Mateusz Ślażyński \and
-Łukasz Zieńkowski}
+\begin{titlepage}
+\begin{center}
+
+% Upper part of the page. The '~' is needed because \\
+% only works if a paragraph has started.
+\includegraphics[width=0.15\textwidth]{./include/agh-logo}~\\[1cm]
+
+\textsc{\LARGE Akademia Górniczo-Hutnicza w Krakowie}\\
+\textsc{\Large Wydział Elektrotechniki, Automatyki, Informatyki i Inżynierii Biomedycznej}\\
+[1.5cm]
+
+\textsc{\Large Projekt zaliczeniowy}\\[0.5cm]
+
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries Analizator EKG}\\[0.4cm]
+
+\HRule \\[1.5cm]
+
+% Author and supervisor
+\begin{minipage}{0.27\textwidth}
+\begin{flushleft} \large
+\emph{Autorzy:}\\
+ Mateusz \textsc{Baran} \\
+ Krzysztof \textsc{Bębenek} \\
+ Bartłomiej \textsc{Bułat} \\
+ Szczepan \textsc{Czaicki} \\
+ Tomasz \textsc{Drzewiecki} \\
+ Krzysztof \textsc{Farganus} \\
+ Łukasz \textsc{Jaromi} \\
+ Mateusz \textsc{Krasucki} \\
+ Łukasz \textsc{Krzyżek} \\
+ Łukasz \textsc{Kutrzuba} \\
+ Weronika \textsc{Łabaj} \\
+ Paweł \textsc{Maślanka} \\
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.27\textwidth}
+\begin{flushleft} \large
+ \phantom{Autorzy:}
+ Piotr \textsc{Matuszkiewicz} \\
+ Norbert \textsc{Pabian} \\
+ Łukasz \textsc{Pękala} \\
+ Krzysztof \textsc{Piekutowski} \\
+ Grzegorz \textsc{Pietrzyk} \\
+ Łukasz \textsc{Podolski} \\
+ Mikołaj \textsc{Rzepka} \\
+ Agata \textsc{Sitnik} \\
+ Leszek \textsc{Sosnowski} \\
+ Aleksander \textsc{Steliga} \\
+ Mateusz \textsc{Ślażyński} \\
+ Łukasz \textsc{Zieńkowski}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Opiekun:} \\
+ mgr inż. Tomasz \textsc{Pięciak}
+\end{flushright}
+\end{minipage}
+
+\vfill
+
+% Bottom of the page
+{\large \today}
+
+\end{center}
+\end{titlepage}
 
 
-\maketitle
-\newpage
-
+\setcounter{page}{2}
 \tableofcontents
 \newpage
 
@@ -174,7 +217,7 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 Autorzy: Krzysztof Bębenek
 
 \subsubsection{Opis zadania}
-\label{sec:baseline:desc}
+\label{sec:qrs_class:desc}
 
 \begin{description}
 \item[Temat] Metody detekcji morfologicznego pochodzenia zespołu QRS.
@@ -188,16 +231,16 @@ Autorzy: Krzysztof Bębenek
 \end{description}
 
 \subsubsection{Badania literaturowe}
-\label{sec:baseline:papers}
+\label{sec:qrs_class:papers}
 
 \subsubsection{Opis procedur i metod}
-\label{sec:baseline:procs}
+\label{sec:qrs_class:procs}
 
 \subsubsection{Warunki testowania}
-\label{sec:baseline:tests}
+\label{sec:qrs_class:tests}
 
 \subsubsection{Wyniki}
-\label{sec:baseline:results}
+\label{sec:qrs_class:results}
 
 
 
