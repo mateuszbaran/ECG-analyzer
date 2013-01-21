@@ -1,6 +1,11 @@
 #include "stplot.h"
-#include <qwt_symbol.h> 
-#include <qwt_legend.h> 
+#ifdef WIN32
+#include <qwt6/qwt_symbol.h>
+#include <qwt6/qwt_legend.h>
+#else
+#include <qwt_symbol.h>
+#include <qwt_legend.h>
+#endif
 #include <QResizeEvent>
 
 StPlot::StPlot(QWidget* parent): 

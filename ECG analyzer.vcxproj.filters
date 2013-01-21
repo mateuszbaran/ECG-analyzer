@@ -206,6 +206,9 @@
     <ClCompile Include="STAnalysis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QRSPointsDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -328,6 +331,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="STAnalysis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QRSPointsDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

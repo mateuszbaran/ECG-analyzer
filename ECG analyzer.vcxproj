@@ -43,6 +43,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(ConfigurationName)</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(ConfigurationName)</OutDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">plots;..\ecg-biblioteki\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -170,6 +171,7 @@
     <ClCompile Include="plots\stplot.cpp" />
     <ClCompile Include="plots\synczoomer.cpp" />
     <ClCompile Include="QRSClass.cpp" />
+    <ClCompile Include="QRSPointsDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="STAnalysis.cpp" />
     <ClCompile Include="tri_logger.cpp" />
@@ -307,6 +309,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I."</Command>
     </CustomBuild>
     <ClInclude Include="QRSClass.h" />
+    <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="STAnalysis.h" />
     <ClInclude Include="tri_logger.hpp" />

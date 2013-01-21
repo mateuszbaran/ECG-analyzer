@@ -14,9 +14,9 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 
 	ui.setupUi(this);
     
-#ifndef DEVELOPMENT
-    ui.run_st_analysis_button->setProperty("visible", false);
-#endif
+//#ifndef DEVELOPMENT
+//    ui.run_st_analysis_button->setProperty('visible', false);
+//#endif
 }
 
 ECGanalyzer::~ECGanalyzer()
@@ -210,17 +210,62 @@ void ECGanalyzer::on_radioButtonMovingAverage_toggled(bool checked)
 {
     if(checked)
     {
+		enableMovingAverageGUIControls(true);
+
+		enableChebyschevGUIControls(false);
+		enableButterworthGUIControls(false);
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::enableMovingAverageGUIControls(bool enable)
+{
+    ui.spinBoxMovingAverageSpan->setEnabled(enable);
+}
+
+void ECGanalyzer::enableChebyschevGUIControls(bool enable) 
+{
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+}
+
+void ECGanalyzer::enableButterworthGUIControls(bool enable)
+{
+	ui.doubleSpinBoxAttenuationButterworth->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyButterworth->setEnabled(enable);
+	ui.spinBoxOrderButterworth->setEnabled(enable);
+}
+
 
 void ECGanalyzer::on_radioButtonButterworthFilter_toggled(bool checked)
 {
     if(checked)
     {
+		enableButterworthGUIControls(true);
+
+		enableMovingAverageGUIControls(false);
+		enableChebyschevGUIControls(false);
+		
+
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::on_radioButtonChebyschevFilter_toggled(bool checked)
+{
+    if(checked)
+    {
+		enableChebyschevGUIControls(true);
+
+		enableButterworthGUIControls(false);
+		enableMovingAverageGUIControls(false);
+
+
+        //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
+    }
+}
+
 
 void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked)
 {
@@ -255,8 +300,16 @@ void ECGanalyzer::updateAnalysisStatus(std::string status)
 
 void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 {
-	ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
-	ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
+	QMetaObject::invokeMethod(ui.actionZatrzymajPonownaAnalizeSygnalu,         // obj
+		"setEnabled", // member
+		Qt::QueuedConnection,     // connection type
+		Q_ARG(bool, analysisOngoing));     // val1
+	//ui.actionZatrzymajPonownaAnalizeSygnalu->setEnabled(analysisOngoing);
+	QMetaObject::invokeMethod(ui.actionPrzeprowadzPonownieAnalizeSygnalu,         // obj
+		"setEnabled", // member
+		Qt::QueuedConnection,     // connection type
+		Q_ARG(bool, !analysisOngoing));     // val1
+	//ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(!analysisOngoing);
 }
 
 void ECGanalyzer::setModulesParams()
@@ -348,5 +401,8 @@ void ECGanalyzer::setSTIntervalParams()
   st_params["slope_thresh"] = ui.st_complex_slope->value();
   _ECGcontroller.setParamsSTInterval(st_params);
 }
+
+
+
 
 
