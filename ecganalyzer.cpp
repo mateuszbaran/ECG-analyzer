@@ -262,6 +262,7 @@ void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 void ECGanalyzer::setModulesParams()
 {
   //TODO: Set params for other modules
+  setRpeaksParams();
   setSTIntervalParams();
 }
 
@@ -313,6 +314,28 @@ void ECGanalyzer::updateSTIntervalTab()
   auto _section = st_data.getIntervalBeginAndEnd(0);
   ui.st_plot->zoomX(_section.first, _section.second);
   
+}
+
+void ECGanalyzer::setRpeaksParams()
+{
+	ParametersTypes params;
+	params["detection_method"] = ui.comboBoxRPeaksDetectionMethod->currentIndex();
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
+	{
+		if(!ui.checkBoxRPeaksDetectThresholdAutomatically->isChecked())
+		{
+			params["threshold_size"] = ui.doubleSpinBoxRPeaksThreshold->value();
+		}
+		if(!ui.checkBoxRPeaksDetectWindowSizeAutomatically->isChecked())
+		{
+			params["window_size"] = ui.doubleSpinBoxRPeaksWindowSize->value();
+		}
+	}
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
+	{
+		//TODO Hilbert parameters
+	}
+	_ECGcontroller.setParamsRPeaks(params);
 }
 
 void ECGanalyzer::setSTIntervalParams()
