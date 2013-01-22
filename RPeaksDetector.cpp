@@ -1429,14 +1429,15 @@ void detekcja_r_hilbert(const std::vector<double> & sygnal,
 	std::vector<int> & numery_R) { 
 		const int za_bliskie = round(parametry_hilbert::za_bliskie * czestotliwosc);
 		std::vector<int> wykryte;
-		int zalatwione = 0;
-		std::vector<double> y;
+        int zalatwione = 0;
+        std::vector<double> y;
 		rozniczkuj(sygnal, czestotliwosc, y);	
 		while (zalatwione < sygnal.size() ) {
 			zalatwione = std::max(0,zalatwione-za_bliskie);
-			int rozmiar = std::min(parametry_hilbert::rozmiar_okna, sygnal.size()-zalatwione);
+            const unsigned int size = sygnal.size() - zalatwione;
+            int rozmiar = std::min(parametry_hilbert::rozmiar_okna, size);
 			int stara_liczba_wykrytych = wykryte.size();
-			rozwaz_okno(sygnal, zalatwione, rozmiar, y, 
+            rozwaz_okno(sygnal, zalatwione, rozmiar, y,
 				czestotliwosc, wykryte);
 			bool znalezione = wykryte.size() > stara_liczba_wykrytych;
 			// czy zosta³ wykryty za³amek R
