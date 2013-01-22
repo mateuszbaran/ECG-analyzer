@@ -303,21 +303,24 @@ void ECGController::setHRV1NotRun()
 void ECGController::setHRV2NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv2_module->run_ = false;
+  if(hrv2_module)
+	hrv2_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setHRVDFANotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv_dfa_module->run_ = false;
+  if(hrv_dfa_module)
+	hrv_dfa_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setQRSClassNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  qrs_class_module->run_ = false;
+  if(qrs_class_module)
+	qrs_class_module->run_ = false;
   setHRTNotRun();
   LOG_END
 }
@@ -332,14 +335,16 @@ void ECGController::setSTIntervalNotRun()
 void ECGController::setTwaveAltNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  t_wave_alt_module->run_ = false;
+  if(t_wave_alt_module)
+	t_wave_alt_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setHRTNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrt_module->run_ = false;
+  if(hrt_module)
+	hrt_module->run_ = false;
   LOG_END
 }
 
