@@ -648,7 +648,7 @@
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QLabel" name="label_6">
+                  <widget class="QLabel" name="window_size_label">
                    <property name="text">
                     <string>Window size:</string>
                    </property>
@@ -698,7 +698,6 @@
               </layout>
              </item>
             </layout>
-            <zorder></zorder>
            </widget>
           </item>
          </layout>
@@ -1724,7 +1723,7 @@
                   </widget>
                  </item>
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_4">
+                  <widget class="QLabel" name="st_interval_table_title">
                    <property name="text">
                     <string>ST intervals ordered by occurence</string>
                    </property>

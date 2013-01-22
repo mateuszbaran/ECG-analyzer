@@ -39,12 +39,14 @@ FILE(GLOB ecg-analyzer_SOURCES *.cpp)
 FILE(GLOB plots_HEADERS plots/*.h)
 FILE(GLOB plots_SOURCES plots/*.cpp)
 
+SET(ecg-analyzer_Q_OBJECTS_HEADERS ecganalyzer.h AboutWindow.h)
+
 SET(ecg-analyzer_FORMS ecganalyzer.ui)
 SET(ecg-analyzer_AboutWindow_FORMS AboutWindow.ui)
 
 SET(ecg-analyzer_RESOURCES ecganalyzer.qrc)
 
-QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_HEADERS} ${plots_HEADERS})
+QT4_WRAP_CPP(ecg-analyzer_HEADERS_MOC ${ecg-analyzer_Q_OBJECTS_HEADERS} ${plots_HEADERS})
 QT4_WRAP_UI(ecg-analyzer_FORMS_HEADERS ${ecg-analyzer_FORMS})
 QT4_WRAP_UI(ecg-analyzer_AboutWindow_FORMS_HEADERS ${ecg-analyzer_AboutWindow_FORMS})
 QT4_ADD_RESOURCES(ecg-analyzer_RESOURCES_RCC ${ecg-analyzer_RESOURCES})

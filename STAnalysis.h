@@ -56,13 +56,9 @@ private:
   };
   
   AbstractAnalizer * analizator;
-  double dt;
-  double thresh;
-  void setAnalizator(STAnalysis::AbstractAnalizer* a = nullptr);
+  void setAnalizator(STAnalysis::AbstractAnalizer* a);
   void setAnalizator(AlgorithmType atype = AlgorithmType::Simple);
   
-  AlgorithmType algorithmTypeFromInt(int value = 0) const;
-
 #ifdef DEVELOPMENT
   ECGRs read_normal_r_peaks(std::string path, std::string filename);
 #endif

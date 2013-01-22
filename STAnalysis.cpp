@@ -14,13 +14,13 @@
 STAnalysis::STAnalysis() :
   analizator(nullptr)
 {
-  setAnalizator(AlgorithmType::Simple);
+  setAnalizator();
 }
 
 
 STAnalysis::~STAnalysis()
 {
-  if (analizator) delete analizator;
+  setAnalizator(nullptr);
 }
 
 void STAnalysis::runModule(const ECGRs & rpeaks, const ECGWaves& waves, const ECGSignalChannel& signal, const ECGInfo& info, ECGST& output)
@@ -312,8 +312,7 @@ void STAnalysis::setParams(ParametersTypes& p)
 {
   auto algorithm = p.find("algorithm");
   if (algorithm != p.end()) {
-    AlgorithmType atype = algorithmTypeFromInt((int) algorithm->second);
-    setAnalizator(atype);
+    setAnalizator(static_cast<AlgorithmType>(algorithm->second));
     p.erase(algorithm);
   }
   
@@ -376,21 +375,14 @@ void STAnalysis::setAnalizator(STAnalysis::AlgorithmType atype)
 {
   switch(atype) {
     case AlgorithmType::Complex:
-      setAnalizator(new ComplexAnalizer()); break;
+      setAnalizator(new ComplexAnalizer()); 
+      printf("Switch to complex algorithm\n");
+      break;
     case AlgorithmType::Simple:
     default:
-      setAnalizator(new SimpleAnalizer()); break;
-  }
-}
-
-STAnalysis::AlgorithmType STAnalysis::algorithmTypeFromInt(int value) const
-{
-  switch(value) {
-    case 1:
-      return AlgorithmType::Complex;
-    case 0:
-    default:
-      return AlgorithmType::Simple;
+      setAnalizator(new SimpleAnalizer()); 
+      printf("Switch to simple algorithm\n");
+      break;
   }
 }
 

@@ -18,10 +18,10 @@ ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
   hrv1_module(new HRV1Analyzer()),
-  st_interval_module(new STAnalysis()),
   waves_module(new QRSPointsDetector()),
-  analysisCompl(false),
-  computation(NULL)
+  st_interval_module(new STAnalysis()),
+  computation(NULL),
+  analysisCompl(false)
 {
   TRI_LOG_STR("ECGController created, 20:51 17-12-2012");
   //TODO: create modules objects
