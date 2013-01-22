@@ -1,14 +1,11 @@
 #include "Snr.h"
 
-Snr::Snr(){};
-Snr::~Snr(){};
-
 double Snr::snr()
 {
-	return;
+    return 0.0;
 }
 
 double Snr::psnr()
 {
-	return;
+    return 0.0;
 }

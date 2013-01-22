@@ -1,6 +1,6 @@
 #include "ECGController.h"
 
-#include "BaselineRemoval.h"
+#include "ECGBaselineRemoval.h"
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
 #include "STAnalysis.h"
@@ -15,7 +15,7 @@
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
 ECGController::ECGController (void) :
-  ecg_baseline_module(new BaselineRemoval()),
+  ecg_baseline_module(new ECGBaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
   waves_module(new QRSPointsDetector()),
   hrv1_module(new HRV1Analyzer()),
