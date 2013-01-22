@@ -8,6 +8,10 @@
 class ECGHRV1
 {
 public:
+
+	ECGHRV1();
+	~ECGHRV1();
+
 	//time domain parameters
 	double RR_avg;
 	double RR_stddev;
@@ -26,6 +30,7 @@ public:
 	double VLF;
 	double ULF;
 	double LFHF;
+
 	//vectors are needed to plot frequency figure
 	OtherSignal freqency;
 	OtherSignal power;
