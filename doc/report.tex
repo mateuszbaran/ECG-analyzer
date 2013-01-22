@@ -21,38 +21,81 @@
 \usepackage{multirow}
 \usepackage{listings}
 
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
 \begin{document}
 
-\title{Raport z projektu Analizatora EKG}
-\author{Mateusz Baran \and
-Krzysztof Bębenek \and
-Bartłomiej Bułat \and
-Szczepan Czaicki \and
-Tomasz Drzewiecki \and
-Krzysztof Farganus \and
-Łukasz Jaromi \and
-Mateusz Krasucki \and
-Łukasz Krzyżek \and
-Łukasz Kutrzuba \and
-Weronika Łabaj \and
-Paweł Maślanka \and
-Piotr Matuszkiewicz \and
-Norbert Pabian \and
-Łukasz Pękala \and
-Krzysztof Piekutowski \and
-Grzegorz Pietrzyk \and
-Łukasz Podolski \and
-Mikołaj Rzepka \and
-Agata Sitnik \and
-Leszek Sosnowski \and
-Aleksander Steliga \and
-Mateusz Ślażyński \and
-Łukasz Zieńkowski}
+\begin{titlepage}
+\begin{center}
+
+% Upper part of the page. The '~' is needed because \\
+% only works if a paragraph has started.
+\includegraphics[width=0.15\textwidth]{./include/agh-logo}~\\[1cm]
+
+\textsc{\LARGE Akademia Górniczo-Hutnicza w Krakowie}\\
+\textsc{\Large Wydział Elektrotechniki, Automatyki, Informatyki i Inżynierii Biomedycznej}\\
+[1.5cm]
+
+\textsc{\Large Projekt zaliczeniowy}\\[0.5cm]
+
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries Analizator EKG}\\[0.4cm]
+
+\HRule \\[1.5cm]
+
+% Author and supervisor
+\begin{minipage}{0.27\textwidth}
+\begin{flushleft} \large
+\emph{Autorzy:}\\
+ Mateusz \textsc{Baran} \\
+ Krzysztof \textsc{Bębenek} \\
+ Bartłomiej \textsc{Bułat} \\
+ Szczepan \textsc{Czaicki} \\
+ Tomasz \textsc{Drzewiecki} \\
+ Krzysztof \textsc{Farganus} \\
+ Łukasz \textsc{Jaromi} \\
+ Mateusz \textsc{Krasucki} \\
+ Łukasz \textsc{Krzyżek} \\
+ Łukasz \textsc{Kutrzuba} \\
+ Weronika \textsc{Łabaj} \\
+ Paweł \textsc{Maślanka} \\
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.27\textwidth}
+\begin{flushleft} \large
+ \phantom{Autorzy:}
+ Piotr \textsc{Matuszkiewicz} \\
+ Norbert \textsc{Pabian} \\
+ Łukasz \textsc{Pękala} \\
+ Krzysztof \textsc{Piekutowski} \\
+ Grzegorz \textsc{Pietrzyk} \\
+ Łukasz \textsc{Podolski} \\
+ Mikołaj \textsc{Rzepka} \\
+ Agata \textsc{Sitnik} \\
+ Leszek \textsc{Sosnowski} \\
+ Aleksander \textsc{Steliga} \\
+ Mateusz \textsc{Ślażyński} \\
+ Łukasz \textsc{Zieńkowski}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Opiekun:} \\
+ mgr inż. Tomasz \textsc{Pięciak}
+\end{flushright}
+\end{minipage}
+
+\vfill
+
+% Bottom of the page
+{\large \today}
+
+\end{center}
+\end{titlepage}
 
 
-\maketitle
-\newpage
-
+\setcounter{page}{2}
 \tableofcontents
 \newpage
 
@@ -119,6 +162,24 @@ Cała aplikacja napisana jest jako samodzielny, wieloplatformowy program (rys. \
   \caption{Diagram wdrożenia.}
 \end{figure}
 
+Diagram sekwencji przedstawiający sposób uruchamiania modułów jest przedstawiony na rys. \ref{fig:sequence_diagram}.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\linewidth]{include/sequence_diagram}
+  \label{fig:sequence_diagram}
+  \caption{Diagram sekwencji.}
+\end{figure}
+
+Diagram klas został przedstawiony na rys. \ref{fig:class_diagram}.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\linewidth]{include/class_diagram}
+  \label{fig:class_diagram}
+  \caption{Diagram klas.}
+\end{figure}
+
 \section{Opisy modułów}
 \label{sec:mod}
 
@@ -171,6 +232,35 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \subsection{Klasyfikacja zespołów QRS}
 \label{sec:qrs_class}
+Autorzy: Krzysztof Bębenek
+
+\subsubsection{Opis zadania}
+\label{sec:qrs_class:desc}
+
+\begin{description}
+\item[Temat] Metody detekcji morfologicznego pochodzenia zespołu QRS.
+\item[Opis] Proces automatycznego klasyfikowania zespołów QRS należy do jednego z trudniejszych procesów podczas przetwarzania sygnałów EKG. Jest jednak on niezbędny w dalszych etapach analizy podczas których brane są pod uwagę tylko niepoprawne pobudzenia. Do prostych sposób oceny morfologi pobudzenia służą:
+  \begin{itemize}
+  \item współczynnik kształtu Malinowskiej,
+  \item stosunek części ujemnej do dodatniej sygnału,
+  \end{itemize}
+\item[Dane] ciąg próbek przefiltrowanego sygnału EKG, wektory QRS\_onset oraz QRS\_end określające początek oraz koniec zespołu QRS
+\item[Szukane] moduł programu klasyfikujący zespołu QRS na podstawie ich morfologii 
+\end{description}
+
+\subsubsection{Badania literaturowe}
+\label{sec:qrs_class:papers}
+
+\subsubsection{Opis procedur i metod}
+\label{sec:qrs_class:procs}
+
+\subsubsection{Warunki testowania}
+\label{sec:qrs_class:tests}
+
+\subsubsection{Wyniki}
+\label{sec:qrs_class:results}
+
+
 
 \subsection{ST interval}
 \label{sec:st_interval}
@@ -215,18 +305,18 @@ określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const int it| - numer badanego zespołu QRS, jako liczba
+  \item \verb|const int it| -- numer badanego zespołu QRS, jako liczba
     porządkowa numerów próbek z tablicy załamków R.
-  \item \verb|const ECGR& rpeaks| - struktura zawierająca tablicę numerów
+  \item \verb|const ECGR& rpeaks| -- struktura zawierająca tablicę numerów
     próbek kolejnych załamków R
-  \item \verb|const ECGEaves& waves| - struktura zawierajace tablice
+  \item \verb|const ECGEaves& waves| -- struktura zawierająca tablice
     przechowujące numery próbek punktów charakterystycznych kolejnych zespołów
     QRS: $P_{onset}$, $QRS_{onset}$, $QRS_{end}$ oraz $T_{end}$.
-  \item \verb|const ECGSignalChanel& signal| - jeden kanał odfiltrowanego
+  \item \verb|const ECGSignalChanel& signal| -- jeden kanał odfiltrowanego
     sygnału z usuniętym przesunięciem izolinii.
-  \item \verb|const ECGInfo& info| - struktura zawierająca informacje o badanym
+  \item \verb|const ECGInfo& info| -- struktura zawierająca informacje o badanym
     sygnale EKG, m.in. częstotliwość.
-  \item \verb|ECGST& output| - parametr wyjściowy, struktura zawierajaca
+  \item \verb|ECGST& output| -- parametr wyjściowy, struktura zawierająca
     tablice wszystkich interwałów ST wraz z ich parametrami, oraz tablice
     zarejestrowanych epizodów ST wraz z ich parametrami.
 \end{itemize}
@@ -242,12 +332,12 @@ punkty sygnału obliczone we wcześniejszych modułach (tj. $QRS_{onset}$,
 $QRS_{end}$ oraz $T_{end}$) oblicza koniec odcinka ST (wykorzystując bardziej
 zaawansowane algorytmy od poprzedniej funkcji), a następnie oblicza jego parametry:
 \begin{itemize}
-  \item przesunięcie względem izolinii
-  \item wartość nachylenia w stosunku do izolini
-  \item długość odcinka ST
-  \item klasyfikacja kształtu
+  \item przesunięcie względem izolinii,
+  \item wartość nachylenia w stosunku do izolinii,
+  \item długość odcinka ST,
+  \item klasyfikacja kształtu.
 \end{itemize}
-Uzywając wczesniej ustawionego parametru \verb|complex_thresh|, odcinek ST
+Używając wcześniej ustawionego parametru \verb|complex_thresh|, odcinek ST
 określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''. Algorytm
 ocenia również to, czy załamek jest prosty czy zakrzywiony w oparciu o
 wcześniej ustawiony parametr \verb|type_thresh|. Dla prostych odcinków określa
@@ -258,18 +348,18 @@ poprzednim rozdziale.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const int it| - numer badanego zespołu QRS, jako liczba
+  \item \verb|const int it| -- numer badanego zespołu QRS, jako liczba
     porządkowa numerów próbek z tablicy załamków R.
-  \item \verb|const ECGR& rpeaks| - struktura zawierająca tablicę numerów
+  \item \verb|const ECGR& rpeaks| -- struktura zawierająca tablicę numerów
     próbek kolejnych załamków R
-  \item \verb|const ECGEaves& waves| - struktura zawierajace tablice
+  \item \verb|const ECGEaves& waves| -- struktura zawierające tablice
     przechowujące numery próbek punktów charakterystycznych kolejnych zespołów
     QRS: $P_{onset}$, $QRS_{onset}$, $QRS_{end}$ oraz $T_{end}$.
-  \item \verb|const ECGSignalChanel& signal| - jeden kanał odfiltrowanego
+  \item \verb|const ECGSignalChanel& signal| -- jeden kanał odfiltrowanego
     sygnału z usuniętym przesunięciem izolinii.
-  \item \verb|const ECGInfo& info| - struktura zawierająca informacje o badanym
+  \item \verb|const ECGInfo& info| -- struktura zawierająca informacje o badanym
     sygnale EKG, m.in. częstotliwość.
-  \item \verb|ECGST& output| - parametr wyjściowy, struktura zawierajaca
+  \item \verb|ECGST& output| -- parametr wyjściowy, struktura zawierająca
     tablice wszystkich interwałów ST wraz z ich parametrami, oraz tablice
     zarejestrowanych epizodów ST wraz z ich parametrami.
 \end{itemize}
@@ -289,7 +379,7 @@ dyskretną pochodną sygnału.
 Parametry:
 \begin{itemize}
   \item \verb|const OtherSignal& sig| - cały, odfiltrowany sygnał EKG
-  \item \verb|int from| - numer próbki w której należy zacząc poszukiwania
+  \item \verb|int from| - numer próbki w której należy zacząć poszukiwania
   \item \verb|int to| - numer próbki w której należy skończyć poszukiwania
 \end{itemize}
 

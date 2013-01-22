@@ -210,17 +210,62 @@ void ECGanalyzer::on_radioButtonMovingAverage_toggled(bool checked)
 {
     if(checked)
     {
+		enableMovingAverageGUIControls(true);
+
+		enableChebyschevGUIControls(false);
+		enableButterworthGUIControls(false);
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::enableMovingAverageGUIControls(bool enable)
+{
+    ui.spinBoxMovingAverageSpan->setEnabled(enable);
+}
+
+void ECGanalyzer::enableChebyschevGUIControls(bool enable) 
+{
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+}
+
+void ECGanalyzer::enableButterworthGUIControls(bool enable)
+{
+	ui.doubleSpinBoxAttenuationButterworth->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyButterworth->setEnabled(enable);
+	ui.spinBoxOrderButterworth->setEnabled(enable);
+}
+
 
 void ECGanalyzer::on_radioButtonButterworthFilter_toggled(bool checked)
 {
     if(checked)
     {
+		enableButterworthGUIControls(true);
+
+		enableMovingAverageGUIControls(false);
+		enableChebyschevGUIControls(false);
+		
+
         //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
     }
 }
+
+void ECGanalyzer::on_radioButtonChebyschevFilter_toggled(bool checked)
+{
+    if(checked)
+    {
+		enableChebyschevGUIControls(true);
+
+		enableButterworthGUIControls(false);
+		enableMovingAverageGUIControls(false);
+
+
+        //TODO: ustaw algorytm w ECGBaseline oraz przełącz zakładkę na GUI
+    }
+}
+
 
 void ECGanalyzer::on_checkBoxRPeaksDetectThresholdAutomatically_toggled(bool checked)
 {
@@ -270,6 +315,7 @@ void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 void ECGanalyzer::setModulesParams()
 {
   //TODO: Set params for other modules
+  setRpeaksParams();
   setSTIntervalParams();
 }
 
@@ -323,6 +369,28 @@ void ECGanalyzer::updateSTIntervalTab()
   
 }
 
+void ECGanalyzer::setRpeaksParams()
+{
+	ParametersTypes params;
+	params["detection_method"] = ui.comboBoxRPeaksDetectionMethod->currentIndex();
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
+	{
+		if(!ui.checkBoxRPeaksDetectThresholdAutomatically->isChecked())
+		{
+			params["threshold_size"] = ui.doubleSpinBoxRPeaksThreshold->value();
+		}
+		if(!ui.checkBoxRPeaksDetectWindowSizeAutomatically->isChecked())
+		{
+			params["window_size"] = ui.doubleSpinBoxRPeaksWindowSize->value();
+		}
+	}
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
+	{
+		//TODO Hilbert parameters
+	}
+	_ECGcontroller.setParamsRPeaks(params);
+}
+
 void ECGanalyzer::setSTIntervalParams()
 {
   ParametersTypes st_params;
@@ -333,5 +401,8 @@ void ECGanalyzer::setSTIntervalParams()
   st_params["slope_thresh"] = ui.st_complex_slope->value();
   _ECGcontroller.setParamsSTInterval(st_params);
 }
+
+
+
 
 
