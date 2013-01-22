@@ -3,6 +3,7 @@
 #include "BaselineRemoval.h"
 #include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "DFAAnalyzer.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
 
@@ -17,6 +18,7 @@
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
+  hrv_dfa_module(new DFAAnalyzer()),
   hrv1_module(new HRV1Analyzer()),
   st_interval_module(new STAnalysis()),
   waves_module(new QRSPointsDetector()),
@@ -454,6 +456,8 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
 			runHRV1();
 			HANDLE_INTERRUPTION
+			statusUpdate("HRV1 analysis completed; HRVDFA analysis ongoing.");
+			runHRVDFA();
 			statusUpdate("Analysis complete!");
 			analysisComplete();
 			analysisCompl = true;
