@@ -56,8 +56,8 @@ private:
   };
   
   AbstractAnalizer * analizator;
-  void setAnalizator(STAnalysis::AbstractAnalizer* a);
-  void setAnalizator(AlgorithmType atype = AlgorithmType::Simple);
+  void setAnalizer(STAnalysis::AbstractAnalizer* a);
+  void setAnalizer(AlgorithmType atype = AlgorithmType::Simple);
   
 #ifdef DEVELOPMENT
   ECGRs read_normal_r_peaks(std::string path, std::string filename);

@@ -17,8 +17,8 @@
 ECGController::ECGController (void) :
   ecg_baseline_module(new BaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
-  hrv1_module(new HRV1Analyzer()),
   waves_module(new QRSPointsDetector()),
+  hrv1_module(new HRV1Analyzer()),
   st_interval_module(new STAnalysis()),
   computation(NULL),
   analysisCompl(false)
