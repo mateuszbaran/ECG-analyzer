@@ -87,7 +87,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutWindow.cpp" />
-    <ClCompile Include="BaselineRemoval.cpp" />
+    <ClCompile Include="ECGBaselineRemoval.cpp" />
+    <ClCompile Include="butterworth.cpp" />
     <ClCompile Include="ecganalyzer.cpp" />
     <ClCompile Include="ECGChannelInfo.cpp" />
     <ClCompile Include="ECGClasses.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="ECGTWave.cpp" />
     <ClCompile Include="ECGWaves.cpp" />
     <ClCompile Include="EGHRVDFT.cpp" />
+    <ClCompile Include="Filter.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_AboutWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -174,6 +176,7 @@
     <ClCompile Include="QRSClass.cpp" />
     <ClCompile Include="QRSPointsDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
+    <ClCompile Include="SignalPreprocessor.cpp" />
     <ClCompile Include="STAnalysis.cpp" />
     <ClCompile Include="tri_logger.cpp" />
     <ClCompile Include="wfdb\annot.c" />
@@ -219,7 +222,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I."</Command>
     </CustomBuild>
-    <ClInclude Include="BaselineRemoval.h" />
+    <ClInclude Include="ECGBaselineRemoval.h" />
+    <ClInclude Include="Butterworth.h" />
     <ClInclude Include="ECGChannelInfo.h" />
     <ClInclude Include="ECGClasses.h" />
     <ClInclude Include="ECGController.h" />
@@ -233,6 +237,7 @@
     <ClInclude Include="ECGTWave.h" />
     <ClInclude Include="ECGWaves.h" />
     <ClInclude Include="EGHRVDFT.h" />
+    <ClInclude Include="Filter.h" />
     <ClInclude Include="GeneratedFiles\ui_AboutWindow.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
     <ClInclude Include="HRV1Analyzer.h" />
@@ -312,6 +317,7 @@
     <ClInclude Include="QRSClass.h" />
     <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
+    <ClInclude Include="SignalPreprocessor.h" />
     <ClInclude Include="STAnalysis.h" />
     <ClInclude Include="tri_logger.hpp" />
     <ClInclude Include="wfdb\ecgcodes.h" />
