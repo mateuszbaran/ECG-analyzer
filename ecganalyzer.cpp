@@ -295,8 +295,10 @@ void ECGanalyzer::on_actionZatrzymajPonownaAnalizeSygnalu_triggered()
 
 void ECGanalyzer::updateAnalysisStatus(std::string status)
 {
-	//TODO
-	ui.statusBar->setStatusTip(QString("%s,status"));
+	QMetaObject::invokeMethod(ui.statusBar,
+		"showMessage",
+		Qt::QueuedConnection,
+		Q_ARG(QString, QString::fromStdString(status)));
 }
 
 void ECGanalyzer::updateRunButtons( bool analysisOngoing )
