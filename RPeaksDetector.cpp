@@ -297,7 +297,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	double threshold = 0;
 	if( this->panTompkinsThershold == 0)
 	{
-		threshold = sigMaxVal * 0.25;
+		threshold = sigMaxVal * 0.5;
 	}
 	else
 	{
@@ -448,8 +448,6 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	#endif
 
 	int partLength;
-	double tmpMax;
-	int tmpMaxIndex;
 	IntSignal rs;
 	int numberRs = 0;
 
@@ -460,8 +458,8 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		for(int i = 0; i < leftPointsCount; i++)
 		{		
 			partLength = gsl_vector_get (rightPoints->signal, i) - gsl_vector_get(leftPoints->signal, i);
-			tmpMax = 0;
-			tmpMaxIndex = 0;
+			double tmpMax = 0;
+			int tmpMaxIndex = 0;
 			for(int j = 0; j < partLength; j++)
 			{
 				int sigIndex = gsl_vector_get (leftPoints->signal, i) + j;

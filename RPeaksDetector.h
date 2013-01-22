@@ -351,7 +351,7 @@ void detekcja_r_hilbert(const std::vector<double> & sygnal,
 //#define DEBUG
 //#define DEBUG_SIGNAL
 //#define DEBUG_SIGNAL_DETAILS
-#define USE_MOCKED_SIGNAL
+//#define USE_MOCKED_SIGNAL
 
 using namespace std;
 
