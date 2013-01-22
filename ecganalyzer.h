@@ -69,6 +69,11 @@ private:
 	void updateAnalysisStatus(std::string status);
     
     void setModulesParams();
+
+	/**
+     * Set params for R peaks module
+     */
+	void setRpeaksParams();
     
     /**
      * Set params for ST interval analysis module
