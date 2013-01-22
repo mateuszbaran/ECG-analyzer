@@ -7,4 +7,4 @@ class Snr
 
 	double snr();
 	double psnr();
-}
+};
