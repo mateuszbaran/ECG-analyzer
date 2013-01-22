@@ -209,6 +209,9 @@
     <ClCompile Include="QRSPointsDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TWaveAltDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -334,6 +337,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QRSPointsDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TWaveAltDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

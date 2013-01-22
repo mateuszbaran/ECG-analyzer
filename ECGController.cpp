@@ -5,6 +5,7 @@
 #include "HRV1Analyzer.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
+#include "TWaveAltDetector.h"
 
 #include "wfdb/wfdb.h"
 
@@ -20,6 +21,7 @@ ECGController::ECGController (void) :
   hrv1_module(new HRV1Analyzer()),
   st_interval_module(new STAnalysis()),
   waves_module(new QRSPointsDetector()),
+  t_wave_alt_module(new TWaveAltDetector()),
   analysisCompl(false),
   computation(NULL)
 {
@@ -210,13 +212,13 @@ void ECGController::runSTInterval ()
   }
   if (!rpeaks_module->run_)
   {
-    runRPeaks();
+    //runRPeaks();
   }
   if (!waves_module->run_)
   {
     runWaves();
   }
-  st_interval_module->runModule(r_peaks_data, waves_data, filtered_signal, ecg_info, st_data);
+  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal.channel_one, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
@@ -303,24 +305,21 @@ void ECGController::setHRV1NotRun()
 void ECGController::setHRV2NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  if(hrv2_module)
-	hrv2_module->run_ = false;
+  hrv2_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setHRVDFANotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  if(hrv_dfa_module)
-	hrv_dfa_module->run_ = false;
+  hrv_dfa_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setQRSClassNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  if(qrs_class_module)
-	qrs_class_module->run_ = false;
+  qrs_class_module->run_ = false;
   setHRTNotRun();
   LOG_END
 }
@@ -335,16 +334,14 @@ void ECGController::setSTIntervalNotRun()
 void ECGController::setTwaveAltNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  if(t_wave_alt_module)
-	t_wave_alt_module->run_ = false;
+  t_wave_alt_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setHRTNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  if(hrt_module)
-	hrt_module->run_ = false;
+  hrt_module->run_ = false;
   LOG_END
 }
 

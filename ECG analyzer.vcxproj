@@ -176,6 +176,7 @@
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="STAnalysis.cpp" />
     <ClCompile Include="tri_logger.cpp" />
+    <ClCompile Include="TWaveAltDetector.cpp" />
     <ClCompile Include="wfdb\annot.c" />
     <ClCompile Include="wfdb\calib.c" />
     <ClCompile Include="wfdb\signal.c" />
@@ -314,6 +315,7 @@
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="STAnalysis.h" />
     <ClInclude Include="tri_logger.hpp" />
+    <ClInclude Include="TWaveAltDetector.h" />
     <ClInclude Include="wfdb\ecgcodes.h" />
     <ClInclude Include="wfdb\ecgmap.h" />
     <ClInclude Include="wfdb\wfdb.h" />
