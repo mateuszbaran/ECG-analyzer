@@ -362,7 +362,7 @@ void ECGanalyzer::setBaselineParams()
 		params["ripple"] = ui.doubleSpinBoxRippleChebyschev->value();
 	}
 
-	_ECGcontroller.setParamsBaseline(params);
+	_ECGcontroller.setParamsECGBaseline(params);
 }
 
 void ECGanalyzer::setRpeaksParams()
