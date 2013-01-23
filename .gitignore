@@ -186,3 +186,4 @@ doc/*.pdf
 doc/*.pdf
 doc/*.eps
 doc/*.ps
+doc/include/*.eps
