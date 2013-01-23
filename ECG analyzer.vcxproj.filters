@@ -300,6 +300,7 @@
       <Filter>Source Files\matrix</Filter>
     </ClCompile>
     <ClCompile Include="HRTAnalyzer.cpp">
+    <ClCompile Include="GeometricAnalysis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -496,6 +497,7 @@
       <Filter>Header Files\matrix</Filter>
     </ClInclude>
     <ClInclude Include="HRTAnalyzer.h">
+    <ClInclude Include="GeometricAnalysis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

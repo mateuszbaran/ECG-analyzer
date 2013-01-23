@@ -1052,3 +1052,4 @@ void detekcja_r_hilbert(const std::vector<double> & sygnal,
 		//sort(wykryte.begin(), wykryte.end());
 		usun_zbyt_bliskie(czestotliwosc, sygnal, wykryte, numery_R);
 }
+

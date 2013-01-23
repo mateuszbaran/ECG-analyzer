@@ -14,6 +14,10 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 	ui.setupUi(this);
+    
+//#ifndef DEVELOPMENT
+//    ui.run_st_analysis_button->setProperty('visible', false);
+//#endif
 }
 
 ECGanalyzer::~ECGanalyzer()
@@ -82,7 +86,8 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 //        _ECGcontroller.runRPeaks();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
-
+		//moje
+		_ECGcontroller.runHRV2();
 
 		QTableWidgetItem *fileName = new QTableWidgetItem();
 		fileName->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.filename) );
@@ -131,13 +136,13 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
 		PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
 		plotHRVTriangleLayout->addWidget(plotHRVTriangle);
-		//plotHRVTriangle->setData(hrv2_data);
+		plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
 		ui.tab_2->setLayout(plotHRVTriangleLayout);
 		
 		QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
 		PlotPoincare *plotPoincare = new PlotPoincare(this);
 		plotPoincareLayout->addWidget(plotPoincare);
-		//plotPoincare->setData(hrv2_data);
+		plotPoincare->setData(_ECGcontroller.hrv2_data);
 		ui.tab_3->setLayout(plotPoincareLayout);
 		
 		
