@@ -302,6 +302,12 @@
     <ClCompile Include="HRTAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeometricAnalysis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TWaveAltDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -345,6 +351,18 @@
     </CustomBuild>
     <CustomBuild Include="plots\scrollzoomer.h">
       <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\hrt.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plothrvtriangle.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plotpoincare.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\stplot.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -496,6 +514,12 @@
       <Filter>Header Files\matrix</Filter>
     </ClInclude>
     <ClInclude Include="HRTAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometricAnalysis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TWaveAltDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

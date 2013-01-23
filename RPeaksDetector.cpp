@@ -1,22 +1,7 @@
-﻿#include "RPeaksDetector.h"
+#include "RPeaksDetector.h"
 #include <QDebug>
 #include "tri_logger.hpp"
-#include "fft/kiss_fft.h"
-#include <cstdlib>
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
-
-
-//-----------------------------------------------------------------------------------------------------------
-#define _FAZA_TESTOWA_
-#ifndef _FAZA_TESTOWA_
-#define ASSERT(gdzie,co) ; // gdy ju� program prawid�owo dzia�a
-#else
-#include <iostream>  // dla ASSERT 
-#include <cstdlib>  // dla ASSERT 
-#define ASSERT(gdzie,co) if (!(co)) {std::cerr << "UWAGA! FUNKCJA " << #gdzie << ": NIE SPELNIONA ASERCJA " << #co << std::endl;exit(1);}      // na etapie uruchamiania i testowania 
-#endif // _FAZA_TESTOWA_
-
-//-------------------------------------------------------------------------------------------------------------
 
 RPeaksDetector::RPeaksDetector()
 {
@@ -279,11 +264,11 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		newSigSize++;
 	}
 
-	//Calculating detection thersold
-	//TODO (Not important now) Try to find another way to calcutale thersold position, maybe dynamic thersold?
+	//Calculating detection threshold
+	//TODO (Not important now) Try to find another way to calcutale threshold position, maybe dynamic threshold?
 	sigSize = newSigSize;
 	#ifdef DEBUG
-		qDebug() << "Calculating detection thersold" << endl << "After moving window integration signal size: " << sigSize;
+	qDebug() << "Calculating detection threshold" << endl << "After moving window integration signal size: " << sigSize;
 	#endif
 	double sigMaxVal = 0;
 	double meanVal = 0;
@@ -304,7 +289,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 
 	#ifdef DEBUG
 		qDebug() << "Final max value for channel one: " << sigMaxVal << endl
-			 << "Final mean value: " << meanVal << endl;
+	         << "Final mean value: " << meanVal << endl;
 
 	#endif
 
@@ -312,7 +297,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	double threshold = 0;
 	if( this->panTompkinsThershold == 0)
 	{
-		threshold = sigMaxVal * 0.25;
+		threshold = meanVal + (sigMaxVal * 0.5);
 	}
 	else
 	{
@@ -454,7 +439,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	#endif
 	#ifdef DEBUG
 		qDebug() << "Number of left points: " << leftPointsCount << endl
-				 << "Number of right points: " << rightPointsCount;
+			     << "Number of right points: " << rightPointsCount;
 	#endif
 
 	//Final R peaks detection
@@ -463,8 +448,6 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	#endif
 
 	int partLength;
-	double tmpMax;
-	int tmpMaxIndex;
 	IntSignal rs;
 	int numberRs = 0;
 
@@ -475,8 +458,8 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 		for(int i = 0; i < leftPointsCount; i++)
 		{		
 			partLength = gsl_vector_get (rightPoints->signal, i) - gsl_vector_get(leftPoints->signal, i);
-			tmpMax = 0;
-			tmpMaxIndex = 0;
+			double tmpMax = 0;
+			int tmpMaxIndex = 0;
 			for(int j = 0; j < partLength; j++)
 			{
 				int sigIndex = gsl_vector_get (leftPoints->signal, i) + j;
@@ -492,7 +475,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 			numberRs++;
 			#ifdef DEBUG_SIGNAL
 				qDebug() << "R point at index: " << tmpMaxIndex 
-						 << " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex);
+					     << " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex);
 			#endif
 		}
 		rsPositions->setRs(rs);
@@ -540,12 +523,12 @@ bool RPeaksDetector::hilbertRPeaksDetection(ECGSignalChannel *signal)
 	for ( ; i < n ; ++i)
 		sygnal[i] = gsl_vector_get (sig->signal, i);
 
-	zmien_sygnal_na_abs(sygnal);
+	signalAbs(sygnal);
 
 	std::vector<int> pozycje;
 	int czestotliwosc = 360;
 
-	detekcja_r_hilbert(sygnal, czestotliwosc, pozycje);
+	hilbertDetection(sygnal, czestotliwosc, pozycje);
 
 	IntSignal rs;
 	rs = IntSignal(new WrappedVectorInt);
@@ -580,7 +563,7 @@ ECGSignalChannel RPeaksDetector::getMockedSignal()
 	ifstream myfile;
 	myfile.open("mocks/FilteredSignal.txt");
 	if (myfile.is_open())
-	{
+    {
 		int i = 0;
 		while (!myfile.eof())
 		{
@@ -595,7 +578,7 @@ ECGSignalChannel RPeaksDetector::getMockedSignal()
 				break;
 		}
 		myfile.close();
-	}
+    }
 	else
 	{
 		#ifdef DEBUG
@@ -607,325 +590,114 @@ ECGSignalChannel RPeaksDetector::getMockedSignal()
 	return mockedSignal;
 }  
 
-void double2kiss(const std::vector<double> &f, 
-	kiss_fft_cpx * g) {
-		for (int i=0; i<f.size(); i++) {
-			g[i].r = f[i];
-			g[i].i = 0.0;
-		};
-}
-void kiss2double(int n, kiss_fft_cpx * f, std::vector<double> &g) {
-	g.resize(n);
-	for (int i=0; i<n; i++) {
-		g[i] = f[i].r;
-	};
-}
-
-void fft(const std::vector<double> & f, kiss_fft_cpx * g) {
-	// z rzeczywistego wektora f utworzy jego transformate g
-	kiss_fft_cpx * dane_dla_kiss = new kiss_fft_cpx[f.size()];
-	double2kiss(f, dane_dla_kiss);
-	kiss_fft_cfg cfg = kiss_fft_alloc(f.size(), false, NULL, 0);
-	kiss_fft( cfg, dane_dla_kiss, g);
-	kiss_fft_free(cfg);
-	kiss_fft_cleanup();
-	delete dane_dla_kiss;
-};
-void ifft(int n, kiss_fft_cpx * f, std::vector<double> & g) {
-	// z zespolonego wektora f utworzy jego transofrmatę odwrotną, i
-	// jej część rzeczywistą wpisze do g
-	kiss_fft_cpx * wyniki_kiss = new kiss_fft_cpx[n];
-	kiss_fft_cfg cfg = kiss_fft_alloc(n, true, NULL, 0);
-	kiss_fft( cfg, f, wyniki_kiss);
-	kiss_fft_free(cfg);
-	kiss_fft_cleanup();
-	kiss2double(n,wyniki_kiss,g);
-	delete wyniki_kiss;
-};
-
-void przemnoz_przez_transformate_1ppix( int n, kiss_fft_cpx * f ) {
-	// pierwsza połówka przez j, druga połówka przez -j, środek
-	// przez 0
-	f[ 0 ].r = 0; f[ 0 ].i = 0;
-	f[ n/2 ].r = 0; f[ n/2 ].i = 0;
-	for (int i=1; i< n/2; i++) {
-		kiss_fft_cpx nowy;
-		nowy.r = f[i].i;
-		nowy.i = -f[i].r;
-		f[i] = nowy;
-	}
-	for (int i=n/2+1; i< n; i++) {
-		kiss_fft_cpx nowy;
-		nowy.r = -f[i].i;
-		nowy.i = f[i].r;
-		f[i] = nowy;
-	}
-};
-
-
-void hilbert(const std::vector<double> & f, std::vector<double> & g) {
-	const int n = f.size();
-	kiss_fft_cpx * fft_f = new kiss_fft_cpx[n];
-	fft ( f, fft_f );
-	przemnoz_przez_transformate_1ppix(n,  fft_f );
-	ifft ( n, fft_f, g);
-	delete fft_f;
-	for (int i=0; i<n;i++)
-		g[i] /= n; 
-}
-
-//---------------------------------------------------------------------------------------------------
-
-// *************************************************************
-// funkcja oblicza RMS ciągu "w"
-// *************************************************************
-double oblicz_rms (const std::vector<double> & w) { 
-	ASSERT( oblicz_rms, w.size() > 0);
-	double s=0;
-	for (int i=0; i<w.size(); i++)
-		s += w[i]*w[i];
-	return sqrt(s/w.size());
-}       
-
-// *************************************************************
-// funkcja oblicza maksimum z abs(w)
-// *************************************************************
-double oblicz_max_abs (const std::vector<double> & w) { 
-	double mx=w[1];
-	for (int i=1; i<w.size(); i++) {
-		double wart = fabs(w[i]);
-		if (wart > mx)
-			mx = wart;
-	}
-	return mx;
-}       
-
-
-// sygnal - dany sygnal
-// czestotliwosc - jego czetotliwosc
-// y - wektor w którym umieszczone są wyniki działania funkcji
-// *************************************************************
-// funkcja oblicza pochodną sygnału o zadanej czętotliwości
-// *************************************************************
-void rozniczkuj(const std::vector<double> &sygnal, int czestotliwosc, 
-	std::vector<double> &y) { 
-		y.resize( sygnal.size() );
-		double s = (sygnal[0] + sygnal[ sygnal.size() - 1 ])/2;
-		double dt = 2.0/czestotliwosc;
-
-		y[0] = (sygnal[1]-s)/dt;
-		y[ y.size()-1 ] = (s- sygnal[ y.size() - 2]) /dt;
-
-		for (int i=1; i< y.size() - 1; i++)
-			y[i] = (sygnal[i+1] - sygnal[i-1]) / dt;
-};
-
-
-// *******************************************************************
-// **   oblicza średnią wartość wektora
-// *******************************************************************
-double oblicz_srednia(const std::vector<double> & w) {
-	double suma = 0.0;
-	for (int i=0; i< w.size(); i++)
-		suma += w[i];
-
-	return suma / w.size();
-}
-
-// sygnal - zmieniany sygnal
-// *****************************************************************
-//   fukcja odejmuje od sygnalu jego srednią wartość a następnie 
-//   każdy element wektoa zamienia na jego wartość bezwzględną.
-//   Po co to? Ano po to, by późnejsza naliza transformacji pochodnej 
-//   brała pod uwagę także "dolne" R-peaki
-// *****************************************************************
-void zmien_sygnal_na_abs(std::vector<double> &s) {
-	double srednia = oblicz_srednia(s);
-	for (int i=0; i<s.size(); i++)
-		s[i] = fabs(s[i] - srednia);
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-
-
-
-namespace parametry_hilbert {
+namespace hilbertParameters {
 
 	using namespace std;
-	// rozmiar odcinka dla którego przeprowadzona jest
-	// transformacja hilberta (w artykule 1024), bierz potęgę 2
+	// rozmiar odcinka dla ktorego przeprowadzona jest
+	// transformacja hilberta (w artykule 1024), bierz potege 2
 	const unsigned int rozmiar_okna = 1024; // 1024;
-	// promień sąsiedztwa (w milisekundach) do przezukiwania w
+	// promien sasiedztwa (w milisekundach) do przezukiwania w
 	// okolicy punktu podejrzanego (w artykule 1/36)
 	const double sasiedztwo = 2.0/36.0;
-	// odległość czasowa między punktami w których wykryto R-peaki,
-	// którą uznajemy za nieprawdopodobną i powoduje ona, z
-	// zdecyujemy się na jeden tylko z tych punktów
+	// odleglosc czasowa miedzy punktami w ktorych wykryto R-peaki,
+	// ktore uznajemy za nieprawdopodobne i powoduje ona, z
+	// zdecyujemy sie na jeden tylko z tych punktow
 	const double  za_bliskie = 1.0/5.0;
-	// jeżeli mamy dwa punkty R, które są za bliskie, to możemy
-	// chcieć wybrać ten, który lepiej pasuje do średnich odległości
-	// "dotychczasowych", ale do tego trzeba jakiejś sensownej
-	// liczby poprzednio wykrytych punktów; poniższa liczba to
-	// właśnie taka liczba
-	const int min_liczba_do_sr_odl = 10; // absolutnie powyżej 3, ale 
+	// jezeli mamy dwa punkty R, ktore sa za bliskie, to mozemy
+	// chciec wybrac ten, ktory lepiej pasuje do srednich odleglosci
+	// "dotychczasowych", ale do tego trzeba jakiejs sensownej
+	// liczby poprzednio wykrytych punktow; ponizsza liczba to
+	// wlasnie taka liczba
+	const int min_liczba_do_sr_odl = 10; // absolutnie powyzej 3, ale 
 	// lepiej wiecej, moze 10
-	// jeżeli mamy dwa zbyt bliskie sobie punkty R, i chcemy wybrać
-	// ten właściwy, to o ile to możliwe) obliczamy średnią z
-	// odległości pomędzy już odkrtymi punktami R i badamy jaka
-	// byłaby różnica między odgległością pierwszego z tych spornych
-	// punktów do ostatniego "zatwierdzonego" a tą średnią. Oznaczmy
-	// ta wielkość R1. Analogicznie obliczymy R2. Teraz, jeżeli R1
-	// stanowi ustalony procent R2 (właśnie procent ustalony
-	// poniżej) to za właściwy przyjmuję punkt pierwszy. Jeżeli
-	// natomiast R2 stanowi ustalony procent R1, to za właściwy
-	// przymujemy punkt drugi. W pozostałych przypadkach roztrzyga
-	// to, w którym punkcie wartość ygnału góruje. No, chyba, ze
-	// wartość ta będzie identyczna. Wtedy wracamy do porównywania
-	// odległości (już bez zabawy w procenty). Jeśłi i tu będzie
+	// jezeli mamy dwa zbyt bliskie sobie punkty R, i chcemy wybrac
+	// ten wlasciwy, to o ile to mozliwe) obliczamy srednia z
+	// odleglosci pomedzy juz odkrtymi punktami R i badamy jaka
+	// bylaby roznica miedzy odglegloscia pierwszego z tych spornych
+	// punktpw do ostatniego "zatwierdzonego" a ta srednia. Oznaczmy
+	// ta wielkosc R1. Analogicznie obliczymy R2. Teraz, jezeli R1
+	// stanowi ustalony procent R2 (wlasnie procent ustalony
+	// ponizej) to za wlasciwy przyjmuje punkt pierwszy. Jezeli
+	// natomiast R2 stanowi ustalony procent R1, to za wlasciwy
+	// przymujemy punkt drugi. W pozostalych przypadkach roztrzyga
+	// to, w ktorym punkcie wartosc sygnalu goruje. No, chyba, ze
+	// wartosc ta bedzie identyczna. Wtedy wracamy do porownywania
+	// odleglosci (juz bez zabawy w procenty). Jezeli i tu bedzie
 	// identycznie - przyjmujemy pierwszy. 	
 	const double procent_mniejszej_odleglosci = 0.8;
-	// jeżeli dla danego odcinka obliczę transformatę hilberta, to
-	// rozważam stosunek RMS ciągu do MAX tego ciągu. Jeżeli ten
-	// stounek jest poniżej tego progu - ciąg ten ma mały szumm. W
-	// ARTYKULE była to wielkość 0.18
+	// jeeeli dla danego odcinka oblicze transformate hilberta, to
+	// rozwazam stosunek RMS ciagu do MAX tego ciagu. Jezeli ten
+	// stounek jest ponizej tego progu - ciag ten ma maly szumm. W
+	// ARTYKULE byla to wielkosc 0.18
 	const double prog_stosunku_rms_do_max = 0.18;
-	// w niektórych sytuacjach próg do filtrowania wyznacza się
-	// w proporcji do MAX. poniższa stała ustala tą proporcję
+	// w niektorych sytuacjach prog do filtrowania wyznacza sie
+	// w proporcji do MAX. ponizsza stala ustala te proporcje
 	const double stosunek_prog_do_max = 0.39;
-	// w niektórych sytuacjach próg do filtrowania wyznacza się
-	// w proporcji do RMS. poniższa stała ustala tą proporcję
+	// w niektorych sytuacjach prog do filtrowania wyznacza sie
+	// w proporcji do RMS. ponizsza stala ustala te proporcje
 	const double stosunek_prog_do_rms = 2.6;
-	// gdy porównuję ze sobą dwa zbyt bliskie piki (bliskie w sensie
-	// czasowym) to najpierw sprawdzę, czy sa mniej więcej równe). A
-	// mniej więcej równe będzie znaczyło, że różnica między nim
-	// stanowi malutki procent ich średnije wartości, poniższy
-	// parametr ten właśnie procent definiuje
+	// gdy porownuje ze soba dwa zbyt bliskie piki (bliskie w sensie
+	// czasowym) to najpierw sprawdze, czy sa mniej wiecej rowne). A
+	// mniej wiecej rewne bedzie znaczylo, ze roznica miedzy nim
+	// stanowi malutki procent ich srednije wartosci, ponizszy
+	// parametr ten wlasnie procent definiuje
 	const double zaniedbywalna_roznica = 0.02;
 };
-
-
-#include <cmath>
-//***************************************************************
-// ** stwierdza czy liczby są "prawie równe" (przy porównywaniu
-// ** podejrzanie bliskich szczytów
-//***************************************************************
-bool prawie_rowne(double x, double y) {
-	double s = (x+y)/2;
-	double blad = fabs(x-y)/s;
-	// [TODO] Check that blad is infinite number
-	// bool isInfinite = std::numeric_limits<double>::infinity() == blad;
-	// ASSERT(prawie_rowne, isInfinite);
-	return blad<parametry_hilbert::zaniedbywalna_roznica;
-}
-
-double round( double liczba)
-{
-	if( liczba - floor(liczba) < 0.5 )
-	{
-		return floor(liczba);
-	} else
-	{
-		return ceil(liczba);
-	}
-}
-
-
-// wyszukuje nr najwiekszego sygnalu w otoczeniu miejsca "nr", probka o
-// czestotliwości "czestotliwość" (do wyznaczania sasiedztwa)
-int wyszukaj_max( int nr, const std::vector<double> &sygnal, int czestotliwosc) { 
-	ASSERT(wyszukaj_max, (nr<sygnal.size()) );
-	ASSERT(wyszukaj_max, (nr >=0 ));
-	int sasiedztwo = round(czestotliwosc * parametry_hilbert::sasiedztwo);
-	int start = std::max(0, nr-sasiedztwo);
-	int stop = std::min((int)sygnal.size()-1, nr+sasiedztwo);
-	int max_nr = start;
-	for (int i=start+1; i<= stop; i++)
-		if (sygnal[i] > sygnal[max_nr])
-			max_nr = i;
-	return max_nr;
-};
-
-// czestotliwosc 	- czestotliwosc probki
-// sygnal		- badany sygnal
-// propozycje		- lisa punktow podejrzanych o bycie R punktami
-// ********************************************************************
-//    funkcja funkcja dla kazdego z punktow sprawdza maksimum w jego
-//    okolicy i zatepuje go przez prawdziwe maksimum; ewentualne punkty
-//    z tego samego sasiedztwa na tej liscie -- usuwa
-// ********************************************************************
-void rzeczywiste_maksima(int czestotliwosc, const std::vector<double> &sygnal, 
-	std::list<int> &propozycje) {  
-		for (std::list<int>::iterator p=propozycje.begin();
-			p != propozycje.end(); p++) {
-				int nr = wyszukaj_max( *p, sygnal , czestotliwosc);
-				*p = nr;
-		}
-		propozycje.unique();	
-}
-
 
 // **********************************************************************
 //     do wektora "wykryte" dopisuje elementy listy "propozycje"
 // **********************************************************************
-void dopisz_do_wykrytych( const std::list<int> &propozycje,
+void RPeaksDetector::addToRecognized( const std::list<int> &propozycje,
 	std::vector<int> &wykryte) {    
 		for (std::list<int>::const_iterator i = propozycje.begin(); i!= propozycje.end(); i++) {
 			wykryte.push_back( *i );
 		}
 };
 
-
-
-
-
-
 // *************************************************************
 // funkcja do wektora "propozycje" wpisze numery
-// tych elementów z wektora h, które są większe niż "threshold"
-// przy dopisywaniu powiększa dopisywany numer o liczbę "zalatwione"
+// tych elementow z wektora h, ktore sa wieksze niz "threshold"
+// przy dopisywaniu powieksza dopisywany numer o liczbe "zalatwione"
 // *************************************************************
-void wyfiltruj_propozycje(int czestotliwosc, const std::vector<double> &h, 
+void RPeaksDetector::filterPropositions(int czestotliwosc, const std::vector<double> &h, 
 	double threshold, 
 	std::list<int> & propozycje,
 	int przesuniecie) {   
 		propozycje.resize(0);
-		const int za_bliskie = round( parametry_hilbert::za_bliskie * czestotliwosc );
+		const int za_bliskie = round( hilbertParameters::za_bliskie * czestotliwosc );
 		for (int i=0+za_bliskie; i<h.size()-za_bliskie; i++)
 			if (h[i] > threshold)
 				propozycje.push_back(i+przesuniecie);
 }
 
-
-
-// czestotliwosc - liczba próbek w sekundzie
-// sygnal - sygnal dla którego wyszukujemy R-peaków
-// wykryte - wektor numerów wykrytych maksimów, które pasują do punktów
-// wskazanych przez duże wartości transformaty hilberta
-// R - wektro do którego wpiszemy wszystkie z wykrytych, no chyba, że
-// będą któreś zbyt blisko siebie, wtey (z tych bliskich) wybierzemy
-// tylko ten "właściwy"
-void usun_zbyt_bliskie(int czestotliwosc, const std::vector<double> & sygnal,
+// czestotliwosc - liczba probek w sekundzie
+// sygnal - sygnal dla ktorego wyszukujemy R-peakow
+// wykryte - wektor numerow wykrytych maksimow, ktore pasuja do punktow
+// wskazanych przez duze wartosci transformaty hilberta
+// R - wektro do ktorego wpiszemy wszystkie z wykrytych, no chyba, ze
+// beda ktores zbyt blisko siebie, wtey (z tych bliskich) wybierzemy
+// tylko ten "wlasciwy"
+void RPeaksDetector::removeTooClose(int czestotliwosc, const std::vector<double> & sygnal,
 	const std::vector<int> &wykryte, 
 	std::vector<int> & R) { 
 		R.resize(0);
 		if (wykryte.size() == 0)
 			return;
 		R.push_back(wykryte[0]);
-		ASSERT(usun_zbyt_bliskie, wykryte[0] < sygnal.size() );
+		ASSERT(removeTooClose, wykryte[0] < sygnal.size() );
 
 		const int za_bliskie = 
-			round(parametry_hilbert::za_bliskie * czestotliwosc);
+			round(hilbertParameters::za_bliskie * czestotliwosc);
 
 		for (int i=1; i<wykryte.size(); i++) {
-			ASSERT(usun_zbyt_bliskie, wykryte[i] < sygnal.size() );
+			ASSERT(removeTooClose, wykryte[i] < sygnal.size() );
 			if ((sygnal.size()-wykryte[i]) <= za_bliskie)
 				break;
 			if (wykryte[i] - R.back() <= za_bliskie ) {
 				// sa zbyt blisko;
 				bool rozstrzygniete = false;
-				if (prawie_rowne(sygnal[R.back()],sygnal[wykryte[i]])) {
-					if (R.size() >= parametry_hilbert::min_liczba_do_sr_odl) {
+				if (almostEqual(sygnal[R.back()],sygnal[wykryte[i]])) {
+					if (R.size() >= hilbertParameters::min_liczba_do_sr_odl) {
 						double srednia = (R.back() - R.front())/
 							double(R.size() - 1);
 						int odl1 = R[R.size()-1]-R[R.size()-2];
@@ -933,12 +705,12 @@ void usun_zbyt_bliskie(int czestotliwosc, const std::vector<double> & sygnal,
 
 						double roz1 = fabs(odl1 - srednia);
 						double roz2 = fabs(odl2 - srednia);
-						if (roz1 < parametry_hilbert::procent_mniejszej_odleglosci*roz2)  {
+						if (roz1 < hilbertParameters::procent_mniejszej_odleglosci*roz2)  {
 							// bierzemy 1;
 							rozstrzygniete = true;
 						}
 
-						if (roz2 < parametry_hilbert::procent_mniejszej_odleglosci*roz1)  {
+						if (roz2 < hilbertParameters::procent_mniejszej_odleglosci*roz1)  {
 							// bierzemy 2;
 							rozstrzygniete = true;
 							R.back() = wykryte[i];
@@ -961,8 +733,8 @@ void usun_zbyt_bliskie(int czestotliwosc, const std::vector<double> & sygnal,
 					};
 				};
 				if (!rozstrzygniete) {
-					// są za blisko, ale nie mamy jeszcze
-					// średnich odległości
+					// sa za blisko, ale nie mamy jeszcze
+					// srednich odleglosci
 					if (sygnal[R.back()] < sygnal[wykryte[i]])
 						R.back() = wykryte[i];
 				}
@@ -972,83 +744,250 @@ void usun_zbyt_bliskie(int czestotliwosc, const std::vector<double> & sygnal,
 		}
 }	
 
-
-
-
 // sygnal - to przefiltrowany, gotowy do dalszej obrobki sygnal
-// y - zróżniczkowany sygnal
+// y - zrozniczkowany sygnal
 // czestootliwosc - ile probek odpowiada jednej sekundzie
 // wykryte - wekto numerow probek oznaczajacych miejsca wykrycia probki
 // *************************************************************
 // funkcja przetwarza jedno okno zrozniczkowanego sygnalu
 // *************************************************************
-void rozwaz_okno(const std::vector<double> &sygnal,
+void RPeaksDetector::balanceWindow(const std::vector<double> &sygnal,
 	int start, int rozmiar, 
 	const std::vector<double> &y,
 	int czestotliwosc,	
 	std::vector<int> &wykryte) {
 
 		static double poprzedni_max_abs = -1;
-		// wartość max|y| dla poprzedniego segmentu, przechowywana z
-		// wywołania na wywołanie 
+		// wartosc max|y| dla poprzedniego segmentu, przechowywana z
+		// wywolania na wywolanie 
 
 		std::vector<double> odcinek( y.begin()+start,
 			y.begin()+start+rozmiar );
 		std::vector<double> h;
 		hilbert(odcinek, h);
 
-
-
-		double rms = oblicz_rms(h);
-		double max_abs = oblicz_max_abs(h);
+		double rms = rmsCalculate(h);
+		double max_abs = maxFromAbs(h);
 		double threshold;
 
-		if (rms >= parametry_hilbert::prog_stosunku_rms_do_max*max_abs)
-			threshold = parametry_hilbert::stosunek_prog_do_max*max_abs;
+		if (rms >= hilbertParameters::prog_stosunku_rms_do_max*max_abs)
+			threshold = hilbertParameters::stosunek_prog_do_max*max_abs;
 		else
-			threshold = parametry_hilbert::stosunek_prog_do_rms*rms;
-		if (poprzedni_max_abs != -1 ) // było już poprzednie okno
+			threshold = hilbertParameters::stosunek_prog_do_rms*rms;
+		if (poprzedni_max_abs != -1 ) // by?o ju? poprzednie okno
 			if (max_abs > 2*poprzedni_max_abs)
-				threshold = std::max(parametry_hilbert::stosunek_prog_do_max*poprzedni_max_abs, threshold);
+				threshold = std::max(hilbertParameters::stosunek_prog_do_max*poprzedni_max_abs, threshold);
 		poprzedni_max_abs = max_abs;
 
 		std::list<int> propozycje;
-		wyfiltruj_propozycje(czestotliwosc,h, threshold, propozycje, start);
-		rzeczywiste_maksima(czestotliwosc, sygnal, propozycje);
-		dopisz_do_wykrytych(propozycje, wykryte);
+		filterPropositions(czestotliwosc,h, threshold, propozycje, start);
+		realMax(czestotliwosc, sygnal, propozycje);
+		addToRecognized(propozycje, wykryte);
 };
-
-
 
 // sygnal - to przefiltrowany, gotowy do dalszej obrobki sygnal
 // czestootliwosc - ile probek odpowiada jednej sekundzie
 // wykryte - wekto numerow probek oznaczajacych miejsca wykrycia probki
 // *************************************************************
-// funkcja organizuje cały algorytm detekcji R
+// funkcja organizuje caly algorytm detekcji R
 // *************************************************************
-void detekcja_r_hilbert(const std::vector<double> & sygnal,
+void RPeaksDetector::hilbertDetection(const std::vector<double> & sygnal,
 	int czestotliwosc,
 	std::vector<int> & numery_R) { 
-		const int za_bliskie = round(parametry_hilbert::za_bliskie * czestotliwosc);
+		const int za_bliskie = round(hilbertParameters::za_bliskie * czestotliwosc);
 		std::vector<int> wykryte;
-		int zalatwione = 0;
-		std::vector<double> y;
-		rozniczkuj(sygnal, czestotliwosc, y);	
+        int zalatwione = 0;
+        std::vector<double> y;
+		differentiates(sygnal, czestotliwosc, y);	
 		while (zalatwione < sygnal.size() ) {
 			zalatwione = std::max(0,zalatwione-za_bliskie);
-			const unsigned int size = sygnal.size() - zalatwione;
-			int rozmiar = std::min(parametry_hilbert::rozmiar_okna, size);
+            const unsigned int size = sygnal.size() - zalatwione;
+            int rozmiar = std::min(hilbertParameters::rozmiar_okna, size);
 			int stara_liczba_wykrytych = wykryte.size();
-			rozwaz_okno(sygnal, zalatwione, rozmiar, y,
+            balanceWindow(sygnal, zalatwione, rozmiar, y,
 				czestotliwosc, wykryte);
 			bool znalezione = wykryte.size() > stara_liczba_wykrytych;
-			// czy został wykryty załamek R
-			// w ostatniej próbce?
-			if ((rozmiar < parametry_hilbert::rozmiar_okna) || !znalezione) 
+			// czy zosta? wykryty za?amek R
+			// w ostatniej pr?bce?
+			if ((rozmiar < hilbertParameters::rozmiar_okna) || !znalezione) 
 				zalatwione += rozmiar;
 			else 
 				zalatwione = wykryte.back();
 		}
 		//sort(wykryte.begin(), wykryte.end());
-		usun_zbyt_bliskie(czestotliwosc, sygnal, wykryte, numery_R);
+		removeTooClose(czestotliwosc, sygnal, wykryte, numery_R);
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void RPeaksDetector::double2kiss(const std::vector<double> &f, 
+	kiss_fft_cpx * g) {
+		for (int i=0; i<f.size(); i++) {
+			g[i].r = f[i];
+			g[i].i = 0.0;
+		};
+}
+
+void RPeaksDetector::kiss2double(int n, kiss_fft_cpx * f, std::vector<double> &g) {
+	g.resize(n);
+	for (int i=0; i<n; i++) {
+		g[i] = f[i].r;
+	};
+}
+
+void RPeaksDetector::fft(const std::vector<double> & f, kiss_fft_cpx * g) {
+	// z rzeczywistego wektora f utworzy jego transformate g
+	kiss_fft_cpx * dane_dla_kiss = new kiss_fft_cpx[f.size()];
+	double2kiss(f, dane_dla_kiss);
+	kiss_fft_cfg cfg = kiss_fft_alloc(f.size(), false, NULL, 0);
+	kiss_fft( cfg, dane_dla_kiss, g);
+	kiss_fft_free(cfg);
+	kiss_fft_cleanup();
+	delete dane_dla_kiss;
+};
+
+void RPeaksDetector::ifft(int n, kiss_fft_cpx * f, std::vector<double> & g) {
+	// z zespolonego wektora f utworzy jego transofrmate odwrotna, i
+	// jej czesc rzeczywista wpisze do g
+	kiss_fft_cpx * wyniki_kiss = new kiss_fft_cpx[n];
+	kiss_fft_cfg cfg = kiss_fft_alloc(n, true, NULL, 0);
+	kiss_fft( cfg, f, wyniki_kiss);
+	kiss_fft_free(cfg);
+	kiss_fft_cleanup();
+	kiss2double(n,wyniki_kiss,g);
+	delete wyniki_kiss;
+};
+
+void RPeaksDetector::multiplyBy1ppixTransformation( int n, kiss_fft_cpx * f ) {
+	// pierwsza polowka przez j, druga polowka przez -j, srodek
+	// przez 0
+	f[ 0 ].r = 0; f[ 0 ].i = 0;
+	f[ n/2 ].r = 0; f[ n/2 ].i = 0;
+	for (int i=1; i< n/2; i++) {
+		kiss_fft_cpx nowy;
+		nowy.r = f[i].i;
+		nowy.i = -f[i].r;
+		f[i] = nowy;
+	}
+	for (int i=n/2+1; i< n; i++) {
+		kiss_fft_cpx nowy;
+		nowy.r = -f[i].i;
+		nowy.i = f[i].r;
+		f[i] = nowy;
+	}
+};
+
+void RPeaksDetector::hilbert(const std::vector<double> & f, std::vector<double> & g) {
+	const int n = f.size();
+	kiss_fft_cpx * fft_f = new kiss_fft_cpx[n];
+	fft ( f, fft_f );
+	multiplyBy1ppixTransformation(n,  fft_f );
+	ifft ( n, fft_f, g);
+	delete fft_f;
+	for (int i=0; i<n;i++)
+		g[i] /= n; 
+}
+
+//***************************************************************
+// ** stwierdza czy liczby sa "prawie rowne" (przy porownywaniu
+// ** podejrzanie bliskich szczytow
+//***************************************************************
+bool RPeaksDetector::almostEqual(double x, double y) {
+	double s = (x+y)/2;
+	double blad = fabs(x-y)/s;
+	// [TODO] Check that blad is infinite number
+	// bool isInfinite = std::numeric_limits<double>::infinity() == blad;
+	// ASSERT(almostEqual, isInfinite);
+	return blad<hilbertParameters::zaniedbywalna_roznica;
+}
+
+double RPeaksDetector::round( double liczba)
+{
+	if( liczba - floor(liczba) < 0.5 )
+	{
+		return floor(liczba);
+	} else
+	{
+		return ceil(liczba);
+	}
+}
+
+// wyszukuje nr najwiekszego sygnalu w otoczeniu miejsca "nr", probka o
+// czestotliwosci "czestotliwosc" (do wyznaczania sasiedztwa)
+int RPeaksDetector::findMax( int nr, const std::vector<double> &sygnal, int czestotliwosc) { 
+	ASSERT(findMax, (nr<sygnal.size()) );
+	ASSERT(findMax, (nr >=0 ));
+	int sasiedztwo = round(czestotliwosc * hilbertParameters::sasiedztwo);
+	int start = std::max(0, nr-sasiedztwo);
+	int stop = std::min((int)sygnal.size()-1, nr+sasiedztwo);
+	int max_nr = start;
+	for (int i=start+1; i<= stop; i++)
+		if (sygnal[i] > sygnal[max_nr])
+			max_nr = i;
+	return max_nr;
+};
+
+// czestotliwosc 	- czestotliwosc probki
+// sygnal		- badany sygnal
+// propozycje		- lisa punktow podejrzanych o bycie R punktami
+// ********************************************************************
+//    funkcja funkcja dla kazdego z punktow sprawdza maksimum w jego
+//    okolicy i zatepuje go przez prawdziwe maksimum; ewentualne punkty
+//    z tego samego sasiedztwa na tej liscie -- usuwa
+// ********************************************************************
+void RPeaksDetector::realMax(int czestotliwosc, const std::vector<double> &sygnal, 
+	std::list<int> &propozycje) {  
+		for (std::list<int>::iterator p=propozycje.begin();
+			p != propozycje.end(); p++) {
+				int nr = findMax( *p, sygnal , czestotliwosc);
+				*p = nr;
+		}
+		propozycje.unique();	
+}
+
+double RPeaksDetector::rmsCalculate(const std::vector< double >& w)
+{ 
+	ASSERT( rmsCalculate, w.size() > 0);
+	double s=0;
+	for (int i=0; i<w.size(); i++)
+		s += w[i]*w[i];
+	return sqrt(s/w.size());
+}       
+
+double RPeaksDetector::maxFromAbs(const std::vector< double >& w)
+{ 
+	double mx=w[1];
+	for (int i=1; i<w.size(); i++) {
+		double wart = fabs(w[i]);
+		if (wart > mx)
+			mx = wart;
+	}
+	return mx;
+}       
+
+void RPeaksDetector::differentiates(const std::vector<double> &sygnal, int czestotliwosc, 
+	std::vector<double> &y) { 
+		y.resize( sygnal.size() );
+		double s = (sygnal[0] + sygnal[ sygnal.size() - 1 ])/2;
+		double dt = 2.0/czestotliwosc;
+
+		y[0] = (sygnal[1]-s)/dt;
+		y[ y.size()-1 ] = (s- sygnal[ y.size() - 2]) /dt;
+
+		for (int i=1; i< y.size() - 1; i++)
+			y[i] = (sygnal[i+1] - sygnal[i-1]) / dt;
+};
+
+double RPeaksDetector::average(const std::vector<double> & w) {
+	double suma = 0.0;
+	for (int i=0; i< w.size(); i++)
+		suma += w[i];
+
+	return suma / w.size();
+}
+
+void RPeaksDetector::signalAbs(std::vector<double> &s) {
+	double srednia = average(s);
+	for (int i=0; i<s.size(); i++)
+		s[i] = fabs(s[i] - srednia);
+}
+

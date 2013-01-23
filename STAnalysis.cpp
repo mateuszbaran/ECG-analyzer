@@ -382,4 +382,3 @@ void STAnalysis::setAnalizer(STAnalysis::AlgorithmType atype)
       break; //Don't change anything
   }
 }
-
