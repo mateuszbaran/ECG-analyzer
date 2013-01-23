@@ -196,9 +196,6 @@
     <ClCompile Include="plots\plotpoincare.cpp" />
     <ClCompile Include="plots\scrollbar.cpp" />
     <ClCompile Include="plots\scrollzoomer.cpp" />
-    <ClCompile Include="plots\hrt.cpp" />
-    <ClCompile Include="plots\plothrvtriangle.cpp" />
-    <ClCompile Include="plots\plotpoincare.cpp" />
     <ClCompile Include="plots\stplot.cpp" />
     <ClCompile Include="plots\synczoomer.cpp" />
     <ClCompile Include="plots\timescaledraw.cpp" />
@@ -438,6 +435,7 @@
     <ClInclude Include="QRSClass.h" />
     <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
+
     <ClInclude Include="STAnalysis.h" />
     <ClInclude Include="tri_logger.hpp" />
     <ClInclude Include="wfdb\ecgcodes.h" />

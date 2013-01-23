@@ -47,11 +47,11 @@ public:
   void SetX(double X);
   void SetHistogramBinLength(double HistogramBinLength);
 
-  private:
-
   //SD parameters [ms]
   double SD1;
   double SD2;
+
+  private:
 
   //TINN parameter [ms]
   double TINN;

@@ -140,6 +140,9 @@
     <ClCompile Include="RPeaksDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BaselineRemoval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ecg2ch.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -300,6 +303,8 @@
       <Filter>Source Files\matrix</Filter>
     </ClCompile>
     <ClCompile Include="HRTAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GeometricAnalysis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -415,6 +420,9 @@
     <ClInclude Include="RPeaksDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaselineRemoval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="nullstream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -497,6 +505,8 @@
       <Filter>Header Files\matrix</Filter>
     </ClInclude>
     <ClInclude Include="HRTAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GeometricAnalysis.h">
       <Filter>Header Files</Filter>
     </ClInclude>

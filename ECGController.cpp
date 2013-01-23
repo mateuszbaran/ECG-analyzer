@@ -466,7 +466,10 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
 			runHRV1();
 			HANDLE_INTERRUPTION
-			statusUpdate("HRV1 analysis completed; ST segment analysis ongoing.");
+			statusUpdate("HRV1 analysis completed; HRV2 analysis ongoing.");
+			runSTInterval();
+			HANDLE_INTERRUPTION
+			statusUpdate("HRV2 analysis completed; ST segment analysis ongoing.");
 			runSTInterval();
 			HANDLE_INTERRUPTION
 			statusUpdate("ST segment analysis completed; QRS analysis ongoing.");
