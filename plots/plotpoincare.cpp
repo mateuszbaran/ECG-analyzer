@@ -31,8 +31,8 @@ void PlotPoincare::setData(ECGHRV2 &data)
 {
 	gsl_vector_int *px = data.GetPoincare_x()->signal;
 	gsl_vector_int *py = data.GetPoincare_y()->signal;
-	double x = data.GetTriple_index_x();
-	double y = data.GetTriple_index_y();
+	double x = data.GetX();
+	double y = data.GetY();
 	double s1 = data.SD1;
 	double s2 = data.SD2;
 	int size = int(px->size); // == py.size

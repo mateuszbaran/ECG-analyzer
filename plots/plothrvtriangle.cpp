@@ -1,7 +1,7 @@
 #include "plothrvtriangle.h"
 
 PlotHRVTriangle::PlotHRVTriangle(QWidget *parent) :
-    QwtPlot(parent)
+	QwtPlot(parent)
 {
 	setMinimumHeight(10);
 	setMinimumWidth(10);
@@ -67,8 +67,8 @@ void PlotHRVTriangle::setData(ECGHRV2 &data)
 {
 	gsl_vector_int *hx = data.GetHistogram_x()->signal;
 	gsl_vector_int *hy = data.GetHistogram_y()->signal;
-	double x = data.GetTriple_index_x();
-	double y = data.GetTriple_index_y();
+	double x = data.GetX();
+	double y = data.GetY();
 	double n = 200.0;
 	double m = 800.0;
 	int size = int(hx->size); // == hy.size
@@ -88,9 +88,9 @@ void PlotHRVTriangle::setData(ECGHRV2 &data)
 	vxm.push_back(QPointF(m, 0.0));
 	xn->setSamples(vxn);
 	xm->setSamples(vxm);
-    mx->setValue(x, y);
-    my->setValue(m, y);
-    mn->setValue(n, 0.0);
-    mm->setValue(m, 0.0);
+	mx->setValue(x, y);
+	my->setValue(m, y);
+	mn->setValue(n, 0.0);
+	mm->setValue(m, 0.0);
 	replot();
 }

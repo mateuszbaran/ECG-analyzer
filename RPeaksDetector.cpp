@@ -990,3 +990,4 @@ void RPeaksDetector::signalAbs(std::vector<double> &s) {
 	for (int i=0; i<s.size(); i++)
 		s[i] = fabs(s[i] - srednia);
 }
+
