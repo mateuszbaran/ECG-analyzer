@@ -6,6 +6,7 @@
 #include "RPeaksDetector.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
+#include "DFAAnalyzer.h"
 
 #include "wfdb/wfdb.h"
 
