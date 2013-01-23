@@ -22,16 +22,32 @@ public:
     return dfa_y;
   }
 
+  OtherSignal GetRR_integrated () const
+  {
+    return rr_integrated;
+  }
+
+
   std::vector<std::vector<std::string >> &getTable ()
   {
     return table;
   }
+	
+  void setDFA_scaling_factor(double DFA_scaling_factor);
+
+  void setDFA_x(OtherSignal dfa_x);
+
+  void setDFA_y(OtherSignal dfa_y);
+
+  void setRR_integrated(OtherSignal rr_integrated);
 
 private:
   //for plotting
   OtherSignal dfa_x;
   OtherSignal dfa_y;
+  OtherSignal rr_integrated;
   //table
+  double DFA_scaling_factor;
   std::vector<std::vector<std::string >> table;
 };
 

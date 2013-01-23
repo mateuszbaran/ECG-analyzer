@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>922</width>
-    <height>577</height>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QTabWidget" name="tabWidgetLeftPane">
+       <widget class="QTabWidget" name="tabWidgetLeftPanel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -62,7 +62,7 @@
          <enum>QTabWidget::West</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabSignalInfo">
          <attribute name="title">
@@ -188,7 +188,7 @@
                     <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderVisible">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </attribute>
                    <attribute name="verticalHeaderCascadingSectionResizes">
                     <bool>false</bool>
@@ -297,6 +297,9 @@
              <string>Digital filters:</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="margin">
+              <number>6</number>
+             </property>
              <item>
               <widget class="QRadioButton" name="radioButtonMovingAverage">
                <property name="sizePolicy">
@@ -453,20 +456,23 @@
              </item>
              <item>
               <layout class="QGridLayout" name="gridLayout_9">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>6</number>
+               </property>
                <property name="spacing">
                 <number>6</number>
                </property>
-               <item row="0" column="1">
-                <widget class="QSpinBox" name="spinBoxCutOffFrequencyChebyshev">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="value">
-                  <number>5</number>
+               <item row="2" column="1">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Cut-off frequency:</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
+               <item row="3" column="2">
                 <widget class="QDoubleSpinBox" name="doubleSpinBoxRippleChebyschev">
                  <property name="enabled">
                   <bool>false</bool>
@@ -479,33 +485,72 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_11">
-                 <property name="text">
-                  <string>Ripple:</string>
+               <item row="2" column="2">
+                <widget class="QSpinBox" name="spinBoxCutOffFrequencyChebyshev">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="value">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>Cut-off frequency:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
+               <item row="2" column="3">
                 <widget class="QLabel" name="label_16">
                  <property name="text">
                   <string>Hz</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
+               <item row="3" column="3">
                 <widget class="QLabel" name="label_15">
                  <property name="text">
                   <string>dB</string>
                  </property>
                 </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Order:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>Ripple:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QSpinBox" name="spinBoxOrderChebyshev">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>4</number>
+                 </property>
+                 <property name="value">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <spacer name="horizontalSpacer_13">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </item>
@@ -534,6 +579,9 @@
              <string>R Peaks:</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <property name="margin">
+              <number>6</number>
+             </property>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <property name="topMargin">
@@ -569,6 +617,68 @@
                      <string>Hilbert</string>
                     </property>
                    </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_18">
+                 <property name="rightMargin">
+                  <number>5</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_13">
+                   <property name="text">
+                    <string>Histogram size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_8">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="doubleSpinBoxRPeaksHistogramSize">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="decimals">
+                    <number>4</number>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>7.812500000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string>ms</string>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -688,7 +798,7 @@
                <item>
                 <widget class="QCheckBox" name="checkBoxRPeaksDetectWindowSizeAutomatically">
                  <property name="text">
-                  <string>Detest Window Size Automatically</string>
+                  <string>Detect Window Size Automatically</string>
                  </property>
                  <property name="checked">
                   <bool>true</bool>
@@ -842,39 +952,20 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">
                <string>Statistical Parameters</string>
               </attribute>
-             </widget>
-             <widget class="QWidget" name="tabHRVAnalysisFrequencyParameters">
-              <attribute name="title">
-               <string>Frequency Parameters</string>
-              </attribute>
-             </widget>
-             <widget class="QWidget" name="tabHRVAnalysisGeometricalParameters">
-              <attribute name="title">
-               <string>Geometrical Parameters</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <layout class="QHBoxLayout" name="horizontalLayout_17">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_8">
-                 <property name="spacing">
-                  <number>0</number>
-                 </property>
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetMinimumSize</enum>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_16">
                  <item>
-                  <widget class="QTableWidget" name="tableWidgetGeometricalParameters">
+                  <widget class="QTableWidget" name="tableWidgetStatisticalParameters">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                     <horstretch>0</horstretch>
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>2</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
@@ -886,8 +977,8 @@
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>221</width>
-                     <height>122</height>
+                     <width>999999</width>
+                     <height>999999</height>
                     </size>
                    </property>
                    <property name="baseSize">
@@ -909,12 +1000,15 @@
                     <enum>Qt::DashLine</enum>
                    </property>
                    <property name="rowCount">
-                    <number>4</number>
+                    <number>9</number>
                    </property>
                    <property name="columnCount">
-                    <number>1</number>
+                    <number>2</number>
                    </property>
                    <attribute name="horizontalHeaderVisible">
+                    <bool>false</bool>
+                   </attribute>
+                   <attribute name="horizontalHeaderCascadingSectionResizes">
                     <bool>false</bool>
                    </attribute>
                    <attribute name="horizontalHeaderDefaultSectionSize">
@@ -926,53 +1020,403 @@
                    <attribute name="horizontalHeaderMinimumSectionSize">
                     <number>25</number>
                    </attribute>
+                   <attribute name="verticalHeaderCascadingSectionResizes">
+                    <bool>false</bool>
+                   </attribute>
                    <row>
                     <property name="text">
-                     <string>SD1:</string>
+                     <string>RR_avg:</string>
                     </property>
                    </row>
                    <row>
                     <property name="text">
-                     <string>SD2:</string>
+                     <string>RR_stddev:</string>
                     </property>
                    </row>
                    <row>
                     <property name="text">
-                     <string>TINN:</string>
+                     <string>SDNN:</string>
                     </property>
                    </row>
                    <row>
                     <property name="text">
-                     <string>HRV Triangular Index:</string>
+                     <string>RMSSD:</string>
                     </property>
                    </row>
+                   <row>
+                    <property name="text">
+                     <string>NN50:</string>
+                    </property>
+                   </row>
+                   <row>
+                    <property name="text">
+                     <string>pNN50:</string>
+                    </property>
+                   </row>
+                   <row>
+                    <property name="text">
+                     <string>SDANN:</string>
+                    </property>
+                   </row>
+                   <row>
+                    <property name="text">
+                     <string>SDANN index:</string>
+                    </property>
+                   </row>
+                   <row>
+                    <property name="text">
+                     <string>SDSD:</string>
+                    </property>
+                   </row>
+                   <column>
+                    <property name="text">
+                     <string>Unit</string>
+                    </property>
+                   </column>
                    <column/>
+                   <item row="0" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
+                   <item row="1" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
+                   <item row="2" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
+                   <item row="3" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
+                   <item row="4" column="1">
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </item>
+                   <item row="5" column="1">
+                    <property name="text">
+                     <string>%</string>
+                    </property>
+                   </item>
+                   <item row="6" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
+                   <item row="7" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
+                   <item row="8" column="1">
+                    <property name="text">
+                     <string>ms</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>
                </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabHRVAnalysisFrequencyParameters">
+              <attribute name="title">
+               <string>Frequency Parameters</string>
+              </attribute>
+              <layout class="QHBoxLayout" name="horizontalLayout_19">
+               <item>
+                <widget class="QTableWidget" name="tableWidgetFrequencyParameters">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>2</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>999999</width>
+                   <height>999999</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="alternatingRowColors">
+                  <bool>true</bool>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::NoSelection</enum>
+                 </property>
+                 <property name="gridStyle">
+                  <enum>Qt::DashLine</enum>
+                 </property>
+                 <property name="rowCount">
+                  <number>6</number>
+                 </property>
+                 <property name="columnCount">
+                  <number>2</number>
+                 </property>
+                 <attribute name="horizontalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderCascadingSectionResizes">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>90</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderHighlightSections">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <attribute name="verticalHeaderCascadingSectionResizes">
+                  <bool>false</bool>
+                 </attribute>
+                 <row>
+                  <property name="text">
+                   <string>TP:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>HF:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>LF:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>VLF:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>ULF:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>LFHF:</string>
+                  </property>
+                 </row>
+                 <column>
+                  <property name="text">
+                   <string>Unit</string>
+                  </property>
+                 </column>
+                 <column/>
+                 <item row="0" column="1">
+                  <property name="text">
+                   <string>power/ms</string>
+                  </property>
+                 </item>
+                 <item row="1" column="1">
+                  <property name="text">
+                   <string>power/ms</string>
+                  </property>
+                 </item>
+                 <item row="2" column="1">
+                  <property name="text">
+                   <string>power/ms</string>
+                  </property>
+                 </item>
+                 <item row="3" column="1">
+                  <property name="text">
+                   <string>power/ms</string>
+                  </property>
+                 </item>
+                 <item row="4" column="1">
+                  <property name="text">
+                   <string>power/ms</string>
+                  </property>
+                 </item>
+                 <item row="5" column="1">
+                  <property name="text">
+                   <string>power/ms</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabHRVAnalysisGeometricalParameters">
+              <attribute name="title">
+               <string>Geometrical Parameters</string>
+              </attribute>
+              <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <item>
+                <widget class="QTableWidget" name="tableWidgetGeometricalParameters">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>2</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>312</width>
+                   <height>123</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="alternatingRowColors">
+                  <bool>true</bool>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::NoSelection</enum>
+                 </property>
+                 <property name="gridStyle">
+                  <enum>Qt::DashLine</enum>
+                 </property>
+                 <property name="rowCount">
+                  <number>4</number>
+                 </property>
+                 <property name="columnCount">
+                  <number>2</number>
+                 </property>
+                 <attribute name="horizontalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>90</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderHighlightSections">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <row>
+                  <property name="text">
+                   <string>SD1:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>SD2:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>TINN:</string>
+                  </property>
+                 </row>
+                 <row>
+                  <property name="text">
+                   <string>HRV Triangular Index:</string>
+                  </property>
+                 </row>
+                 <column>
+                  <property name="text">
+                   <string>Unit</string>
+                  </property>
+                 </column>
+                 <column/>
+                 <item row="0" column="1">
+                  <property name="text">
+                   <string>ms</string>
+                  </property>
+                 </item>
+                 <item row="1" column="1">
+                  <property name="text">
+                   <string>ms</string>
+                  </property>
+                 </item>
+                 <item row="2" column="1">
+                  <property name="text">
+                   <string>ms</string>
+                  </property>
+                 </item>
+                 <item row="3" column="1">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
                <item>
                 <widget class="QGroupBox" name="groupBox_3">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="title">
                   <string>Show on plot:</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_12">
                   <item>
-                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD1">
-                    <property name="text">
-                     <string>SD1</string>
+                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD1SD2Parameters">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
                     </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD2">
                     <property name="text">
-                     <string>SD2</string>
+                     <string>SD1/SD2 Parameters</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QCheckBox" name="checkBoxShowOnPlotHRVTriangle">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="text">
                      <string>HRV Triangle</string>
                     </property>
@@ -1178,6 +1622,21 @@
                       <string>P_end</string>
                      </property>
                     </row>
+                    <row>
+                     <property name="text">
+                      <string>Number of T_WAVE_ALT</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Percent of T_WAVE_ALT</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Is T_WAVE_ALT detected?</string>
+                     </property>
+                    </row>
                     <column>
                      <property name="text">
                       <string>Value</string>
@@ -1250,6 +1709,16 @@
                     </property>
                    </widget>
                   </item>
+                  <item>
+                   <widget class="QCheckBox" name="checkBoxT_Wave_AltEnabled">
+                    <property name="text">
+                     <string>T_Wave_Alt</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -1302,13 +1771,13 @@
                   <property name="minimumSize">
                    <size>
                     <width>268</width>
-                    <height>150</height>
+                    <height>121</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
                     <width>268</width>
-                    <height>150</height>
+                    <height>121</height>
                    </size>
                   </property>
                   <property name="font">
@@ -1388,11 +1857,6 @@
                   <row>
                    <property name="text">
                     <string>TO average</string>
-                   </property>
-                  </row>
-                  <row>
-                   <property name="text">
-                    <string>TS slope</string>
                    </property>
                   </row>
                   <column>
@@ -1781,7 +2245,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>955</width>
+     <width>922</width>
      <height>21</height>
     </rect>
    </property>
@@ -1923,7 +2387,7 @@
   <customwidget>
    <class>StPlot</class>
    <extends>QWidget</extends>
-   <header>stplot.h</header>
+   <header>../plots/stplot.h</header>
   </customwidget>
  </customwidgets>
  <resources>

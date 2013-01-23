@@ -101,6 +101,40 @@ private:
   
   ///////// Hilbert methods /////////
   /**
+  *  Organizes hilbert R peaks detection
+  */
+  void hilbertDetection(const std::vector<double> & sygnal, int czestotliwosc, std::vector<int> & numery_R);
+  
+  /**
+  *  Add new proposition to recognized R peaks
+  */
+  void addToRecognized( const std::list<int> &propozycje, std::vector<int> &wykryte);
+
+  /**
+  *  Leaves point sonly over threshold
+  */
+  void filterPropositions(int czestotliwosc, const std::vector<double> &h, double threshold, 
+	  std::list<int> & propozycje, int przesuniecie);
+  
+  /**
+  *  
+  */
+  void hilbert(const std::vector<double> & f, std::vector<double> & g);
+
+  /**
+  *  Process one differentiated signal window
+  */
+  void balanceWindow(const std::vector<double> &sygnal, int start, int rozmiar, 
+	  const std::vector<double> &y, int czestotliwosc, std::vector<int> &wykryte);
+
+  /**
+  *  Remove to close points
+  */
+  void removeTooClose(int czestotliwosc, const std::vector<double> & sygnal,
+	  const std::vector<int> &wykryte, std::vector<int> & R) ;
+
+  ///////// HELPERS /////////
+  /**
   *  Calculate RMS
   */
   double rmsCalculate (const std::vector<double> & w);
@@ -119,33 +153,12 @@ private:
   *  Make signal abs
   */
   void signalAbs(std::vector<double> &s);
-
-  /**
-  *  Organizes hilbert R peaks detection
-  */
-  void hilbertDetection(const std::vector<double> & sygnal, int czestotliwosc, std::vector<int> & numery_R);
-  
-  /**
-  *  Add new proposition to recognized R peaks
-  */
-  void addToRecognized( const std::list<int> &propozycje, std::vector<int> &wykryte);
-
-  /**
-  *  Leaves point sonly over threshold
-  */
-  void filterPropositions(int czestotliwosc, const std::vector<double> &h, double threshold, 
-	  std::list<int> & propozycje, int przesuniecie);
   
   /**
   *  Chceks if numbers are almoust equals
   */
   bool almostEqual(double x, double y);
 
-  /**
-  *  
-  */
-  void hilbert(const std::vector<double> & f, std::vector<double> & g);
-  
   /**
   *  Finds max value for given vector
   */
@@ -155,19 +168,7 @@ private:
   *  
   */
   void realMax(int czestotliwosc, const std::vector<double> &sygnal, std::list<int> &propozycje) ;
-
-  /**
-  *  Process one differentiated signal window
-  */
-  void balanceWindow(const std::vector<double> &sygnal, int start, int rozmiar, 
-	  const std::vector<double> &y, int czestotliwosc, std::vector<int> &wykryte);
-
-  /**
-  *  Remove to close points
-  */
-  void removeTooClose(int czestotliwosc, const std::vector<double> & sygnal,
-	  const std::vector<int> &wykryte, std::vector<int> & R) ;
-
+  
   /**
   *  
   */
@@ -201,7 +202,7 @@ private:
   /**
   *  
   */
-  double round( double liczba);
+  double round(double liczba);
 
 };
 

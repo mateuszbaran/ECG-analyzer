@@ -1,10 +1,13 @@
 #include "ECGController.h"
 
 #include "ECGBaselineRemoval.h"
-#include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "HRTAnalyzer.h"
+#include "DFAAnalyzer.h"
+#include "RPeaksDetector.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
+#include "DFAAnalyzer.h"
 
 #include "wfdb/wfdb.h"
 
@@ -17,6 +20,8 @@
 ECGController::ECGController (void) :
   ecg_baseline_module(new ECGBaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
+  hrv_dfa_module(new DFAAnalyzer()),
+  hrt_module(new HRTAnalyzer()),
   waves_module(new QRSPointsDetector()),
   hrv1_module(new HRV1Analyzer()),
   st_interval_module(new STAnalysis()),
@@ -244,15 +249,15 @@ void ECGController::runHRT ()
   {
     runECGBaseline();
   }
-  if (!waves_module->run_)
+  if (!rpeaks_module->run_)
   {
-    runWaves();
+    runRPeaks();
   }
-  if (!qrs_class_module->run_)
+  /*if (!qrs_class_module->run_)
   {
     runQRSClass();
-  }
-  hrt_module->runModule(waves_data, r_peaks_data, filtered_signal, ecg_info, hrt_data);
+  }*/
+  hrt_module->runModule(r_peaks_data, classes_data, ecg_info, hrt_data);
   hrt_module->run_ = true;
   LOG_END
 }
@@ -464,6 +469,9 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			HANDLE_INTERRUPTION
 			statusUpdate("ST segment analysis completed; QRS analysis ongoing.");
 			runWaves();
+			HANDLE_INTERRUPTION
+			statusUpdate("QRS analysis completed; HRVDFA analysis ongoing.");
+			runHRVDFA();
 			statusUpdate("Analysis complete!");
 			analysisComplete();
 			analysisCompl = true;

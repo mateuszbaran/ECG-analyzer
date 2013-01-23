@@ -94,5 +94,5 @@ class HRTModule : public GlobalInterface
 {
 public:
   HRTModule() : GlobalInterface() {}
-  virtual void runModule (const ECGWaves &, const ECGRs &, const ECGSignalChannel &, const ECGInfo &, ECGHRT &) = 0;
+  virtual void runModule (const ECGRs &, const ECGClasses &, const ECGInfo &, ECGHRT &) = 0;
 };

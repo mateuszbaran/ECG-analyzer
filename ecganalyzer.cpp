@@ -3,6 +3,7 @@
 #include <qtextcodec.h>
 #include <QThread>
 #include <functional>
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -28,28 +29,6 @@ void ECGanalyzer::on_actionO_Qt_triggered()
 void ECGanalyzer::on_actionO_Programie_triggered()
 {
 	aboutWindow.show();
-   // QMessageBox::about(this, tr("About ECG Analyzer"),
-   //         tr("<h2><div align=\"center\">ECG Analyzer</div></h2>"
-			//"<br/><b>Moduły:</b>"
-			//"<ul><li>ECG Baseline: Weronika Łabaj, Piotr Matuszkiewicz"
-			//"R Peaks: Paweł Maślanka, Norbert Pabian<ul>"
-			//"<li>Waves: Agata Sitnik, Łukasz Zieńkowski<ul>"
-			//"<li>QRS class: Krzysztof Bębenek, Aleksander Steliga"
-			//"<ul><li>HRT: Łukasz Kutrzuba, Mateusz Krasucki</li></ul>"
-			//"</li>"
-			//"<li>ST interval: Krzysiek Piekutowski, Bartłomiej Bułat</li>"
-			//"<li>T Wave alt: Grzegorz Pietrzyk, Łukasz Krzyżek</li>"
-			//"</ul>"
-			//"</li>"
-			//"<li>HRV 1: Łukasz Jaromi, Leszek Sosnowski</li>"
-			//"<li>HRV 2: Krzysztof Farganus</li>"
-			//"<li>HRV DFA: Mikołaj Rzepka, Szczepan Czaicki</li>"
-			//"</ul>"
-			//"</li></ul>"
-			////"</li></ul>"
-			//"<br/><div align=\"center\"><p>Wydział Elektrotechniki, Automatyki, "
-   //         "Informatyki i Inżynierii Biomedycznej</p>"
-   //         "<p>2012/2013 AGH Kraków</p></div>"));
 }
 
 
@@ -115,25 +94,15 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		range->setText(QString().sprintf("%d mV", _ECGcontroller.ecg_info.channel_one.range) );
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
 		
-		
-		ECGHRT hrt_data;
-		hrt_data.offset = 3;
-		hrt_data.rr.push_back(QPointF(0.0, 2.0));
-		hrt_data.rr.push_back(QPointF(1.0, 0.0));
-		hrt_data.rr.push_back(QPointF(2.0, 5.0));
-		hrt_data.rr.push_back(QPointF(3.0, 3.0));
-		hrt_data.rr.push_back(QPointF(4.0, 10.0));
-		hrt_data.rr.push_back(QPointF(5.0, 4.0));
-		hrt_data.rr.push_back(QPointF(6.0, 9.0));
-		hrt_data.rr.push_back(QPointF(7.0, 7.0));
-		hrt_data.ts.setLine(2.0, 3.0, 5.0, 16.0);
+		/*
+		_ECGcontroller.runHRT();
+
 		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
 		PlotHRT *plotHRT = new PlotHRT(this);
 		plotHARTLayout->addWidget(plotHRT);
-		plotHRT->setData(hrt_data);
-		ui.groupBox->setLayout(plotHARTLayout);
-		
-		
+		plotHRT->setData(_ECGcontroller.hrt_data);
+		ui.groupBox->setLayout(plotHARTLayout);*/
+	
 		ECGHRV2 hrv2_data;
 		// ...
 		
@@ -222,6 +191,7 @@ void ECGanalyzer::enableMovingAverageGUIControls(bool enable)
 
 void ECGanalyzer::enableChebyschevGUIControls(bool enable) 
 {
+	ui.spinBoxOrderChebyshev->setEnabled(enable);
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
 	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
@@ -339,7 +309,7 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_intervals_table->setHorizontalHeaderItem(5, new QTableWidgetItem( "Description" ));
   
   i = 0;
-  for(const ECGST::Interval &it: intervals) {
+  BOOST_FOREACH(const ECGST::Interval &it, intervals) {
     ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.jpoint ).c_str() ));
     ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it.stpoint ).c_str() ) );
     ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it.length()) ));
@@ -357,7 +327,7 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_episodes_table->setHorizontalHeaderItem(1, new QTableWidgetItem("Episode end") );
   
   i = 0;
-  for(const ECGST::Episode &it: episodes) {
+  BOOST_FOREACH(const ECGST::Episode &it, episodes) {
     ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.start ).c_str() ));
     ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  it.end ).c_str() ));
     ++i;

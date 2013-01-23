@@ -1,4 +1,7 @@
 #include "ecgch.h"
+#include "timescaledraw.h"
+#include "gainsscaledraw.h"
+#include <QDebug>
 
 EcgCh::EcgCh(QWidget *parent) :
     QwtPlot(parent)
@@ -10,8 +13,8 @@ EcgCh::EcgCh(QWidget *parent) :
      grid->setMajPen(QPen(Qt::white, 0, Qt::DotLine));
      grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
      grid->attach(this);
-     setAxisTitle(QwtPlot::xBottom, "Czas [s]");
-     setAxisTitle(QwtPlot::yLeft, "Amplituda [mv]");
+     setAxisTitle(QwtPlot::xBottom, "Czas [hh:mm:ss.ms]");
+     setAxisTitle(QwtPlot::yLeft, "Amplituda [mV]");
 //     picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, canvas());
 //     picker->setStateMachine(new QwtPickerDragPointMachine());
 //     picker->setRubberBandPen(QColor(Qt::green));
@@ -35,14 +38,19 @@ EcgCh::EcgCh(QWidget *parent) :
 void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info)
 {
     gsl_vector *v = signal->signal;
-    float invgain = 1.0 / float(info.gain);
-    float dt = 1.0 / float(info.frequecy);
+
     int size = int(v->size);
     samples->clear();
     for (int i = 0; i < size; i++)
-        samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
+    {
+        if ((float)(v->data[i*v->stride]) != 0.0)
+            samples->push_back(QPointF(float(i), float(v->data[i*v->stride])));
+    }
+
     data->setSamples(*samples);
     curve->setData(data);
+    setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(info.frequecy));
+    setAxisScaleDraw(QwtPlot::yLeft, new GainScaleDraw(info.gain));
 	replot();
 }
 
@@ -58,4 +66,9 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal pe
 //    peaksData->setSamples(*peaksSamples);
 //    peaksCurve->setData(data);
 //    replot();
+}
+
+QPointF EcgCh::lastSample()
+{
+    return samples->last();
 }

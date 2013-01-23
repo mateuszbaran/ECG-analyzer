@@ -36,6 +36,8 @@ endif()
 
 FILE(GLOB ecg-analyzer_HEADERS *.h *.hpp)
 FILE(GLOB ecg-analyzer_SOURCES *.cpp)
+FILE(GLOB matrix_HEADERS matrix/*.h)
+FILE(GLOB matrix_SOURCES matrix/*.cpp)
 FILE(GLOB plots_HEADERS plots/*.h)
 FILE(GLOB plots_SOURCES plots/*.cpp)
 
@@ -64,6 +66,7 @@ set(LIBS ${LIBS} ${GSL_LIBRARIES} ${GSLCBLAS_LIBRARIES})
 
 add_subdirectory(wfdb)
 add_subdirectory(fft)
+add_subdirectory(spline)
 
 include_directories(${CMAKE_HOME_DIRECTORY} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
@@ -73,10 +76,10 @@ include_directories(plots)
 
 
 
-ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
+ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES} ${matrix_SOURCES}
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
 
-# TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb kissfft)
+# TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb kissfft alglib)
 TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS}
-  ${FFTW_LIBRARIES} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} wfdb kissfft)
+  ${FFTW_LIBRARIES} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} wfdb kissfft alglib)

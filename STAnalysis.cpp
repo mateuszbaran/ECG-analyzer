@@ -312,7 +312,7 @@ void STAnalysis::setParams(ParametersTypes& p)
 {
   auto algorithm = p.find("algorithm");
   if (algorithm != p.end()) {
-    setAnalizer(static_cast<AlgorithmType>(algorithm->second));
+    setAnalizer(static_cast<AlgorithmType>((int)algorithm->second));
     p.erase(algorithm);
   }
   
