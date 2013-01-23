@@ -3,6 +3,7 @@
 #include <qtextcodec.h>
 #include <QThread>
 #include <functional>
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -339,7 +340,7 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_intervals_table->setHorizontalHeaderItem(5, new QTableWidgetItem( "Description" ));
   
   i = 0;
-  for(const ECGST::Interval &it: intervals) {
+  BOOST_FOREACH(const ECGST::Interval &it, intervals) {
     ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.jpoint ).c_str() ));
     ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it.stpoint ).c_str() ) );
     ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it.length()) ));
@@ -357,7 +358,7 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_episodes_table->setHorizontalHeaderItem(1, new QTableWidgetItem("Episode end") );
   
   i = 0;
-  for(const ECGST::Episode &it: episodes) {
+  BOOST_FOREACH(const ECGST::Episode &it, episodes) {
     ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.start ).c_str() ));
     ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  it.end ).c_str() ));
     ++i;
