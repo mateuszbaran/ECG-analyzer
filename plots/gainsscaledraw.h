@@ -1,5 +1,5 @@
-#ifndef TIMESCALEDRAW_H
-#define TIMESCALEDRAW_H
+#ifndef GAINSSCALEDRAW_H
+#define GAINSSCALEDRAW_H
 
 #include <QWidget>
 
@@ -17,14 +17,14 @@
 #include <qwt_scale_draw.h>
 #endif
 
-class TimeScaleDraw : public QwtScaleDraw
+class GainScaleDraw : public QwtScaleDraw
 {
 public:
-    TimeScaleDraw(int);
-    ~TimeScaleDraw();
+    GainScaleDraw(float);
+    ~GainScaleDraw();
     QwtText label(double) const;
 private:
-    int frequency;
+    float invgain;
 };
 
-#endif // TIMESCALEDRAW_H
+#endif // GAINSSCALEDRAW_H

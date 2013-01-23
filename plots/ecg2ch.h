@@ -25,12 +25,13 @@ signals:
 public slots:
     void setSignal(ECGSignal *signal, ECGInfo *info);
     void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks);
-
+    void syncToggled(bool);
 private:
     EcgCh *ch1;
     EcgCh *ch2;
     PlotControl *control;
 
+    QToolButton *syncButton, *zoomInFirst, *zoomOutFirst, *zoomInSecond, *zoomOutSecond;
 };
 
 #endif // ECG2CH_H
