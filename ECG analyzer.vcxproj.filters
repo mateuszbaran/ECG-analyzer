@@ -45,6 +45,9 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Header Files\spuc">
+      <UniqueIdentifier>{7f550f10-74df-43dc-9e80-ef137be0e393}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -218,6 +221,12 @@
     <ClCompile Include="ECGBaselineRemoval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Snr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingAverage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -352,6 +361,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ECGBaselineRemoval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Snr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spuc\butterworth.h">
+      <Filter>Header Files\spuc</Filter>
+    </ClInclude>
+    <ClInclude Include="spuc\chebyshev.h">
+      <Filter>Header Files\spuc</Filter>
+    </ClInclude>
+    <ClInclude Include="spuc\complex.h">
+      <Filter>Header Files\spuc</Filter>
+    </ClInclude>
+    <ClInclude Include="spuc\iir_1st.h">
+      <Filter>Header Files\spuc</Filter>
+    </ClInclude>
+    <ClInclude Include="spuc\iir_2nd.h">
+      <Filter>Header Files\spuc</Filter>
+    </ClInclude>
+    <ClInclude Include="spuc\spuc.h">
+      <Filter>Header Files\spuc</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingAverage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
