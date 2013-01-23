@@ -8,6 +8,7 @@
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
 #include "DFAAnalyzer.h"
+#include "GeometricAnalysis.h"
 
 #include "wfdb/wfdb.h"
 
@@ -24,6 +25,7 @@ ECGController::ECGController (void) :
   hrt_module(new HRTAnalyzer()),
   waves_module(new QRSPointsDetector()),
   hrv1_module(new HRV1Analyzer()),
+  hrv2_module(new GeometricAnalysis()),
   st_interval_module(new STAnalysis()),
   computation(NULL),
   analysisCompl(false)
@@ -173,7 +175,7 @@ void ECGController::runHRV2 ()
   {
     runRPeaks();
   }
-  hrv2_module->runModule(r_peaks_data, hrv2_data);
+  hrv2_module->runModule(ecg_info,r_peaks_data, hrv2_data);
   hrv2_module->run_ = true;
   LOG_END
 }
@@ -464,7 +466,10 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
 			runHRV1();
 			HANDLE_INTERRUPTION
-			statusUpdate("HRV1 analysis completed; ST segment analysis ongoing.");
+			statusUpdate("HRV1 analysis completed; HRV2 analysis ongoing.");
+			runSTInterval();
+			HANDLE_INTERRUPTION
+			statusUpdate("HRV2 analysis completed; ST segment analysis ongoing.");
 			runSTInterval();
 			HANDLE_INTERRUPTION
 			statusUpdate("ST segment analysis completed; QRS analysis ongoing.");

@@ -489,8 +489,7 @@ ECGSignalChannel QRSPointsDetector::averageFilter(ECGSignalChannel * signal){
 
 	for (int i=6;i<limit;i++){
 		sumC1 = sumC1 - gsl_vector_get (sig->signal, i-6) + gsl_vector_get (sig->signal, i+5); 
-		gsl_vector_set(tmpSig->signal, i-1, sumC1/11);					 
-
+		gsl_vector_set(tmpSig->signal, i-1, sumC1/11);
 	}
  	
 	gsl_vector_set(tmpSig->signal, signalSize-1, sumC1/11);

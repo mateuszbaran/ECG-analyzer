@@ -873,7 +873,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -924,7 +924,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="title">
@@ -952,7 +952,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">

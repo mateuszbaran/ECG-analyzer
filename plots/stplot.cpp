@@ -178,4 +178,3 @@ void StPlot::resizeEvent(QResizeEvent* e)
   }
   replot();
 }
-
