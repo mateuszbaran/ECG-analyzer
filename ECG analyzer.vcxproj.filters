@@ -387,6 +387,9 @@
     <ClInclude Include="MovingAverage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Chebyshev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

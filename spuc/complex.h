@@ -21,7 +21,7 @@
 #ifndef CMPLX_D
 #define CMPLX_D
 #include <cstdlib>
-#include <spuc.h>
+#include <spuc/spuc.h>
 #include <cmath>
 namespace SPUC {
 //! \brief Spuc template complex class.

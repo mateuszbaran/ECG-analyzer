@@ -1,6 +1,7 @@
 #include "ECGBaselineRemoval.h"
 #include "MovingAverage.h"
 #include "Butterworth.h"
+#include "Chebyshev.h"
 #include "Filter.h"
 #include "SignalPreprocessor.h"
 #include "math.h"
@@ -46,7 +47,12 @@ void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo &
 */
 void ECGBaselineRemoval::setParams(ParametersTypes &params)
 {
-	this -> baselineRemovalMethod = (BASELINE_REMOVAL_METHOD)params["baseline_removal_method"];
+	if(params["baseline_removal_method"] == 1)
+		this->baselineRemovalMethod = MOVING_AVERAGE;
+	else if(params["baseline_removal_method"] == 2)
+		this->baselineRemovalMethod = BUTTERWORTH;
+	else if(params["baseline_removal_method"] == 3)
+		this->baselineRemovalMethod = CHEBYSHEV;
 
 	switch(this->baselineRemovalMethod)
 	{
@@ -80,15 +86,19 @@ void ECGBaselineRemoval::movingAverageBaselineRemoval(ECGSignalChannel &inputSig
 void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal,
 													const ECGInfo &ecgInfo, int order, double cutoffFrequency, double attenuation)
 {
-	int sampleFreq = ecgInfo.channel_one.frequecy;
 	Butterworth * butterworth = new Butterworth();
-	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, cutoffFrequency, sampleFreq, 0);
+	butterworth->spuc_butterworth(cutoffFrequency, order, attenuation);
 	
 	Filter * filter = new Filter();
-	filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2);
+	//filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2);
 }
 
 void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, 
 												  const ECGInfo &ecgInfo, int order, double cutoffFrequency, double ripple)
 {
+	Chebyshev * chebyshev = new Chebyshev();
+	chebyshev->spuc_chebyshev(cutoffFrequency, order, ripple);
+	
+	Filter * filter = new Filter();
+	//filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2)
 }

@@ -18,10 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#include <spuc.h>
-#include <complex.h>
-#include <iir_1st.h>
-#include <iir_2nd.h>
+#include <spuc/spuc.h>
+#include <spuc/complex.h>
+#include <spuc/iir_1st.h>
+#include <spuc/iir_2nd.h>
 namespace SPUC {
 /*! 
   \addtogroup iir IIR filters

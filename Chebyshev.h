@@ -1,14 +1,14 @@
 #pragma once
 #include "ModulesMethods.h"
 #include "ModulesInterfaces.h"
-#include "spuc/butterworth.h"
+#include "spuc/chebyshev.h"
 
-class Butterworth
+class Chebyshev
 {
 public:
-	Butterworth();
-	~Butterworth();
+	Chebyshev(){};
+	~Chebyshev(){};
 
-	SPUC::butterworth<double> spuc_butterworth(double cutoff_frequency, long order, double attenuation);
+	SPUC::chebyshev<double> spuc_chebyshev(double cutoff_frequency, long order, double ripple=3);
 	//std::vector<std::vector<double>> filterDesign(int order, int cutoffFreq, int sampleFreq, int type);
 };
