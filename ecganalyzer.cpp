@@ -3,6 +3,7 @@
 #include <qtextcodec.h>
 #include <QThread>
 #include <functional>
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -13,10 +14,6 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 	ui.setupUi(this);
-    
-//#ifndef DEVELOPMENT
-//    ui.run_st_analysis_button->setProperty('visible', false);
-//#endif
 }
 
 ECGanalyzer::~ECGanalyzer()
@@ -82,6 +79,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		}
 
         _ECGcontroller.runECGBaseline();
+//        _ECGcontroller.runRPeaks();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
 
@@ -294,8 +292,10 @@ void ECGanalyzer::on_actionZatrzymajPonownaAnalizeSygnalu_triggered()
 
 void ECGanalyzer::updateAnalysisStatus(std::string status)
 {
-	//TODO
-	ui.statusBar->setStatusTip(QString("%s,status"));
+	QMetaObject::invokeMethod(ui.statusBar,
+		"showMessage",
+		Qt::QueuedConnection,
+		Q_ARG(QString, QString::fromStdString(status)));
 }
 
 void ECGanalyzer::updateRunButtons( bool analysisOngoing )
@@ -324,12 +324,14 @@ void ECGanalyzer::updateSTIntervalTab()
 {
   const ECGST & st_data = _ECGcontroller.st_data;
   const ECGChannelInfo & info = _ECGcontroller.ecg_info.channel_two;
-  
   std::vector<ECGST::Interval> intervals = st_data.getIntervals();
+  std::vector<ECGST::Episode> episodes = st_data.getEpisodes();
+  int i = 0;
+  
+  //Set Intervals table
   ui.st_intervals_table->clear();
   ui.st_intervals_table->setColumnCount(6);
-  ui.st_intervals_table->setRowCount(intervals.size());
-  
+  ui.st_intervals_table->setRowCount(intervals.size());  
   ui.st_intervals_table->setHorizontalHeaderItem(0, new QTableWidgetItem( "ST onset" ));
   ui.st_intervals_table->setHorizontalHeaderItem(1, new QTableWidgetItem( "ST end" ));
   ui.st_intervals_table->setHorizontalHeaderItem(2, new QTableWidgetItem( "Interval length [ms]" ));
@@ -337,35 +339,33 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_intervals_table->setHorizontalHeaderItem(4, new QTableWidgetItem( "Offset" ));
   ui.st_intervals_table->setHorizontalHeaderItem(5, new QTableWidgetItem( "Description" ));
   
-  auto it = intervals.begin();
-  int i = 0;
-  for(; it != intervals.end(); ++it, ++i) {
-    ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it->jpoint ).c_str() ));
-    ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it->stpoint ).c_str() ) );
-    ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it->length()) ));
-    ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it->slope) ));
-    ui.st_intervals_table->setItem(i,4, new QTableWidgetItem( QString::number(it->offset) ));
-    ui.st_intervals_table->setItem(i,5, new QTableWidgetItem( it->description.c_str() ));
+  i = 0;
+  BOOST_FOREACH(const ECGST::Interval &it, intervals) {
+    ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.jpoint ).c_str() ));
+    ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it.stpoint ).c_str() ) );
+    ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it.length()) ));
+    ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it.slope) ));
+    ui.st_intervals_table->setItem(i,4, new QTableWidgetItem( QString::number(it.offset) ));
+    ui.st_intervals_table->setItem(i,5, new QTableWidgetItem( it.description.c_str() ));
+    ++i;
   }
   
-  std::vector<ECGST::Episode> episodes = st_data.getEpisodes();
+  //Set Episodes table
   ui.st_episodes_table->clear();
   ui.st_episodes_table->setColumnCount(2);
   ui.st_episodes_table->setRowCount(episodes.size());
   ui.st_episodes_table->setHorizontalHeaderItem(0, new QTableWidgetItem("Episode begin") );
   ui.st_episodes_table->setHorizontalHeaderItem(1, new QTableWidgetItem("Episode end") );
   
-  auto itt = episodes.begin();
   i = 0;
-  for(; itt != episodes.end(); ++itt, ++i) {
-    ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( itt->start ).c_str() ));
-    ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  itt->end ).c_str() ));
+  BOOST_FOREACH(const ECGST::Episode &it, episodes) {
+    ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.start ).c_str() ));
+    ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  it.end ).c_str() ));
+    ++i;
   }
   
-  ui.st_plot->setSignal(_ECGcontroller.raw_signal.channel_one, _ECGcontroller.ecg_info.channel_one, _ECGcontroller.st_data);
-  
-  auto _section = st_data.getIntervalBeginAndEnd(0);
-  ui.st_plot->zoomX(_section.first, _section.second);
+  ui.st_plot->setSignal(_ECGcontroller.filtered_signal, _ECGcontroller.ecg_info.channel_one, _ECGcontroller.st_data);
+  ui.st_plot->showInterval(_ECGcontroller.st_data.getIntervalAt(0));
   
 }
 

@@ -2,6 +2,7 @@
 
 #include <string>
 
+
 struct ECGChannelInfo
 {
 public:
@@ -20,6 +21,7 @@ public:
   /* in msec */
   unsigned int signal_duration;
 
+  static std::string sampleToTime(int sample, int frequency);
   std::string sampleToTime(int sample) const;
 };
 

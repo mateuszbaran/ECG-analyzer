@@ -1,9 +1,9 @@
 #include "ECGController.h"
 
-#include "BaselineRemoval.h"
-#include "RPeaksDetector.h"
+#include "ECGBaselineRemoval.h"
 #include "HRV1Analyzer.h"
 #include "DFAAnalyzer.h"
+#include "RPeaksDetector.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
 
@@ -16,14 +16,14 @@
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
 ECGController::ECGController (void) :
-  ecg_baseline_module(new BaselineRemoval()),
+  ecg_baseline_module(new ECGBaselineRemoval()),
   rpeaks_module(new RPeaksDetector()),
   hrv_dfa_module(new DFAAnalyzer()),
+  waves_module(new QRSPointsDetector()),
   hrv1_module(new HRV1Analyzer()),
   st_interval_module(new STAnalysis()),
-  waves_module(new QRSPointsDetector()),
-  analysisCompl(false),
-  computation(NULL)
+  computation(NULL),
+  analysisCompl(false)
 {
   TRI_LOG_STR("ECGController created, 20:51 17-12-2012");
   //TODO: create modules objects
@@ -212,13 +212,13 @@ void ECGController::runSTInterval ()
   }
   if (!rpeaks_module->run_)
   {
-    //runRPeaks();
+    runRPeaks();
   }
   if (!waves_module->run_)
   {
     runWaves();
   }
-  st_interval_module->runModule(r_peaks_data, waves_data, raw_signal.channel_one, ecg_info, st_data);
+  st_interval_module->runModule(r_peaks_data, waves_data, filtered_signal, ecg_info, st_data);
   st_interval_module->run_ = true;
   LOG_END
 }
@@ -305,21 +305,24 @@ void ECGController::setHRV1NotRun()
 void ECGController::setHRV2NotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv2_module->run_ = false;
+  if(hrv2_module)
+	hrv2_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setHRVDFANotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrv_dfa_module->run_ = false;
+  if(hrv_dfa_module)
+	hrv_dfa_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setQRSClassNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  qrs_class_module->run_ = false;
+  if(qrs_class_module)
+	qrs_class_module->run_ = false;
   setHRTNotRun();
   LOG_END
 }
@@ -334,14 +337,16 @@ void ECGController::setSTIntervalNotRun()
 void ECGController::setTwaveAltNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  t_wave_alt_module->run_ = false;
+  if(t_wave_alt_module)
+	t_wave_alt_module->run_ = false;
   LOG_END
 }
 
 void ECGController::setHRTNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  hrt_module->run_ = false;
+  if(hrt_module)
+	hrt_module->run_ = false;
   LOG_END
 }
 
