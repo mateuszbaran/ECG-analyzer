@@ -6,11 +6,14 @@ INCLUDE(CheckLibraryExists)
 # Additional CMake modules for 3rd party library checks reside here
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_admin")
 
-find_package(Boost 1.48 REQUIRED)
+set(Boost_USE_MULTITHREADED ON)
+
+find_package(Boost 1.48 REQUIRED COMPONENTS thread system)
 find_package(Qt4 4.8 REQUIRED)
 find_package(Qwt 6 REQUIRED)
 find_package(gsl REQUIRED)
 find_package(fftw 3.3 REQUIRED)
+find_package(Threads REQUIRED)
 
 #check if some platform-specific libraries are needed for linking client and server
 CHECK_LIBRARY_EXISTS(rt shm_open "" HAVE_RT_LIB)
@@ -50,7 +53,9 @@ INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 # Controls behaviour of logger - possible values: -DCLEANTLOG, -DFTLOG, -DETLOG, -DTLOG
-ADD_DEFINITIONS("-DCLEANTLOG")
+ADD_DEFINITIONS("-DFTLOG=log")
+
+# ADD_DEFINITIONS("-DDEVELOPMENT")
 
 include_directories(${GSL_INCLUDE_DIRS} ${GSLCBLAS_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES} ${GSLCBLAS_LIBRARIES})
@@ -63,9 +68,10 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${QWT_INCLUDE_DIR})
 include_directories(plots)
 
-link_libraries(${LIBS})
+
 
 ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
-TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS} ${FFTW_LIBRARIES} wfdb)
+TARGET_LINK_LIBRARIES(ecg-analyzer ${QT_LIBRARIES} ${QWT_LIBRARY} ${LIBS}
+  ${FFTW_LIBRARIES} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} wfdb)

@@ -49,14 +49,14 @@ public:
 
   private:
 
-  //SD parameters
+  //SD parameters [ms]
   double SD1;
   double SD2;
 
-  //TINN parameter
+  //TINN parameter [ms]
   double TINN;
 
-  // begin point for base of a triangle approximating the NN (TINN) on histogram (x-axis)
+  // begin point for base of a triangle approximating the NN (TINN) on histogram (x-axis) 
   double M;
 
   // end point for base of a triangle approximating the NN (TINN) on histogram (x-axis)
@@ -72,7 +72,7 @@ public:
   double X;
 
   // length of histogram bin (1/128 second)
-  double HistogramBinLength; // (ms)
+  double HistogramBinLength; // [ms]
 
   //data for plotting histogram
   IntSignal histogram_x;

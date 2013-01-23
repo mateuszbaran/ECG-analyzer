@@ -10,20 +10,20 @@ GeometricAnalysis::~GeometricAnalysis (void)
 
 void GeometricAnalysis::runModule(const ECGInfo &info, const ECGRs &ecgRs, ECGHRV2 &ecgHRV2)
 {
-
-	#ifdef DEBUG
+	#ifdef DEVELOPMENT
 		this->rpeaks = MakeRRsignal();
-	#endif
-	#ifndef DEBUG
+	#else
 		this->rpeaks = ecgRs;
 		this->SamplingInterval = (double)info.channel_one.frequecy;
 	#endif
+
 	PrepareRRSignal();
 	MakeHistogramAndGeometricalParams();
 	MakePoincareAndSDParams();
 	SetHRV2Params(ecgHRV2);
 }
 
+// "histogram_bin_length" - szerokosc slupka histogramu
 void GeometricAnalysis::setParams(ParametersTypes &parameterTypes)
 {
 	if(parameterTypes.find("histogram_bin_length") != parameterTypes.end())
@@ -34,6 +34,7 @@ void GeometricAnalysis::setParams(ParametersTypes &parameterTypes)
 
 }
 
+// funkcja przeksztalca wektor numerow probek z zalamkami R na wektor interwalow RR
 void GeometricAnalysis::PrepareRRSignal()
 {
 
@@ -42,15 +43,13 @@ void GeometricAnalysis::PrepareRRSignal()
 	RR_intervals = OtherSignal(new WrappedVector);
 	RR_intervals->signal = gsl_vector_alloc(rpeaks_size-1);
 
-	#ifdef DEBUG
+	#ifdef DEVELOPMENT
 		for(int i = 0; i < rpeaks_size-1; i++) 
 		{
 			int Value = gsl_vector_int_get (rpeaks.GetRs()->signal, i);
 			gsl_vector_set(RR_intervals->signal, i, Value);
 		}
-	#endif
-
-	#ifndef DEBUG
+	#else
 		for(int i = 0; i < rpeaks_size-1; i++) 
 		{
 			int Value1 = gsl_vector_int_get (rpeaks.GetRs()->signal, i);
@@ -61,8 +60,10 @@ void GeometricAnalysis::PrepareRRSignal()
 
 		gsl_vector_scale(RR_intervals->signal,(double)((1/SamplingInterval)*1000));
 	#endif
+	
 }
 
+// funkcja oblicza punkty wykresu histogramu, punkty trojkata aproksymyjacego histogram, parametry: indeks trojkatny, indeks TINN 
 void GeometricAnalysis::MakeHistogramAndGeometricalParams()
 {
 
@@ -99,7 +100,9 @@ void GeometricAnalysis::MakeHistogramAndGeometricalParams()
 	unsigned int X = gsl_vector_int_max_index(Histogram->signal);
 
 	double minimum = 0;
-	double globalminimum = 10000000000000;
+	//double globalminimum = 10000000000000;
+	double globalminimum = 0;
+	bool setglobalminimum = false;
 	int N = 0;
 	int M = 0;
 	double x[3] = { N, X, M };
@@ -137,7 +140,13 @@ void GeometricAnalysis::MakeHistogramAndGeometricalParams()
 				minimum = minimum + (double)(HistogramValue*HistogramValue);
 			}
 
-			if(minimum < globalminimum)
+			if(!setglobalminimum)
+			{
+				globalminimum = minimum;
+				setglobalminimum=true;
+			}
+
+			if(minimum <= globalminimum)
 			{
 				globalminimum=minimum;
 				N=index_N;
@@ -167,6 +176,7 @@ void GeometricAnalysis::MakeHistogramAndGeometricalParams()
 
 }
 
+// funkcja oblicza punkty wykresu Poincare oraz parametry SD1 i SD2
 void GeometricAnalysis::MakePoincareAndSDParams()
 {
 	unsigned int RR_intervals_size = RR_intervals->signal->size;
@@ -209,6 +219,7 @@ void GeometricAnalysis::MakePoincareAndSDParams()
 	this->SD2 = SD2;
 }
 
+//funckja przesyla wszystkie dane do obiektu klasy ECGHRV2
 void GeometricAnalysis::SetHRV2Params(ECGHRV2 &hrv2)
 {
 	hrv2.SetSD1(this->SD1);
@@ -229,7 +240,7 @@ void GeometricAnalysis::SetHRV2Params(ECGHRV2 &hrv2)
 
 }
 
-
+//funkcja tworzaca testowy wektor interwalow RR
 ECGRs GeometricAnalysis::MakeRRsignal()
 {
 	int RRsignal[] = {

@@ -12,7 +12,7 @@
 #include <gsl/gsl_statistics.h>
 
 
-#define DEBUG
+//#define DEVELOPMENT
 /**
  * @class Class for parameters created in HRV2 module
  */
@@ -24,6 +24,7 @@ public:
 
   void runModule( const ECGInfo &, const ECGRs &, ECGHRV2 &);
   
+
   void setParams(ParametersTypes &);
 
   void PrepareRRSignal();
@@ -34,11 +35,11 @@ public:
 
   private:
 
-  //SD parameters
+  //SD parameters [ms]
   double SD1;
   double SD2;
 
-  //TINN parameter
+  //TINN parameter [ms]
   double TINN;
 
   // begin point for base of a triangle approximating the NN (TINN) on histogram (x-axis)
@@ -57,13 +58,13 @@ public:
   double X;
 
   // length of histogram bin (1/128 second)
-  double HistogramBinLength; // (ms)
+  double HistogramBinLength; // [ms]
 
-  //data for plotting histogram
+  //data for plotting histogram 
   IntSignal histogram_x;
   IntSignal histogram_y;
   
-  //data for plotting Poincare
+  //data for plotting Poincare [ms]
   IntSignal poincare_x;
   IntSignal poincare_y;
 
@@ -88,9 +89,9 @@ public:
   OtherSignal RR_intervals;
 
   /**
-  *  RR SamplingInterval
+  *  RR SamplingInterval [Hz]
   */
-  double SamplingInterval;
+  double SamplingInterval; 
 
 };
 
