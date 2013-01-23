@@ -73,7 +73,7 @@ class QRSClassModule : public GlobalInterface
 {
 public:
   QRSClassModule() : GlobalInterface() {}
-  virtual void runModule (const ECGWaves &, const ECGSignal &, const ECGInfo &, ECGClasses &) = 0;
+  virtual void runModule (const ECGWaves &, const ECGSignal &, const ECGInfo &, QRSClass &) = 0;
 };
 
 class STIntervalModule : public GlobalInterface
