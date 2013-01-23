@@ -170,11 +170,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plots\ecg2ch.cpp" />
     <ClCompile Include="plots\ecgch.cpp" />
+    <ClCompile Include="plots\gainsscaledraw.cpp" />
     <ClCompile Include="plots\hrt.cpp" />
     <ClCompile Include="plots\plothrvtriangle.cpp" />
     <ClCompile Include="plots\plotpoincare.cpp" />
+    <ClCompile Include="plots\scrollbar.cpp" />
+    <ClCompile Include="plots\scrollzoomer.cpp" />
     <ClCompile Include="plots\stplot.cpp" />
     <ClCompile Include="plots\synczoomer.cpp" />
+    <ClCompile Include="plots\timescaledraw.cpp" />
     <ClCompile Include="QRSClass.cpp" />
     <ClCompile Include="QRSPointsDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
@@ -328,6 +332,10 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="plots\gainsscaledraw.h" />
+    <ClInclude Include="plots\scrollbar.h" />
+    <ClInclude Include="plots\scrollzoomer.h" />
+    <ClInclude Include="plots\timescaledraw.h" />
     <ClInclude Include="QRSClass.h" />
     <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />

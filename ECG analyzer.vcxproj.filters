@@ -263,6 +263,18 @@
     <ClCompile Include="spline\specialfunctions.cpp">
       <Filter>Source Files\spline</Filter>
     </ClCompile>
+    <ClCompile Include="plots\gainsscaledraw.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\scrollbar.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\scrollzoomer.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\timescaledraw.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -437,6 +449,18 @@
     </ClInclude>
     <ClInclude Include="spline\stdafx.h">
       <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\gainsscaledraw.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\scrollbar.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\scrollzoomer.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\timescaledraw.h">
+      <Filter>Header Files\plots</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
