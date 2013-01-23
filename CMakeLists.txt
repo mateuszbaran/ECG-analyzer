@@ -36,6 +36,8 @@ endif()
 
 FILE(GLOB ecg-analyzer_HEADERS *.h *.hpp)
 FILE(GLOB ecg-analyzer_SOURCES *.cpp)
+FILE(GLOB matrix_HEADERS matrix/*.h)
+FILE(GLOB matrix_SOURCES matrix/*.cpp)
 FILE(GLOB plots_HEADERS plots/*.h)
 FILE(GLOB plots_SOURCES plots/*.cpp)
 
@@ -74,7 +76,7 @@ include_directories(plots)
 
 
 
-ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES}
+ADD_EXECUTABLE(ecg-analyzer ${ecg-analyzer_SOURCES} ${plots_SOURCES} ${matrix_SOURCES}
     ${ecg-analyzer_HEADERS_MOC} ${ecg-analyzer_FORMS_HEADERS} ${ecg-analyzer_AboutWindow_FORMS_HEADERS} ${ecg-analyzer_RESOURCES_RCC} )
 
 

@@ -80,23 +80,33 @@ void DFAAnalyzer::calcDFA()
 	dfa_x = OtherSignal(new WrappedVector);
 	dfa_x->signal = gsl_vector_alloc(sigSize - 1);
 
-	for(int i = 0; i<sigSize - 2; i++)
+	for(int i = 0; i<sigSize - 1; i++)
 	{
-           for(int j = 0; j<sigSize; j+=i)
+			double temp2 = 0;
+           for(int j = 0, l = 0; j<sigSize; j+=i+2, l++)
 	       {
-                double temp2 = 0;
-                for(int k = 0; k < i + 2 && j+k<sigSize; j++)
+                
+                for(int k = 0; k < i + 2 && j+k<sigSize; k++)
 	            {
-                    double temp1 = rr_integrated[j + k] - (trends[i][0].a * (j + k) + trends[i][0].b);
-                    temp2 += (temp1*temp1)/(sigSize);
+                    double temp1 = rr_integrated[j + k] - (trends[i][l].a * (j + k) + trends[i][l].b);
+                    temp2 += temp1*temp1;
+					#ifdef MYDEBUG
+					/*	qDebug() << "rr_integrated[" << j + k << "]" << endl;
+						qDebug() << "trends[" << i << "][" << l << "].a:" << trends[i][l].a  << endl;
+						qDebug() << "trends[" << i << "][" << l << "].b:" << trends[i][l].b  << endl;
+						qDebug() << "temp1: " << temp1 << endl;
+						qDebug() << "temp1*temp1: " <<  temp1*temp1 << endl;
+						qDebug() << "temp2: " << temp2 << endl;*/
+					#endif
                 }
-                fluctuations[i] = sqrt(temp2);
+           }
+		                   fluctuations[i] = sqrt(temp2/sigSize);
 				gsl_vector_set(dfa_y->signal, i, fluctuations[i]);
 				gsl_vector_set(dfa_x->signal, i, i+2);
 				#ifdef MYDEBUG
+					qDebug() << "temp2: " << temp2 << endl;
 					qDebug() << "fluctuations[" << i << "]" << fluctuations[i] << endl;
 				#endif
-           }
 	}
 	#ifdef MYDEBUG
 		qDebug() << "fluctuations[sigSize - 3]: " << fluctuations[sigSize - 3]  << endl;
@@ -104,7 +114,7 @@ void DFAAnalyzer::calcDFA()
 		qDebug() << "log((double)(fluctuations[sigSize - 3] - fluctuations[0])): " << log((double)(fluctuations[sigSize - 3] - fluctuations[0]))  << endl;
 		qDebug() << "log((double)(sigSize - 1)): " << log((double)(sigSize - 1))  << endl;
 	#endif
-	double alpha = log((double)(fluctuations[sigSize - 3] - fluctuations[0]))/log((double)(sigSize - 1));
+	double alpha = log((double)(fluctuations[sigSize - 2] - fluctuations[0]))/log((double)(sigSize - 1));
 	TRI_LOG(alpha);
 	#ifdef DEBUG
 		qDebug() << "Alpha: " << alpha  << endl;
@@ -169,17 +179,25 @@ trend_coefs** DFAAnalyzer::calc_all_trends(double* rr_integrated, int length)
 		for(int j = 0, k = 0; j < length; j += i, k++)
 		{
             int w_length;
-			if(j + i < length)
+			if(j + i <= length)
 			{
 				w_length = i;
 			}
 			else
 			{
 				w_length = length - i;
+				if(w_length>i)
+				{
+					w_length = length - j;
+				}
 			}
             trend_coefs* t = calc_trend(rr_integrated, j, w_length);
 		    trends[i-2][k].a = t->a;
 		    trends[i-2][k].b = t->b;
+			#ifdef MYDEBUG
+				qDebug() << "trends[" << i-2 << "].[" << k << "].a: " << t->a  << endl;
+				qDebug() << "trends[" << i-2 << "].[" << k << "].b: " << t->b  << endl;
+			#endif
 		    
 		}
 	}
@@ -192,24 +210,7 @@ trend_coefs* DFAAnalyzer::calc_trend(double* rr_integrated, int start, int w_len
 	//TRI_LOG_STR(__FUNCTION__);
     trend_coefs* t = new trend_coefs;
 
-    double mean_x = (w_length + 1)/1;
-    double mean_y = 0.0;
-    int x;
-    for(x = start; x < start + w_length; x++)
-    {
-        mean_y += rr_integrated[x] / w_length;
-    }
-    double ss_xx = 0.0, ss_xy = 0.0;
-    for(x = start; x < start + w_length; x++)
-    {
-        ss_xx += x*x;
-        ss_xy += x*rr_integrated[x];
-    }
-    ss_xx -= w_length*mean_x*mean_x;
-    ss_xy -= w_length*mean_x*mean_y;
-    t->b = ss_xy/ss_xx;
-    t->a = mean_y - (mean_x*t->b);
-	/*double S, Sx, Sy, Sxx, Sxy;
+	double S, Sx, Sy, Sxx, Sxy;
 	int x;
 	S = w_length;
 	Sx = 0.0;
@@ -224,13 +225,18 @@ trend_coefs* DFAAnalyzer::calc_trend(double* rr_integrated, int start, int w_len
 		Sxx += x*x;
 		Sxy += x*rr_integrated[x];
     }
-	t->a = (S*Sxy - Sx*Sy)/(S*Sxx-Sx*Sx);
-	t->b = (Sxx*Sy - Sx*Sxy)/(S*Sxx-Sx*Sx);*/
+	if(S*Sxx-Sx*Sx == 0)
+	{
+		t->a = 0;
+		t->b = 0;
+	}
+	else{
+		t->a = (S*Sxy - Sx*Sy)/(S*Sxx-Sx*Sx);
+		t->b = (Sxx*Sy - Sx*Sxy)/(S*Sxx-Sx*Sx);
+	}
 	#ifdef MYDEBUG
 		qDebug() << "start: " << start  << endl;
 		qDebug() << "w_length: " << w_length  << endl;
-		qDebug() << "t->a: " << t->a  << endl;
-		qDebug() << "t->b: " << t->b  << endl;
 	#endif
 	//LOG_END;
     return t;
