@@ -4,7 +4,6 @@
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
 double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd) {
-
     ECGSignalChannel sig;
     sig = *signal;
     auto sigSize = sig->signal->size;
