@@ -188,7 +188,7 @@
                     <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderVisible">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </attribute>
                    <attribute name="verticalHeaderCascadingSectionResizes">
                     <bool>false</bool>
@@ -1475,7 +1475,7 @@
                 <bool>false</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
-                <bool>false</bool>
+                <bool>true</bool>
                </attribute>
                <row>
                 <property name="text">
@@ -1599,7 +1599,7 @@
                      <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderVisible">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </attribute>
                     <attribute name="verticalHeaderCascadingSectionResizes">
                      <bool>false</bool>
@@ -1633,6 +1633,21 @@
                     <row>
                      <property name="text">
                       <string>P_end</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Number of T_WAVE_ALT</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Percent of T_WAVE_ALT</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Is T_WAVE_ALT detected?</string>
                      </property>
                     </row>
                     <column>
@@ -1826,7 +1841,7 @@
                    <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderVisible">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </attribute>
                   <attribute name="verticalHeaderCascadingSectionResizes">
                    <bool>false</bool>
