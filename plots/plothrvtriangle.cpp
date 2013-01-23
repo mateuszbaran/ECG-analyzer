@@ -67,10 +67,10 @@ void PlotHRVTriangle::setData(ECGHRV2 &data)
 {
 	gsl_vector_int *hx = data.GetHistogram_x()->signal;
 	gsl_vector_int *hy = data.GetHistogram_y()->signal;
-	double x = data.GetTriple_index_x();
-	double y = data.GetTriple_index_y();
-	double n = 200.0;
-	double m = 800.0;
+	double x = data.GetX();
+	double y = data.GetY();
+	double n = data.GetN();
+	double m = data.GetM();
 	int size = int(hx->size); // == hy.size
 	
 	QVector<QPointF> peaks;
