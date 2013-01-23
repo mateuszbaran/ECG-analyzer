@@ -302,6 +302,12 @@
     <ClCompile Include="HRTAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Snr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingAverage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -496,6 +502,12 @@
       <Filter>Header Files\matrix</Filter>
     </ClInclude>
     <ClInclude Include="HRTAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Snr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingAverage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
