@@ -254,13 +254,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I."</Command>
     </CustomBuild>
-<<<<<<< HEAD
-    <ClInclude Include="BaselineRemoval.h" />
     <ClInclude Include="DFAAnalyzer.h" />
-=======
     <ClInclude Include="ECGBaselineRemoval.h" />
     <ClInclude Include="Butterworth.h" />
->>>>>>> master
     <ClInclude Include="ECGChannelInfo.h" />
     <ClInclude Include="ECGClasses.h" />
     <ClInclude Include="ECGController.h" />
