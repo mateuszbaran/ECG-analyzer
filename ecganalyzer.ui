@@ -608,13 +608,13 @@
                     </sizepolicy>
                    </property>
                    <item>
-                    <property name="text">
-                     <string>Pan Tompkins</string>
-                    </property>
+                       <property name="text">
+                           <string>Hilbert</string>
+                       </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Hilbert</string>
+                     <string>Pan Tompkins</string>
                     </property>
                    </item>
                   </widget>

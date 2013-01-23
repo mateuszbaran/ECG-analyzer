@@ -347,7 +347,7 @@ void ECGanalyzer::setRpeaksParams()
 {
 	ParametersTypes params;
 	params["detection_method"] = ui.comboBoxRPeaksDetectionMethod->currentIndex();
-	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
 	{
 		if(!ui.checkBoxRPeaksDetectThresholdAutomatically->isChecked())
 		{
@@ -358,7 +358,7 @@ void ECGanalyzer::setRpeaksParams()
 			params["window_size"] = ui.doubleSpinBoxRPeaksWindowSize->value();
 		}
 	}
-	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
 	{
 		//TODO Hilbert parameters
 	}

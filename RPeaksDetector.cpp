@@ -5,7 +5,7 @@
 
 RPeaksDetector::RPeaksDetector()
 {
-	this->detectionMethod = PAN_TOMPKINS;
+    this->detectionMethod = HILBERT;
 	this->panTompkinsMovinghWindowLenght = 0;
 	this->panTompkinsThershold = 0;
 	this->customParameters = false;
@@ -56,11 +56,11 @@ void RPeaksDetector::setParams(ParametersTypes &parameterTypes)
 		int method = (int)parameterTypes["detection_method"];
 		if(method == 0)
 		{
-			this->detectionMethod = PAN_TOMPKINS;
+			this->detectionMethod = HILBERT;
 		}
 		else if(method == 1)
 		{
-			this->detectionMethod = HILBERT;
+            this->detectionMethod = PAN_TOMPKINS;
 		}
 		else
 		{
