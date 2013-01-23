@@ -261,9 +261,6 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 \label{sec:hrv2}
 
 
-\subsection{HRV2}
-\label{sec:hrv2}
-
 Autor: Krzysztof Farganus
 
 
@@ -280,7 +277,7 @@ Dane przyjmowane przez moduł:
 Dane zwracane przez moduł:
 \begin{itemize}
 \item wykresu histogramu 
-\item wskaĽnik TINN 
+\item wskaźnik TINN 
 \item Indeks Trójkątny
 \item wykres Poincare wraz z parametrami SD1 i SD2
 \end{itemize}
@@ -289,7 +286,7 @@ Dane zwracane przez moduł:
 \label{sec:hrv2:papers}
 
 Techniki geometryczne służą do przedstawienia długookresowej zmienności
-rytmu serca. Są łatwe do uzyskania, ponieważ bazują na aproksymacji
+rytmu serca \cite{hrv2-pl}. Są łatwe do uzyskania, ponieważ bazują na aproksymacji
 histogramu trójkątem. Szerokość przedziałów klasowych histogramu ma
 tutaj kluczowe znaczenie, gdyż jej wartość wpływa na rezultaty metod
 geometrycznych. Głównie stosowany jest zakres wynoszący 7.8125 ms
@@ -321,7 +318,7 @@ SD1 oraz SD2, odpowiadające odchyleniom standardowym. Pierwszy charakteryzuje
 rozkład punktów w poprzek linii identyczności, natomiast drugi wzdłuż
 tej linii.
 \end{itemize}
-Algorytm obliczania wskaźnika TINN
+\textbf{Algorytm obliczania wskaźnika TINN \cite{hrv2-eng}}
 
 Aby obliczyć parametr TINN, czyli wyznaczyć wartości punktów N i M
 należy opracować funkcję multiliniową q(t) o postaci:
@@ -352,7 +349,7 @@ D(t)^{2}
 \end{equation}
 
 
-natomiast dla $t\:\epsilon\left\langle 0,N\right\rangle 0>$ wygląda
+natomiast dla $t\:\epsilon\left\langle 0,N\right\rangle$ wygląda
 następująco: 
 \begin{equation}
 (D(t)-q(t))^{2}
@@ -362,10 +359,10 @@ Algorytm obliczania parametrów SD1 i SD2
 
 Parametry SD1 i SD2 są wyznaczane według poniższych wzorów:
 
-\begin{eqnarray}
-SD1 &= \sqrt{\frac{1}{2}\cdot SDSD^{2}}
+\begin{align}
+SD1 &= \sqrt{\frac{1}{2}\cdot SDSD^{2}} \\
 SD2 &= \sqrt{2\cdot SDNN^{2}-\frac{1}{2}\cdot SDSD^{2}}
-\end{eqnarray}
+\end{align}
 
 
 gdzie:
@@ -565,7 +562,7 @@ danym elemencie wektora
 
 Używane zmienne:
 \begin{itemize}
-\item \verb+unsigned int RR\_intervals\_size+ -- liczba wszystkich interwałów RR
+\item \verb+unsigned int RR_intervals_size+ -- liczba wszystkich interwałów RR
 \item \verb+IntSignal diff+ -- wektor różnic pomiędzy sąsiednimi interwałami RR
 \end{itemize}
 %
@@ -664,8 +661,7 @@ Używane funkcje:
 \end{itemize}
 Używane zmienne:
 \begin{itemize}
-\item \verb+double HistogramParameter+ -- zmienna przechowująca wartość zwróconą
-przez funkcję \verb+parameterTypes.find+.
+\item \verb+double HistogramParameter+ -- zmienna przechowująca rezultat funkcji \verb+parameterTypes.find+.
 \item \verb+double HistogramBinLength+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący
 szerokość kolumny histogramu.
 \end{itemize}
@@ -724,7 +720,7 @@ podsekcji:
 \includegraphics[scale=0.7]{include/hrv2_3}
 \par\end{centering}
 
-\caption{Wykres Poincare -+ Matlab}
+\caption{Wykres Poincare -- Matlab}
 \label{fig:hrv2_3}
 \end{figure}
 
