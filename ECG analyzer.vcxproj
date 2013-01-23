@@ -188,6 +188,7 @@
     <ClCompile Include="HRV1Analyzer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix\Matrix.cpp" />
+    <ClCompile Include="MovingAverage.cpp" />
     <ClCompile Include="plots\ecg2ch.cpp" />
     <ClCompile Include="plots\ecgch.cpp" />
     <ClCompile Include="plots\gainsscaledraw.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="QRSPointsDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="SignalPreprocessor.cpp" />
+    <ClCompile Include="Snr.cpp" />
     <ClCompile Include="spline\alglibinternal.cpp" />
     <ClCompile Include="spline\alglibmisc.cpp" />
     <ClCompile Include="spline\ap.cpp" />
@@ -306,6 +308,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\qtmain" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="MovingAverage.h" />
     <ClInclude Include="nullstream.hpp" />
     <CustomBuild Include="plots\synczoomer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -383,6 +386,7 @@
     <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="SignalPreprocessor.h" />
+    <ClInclude Include="Snr.h" />
     <ClInclude Include="spline\alglibinternal.h" />
     <ClInclude Include="spline\alglibmisc.h" />
     <ClInclude Include="spline\ap.h" />
