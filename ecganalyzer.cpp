@@ -380,3 +380,10 @@ void ECGanalyzer::setSTIntervalParams()
 
 
 
+
+void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
+{
+
+    //TODO: CRITICAL
+    _ECGcontroller.setParamsHRV2(NULL);
+}

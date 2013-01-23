@@ -60,6 +60,8 @@ private slots:
 
     void on_radioButtonChebyschevFilter_toggled(bool checked);
 
+    void on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1);
+
 private:
 	Ui::ECGanalyzerClass ui;
 	AboutWindow aboutWindow;
