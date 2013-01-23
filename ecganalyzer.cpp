@@ -194,7 +194,7 @@ void ECGanalyzer::enableChebyschevGUIControls(bool enable)
 	ui.spinBoxOrderChebyshev->setEnabled(enable);
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
 	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
-	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
+	ui.spinBoxOrderChebyshev->setEnabled(enable);
 }
 
 void ECGanalyzer::enableButterworthGUIControls(bool enable)
@@ -284,6 +284,7 @@ void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 void ECGanalyzer::setModulesParams()
 {
   //TODO: Set params for other modules
+  setBaselineParams();
   setRpeaksParams();
   setSTIntervalParams();
 }
@@ -336,6 +337,32 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_plot->setSignal(_ECGcontroller.filtered_signal, _ECGcontroller.ecg_info.channel_one, _ECGcontroller.st_data);
   ui.st_plot->showInterval(_ECGcontroller.st_data.getIntervalAt(0));
   
+}
+
+void ECGanalyzer::setBaselineParams()
+{
+	ParametersTypes params;
+	if(ui.radioButtonMovingAverage->isChecked())
+	{
+		params["baseline_removal_method"] = MOVING_AVERAGE;
+		params["span"] = ui.spinBoxMovingAverageSpan->value();
+	}
+	else if(ui.radioButtonButterworthFilter->isChecked())
+	{
+		params["baseline_removal_method"] = BUTTERWORTH;
+		params["order"] = ui.spinBoxOrderButterworth->value();
+		params["cutoff_frequency"] = ui.spinBoxCutOffFrequencyButterworth->value();
+		params["attenuation"] = ui.doubleSpinBoxAttenuationButterworth->value();
+	}
+	else if(ui.radioButtonChebyschevFilter->isChecked())
+	{
+		params["baseline_removal_method"] = CHEBYSHEV;
+		params["order"] = ui.spinBoxOrderChebyshev->value();
+		params["cutoff_frequency"] = ui.spinBoxCutOffFrequencyChebyshev->value();
+		params["ripple"] = ui.doubleSpinBoxRippleChebyschev->value();
+	}
+
+	_ECGcontroller.setParamsBaseline(params);
 }
 
 void ECGanalyzer::setRpeaksParams()
