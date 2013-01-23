@@ -4,6 +4,7 @@
 
 class Snr
 {
+public:
 	Snr(){};
 	~Snr(){};
 
