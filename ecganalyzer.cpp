@@ -286,6 +286,7 @@ void ECGanalyzer::setModulesParams()
 {
   //TODO: Set params for other modules
   setRpeaksParams();
+  setHRV2Params();
   setSTIntervalParams();
 }
 
@@ -370,6 +371,14 @@ void ECGanalyzer::setSTIntervalParams()
   st_params["type_thresh"] = ui.st_complex_other->value();
   st_params["slope_thresh"] = ui.st_complex_slope->value();
   _ECGcontroller.setParamsSTInterval(st_params);
+}
+
+void ECGanalyzer::setHRV2Params()
+{
+	ParametersTypes st_params;
+	st_params["histogram_bin_length"] = (double) ui.doubleSpinBoxRPeaksHistogramSize->value();
+	
+	_ECGcontroller.setParamsHRV2(st_params);
 }
 
 

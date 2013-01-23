@@ -74,7 +74,10 @@ private:
      * Set params for R peaks module
      */
 	void setRpeaksParams();
-    
+	/**
+     * Set params for HRV2 module
+     */
+    void setHRV2Params();
     /**
      * Set params for ST interval analysis module
      * 
