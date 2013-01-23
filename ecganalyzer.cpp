@@ -213,6 +213,7 @@ void ECGanalyzer::enableMovingAverageGUIControls(bool enable)
 
 void ECGanalyzer::enableChebyschevGUIControls(bool enable) 
 {
+	ui.spinBoxOrderChebyshev->setEnabled(enable);
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
 	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
