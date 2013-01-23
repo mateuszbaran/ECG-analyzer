@@ -62,7 +62,7 @@
          <enum>QTabWidget::West</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabSignalInfo">
          <attribute name="title">
@@ -873,7 +873,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -952,7 +952,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">
@@ -1366,7 +1366,7 @@
                  </item>
                  <item row="3" column="1">
                   <property name="text">
-                   <string>ms</string>
+                   <string/>
                   </property>
                  </item>
                 </widget>
@@ -1397,7 +1397,7 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_12">
                   <item>
-                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD1">
+                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD1SD2Parameters">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1405,20 +1405,7 @@
                      </sizepolicy>
                     </property>
                     <property name="text">
-                     <string>SD1</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD2">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="text">
-                     <string>SD2</string>
+                     <string>SD1/SD2 Parameters</string>
                     </property>
                    </widget>
                   </item>
