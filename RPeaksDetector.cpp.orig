@@ -2,6 +2,22 @@
 #include <QDebug>
 #include "tri_logger.hpp"
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
+<<<<<<< HEAD
+
+
+//-----------------------------------------------------------------------------------------------------------
+#define _FAZA_TESTOWA_
+#ifndef _FAZA_TESTOWA_
+#define ASSERT(gdzie,co) ; // gdy ju� program prawid�owo dzia�a
+#else
+#include <iostream>  // dla ASSERT 
+#include <cstdlib>  // dla ASSERT 
+#define ASSERT(gdzie,co) if (!(co)) {std::cerr << "UWAGA! FUNKCJA " << #gdzie << ": NIE SPELNIONA ASERCJA " << #co << std::endl;exit(1);}      // na etapie uruchamiania i testowania 
+#endif // _FAZA_TESTOWA_
+
+//-------------------------------------------------------------------------------------------------------------
+=======
+>>>>>>> R-peaks
 
 RPeaksDetector::RPeaksDetector()
 {
@@ -288,8 +304,13 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	meanVal = meanVal / sigSize;
 
 	#ifdef DEBUG
+<<<<<<< HEAD
+		qDebug() << "Final max value for channel one: " << sigMaxVal << endl
+			 << "Final mean value: " << meanVal << endl;
+=======
 		qDebug() << "Final max value for channel one: " << sigMaxVal << endl
 	         << "Final mean value: " << meanVal << endl;
+>>>>>>> R-peaks
 
 	#endif
 
@@ -439,7 +460,11 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	#endif
 	#ifdef DEBUG
 		qDebug() << "Number of left points: " << leftPointsCount << endl
+<<<<<<< HEAD
+				 << "Number of right points: " << rightPointsCount;
+=======
 			     << "Number of right points: " << rightPointsCount;
+>>>>>>> R-peaks
 	#endif
 
 	//Final R peaks detection
@@ -474,8 +499,13 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 			gsl_vector_int_set(rs->signal, i, tmpMaxIndex);
 			numberRs++;
 			#ifdef DEBUG_SIGNAL
+<<<<<<< HEAD
+				qDebug() << "R point at index: " << tmpMaxIndex 
+						 << " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex);
+=======
 				qDebug() << "R point at index: " << tmpMaxIndex 
 					     << " signal value: " << gsl_vector_get(sig->signal, tmpMaxIndex);
+>>>>>>> R-peaks
 			#endif
 		}
 		rsPositions->setRs(rs);
