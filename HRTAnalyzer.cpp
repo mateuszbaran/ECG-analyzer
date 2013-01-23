@@ -46,11 +46,12 @@ void HRTAnalyzer::calculateHrtParams(double *signal, int size, ECGHRT & hrt_data
 		#endif
 	} 
 	else	{
+		qDebug() <<vpc_list.size();
 		hrt_data.isCorrect = 1;
 		double* avgTach = calculateAvgTach(signal, vpc_list);
 
 		double to = calculateTO(signal, size, vpc_list);
-
+		qDebug() <<to;
 		calculateTS(signal, size, vpc_list, avgTach, to, hrt_data);
 	}
 }
@@ -175,8 +176,6 @@ double HRTAnalyzer::calculateTO_2(double * signal, int size, double* avgTach)
 
 void HRTAnalyzer::calculateTS(double * signal, int size, vector<int> vpc_list, double* avgTach, double to, ECGHRT & hrt_data)
 {
-    return;
-
     vector<double> A;
     vector<double> B;
 
