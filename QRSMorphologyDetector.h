@@ -7,6 +7,12 @@
 
 #include <gsl/gsl_sort_vector.h>
 
+enum QRSType
+{
+  VENTRICULUS,
+  SUPRACENTRICULAR
+};
+
 using namespace std;
 
 

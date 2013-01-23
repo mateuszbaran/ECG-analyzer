@@ -97,8 +97,8 @@ bool QRSMorphologyDetector::detectQRSMorphology()
 
 		//dokonczyc ocene rodzaju pobudzenia
 
-		if (rm1>0.5 && rm1<1.5) gsl_vector_int_set(tmpSig->signal,i,1);
-		else gsl_vector_int_set(tmpSig->signal,i,2);
+		if (rm1>0.5 && rm1<1.5) gsl_vector_int_set(tmpSig->signal,i,VENTRICULUS);
+		else gsl_vector_int_set(tmpSig->signal,i,SUPRACENTRICULAR);
 
 	}
 
