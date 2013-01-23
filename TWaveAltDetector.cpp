@@ -34,6 +34,10 @@ void TWaveAltDetector::runModule(const ECGWaves &ecgWaves, const ECGSignalChanne
 }
 
 bool TWaveAltDetector::detectTWaveAlt() { 
+
+	#ifdef DEBUG
+		cout << "Detecting TWaveAlt start" << endl;
+	#endif
     
     int signalSize = wavesData.GetT_end()->signal->size;
 	int sS = wavesData.GetT_end()->signal->size;
@@ -44,6 +48,10 @@ bool TWaveAltDetector::detectTWaveAlt() {
     int k0 = 0, k1 = 0, k2 = 0, k3 = 0;
     
     bool *tmp_detect_tab = new bool[signalSize];
+
+	#ifdef DEBUG
+		cout << "Preparing singals to be detected" << endl;
+	#endif
 
     for (int i = 0; i + 3 < signalSize; i++) {
         ilosc++;
@@ -71,14 +79,18 @@ bool TWaveAltDetector::detectTWaveAlt() {
                         tmp_detect_tab[i+2] = true;
                         tmp_detect_tab[i+3] = true;
                         
-                        // czy tutaj umieszczamy informacjê, ¿e w 'i' jest TWAVE? czy wszystkie 4 oznaczmy?
-                        // iloœæ wyszukanych 'k0' bêdzie wliczana do procentu?
+						#ifdef DEBUG
+							cout << "T_WaveAlt detected" << endl;
+						#endif
+                        // TWaveAlt detected in window
                     }
                 }
             }
         }
     }
 
+
+	// setting number of detected peaks/windows
     int num_of_det_pic = 0;
     for(int i = 0 ; i < signalSize ; i++) {
         if(tmp_detect_tab[i] == true) num_of_det_pic++;
@@ -87,6 +99,7 @@ bool TWaveAltDetector::detectTWaveAlt() {
     IntSignal tmp_twa = IntSignal(new WrappedVectorInt);
     tmp_twa->signal = gsl_vector_int_alloc(num_of_det_pic);    
     
+	// creating vector to be shown
     int tmp_i = 0;
     for(int i = 0 ; i < signalSize ; i++) {
         if(tmp_detect_tab[i] == true) {
@@ -121,11 +134,12 @@ bool TWaveAltDetector::detectTWaveAlt() {
         }
     }
 */
-    tWaveAltData.numberOfWinDetected = (double) (k0);
-    tWaveAltData.percentageOfWinDetected = ((double) (k0)) / ((double) (ilosc));
+	// analysis of TWaveAlt
+    tWaveAltData.numberOfWinDetected = (double) (num_of_det_pic);
+    tWaveAltData.percentageOfWinDetected = ((double) (num_of_det_pic)) / ((double) (ilosc));
     tWaveAltData.setTWaveAlt(tmp_twa);
 
-
+	// checking if whole signal has alternans
     if (tWaveAltData.percentageOfWinDetected >= 0.05)
         return true;
     else
