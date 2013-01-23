@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="66cm" height="32cm" viewBox="23 21 1316 629" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <ellipse style="fill: #ffffff" cx="462.575" cy="164.525" rx="106.575" ry="35.525"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="462.575" cy="164.525" rx="106.575" ry="35.525"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="462.575" y="168.425">
+      <tspan x="462.575" y="168.425">Wyznaczanie zalamkow R</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="352.425" cy="577.142" rx="186.425" ry="62.1417"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="352.425" cy="577.142" rx="186.425" ry="62.1417"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="352.425" y="573.042">
+      <tspan x="352.425" y="573.042">Wyznaczanie parametrow geometrycznych</tspan>
+      <tspan x="352.425" y="589.042">i czestotliwosciowych tachogramu</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1052" cy="296.065" rx="11.2826" ry="11.2826"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1052" cy="296.065" rx="11.2826" ry="11.2826"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1006.87" y1="318.63" x2="1097.13" y2="318.63"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1052" y1="307.348" x2="1052" y2="363.761"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1052" y1="363.761" x2="1006.87" y2="417.935"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1052" y1="363.761" x2="1097.13" y2="417.935"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="1052" y="452.4">
+      <tspan x="1052" y="452.4">Użytkownik</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="958.152" cy="71.3833" rx="148.15" ry="49.3833"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="958.152" cy="71.3833" rx="148.15" ry="49.3833"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="958.152" y="67.2833">
+      <tspan x="958.152" y="67.2833">Przeprowadzanie beztrendowej</tspan>
+      <tspan x="958.152" y="83.2833">analizy fluktuacji</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="120.402" cy="307.133" rx="96.4" ry="32.1333"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="120.402" cy="307.133" rx="96.4" ry="32.1333"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="120.402" y="311.033">
+      <tspan x="120.402" y="311.033">Usuwanie linii bazowej</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="366.002,431.125 366.002,284.542 462.575,284.542 462.575,207.754 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="467.575,220.401 462.575,204.401 457.575,220.401 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="414.289" y="281.542">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="356,164.525 356,167 120.402,167 120.402,267.294 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="115.402,254.646 120.402,270.646 125.402,254.646 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="238.201" y="164">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="352.425,513.992 352.425,357.526 462.575,357.526 462.575,207.764 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="467.575,220.412 462.575,204.412 457.575,220.412 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="407.5" y="354.526">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="974.422" y1="121.768" x2="1021.18" y2="266.57"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="714.756" y1="407.565" x2="993.012" y2="369.97"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="570.151" y1="200.566" x2="993.144" y2="342.281"/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="810.002,71.3834 810.002,94 462.575,94 462.575,121.3 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="457.575,108.653 462.575,124.653 467.575,108.653 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="636.289" y="91">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="540.377" cy="431.125" rx="174.375" ry="58.125"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2.35099e-037; stroke: #000000" cx="540.377" cy="431.125" rx="174.375" ry="58.125"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="540.377" y="427.025">
+      <tspan x="540.377" y="427.025">Detekcja punktow charakterystycznych</tspan>
+      <tspan x="540.377" y="443.025">sygnału EKG</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="715.177" cy="318.058" rx="84.175" ry="28.0583"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="715.177" cy="318.058" rx="84.175" ry="28.0583"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="715.177" y="321.958">
+      <tspan x="715.177" y="321.958">Analiza odcinka ST</tspan>
+    </text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="993.019" y1="354.305" x2="800.205" y2="329.151"/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="631.002,318.058 631.002,347 540.377,347 540.377,366.286 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="535.377,353.639 540.377,369.639 545.377,353.639 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="585.689" y="344">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="539.84" y1="519.506" x2="993.033" y2="380.134"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="990.902" cy="603.3" rx="135.9" ry="45.3"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="990.902" cy="603.3" rx="135.9" ry="45.3"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="990.902" y="599.2">
+      <tspan x="990.902" y="599.2">Ocena ilosciowa alternansu</tspan>
+      <tspan x="990.902" y="615.2">załamka T</tspan>
+    </text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1027.82" y1="457.502" x2="1002.61" y2="557.055"/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="990.902,558 990.902,494 714.752,494 714.752,437.83 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="719.752,450.478 714.752,434.478 709.752,450.478 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="852.827" y="491">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1213.95" cy="183.317" rx="123.95" ry="41.3167"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1213.95" cy="183.317" rx="123.95" ry="41.3167"/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="1213.95" y="187.217">
+      <tspan x="1213.95" y="187.217">Analiza turbulencji rytmu serca</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="1090,183.317 1090,234 540.377,234 540.377,366.476 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="535.377,353.828 540.377,369.828 545.377,353.828 "/>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.7998;font-family:monospace;font-style:normal;font-weight:normal" x="815.19" y="231">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1175.59" y1="225.637" x2="1111" y2="296.902"/>
+</svg>
