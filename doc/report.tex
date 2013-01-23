@@ -276,7 +276,7 @@ Dane przyjmowane przez moduł:
 \end{itemize}
 Dane zwracane przez moduł:
 \begin{itemize}
-\item wykresu histogramu 
+\item wykres histogramu 
 \item wskaźnik TINN 
 \item Indeks Trójkątny
 \item wykres Poincare wraz z parametrami SD1 i SD2
@@ -767,6 +767,35 @@ Autorzy: Bartłomiej Bułat i Krzysztof Piekutowski.
 
 \subsubsection{Opis zadania}
 \label{sec:st_interval:desc}
+Celem projektu jest wyznaczenie odcinków ST, pomiar poziomu odcinka ST względem linii izoelektrycznej i jego nachylenia, a także detekcja epizodów ST oraz parametry ilościowe i jakościowe epizodów ST. Celowość analizy odcinka ST względem linii izoelektrycznej związana jest z predykcją choroby wieńcowej, miażdżycy oraz niedotlenieniem mięśnia serca.
+
+Dane przyjmowane przez moduł:
+\begin{itemize}
+  \item sygnał ECG\_BASELINE;
+  \item wektor numerów próbek załamków R z modułu R PEAKS;
+  \item wektor numerów próbek punktów charakterystycznych z modułu WAVES:
+  \begin{itemize}
+    \item $QRS_{onset}$
+    \item $QRS_{end}$
+    \item $T_{end}$
+  \end{itemize}  
+\end{itemize}
+
+Dane zwracane przez moduł:
+\begin{itemize}
+  \item wektor wykrytych odcinków ST zawierających informaje:
+  \begin{itemize}
+    \item początek i koniec odcinka;
+    \item pomiar poziomu względem izolinii;
+    \item pomiar nachylenia odcinka ST;
+  \end{itemize}
+  \item wektor wykrytych epizodów wraz z parametrami:
+  \begin{itemize}
+    \item numer próbki początku epizodu;
+    \item numer próbki końca epizodu;
+    \item rodzaj epizodu.
+  \end{itemize}
+\end{itemize}
 
 \subsubsection{Badania literaturowe}
 \label{sec:st_interval:papers}
