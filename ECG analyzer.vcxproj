@@ -103,6 +103,8 @@
     <ClCompile Include="ECGTWave.cpp" />
     <ClCompile Include="ECGWaves.cpp" />
     <ClCompile Include="EGHRVDFT.cpp" />
+    <ClCompile Include="fft\kiss_fft.c" />
+    <ClCompile Include="fft\kiss_fftr.c" />
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_AboutWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -177,6 +179,15 @@
     <ClCompile Include="QRSPointsDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="SignalPreprocessor.cpp" />
+    <ClCompile Include="spline\alglibinternal.cpp" />
+    <ClCompile Include="spline\alglibmisc.cpp" />
+    <ClCompile Include="spline\ap.cpp" />
+    <ClCompile Include="spline\integration.cpp" />
+    <ClCompile Include="spline\interpolation.cpp" />
+    <ClCompile Include="spline\linalg.cpp" />
+    <ClCompile Include="spline\optimization.cpp" />
+    <ClCompile Include="spline\solvers.cpp" />
+    <ClCompile Include="spline\specialfunctions.cpp" />
     <ClCompile Include="STAnalysis.cpp" />
     <ClCompile Include="tri_logger.cpp" />
     <ClCompile Include="wfdb\annot.c" />
@@ -237,6 +248,9 @@
     <ClInclude Include="ECGTWave.h" />
     <ClInclude Include="ECGWaves.h" />
     <ClInclude Include="EGHRVDFT.h" />
+    <ClInclude Include="fft\kiss_fft.h" />
+    <ClInclude Include="fft\kiss_fftr.h" />
+    <ClInclude Include="fft\_kiss_fft_guts.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="GeneratedFiles\ui_AboutWindow.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
@@ -318,6 +332,16 @@
     <ClInclude Include="QRSPointsDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="SignalPreprocessor.h" />
+    <ClInclude Include="spline\alglibinternal.h" />
+    <ClInclude Include="spline\alglibmisc.h" />
+    <ClInclude Include="spline\ap.h" />
+    <ClInclude Include="spline\integration.h" />
+    <ClInclude Include="spline\interpolation.h" />
+    <ClInclude Include="spline\linalg.h" />
+    <ClInclude Include="spline\optimization.h" />
+    <ClInclude Include="spline\solvers.h" />
+    <ClInclude Include="spline\specialfunctions.h" />
+    <ClInclude Include="spline\stdafx.h" />
     <ClInclude Include="STAnalysis.h" />
     <ClInclude Include="tri_logger.hpp" />
     <ClInclude Include="wfdb\ecgcodes.h" />

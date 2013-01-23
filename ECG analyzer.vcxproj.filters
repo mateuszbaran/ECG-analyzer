@@ -45,6 +45,18 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Header Files\fft">
+      <UniqueIdentifier>{a43c0c30-69d1-4ffb-9af0-8db14438a6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\fft">
+      <UniqueIdentifier>{de828fb3-f92a-4140-a052-3a91162529ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\spline">
+      <UniqueIdentifier>{5f41d8ec-ade6-4d3c-b1ef-f331b8e4e702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\spline">
+      <UniqueIdentifier>{6fee3c49-6384-46f9-a9ce-dfee23754d17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -218,6 +230,39 @@
     <ClCompile Include="ECGBaselineRemoval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fft\kiss_fft.c">
+      <Filter>Source Files\fft</Filter>
+    </ClCompile>
+    <ClCompile Include="fft\kiss_fftr.c">
+      <Filter>Source Files\fft</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\alglibinternal.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\alglibmisc.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\ap.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\integration.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\interpolation.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\linalg.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\optimization.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\solvers.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="spline\specialfunctions.cpp">
+      <Filter>Source Files\spline</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -353,6 +398,45 @@
     </ClInclude>
     <ClInclude Include="ECGBaselineRemoval.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fft\_kiss_fft_guts.h">
+      <Filter>Header Files\fft</Filter>
+    </ClInclude>
+    <ClInclude Include="fft\kiss_fft.h">
+      <Filter>Header Files\fft</Filter>
+    </ClInclude>
+    <ClInclude Include="fft\kiss_fftr.h">
+      <Filter>Header Files\fft</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\alglibinternal.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\alglibmisc.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\ap.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\integration.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\interpolation.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\linalg.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\optimization.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\solvers.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\specialfunctions.h">
+      <Filter>Header Files\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="spline\stdafx.h">
+      <Filter>Header Files\spline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

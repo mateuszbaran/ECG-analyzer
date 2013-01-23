@@ -29,10 +29,11 @@ void HRV1Analyzer::run() {
     	sig = new double[signalSize-1];
     	signalSampling = 360;
 
-    	for(int i = 0; i < signalSize; i++) {
+    	for(int i = 0; i < signalSize-1; i++) {
     		sig[i] = (gsl_vector_int_get(rs, i+1)
     				- gsl_vector_int_get(rs, i))/signalSampling;
     	}
+		sig[signalSize] = gsl_vector_int_get(rs, signalSize-1)/signalSampling;
 
     #endif
 
@@ -122,8 +123,8 @@ void HRV1Analyzer::run() {
     int windowSize = signalSampling*60*5; /* 60 seconds*5minutes */
 	int numberOfSteps = std::floor( sigAbsolute[signalSize-1]/windowSize );
 
-    double mRRI[numberOfSteps];
-    double stdRR5[numberOfSteps];
+    double * mRRI = new double[numberOfSteps];
+    double * stdRR5 = new double[numberOfSteps];
 
 	for(int step=1;step<=numberOfSteps;step++) {
 	    int windowStartTime = (step-1) * windowSize;
@@ -182,7 +183,7 @@ void HRV1Analyzer::run() {
     int i,size = (int)(sigAbsolute[signalSize-1]/200) +1;
     int isinverse = 1;
 
-    kiss_fft_cpx out_cpx[size], out[size], *cpx_buf;
+    kiss_fft_cpx * out_cpx = new kiss_fft_cpx[size], * out = new kiss_fft_cpx[size], *cpx_buf;
 
     kiss_fftr_cfg fft = kiss_fftr_alloc(size*2 ,0 ,0,0);
     kiss_fftr_cfg ifft = kiss_fftr_alloc(size*2,isinverse,0,0);
@@ -204,7 +205,7 @@ void HRV1Analyzer::run() {
     free(ifft);
 
     int sizeFftIndex = (size+(size%2))/2;
-    double fftMagnitude[sizeFftIndex];
+    double * fftMagnitude = new double[sizeFftIndex];
 
     for(int i=0; i<sizeFftIndex; i++) {
         fftMagnitude[i] = 2*(out_cpx[i].r*out_cpx[i].r)/(size*size); //=(abs(out_cpx[i].r)/size)*(abs(out_cpx[i].r)/size)
@@ -252,7 +253,11 @@ void HRV1Analyzer::run() {
     	this->hrv1Data->freqency->set(i, i);
     	this->hrv1Data->power->set(i, fftMagnitude[i]);
     }
-
+	delete mRRI;
+	delete stdRR5;
+	delete out_cpx;
+	delete out;
+	delete fftMagnitude;
 }
 
 #ifndef DEV
