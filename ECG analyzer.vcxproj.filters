@@ -275,6 +275,18 @@
     <ClCompile Include="plots\timescaledraw.cpp">
       <Filter>Source Files\plots</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scrollbar.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scrollbar.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scrollzoomer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scrollzoomer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -311,6 +323,12 @@
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\stplot.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\scrollbar.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\scrollzoomer.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -451,12 +469,6 @@
       <Filter>Header Files\spline</Filter>
     </ClInclude>
     <ClInclude Include="plots\gainsscaledraw.h">
-      <Filter>Header Files\plots</Filter>
-    </ClInclude>
-    <ClInclude Include="plots\scrollbar.h">
-      <Filter>Header Files\plots</Filter>
-    </ClInclude>
-    <ClInclude Include="plots\scrollzoomer.h">
       <Filter>Header Files\plots</Filter>
     </ClInclude>
     <ClInclude Include="plots\timescaledraw.h">
