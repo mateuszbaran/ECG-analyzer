@@ -1,17 +1,11 @@
 #include "timescaledraw.h"
-#include "boost/format.hpp"
-#include <math.h>
 #include "ECGChannelInfo.h"
 
-TimeScaleDraw::TimeScaleDraw() : QwtScaleDraw() { };
+TimeScaleDraw::TimeScaleDraw(int _frequency) : QwtScaleDraw(), frequency(_frequency) { };
 TimeScaleDraw::~TimeScaleDraw() { };
 
 QwtText TimeScaleDraw::label(double value) const
 {
-//#ifdef VERBOSE_TIME_FORMAT
-    return QObject::tr("NIC");
-//#else
-
-//#endif
+    return QString::fromStdString(ECGChannelInfo::sampleToTime((int)value,this->frequency));
 }
 

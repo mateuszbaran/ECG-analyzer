@@ -28,7 +28,7 @@ class EcgCh : public QwtPlot
 
 public:
     explicit EcgCh(QWidget *parent = 0);
-    
+    QPointF lastSample();
 signals:
     
 public slots:

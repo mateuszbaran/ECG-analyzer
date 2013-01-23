@@ -20,9 +20,11 @@
 class TimeScaleDraw : public QwtScaleDraw
 {
 public:
-    TimeScaleDraw();
+    TimeScaleDraw(int);
     ~TimeScaleDraw();
     QwtText label(double) const;
+private:
+    int frequency;
 };
 
 #endif // TIMESCALEDRAW_H

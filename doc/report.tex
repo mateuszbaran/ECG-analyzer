@@ -101,9 +101,9 @@
 
 \section{Specyfikacja zadania}
 
-Celem projektu jest stworzenie zintegrowanego systemu pozwalającego na przeglądanie i automatyczną analizę sygnału EKG. Sygnał dostarczany jest w formie cyfrowej w standardzie wykorzystywanym w MIT–BIH Arrhythmia Database. Różne etapy przetwarzania, takie jak usuwanie linii bazowej, detekcja załamków R czy klasyfikacja zespołów QRS wykonywana jest przez różne zespoły (szczegółowe opisy specyfikacji modułów: \ref{sec:mod}), których praca składa się na jeden program.
+Celem projektu jest stworzenie zintegrowanego systemu pozwalającego na przeglądanie i automatyczną analizę sygnału EKG. Sygnał dostarczany jest w formie cyfrowej w standardzie wykorzystywanym w MIT–BIH Arrhythmia Database. Różne etapy przetwarzania, takie jak usuwanie linii bazowej, detekcja załamków R czy klasyfikacja zespołów QRS wykonywana jest przez różne zespoły (szczegółowe opisy specyfikacji modułów znajduje się w sekcji \ref{sec:mod}), których praca składa się na jeden program.
 
-Moduły przetwarzania integrowane i uzupełniane są modułami kontrolującymi przepływ danych i odpowiadającymi za komunikację z użytkownikiem. Wzajemne zależności pomiędzy modułami prezentuje rys. \ref{fig:zaleznosci}.
+Moduły przetwarzania integrowane i uzupełniane są modułami kontrolującymi przepływ danych i odpowiadającymi za komunikację z użytkownikiem. Wzajemne zależności pomiędzy modułami prezentuje rys. \ref{fig:zaleznosci}. W nawiasach obok nazwy zespołu podana jest liczba osób wchodzących w jego skład.
 
 \begin{figure}[h!]
   \centering
@@ -134,6 +134,14 @@ Minimalne wymagania kompilacji projektu są następujące:
     \item gsl 1.15
     \item WFDB 10.5.16 (zawarta w źródłach projektu)
     \item FFTW 3.3.2
+    \item KissFFT (zawarta w źródłach projektu)
+  \end{itemize}
+  \item System budowania:
+  \begin{itemize}
+	  \item system budowy Microsoft Visual Studio 2010 (Windows)
+	  \item CMake (Linux, MacOS X), generuje plik Makefile
+	  \item pakiet \LaTeX (dokumentacja)
+	  \item program Dia (większość diagramów)
   \end{itemize}
 \end{itemize}
 
@@ -147,8 +155,8 @@ Program został wykonany w architekturze MVC -- istnieje ścisły podział na cz
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\linewidth]{include/package_diagram}
-  \label{fig:package_diagram}
   \caption{Diagram pakietów.}
+  \label{fig:package_diagram}
 \end{figure}
 
 Samo przetwarzanie realizowane jest wielofazowo -- moduły przeliczane są sekwencyjnie na osobnym wątku niż wątek zdarzeń GUI, co pozwala na zatrzymanie zbyt długo trwającej operacji. Zaimplementowano także mechanizm buforowania wyników, dzięki czemu przy zmianie parametrów pewnego modułu nie ma konieczności przeliczania wyników modułów wcześniejszych.
@@ -158,27 +166,52 @@ Cała aplikacja napisana jest jako samodzielny, wieloplatformowy program (rys. \
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.5\linewidth]{include/deployment_diagram}
-  \label{fig:deployment_diagram}
   \caption{Diagram wdrożenia.}
+  \label{fig:deployment_diagram}
 \end{figure}
 
-Diagram sekwencji przedstawiający sposób uruchamiania modułów jest przedstawiony na rys. \ref{fig:sequence_diagram}.
+Diagram sekwencji przedstawiający sposób uruchamiania modułów jest przedstawiony na rys. \ref{fig:sequence_diagram}. Każdy moduł otrzymuje najpierw zestaw parametrów (o ile posiada jakieś parametry), następnie zaś jest uruchamiany funkcją runModule. Kolejne moduły uruchamiane są sekwencyjnie według identycznego schematu. Wskutek akcji użytkownika możliwe jest przerwanie analizy pomiędzy poszczególnymi modułami.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.5\linewidth]{include/sequence_diagram}
-  \label{fig:sequence_diagram}
   \caption{Diagram sekwencji.}
+  \label{fig:sequence_diagram}
 \end{figure}
 
-Diagram klas został przedstawiony na rys. \ref{fig:class_diagram}.
+Diagram klas został przedstawiony na rys. \ref{fig:class_diagram}. Obrazuje on zależności pomiędzy poszczególnymi klasami zrealizowanymi w ramach modułów oraz klasami pomocniczymi przechowującymi informacje przekazywane pomiędzy modułami, kontrolerem i widokiem.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.9\linewidth]{include/class_diagram}
-  \label{fig:class_diagram}
   \caption{Diagram klas.}
+  \label{fig:class_diagram}
 \end{figure}
+
+Diagram przypadków użycia, przedstawiony na rys. \ref{fig:use_case_diagram} pokazuje różne scenariusze, w których może być używany zrealizowany system. Każdemu przypadkowi odpowiada jeden lub więcej modułów. zachodzące pomiędzy nimi zależności są ukazywane relacjami zawierania.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{include/use_case_diagram}
+  \caption{Diagram klas.}
+  \label{fig:use_case_diagram}
+\end{figure}
+
+\subsection{Główne elementy kodu systemu}
+
+Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagram}. Metoda \verb+rerunAnalysis+, która się w niej znajduje odpowiada za kilka rzeczy:
+\begin{enumerate}
+\item Upewnianie się, że moduły mają aktualne parametry.
+\item Rozpoczynanie analizy zapisu EKG.
+\item Przerywanie analizy w przypadku, gdy już ona trwa.
+\item Raportowanie do GUI o kolejnych etapach pracy systemu (który moduł aktualnie się wykonuje).
+\end{enumerate}
+Ostatnie zadanie wykonywane jest za pomocą dwóch funkcyjnych argumentów wejściowych.
+
+Parametry, ustawiane metodami \verb+setParam*+ mają postać mapy przypisującej nazwom poszczególnych parametrów odpowiadające im wartości liczbowe. Wykorzystywane są przede wszystkim w modułach usuwania linii bazowej oraz wykrywania załamków R.
+
+Do klas pomocniczych można zaliczyć między innymi \verb+IntSignal+ czy \verb+ECGSignalChannel+. Sygnały, które przechodzą pomiędzy systemami czynią to właśnie poprzez obiekty tych klas. Są one zrealizowane jako sprytne wskaźniki do struktur trzymających wektory w stylu C biblioteki GSL, dzięki czemu możliwe jest pogodzenie szybkości działania z wygodną składnią i semantyką sprytnego wskaźnika.
+
+Poszczególne moduły są tworzone w hierarchii obiektowej (rys. \ref{fig:class_diagram}). Umożliwia to podmianę w przyszłości modułu na lepszą implementację bez poprawiania reszty silnika oraz przyczynia się do zmniejszenia współzależności.
 
 \section{Opisy modułów}
 \label{sec:mod}
@@ -226,6 +259,476 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \subsection{HRV2}
 \label{sec:hrv2}
+
+
+\subsection{HRV2}
+\label{sec:hrv2}
+
+Autor: Krzysztof Farganus
+
+
+\subsubsection{Opis zadania}
+\label{sec:hrv2:desc}
+
+Celem projektu jest opracowanie i implementacja metod geometrycznych
+analizy HRV.
+
+Dane przyjmowane przez moduł: 
+\begin{itemize}
+\item ciąg próbek załamków R z modułu R\_PEAKS.
+\end{itemize}
+Dane zwracane przez moduł:
+\begin{itemize}
+\item wykresu histogramu 
+\item wskaĽnik TINN 
+\item Indeks Trójkątny
+\item wykres Poincare wraz z parametrami SD1 i SD2
+\end{itemize}
+
+\subsubsection{Badania literaturowe}
+\label{sec:hrv2:papers}
+
+Techniki geometryczne służą do przedstawienia długookresowej zmienności
+rytmu serca. Są łatwe do uzyskania, ponieważ bazują na aproksymacji
+histogramu trójkątem. Szerokość przedziałów klasowych histogramu ma
+tutaj kluczowe znaczenie, gdyż jej wartość wpływa na rezultaty metod
+geometrycznych. Głównie stosowany jest zakres wynoszący 7.8125 ms
+(1/128 s). Powodem jest częstotliwość próbkowania sygnału o najczęściej
+występującej wartości 128 Hz.
+
+Cechy metod geometrycznych: 
+\begin{itemize}
+\item odporność na zakłócenia ze względu na zastosowanie technik aproksymacyjnych
+\item eliminacja artefaktów zlokalizowanych poza trójkątem 
+\item wyniki niezależne od jakości zapisu sygnału 
+\item rezultaty zależne od czasu rejestracji 
+\item wymagana duża liczba odstępów RR dla poprawnej analizy (minimalny
+czas zapisu \textendash{} 20 minut) 
+\end{itemize}
+Do najbardziej rozpowszechnionych metod należą: 
+\begin{itemize}
+\item Wykres histogramu przedstawiający rozkład interwałów RR
+\item Indeks trójkątny (HRV triangular index ) - całkowita liczba wszystkich
+odstępów RR podzielona przez liczbę odstępów RR o najczęściej spotykanym
+czasie trwania. 
+\item Trójkątna interpolacja odstępów RR (TINN) \textendash{} długość podstawy
+trójkąta aproksymującego histogram kolejnych odstępów interwałów RR
+rytmu zatokowego wyrażana w milisekundach. 
+\item Wykres Poincare - graficzna reprezentacja korelacji pomiędzy kolejnymi
+interwałami , gdzie każdy odstęp RR jest opisany funkcją RR+1. Do
+analizy rozproszenia punktów na wykresie stosuje się dwa deskryptory:
+SD1 oraz SD2, odpowiadające odchyleniom standardowym. Pierwszy charakteryzuje
+rozkład punktów w poprzek linii identyczności, natomiast drugi wzdłuż
+tej linii.
+\end{itemize}
+Algorytm obliczania wskaźnika TINN
+
+Aby obliczyć parametr TINN, czyli wyznaczyć wartości punktów N i M
+należy opracować funkcję multiliniową q(t) o postaci:
+\begin{itemize}
+\item $q(t) = 0$ dla \ensuremath{t \le N}
+\item $q(t) = 0$ dla \ensuremath{t \ge M} 
+\item $q(X) = Y$ w pozostałych przypadkach
+\end{itemize}
+a następnie znaleźć minimum z całki o wzorze:
+
+\begin{equation}
+\int_{0}^{+\infty}\left(\: D(t)\right)-q(t)\:)^{2}dt
+\end{equation}
+
+spośród wszystkich kombinacji punktów (N,M) , gdzie D(t) to wartość
+histogramu. W układzie dyskretnym poprzedni wzór wygląda następująco:
+
+\begin{equation}
+\sum(\: D(t)-q(t)\:)^{2}\rightarrow \text{minimum}
+\end{equation}
+
+
+przy czym dla $t\:\epsilon(0,N)$ oraz $t\:\epsilon(M,\infty)$ ma
+postać: 
+
+\begin{equation}
+D(t)^{2}
+\end{equation}
+
+
+natomiast dla $t\:\epsilon\left\langle 0,N\right\rangle 0>$ wygląda
+następująco: 
+\begin{equation}
+(D(t)-q(t))^{2}
+\end{equation}
+
+Algorytm obliczania parametrów SD1 i SD2
+
+Parametry SD1 i SD2 są wyznaczane według poniższych wzorów:
+
+\begin{eqnarray}
+SD1 &= \sqrt{\frac{1}{2}\cdot SDSD^{2}}
+SD2 &= \sqrt{2\cdot SDNN^{2}-\frac{1}{2}\cdot SDSD^{2}}
+\end{eqnarray}
+
+
+gdzie:
+\begin{itemize}
+\item SDNN to odchylenie standardowe interwałów RR: $SDNN=\sqrt{\frac{1}{N-1}\cdot\sum_{i=1}^{N}\left(\bar{RR}-RR_{i}\right)^{2}}$
+\item SDSD to odchylenie standardowe różnic pomiędzy dwoma sąsiadującymi
+interwałami: $SDSD=\sqrt{E\left\{ \triangle RR_{j}^{2}\right\} -E\left\{ \triangle RR_{j}\right\} ^{2}}$
+\end{itemize}
+
+\subsubsection{Opis procedur i metod }
+\label{sec:hrv2:procs}
+
+\paragraph{\texttt{GeometricAnalysis::runModule}} -- wirtualna funkcja uruchamiająca moduł HRV2.
+
+\medskip{}
+
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+ECGInfo info+ -- dane o wczytanym sygnale
+\item \verb+ECGRs ecgRs+ -- wektor numerów próbek zawierający załamki R
+\item \verb+ECGHRV2 ecgHRV2+ -- instancja klasy przechowującej wyniki analizy zmienności
+rytmu serca metodami geometrycznymi
+\end{itemize}
+\medskip{}
+
+
+Funkcja zwraca:
+
+Funkcja przekazuje wyniki metod geometrycznych analizy HRV do instancji
+klasy \verb+ECGHRV2+.
+
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+PrepareRRSignal+
+\item \verb+MakeHistogramAndGeometricalParams+
+\item \verb+MakePoincareAndSDParams+
+\item \verb+SetHRV2Params+\medskip{}
+
+\end{itemize}
+Używane zmienne:
+\begin{itemize}
+\item \verb+ECGRs rpeaks+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący wektor
+numerów próbek z załamkami R
+\item \verb+double SamplingInterval+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący
+częstotliwość wczytanego sygnału
+\end{itemize}
+
+
+\medskip{}
+
+\paragraph{\texttt{GeometricAnalysis::PrepareRRSignal}} -- funkcja przekształca wektor numerów próbek z załamkami R na wektor
+interwałów RR w milisekundach.
+
+\medskip{}
+
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+rpeaks+ -- wektor numerów próbek z załamkami R
+\end{itemize}
+\medskip{}
+
+
+Funkcja zwraca:
+
+Funkcja zapisuje wektor interwałów RR w atrybucie klasy \verb+RR_intervals+.
+
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+gsl_vector_int_get+ -- metoda GSL pobierająca całkowitą wartość danego
+elementu z wektora
+\item \verb+gsl_vector_set+ -- metoda GSL zapisująca zmiennoprzecinkową wartość
+w danym elemencie wektora
+\item \verb+gsl_vector_scale+ -- metoda GSL mnożąca każdy element wektoru przez
+liczbę zmiennoprzecinkową
+\end{itemize}
+\medskip{}
+
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+unsigned int rpeaks_size+ -- długość wektora z numerami próbek załamków
+R
+\item \verb+double SamplingInterval+ -- częstotliwość wczytanego sygnału
+\end{itemize}
+
+\medskip{}
+
+\paragraph{\texttt{GeometricAnalysis::MakeHistogramAndGeometricalParams}} -- funkcja tworzy wektor wartości histogramu, oblicza wysokość i pozycję
+kolumny histogramu reprezentującą najczęściej powtarzający się interwał
+RR, wylicza długość oraz pozycję podstawy trójkąta aproksymującego,
+oszacowuje wartość indeksu trójkątnego.
+
+\medskip{}
+
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+RR_intervals+ -- wektor interwałów RR w milisekundach
+\end{itemize}
+\medskip{}
+
+
+Funkcja zwraca:
+\begin{itemize}
+\item histogram\_x -- pozycje kolumn histogramu
+\item histogram\_y -- wysokości kolumn histogramu
+\item X -- pozycja najwyższej kolumny histogramu
+\item Y -- wysokość najwyższej kolumny histogramu
+\item N -- początek podstawy trójkąta aproksymującego
+\item M -- koniec podstawy trójkąta aproksymującego
+\item HRVTriangularIndex -- indeks trójkątny
+\item TINN -- wskaźnik TINN
+\end{itemize}
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+gsl_vector_max+ -- metoda GSL zwracająca największy element danego
+wektora
+\item \verb+gsl_vector_min+ -- metoda GSL zwracająca najmniejszy element danego
+wektora
+\item \verb+gsl_vector_int_max_index+ -- metoda GSL zwracająca pozycję największego
+elementu danego wektora
+\item \verb+gsl_vector_int_get+ -- metoda GSL pobierająca całkowitą wartość danego
+elementu z wektora
+\item \verb+gsl_vector_get+ -- metoda GSL pobierająca zmiennoprzecinkową wartość
+danego elementu z wektora
+\item \verb+gsl_vector_set+ -- metoda GSL zapisująca zmiennoprzecinkową wartość
+w danym elemencie wektora
+\item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
+danym elemencie wektora
+\item \verb+gsl_interp_alloc+ -- metoda GSL tworząca wskaĽnik do nowo utworzonego
+obiektu interpolacji
+\item \verb+gsl_interp_accel_alloc+ -- metoda GSL tworząca wskaĽnik na obiekt
+iteratora do wyszukiwania interpolacji 
+\item \verb+gsl_interp_init+ -- metoda GSL wyliczająca funkcję interpolującą
+\item \verb+gsl_interp_eval+ -- metoda GSL zwracająca punkt funkcji interpolującej 
+\end{itemize}
+\medskip{}
+
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+double RRmax+ -- najdłuższy interwał RR
+\item \verb+double RRmin+ -- najkrótszy interwał RR
+\item \verb+IntSignal Histogram+ -- tymczasowy wektor punktów histogramu
+\item \verb+unsigned Histogram_size+ -- liczba wszystkich kolumn histogramu
+\item \verb+unsigned int RR_intervals_size+ -- liczba wszystkich interwałów RR
+\item \verb+double minimum+ -- zmienna przechowująca minimalną wartość całki z algorytmu
+wyznaczania TINN
+\item \verb+double x[3], y[3]+ -- tablica współrzędnych trójkąta aproksymującego
+\end{itemize}
+
+
+\paragraph{\texttt{GeometricAnalysis::MakePoincareAndSDParams}} -- funkcja wylicza punkty wykresu Poincare oraz parametry: SD1 i SD2.
+
+\medskip{}
+
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+RR_intervals+ -- wektor interwałów RR w milisekundach
+\end{itemize}
+\medskip{}
+
+
+Funkcja zwraca:
+\begin{itemize}
+\item poincare\_x -- współrzędne osi OX wykresu Poincare
+\item poincare\_y -- współrzędne osi OY wykresu Poincare
+\item parametr SD1
+\item parametr SD2
+\end{itemize}
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+gsl_vector_get+ -- metoda GSL pobierająca zmiennoprzecinkową wartość
+danego elementu z wektora
+\item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
+danym elemencie wektora
+\item \verb+gsl_stats_sd+ -- metoda GSL wyliczająca odchylenie standardowe
+\item \verb+gsl_vector_int_sub+ -- metoda GSL odejmująca dwa wektory
+\end{itemize}
+\medskip{}
+
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+unsigned int RR\_intervals\_size+ -- liczba wszystkich interwałów RR
+\item \verb+IntSignal diff+ -- wektor różnic pomiędzy sąsiednimi interwałami RR
+\end{itemize}
+%
+
+\paragraph{\texttt{GeometricAnalysis::SetHRV2Params}} -- funkcja przekazuje wyniki analizy HRV metodami geometrycznymi do instancji
+klasy ECGHRV2.
+
+\medskip{}
+
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+ECGHRV2 &hrv2+
+\end{itemize}
+\medskip{}
+
+
+Funkcja zwraca:
+
+Funkcja zwraca wyniki analizy geometrycznej do \verb+ECGHRV2 &hrv2+.
+
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item wszystkie funkcje pozwalające na zapis wyników do atrybutów klasy
+ECGHRV2. \medskip{}
+
+\end{itemize}
+Używane zmienne:
+
+Funkcja nie używa dodatkowych zmiennych.%
+
+
+\paragraph{\texttt{GeometricAnalysis::MakeRRsignal}} -- funkcja tworząca testowy wektor interwałów RR w milisekundach.
+
+\medskip{}
+
+
+Argumenty funkcji:
+
+Nie przyjmuje argumentów.
+
+\medskip{}
+
+
+Funkcja zwraca:
+
+Funkcja zwraca testowy wektor interwałów RR jako instancję klasy ECGRs.
+
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
+danym elemencie wektora
+\item \verb+setRs+ -- zapisuje wektor w instancji klasy ECGRs
+\end{itemize}
+\medskip{}
+
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+int RRsignal_length+ -- długość wektora interwałów RR
+\item \verb+int RRsignal[]+ -- tablica wartości interwałów RR
+\end{itemize}
+%
+
+\paragraph{\texttt{GeometricAnalysis::setParams}} -- funkcja modyfikująca szerokość kolumny histogramu.
+
+\medskip{}
+
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+ParametersTypes &parameterTypes+ -- zawiera dane ustawień poszczególnych
+modułów
+\end{itemize}
+\medskip{}
+
+
+Funkcja zwraca:
+
+Nie zwraca niczego. 
+
+\medskip{}
+
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+parameterTypes.find(histogram_bin_length)+
+- wyszukuje parametr modyfikujący szerokość kolumny histogramu\medskip{}
+
+\end{itemize}
+Używane zmienne:
+\begin{itemize}
+\item \verb+double HistogramParameter+ -- zmienna przechowująca wartość zwróconą
+przez funkcję \verb+parameterTypes.find+.
+\item \verb+double HistogramBinLength+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący
+szerokość kolumny histogramu.
+\end{itemize}
+
+
+\subsubsection{Warunki Testowania}
+\label{sec:hrv2:tests}
+
+Podczas procesu implementacji, moduł HRV2 poddawany był dwóm rodzajom
+testów:
+\begin{itemize}
+\item Pierwszy test polegał na porównaniu wyników działania modułu zaimplementowanego
+w Matlabie oraz Visual Studio Ultimate 2010. W tym celu jako dane
+wejściowe wykorzystano wektor interwałów RR wczytywany z pliku tekstowego
+dla Matlaba z tablicy jednowymiarowej dla Visual Studio.
+\item Drugi test sprawdzał działanie programu, gdy ten korzystał z testowych
+wyników modułu R\_PEAKS.
+\end{itemize}
+
+\subsubsection{Wyniki}
+\label{sec:hrv2:results}
+
+Rysunki \ref{fig:hrv2_1}, \ref{fig:hrv2_2} oraz \ref{fig:hrv2_3} prezentują wyniki pierwszego testu opisanego w poprzedniej
+podsekcji:
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/hrv2_1}
+\par\end{centering}
+
+\caption{Wyniki modułu HRV2 -- Visual Studio Ultimate 2010}
+\label{fig:hrv2_1}
+\end{figure}
+
+\par\end{center}
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.7]{include/hrv2_2}
+\par\end{centering}
+
+\caption{Wykres histogramu -- Matlab}
+\label{fig:hrv2_2}
+\end{figure}
+
+\par\end{center}
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.7]{include/hrv2_3}
+\par\end{centering}
+
+\caption{Wykres Poincare -+ Matlab}
+\label{fig:hrv2_3}
+\end{figure}
+
+\par\end{center}
 
 \subsection{HRV DFA}
 \label{sec:hrvd_fa}
