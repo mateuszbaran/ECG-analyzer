@@ -175,7 +175,8 @@ double HRTAnalyzer::calculateTO_2(double * signal, int size, double* avgTach)
 
 void HRTAnalyzer::calculateTS(double * signal, int size, vector<int> vpc_list, double* avgTach, double to, ECGHRT & hrt_data)
 {
-
+    return;
+/* Brak dodanyc Ÿróde³ matrixa, bez tego nei zadzia³a, zakomentowane, by inni mogli pracowaæ
     vector<double> A;
     vector<double> B;
 
@@ -192,7 +193,7 @@ void HRTAnalyzer::calculateTS(double * signal, int size, vector<int> vpc_list, d
 	}
         
 		
-	/* Wybór najwiêkszego A */
+    // Wybór najwiêkszego A
 	double maxA = A[0];
 	for(int i = 1; i < A.size(); i++)
 	{
@@ -234,4 +235,5 @@ void HRTAnalyzer::calculateTS(double * signal, int size, vector<int> vpc_list, d
 	hrt_data.length_to = hrt_data.avgSignal[7]*hrt_data.TO/100;
 	hrt_data.TS=maxA;
 	delete [] avgTach;
+    */
 }

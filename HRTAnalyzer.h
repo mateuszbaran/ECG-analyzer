@@ -2,7 +2,7 @@
 //#define USE_MOCKED_INTERVALS_SIGNAL
 #include "ModulesInterfaces.h"
 #include "ECGHRT.h"
-#include "matrix\Matrix.h"
+#include "matrix/Matrix.h"
 using namespace std;
 
 // testowe
