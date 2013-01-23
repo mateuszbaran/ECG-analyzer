@@ -101,9 +101,9 @@
 
 \section{Specyfikacja zadania}
 
-Celem projektu jest stworzenie zintegrowanego systemu pozwalającego na przeglądanie i automatyczną analizę sygnału EKG. Sygnał dostarczany jest w formie cyfrowej w standardzie wykorzystywanym w MIT–BIH Arrhythmia Database. Różne etapy przetwarzania, takie jak usuwanie linii bazowej, detekcja załamków R czy klasyfikacja zespołów QRS wykonywana jest przez różne zespoły (szczegółowe opisy specyfikacji modułów: \ref{sec:mod}), których praca składa się na jeden program.
+Celem projektu jest stworzenie zintegrowanego systemu pozwalającego na przeglądanie i automatyczną analizę sygnału EKG. Sygnał dostarczany jest w formie cyfrowej w standardzie wykorzystywanym w MIT–BIH Arrhythmia Database. Różne etapy przetwarzania, takie jak usuwanie linii bazowej, detekcja załamków R czy klasyfikacja zespołów QRS wykonywana jest przez różne zespoły (szczegółowe opisy specyfikacji modułów znajduje się w sekcji \ref{sec:mod}), których praca składa się na jeden program.
 
-Moduły przetwarzania integrowane i uzupełniane są modułami kontrolującymi przepływ danych i odpowiadającymi za komunikację z użytkownikiem. Wzajemne zależności pomiędzy modułami prezentuje rys. \ref{fig:zaleznosci}.
+Moduły przetwarzania integrowane i uzupełniane są modułami kontrolującymi przepływ danych i odpowiadającymi za komunikację z użytkownikiem. Wzajemne zależności pomiędzy modułami prezentuje rys. \ref{fig:zaleznosci}. W nawiasach obok nazwy zespołu podana jest liczba osób wchodzących w jego skład.
 
 \begin{figure}[h!]
   \centering
@@ -134,6 +134,14 @@ Minimalne wymagania kompilacji projektu są następujące:
     \item gsl 1.15
     \item WFDB 10.5.16 (zawarta w źródłach projektu)
     \item FFTW 3.3.2
+    \item KissFFT (zawarta w źródłach projektu)
+  \end{itemize}
+  \item System budowania:
+  \begin{itemize}
+	  \item system budowy Microsoft Visual Studio 2010 (Windows)
+	  \item CMake (Linux, MacOS X), generuje plik Makefile
+	  \item pakiet \LaTeX (dokumentacja)
+	  \item program Dia (większość diagramów)
   \end{itemize}
 \end{itemize}
 
@@ -147,8 +155,8 @@ Program został wykonany w architekturze MVC -- istnieje ścisły podział na cz
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\linewidth]{include/package_diagram}
-  \label{fig:package_diagram}
   \caption{Diagram pakietów.}
+  \label{fig:package_diagram}
 \end{figure}
 
 Samo przetwarzanie realizowane jest wielofazowo -- moduły przeliczane są sekwencyjnie na osobnym wątku niż wątek zdarzeń GUI, co pozwala na zatrzymanie zbyt długo trwającej operacji. Zaimplementowano także mechanizm buforowania wyników, dzięki czemu przy zmianie parametrów pewnego modułu nie ma konieczności przeliczania wyników modułów wcześniejszych.
@@ -158,9 +166,52 @@ Cała aplikacja napisana jest jako samodzielny, wieloplatformowy program (rys. \
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.5\linewidth]{include/deployment_diagram}
-  \label{fig:deployment_diagram}
   \caption{Diagram wdrożenia.}
+  \label{fig:deployment_diagram}
 \end{figure}
+
+Diagram sekwencji przedstawiający sposób uruchamiania modułów jest przedstawiony na rys. \ref{fig:sequence_diagram}. Każdy moduł otrzymuje najpierw zestaw parametrów (o ile posiada jakieś parametry), następnie zaś jest uruchamiany funkcją runModule. Kolejne moduły uruchamiane są sekwencyjnie według identycznego schematu. Wskutek akcji użytkownika możliwe jest przerwanie analizy pomiędzy poszczególnymi modułami.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\linewidth]{include/sequence_diagram}
+  \caption{Diagram sekwencji.}
+  \label{fig:sequence_diagram}
+\end{figure}
+
+Diagram klas został przedstawiony na rys. \ref{fig:class_diagram}. Obrazuje on zależności pomiędzy poszczególnymi klasami zrealizowanymi w ramach modułów oraz klasami pomocniczymi przechowującymi informacje przekazywane pomiędzy modułami, kontrolerem i widokiem.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\linewidth]{include/class_diagram}
+  \caption{Diagram klas.}
+  \label{fig:class_diagram}
+\end{figure}
+
+Diagram przypadków użycia, przedstawiony na rys. \ref{fig:use_case_diagram} pokazuje różne scenariusze, w których może być używany zrealizowany system. Każdemu przypadkowi odpowiada jeden lub więcej modułów. zachodzące pomiędzy nimi zależności są ukazywane relacjami zawierania.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{include/use_case_diagram}
+  \caption{Diagram klas.}
+  \label{fig:use_case_diagram}
+\end{figure}
+
+\subsection{Główne elementy kodu systemu}
+
+Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagram}. Metoda \verb+rerunAnalysis+, która się w niej znajduje odpowiada za kilka rzeczy:
+\begin{enumerate}
+\item Upewnianie się, że moduły mają aktualne parametry.
+\item Rozpoczynanie analizy zapisu EKG.
+\item Przerywanie analizy w przypadku, gdy już ona trwa.
+\item Raportowanie do GUI o kolejnych etapach pracy systemu (który moduł aktualnie się wykonuje).
+\end{enumerate}
+Ostatnie zadanie wykonywane jest za pomocą dwóch funkcyjnych argumentów wejściowych.
+
+Parametry, ustawiane metodami \verb+setParam*+ mają postać mapy przypisującej nazwom poszczególnych parametrów odpowiadające im wartości liczbowe. Wykorzystywane są przede wszystkim w modułach usuwania linii bazowej oraz wykrywania załamków R.
+
+Do klas pomocniczych można zaliczyć między innymi \verb+IntSignal+ czy \verb+ECGSignalChannel+. Sygnały, które przechodzą pomiędzy systemami czynią to właśnie poprzez obiekty tych klas. Są one zrealizowane jako sprytne wskaźniki do struktur trzymających wektory w stylu C biblioteki GSL, dzięki czemu możliwe jest pogodzenie szybkości działania z wygodną składnią i semantyką sprytnego wskaźnika.
+
+Poszczególne moduły są tworzone w hierarchii obiektowej (rys. \ref{fig:class_diagram}). Umożliwia to podmianę w przyszłości modułu na lepszą implementację bez poprawiania reszty silnika oraz przyczynia się do zmniejszenia współzależności.
 
 \section{Opisy modułów}
 \label{sec:mod}
@@ -731,7 +782,7 @@ Dane przyjmowane przez moduł:
 
 Dane zwracane przez moduł:
 \begin{itemize}
-  \item wektor wykrytych odcinków ST zawierających informaje:
+  \item wektor wykrytych odcinków ST zawierających informacje:
   \begin{itemize}
     \item początek i koniec odcinka;
     \item poziom izolinii;
