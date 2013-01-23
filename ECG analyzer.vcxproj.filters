@@ -57,6 +57,12 @@
     <Filter Include="Source Files\spline">
       <UniqueIdentifier>{6fee3c49-6384-46f9-a9ce-dfee23754d17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\matrix">
+      <UniqueIdentifier>{fa0c6c68-7fdf-42e6-a2cd-029d7e3315b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\matrix">
+      <UniqueIdentifier>{ad0e9357-8b99-4e0c-961c-a762faa03a29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -287,6 +293,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_scrollzoomer.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="DFAAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix\Matrix.cpp">
+      <Filter>Source Files\matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="HRTAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -473,6 +488,15 @@
     </ClInclude>
     <ClInclude Include="plots\timescaledraw.h">
       <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="DFAAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix\Matrix.h">
+      <Filter>Header Files\matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="HRTAnalyzer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -183,8 +183,10 @@
     <ClCompile Include="GeneratedFiles\Release\moc_synczoomer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="HRTAnalyzer.cpp" />
     <ClCompile Include="HRV1Analyzer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrix\Matrix.cpp" />
     <ClCompile Include="plots\ecg2ch.cpp" />
     <ClCompile Include="plots\ecgch.cpp" />
     <ClCompile Include="plots\gainsscaledraw.cpp" />
@@ -276,7 +278,9 @@
     <ClInclude Include="Filter.h" />
     <ClInclude Include="GeneratedFiles\ui_AboutWindow.h" />
     <ClInclude Include="GeneratedFiles\ui_ecganalyzer.h" />
+    <ClInclude Include="HRTAnalyzer.h" />
     <ClInclude Include="HRV1Analyzer.h" />
+    <ClInclude Include="matrix\Matrix.h" />
     <ClInclude Include="ModulesInterfaces.h" />
     <ClInclude Include="ModulesMethods.h" />
     <CustomBuild Include="plots\ecg2ch.h">

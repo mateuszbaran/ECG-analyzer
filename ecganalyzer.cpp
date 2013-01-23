@@ -117,21 +117,12 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
 		
 		
-		ECGHRT hrt_data;
-		hrt_data.offset = 3;
-		hrt_data.rr.push_back(QPointF(0.0, 2.0));
-		hrt_data.rr.push_back(QPointF(1.0, 0.0));
-		hrt_data.rr.push_back(QPointF(2.0, 5.0));
-		hrt_data.rr.push_back(QPointF(3.0, 3.0));
-		hrt_data.rr.push_back(QPointF(4.0, 10.0));
-		hrt_data.rr.push_back(QPointF(5.0, 4.0));
-		hrt_data.rr.push_back(QPointF(6.0, 9.0));
-		hrt_data.rr.push_back(QPointF(7.0, 7.0));
-		hrt_data.ts.setLine(2.0, 3.0, 5.0, 16.0);
+		_ECGcontroller.runHRT();
+
 		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
 		PlotHRT *plotHRT = new PlotHRT(this);
 		plotHARTLayout->addWidget(plotHRT);
-		plotHRT->setData(hrt_data);
+		plotHRT->setData(_ECGcontroller.hrt_data);
 		ui.groupBox->setLayout(plotHARTLayout);
 		
 		

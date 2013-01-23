@@ -44,11 +44,11 @@ PlotHRT::PlotHRT(QWidget *parent) :
 	grid->setMajPen(QPen(Qt::white, 0, Qt::DotLine));
 	grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
 	grid->attach(this);
-	setAxisTitle(QwtPlot::xBottom, "próbka");
+	setAxisTitle(QwtPlot::xBottom, "relative interval number");
 	setAxisTitle(QwtPlot::yLeft, "RR [ms]");
 	rr = new QwtPlotCurve("RR");
 	ts = new QwtPlotCurve("TS");
-	ts->setPen(QPen(Qt::red, 5));
+	ts->setPen(QPen(Qt::red, 2));
 	rr->setYAxis(QwtPlot::yLeft);
 	ts->setYAxis(QwtPlot::yLeft);
 	rr->attach(this);
