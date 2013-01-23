@@ -8,6 +8,6 @@ public:
 	SignalPreprocessor();
 	~SignalPreprocessor();
 
-	void evaluateSignalChannels(const ECGSignal &inputSignal, ECGSignalChannel &betterChannel);
+	int evaluateSignalChannels(const ECGSignal &inputSignal);
 	void normalize(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal);
 };
