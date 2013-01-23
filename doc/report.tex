@@ -847,7 +847,11 @@ Autorzy: Bartłomiej Bułat i Krzysztof Piekutowski.
 
 \subsubsection{Opis zadania}
 \label{sec:st_interval:desc}
-Celem projektu jest wyznaczenie odcinków ST, pomiar poziomu odcinka ST względem linii izoelektrycznej i jego nachylenia, a także detekcja epizodów ST oraz parametry ilościowe i jakościowe epizodów ST. Celowość analizy odcinka ST względem linii izoelektrycznej związana jest z predykcją choroby wieńcowej, miażdżycy oraz niedotlenieniem mięśnia serca.
+Celem projektu jest wyznaczenie odcinków ST, pomiar poziomu odcinka ST względem
+linii izoelektrycznej i jego nachylenia, a także detekcja epizodów ST oraz
+parametry ilościowe i jakościowe epizodów ST. Celowość analizy odcinka ST
+względem linii izoelektrycznej związana jest z predykcją choroby wieńcowej,
+miażdżycy oraz niedotlenieniem mięśnia serca.
 
 Dane przyjmowane przez moduł:
 \begin{itemize}
@@ -889,8 +893,8 @@ według przyjętego schematu rozszerza abstrakcyjny moduł analizy odcinka ST. W
 tej klasie znajdują się drzewo klas prywatnych reprezentujących poszczególne
 algorytmy analizy. W szczególności dwie klasy \verb|SimpleAnalizer| oraz
 \verb|ComplexAnalizer|. Pierwsza klasa reprezentuje najprostszy algorytm
-zaprezentowany w \cite[p.~155]{AUGUST1}, druga zaś implementuje lekko
-zmodyfikowany algorytm opisany w \cite{SHEN1}.
+zaprezentowany w \cite[p.~155]{AUGUST1}, druga zaś implementuje zmodyfikowany
+algorytm opisany w \cite{SHEN1}.
 
 %% TODO: mienić nazwę funkcji w programie
 Lista i opis najważniejszych funkcji:
@@ -909,7 +913,7 @@ $QRS_{end}$ oraz $T_{end}$) oblicza koniec odcinka ST i wylicza jego parametry:
   \item wartość nachylenia w stosunku do izolini
   \item długość odcinka ST
 \end{itemize}
-Uzywając wczesniej ustawionego parametru \verb|simple_thresh|, odcinek ST
+Używając wcześniej ustawionego parametru \verb|simple_thresh|, odcinek ST
 określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''.
 
 Parametry:
@@ -949,9 +953,9 @@ zaawansowane algorytmy od poprzedniej funkcji), a następnie oblicza jego parame
 Używając wcześniej ustawionego parametru \verb|complex_thresh|, odcinek ST
 określany jest jako ,,normalny'', ,,uniesiony'' lub ,,obniżony''. Algorytm
 ocenia również to, czy załamek jest prosty czy zakrzywiony w oparciu o
-wcześniej ustawiony parametr \verb|type_thresh|. Dla prostych odcinków określa
-kierunek, czy narasta, opada czy jest poziomy. Do określenia tej cechy
-wykorzystywany jest parametr \verb|slope_thresh|. Dla zakrzywiony odcinków ST
+wcześniej ustawiony parametr \verb|type_thresh|. Dla prostych odcinków określa,
+czy kierunek narasta, opada czy jest poziomy. Do określenia tej cechy
+wykorzystywany jest parametr \verb|slope_thresh|. Dla zakrzywionych odcinków ST
 oceniana jest wypukłość krzywej. Szczegółowy opis działania znajduje się w
 poprzednim rozdziale.
 
@@ -988,8 +992,8 @@ dyskretną pochodną sygnału.
 Parametry:
 \begin{itemize}
   \item \verb|const OtherSignal& sig| - cały, odfiltrowany sygnał EKG
-  \item \verb|int from| - numer próbki w której należy zacząć poszukiwania
-  \item \verb|int to| - numer próbki w której należy skończyć poszukiwania
+  \item \verb|int from| - numer próbki, w której należy zacząć poszukiwania
+  \item \verb|int to| - numer próbki, w której należy skończyć poszukiwania
 \end{itemize}
 
 
