@@ -1,4 +1,5 @@
 #include "ECGBaselineRemoval.h"
+#include "MovingAverage.h"
 #include "Butterworth.h"
 #include "Filter.h"
 #include "SignalPreprocessor.h"
@@ -12,11 +13,15 @@ void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo &
 {
 
 	SignalPreprocessor * preprocessor = new SignalPreprocessor();	
-	ECGSignalChannel betterChannel = ECGSignalChannel(new WrappedVector);
+	ECGSignalChannel betterChannel;
+
 	ECGSignalChannel filteredSignal = ECGSignalChannel(new WrappedVector);
 	filteredSignal->signal = gsl_vector_alloc(outputSignal->signal->size);
 	
-	preprocessor->evaluateSignalChannels(inputSignal, betterChannel);
+	if(preprocessor->evaluateSignalChannels(inputSignal) == 1)
+		betterChannel = inputSignal.channel_one;
+	else
+		betterChannel = inputSignal.channel_two;
 
 	switch(baselineRemovalMethod){
 		case MOVING_AVERAGE:
@@ -68,35 +73,8 @@ void ECGBaselineRemoval::setParams(ParametersTypes &params)
 */
 void ECGBaselineRemoval::movingAverageBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int span)
 {
-	auto signalLength = outputSignal-> signal -> size;
-
-	for(long index = 0; index < signalLength; index++)
-	{
-		auto edge = ceil((float)span/2);
-
-		if(index < edge || index > signalLength - edge) 
-		{
-			auto inputValue = gsl_vector_get (inputSignal -> signal, index);
-			gsl_vector_set(outputSignal -> signal, index, inputValue);
-		}
-		else
-		{
-			auto avgValue = calculateAvgValueOfNeighbours(inputSignal -> signal, index, span);		
-			gsl_vector_set (outputSignal -> signal, index, avgValue);
-		}
-	}
-}
-
-double ECGBaselineRemoval::calculateAvgValueOfNeighbours(gsl_vector *signal, int currentIndex, int span)
-{
-	double sum = 0.00;
-	for(int i = 1; i <= span/2; i++)
-	{
-		sum += gsl_vector_get (signal, currentIndex - i);
-		sum += gsl_vector_get (signal, currentIndex + i);
-	}
-
-	return sum/span;
+	MovingAverage * ma = new MovingAverage();
+	ma->removeBaseline(inputSignal, outputSignal, span);
 }
 
 void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal,
