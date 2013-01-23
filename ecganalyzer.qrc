@@ -13,5 +13,6 @@
         <file>icons/locked.png</file>
         <file>icons/magnifier_minus.png</file>
         <file>icons/magnifier_plus.png</file>
+        <file>icons/magnifier_one.png</file>
     </qresource>
 </RCC>

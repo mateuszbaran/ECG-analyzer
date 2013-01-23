@@ -31,7 +31,7 @@ private:
     EcgCh *ch2;
     PlotControl *control;
 
-    QToolButton *syncButton, *zoomInFirst, *zoomOutFirst, *zoomInSecond, *zoomOutSecond;
+    QToolButton *syncButton, *zoomResetFirstButton, *zoomInFirstButton, *zoomOutFirstButton, *zoomResetSecondButton, *zoomInSecondButton, *zoomOutSecondButton;
 };
 
 #endif // ECG2CH_H

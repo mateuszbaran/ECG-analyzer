@@ -20,6 +20,8 @@
 #include <qwt_plot_magnifier.h>
 #endif
 
+#include "qdebug.h"
+
 const unsigned int c_rangeMax = 1000;
 
 class Zoomer: public ScrollZoomer
@@ -44,11 +46,11 @@ public:
         return text;
     }
 
-    virtual void Zoomer::widgetMousePressEvent(QMouseEvent *e)
+    virtual void widgetMousePressEvent(QMouseEvent *e)
     {
     }
 
-    virtual void Zoomer::widgetMouseReleaseEvent(QMouseEvent *)
+    virtual void widgetMouseReleaseEvent(QMouseEvent *)
     {
 
     }
@@ -91,7 +93,6 @@ PlotControl::PlotControl(QwtPlot *_plot1, QwtPlot *_plot2)
 void PlotControl::setZoomBase(QRectF& base, QRectF& current)
 {
     this->defaultRect = current;
-    this->baseRect = base;
     zoomer1->zoom(base);
     zoomer2->zoom(base);
     zoomer1->setZoomBase();
@@ -115,40 +116,98 @@ void PlotControl::enableSync(bool enable)
     }
 }
 
-void PlotControl::zoomOutFirst()
+void PlotControl::zoomIn(Zoomer *zoomer)
 {
-    QRectF rect = zoomer1->zoomStack().last();
-    float dimensionFactor = rect.width() / rect.height();
-
-    float newLeftX = std::max(baseRect.left(), rect.left() - rect.width() * 0.2);
-    float newRightX = std::min(rect.right() + rect.width() * 0.2, baseRect.right());
-
-    float newWidth = newRightX - newLeftX;
-    float newHeight = dimensionFactor * newWidth;
-
-    float y_offset = (newHeight - rect.height()) * 0.5;
-//    float newRightX = max(rect.bottomRight().x + rect.width() * 0.2, zoomer1->canvas())
-    QPointF topLeft(newLeftX, rect.top() - y_offset);
-    QPointF bottomRight(newRightX, rect.bottom() + y_offset);
+    QRectF rect = zoomer->zoomStack().last();
+    QPointF topLeft(rect.topLeft().x() + rect.width() * 0.0816, rect.topLeft().y() + rect.height() * 0.0816);
+    QPointF bottomRight(rect.bottomRight().x() - rect.width() * 0.0816, rect.bottomRight().y() - rect.height() * 0.0816);
     QRectF newRect(topLeft, bottomRight);
-    zoomer1->zoom(newRect);
+    zoomer->zoom(newRect);
 }
 
-void PlotControl::zoomInSecond()
+void PlotControl::zoomOut(Zoomer *zoomer)
 {
+    QRectF rect = zoomer->zoomStack().last();
+    double dimensionFactor = rect.height() / rect.width();
 
+    float newWidth = 1.2 * rect.width();
+    float x_offset = (newWidth - rect.width()) * 0.5;
+
+    float newLeftX = std::max((float)zoomer->zoomBase().left(), (float)rect.left() - x_offset);
+    float newRightX = std::min(newLeftX + newWidth, (float)zoomer->zoomBase().right());
+    newWidth = newRightX - newLeftX;
+
+    float newHeight = std::min((float)(dimensionFactor * newWidth), (float)zoomer->zoomBase().height());
+    newWidth = newHeight / dimensionFactor;
+    x_offset = (newWidth - rect.width()) * 0.5;
+
+    newLeftX = std::max((float)zoomer->zoomBase().left(), (float)rect.left() - x_offset);
+
+    float y_offset = (newHeight - rect.height()) * 0.5;
+
+    QPointF topLeft(newLeftX, rect.top() - y_offset);
+    QPointF bottomRight(newLeftX + newWidth, rect.top() - y_offset + newHeight);
+
+    QRectF newRect(topLeft, bottomRight);
+    zoomer->zoom(newRect);
+}
+
+void PlotControl::zoomReset(Zoomer *zoomer)
+{
+    QRectF rect = zoomer->zoomStack().last();
+
+    if (rect.width() > defaultRect.width())
+    {
+        QPointF topLeft(rect.center().x() - defaultRect.width() * 0.5, rect.center().y() - defaultRect.height() * 0.5);
+        QPointF bottomRight(rect.center().x() + defaultRect.width() * 0.5, rect.center().y() + defaultRect.height() * 0.5);
+        QRectF newRect(topLeft, bottomRight);
+        zoomer->zoom(newRect);
+    }
+    else
+    {
+        QPointF center = rect.center();
+        if ((center.x() - zoomer->zoomBase().left()) < (defaultRect.width() * 0.5))
+        {
+            center.setX(zoomer->zoomBase().left() + (defaultRect.width() * 0.5));
+        }
+        else if ((zoomer->zoomBase().right() - center.x()) < (defaultRect.width() * 0.5))
+        {
+            center.setX(zoomer->zoomBase().right() - (defaultRect.width() * 0.5));
+        }
+        QPointF topLeft(center.x() - defaultRect.width() * 0.5, center.y() - defaultRect.height() * 0.5);
+        QPointF bottomRight(center.x() + defaultRect.width() * 0.5, center.y() + defaultRect.height() * 0.5);
+        QRectF newRect(topLeft, bottomRight);
+        zoomer->zoom(newRect);
+    }
 }
 
 void PlotControl::zoomInFirst()
 {
-    QRectF rect = zoomer1->zoomStack().last();
-    QPointF topLeft(rect.topLeft().x() + rect.width() * 0.24, rect.topLeft().y() + rect.height() * 0.24);
-    QPointF bottomRight(rect.bottomRight().x() - rect.width() * 0.24, rect.bottomRight().y() - rect.height() * 0.24);
-    QRectF newRect(topLeft, bottomRight);
-    zoomer1->zoom(newRect);
+    this->zoomIn(zoomer1);
+}
+
+void PlotControl::zoomOutFirst()
+{
+    this->zoomOut(zoomer1);
+}
+
+void PlotControl::zoomResetFirst()
+{
+    this->zoomReset(zoomer1);
+}
+
+void PlotControl::zoomInSecond()
+{
+    this->zoomIn(zoomer2);
 }
 
 void PlotControl::zoomOutSecond()
 {
-
+    this->zoomOut(zoomer2);
 }
+
+void PlotControl::zoomResetSecond()
+{
+    this->zoomReset(zoomer2);
+}
+

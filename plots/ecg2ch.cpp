@@ -25,12 +25,34 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     syncButton->setCheckable(true);
     syncButton->setChecked(true);
     toolBar->addWidget(syncButton);
-    zoomInFirst = new QToolButton(toolBar);
-    zoomInFirst->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_plus"));
-    toolBar->addWidget(zoomInFirst);
-    zoomOutFirst = new QToolButton(toolBar);
-    zoomOutFirst->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_minus"));
-    toolBar->addWidget(zoomOutFirst);
+
+    toolBar->addSeparator();
+
+    zoomResetFirstButton = new QToolButton(toolBar);
+    zoomResetFirstButton->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_one.png"));
+    toolBar->addWidget(zoomResetFirstButton);
+    zoomInFirstButton = new QToolButton(toolBar);
+    zoomInFirstButton->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_plus.png"));
+    toolBar->addWidget(zoomInFirstButton);
+    zoomOutFirstButton = new QToolButton(toolBar);
+    zoomOutFirstButton->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_minus.png"));
+    toolBar->addWidget(zoomOutFirstButton);
+
+    toolBar->addSeparator();
+
+    zoomResetSecondButton = new QToolButton(toolBar);
+    zoomResetSecondButton->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_one.png"));
+    zoomResetSecondButton->setEnabled(false);
+    toolBar->addWidget(zoomResetSecondButton);
+    zoomInSecondButton = new QToolButton(toolBar);
+    zoomInSecondButton->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_plus.png"));
+    zoomInSecondButton->setEnabled(false);
+    toolBar->addWidget(zoomInSecondButton);
+    zoomOutSecondButton = new QToolButton(toolBar);
+    zoomOutSecondButton->setIcon(QIcon(":/ECGanalyzer/icons/magnifier_minus.png"));
+    zoomOutSecondButton->setEnabled(false);
+    toolBar->addWidget(zoomOutSecondButton);
+
 
     mainLayout->addWidget(toolBar);
 
@@ -50,8 +72,13 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     control = new PlotControl(plot1, plot2);
     control->enableSync(true);
     connect(syncButton, SIGNAL(toggled(bool)), this, SLOT(syncToggled(bool)));
-    connect(zoomInFirst, SIGNAL(clicked()), control, SLOT(zoomInFirst()));
-    connect(zoomOutFirst, SIGNAL(clicked()), control, SLOT(zoomOutFirst()));
+    connect(zoomResetFirstButton, SIGNAL(clicked()), control, SLOT(zoomResetFirst()));
+    connect(zoomInFirstButton, SIGNAL(clicked()), control, SLOT(zoomInFirst()));
+    connect(zoomOutFirstButton, SIGNAL(clicked()), control, SLOT(zoomOutFirst()));
+
+    connect(zoomResetSecondButton, SIGNAL(clicked()), control, SLOT(zoomResetSecond()));
+    connect(zoomInSecondButton, SIGNAL(clicked()), control, SLOT(zoomInSecond()));
+    connect(zoomOutSecondButton, SIGNAL(clicked()), control, SLOT(zoomOutSecond()));
 }
 
 Ecg2Ch::~Ecg2Ch()
@@ -103,10 +130,16 @@ void Ecg2Ch::syncToggled(bool toggle)
     if (toggle)
     {
         syncButton->setIcon(QIcon(":/ECGanalyzer/icons/locked.png"));
+        zoomResetSecondButton->setEnabled(false);
+        zoomInSecondButton->setEnabled(false);
+        zoomOutSecondButton->setEnabled(false);
     }
     else
     {
         syncButton->setIcon(QIcon(":/ECGanalyzer/icons/unlocked.png"));
+        zoomResetSecondButton->setEnabled(true);
+        zoomInSecondButton->setEnabled(true);
+        zoomOutSecondButton->setEnabled(true);
     }
     control->enableSync(toggle);
 }

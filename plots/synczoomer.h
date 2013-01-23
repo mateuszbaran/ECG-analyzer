@@ -1,6 +1,8 @@
 #ifndef SYNCZOOMER_H
 #define SYNCZOOMER_H
 
+#include "scrollzoomer.h"
+
 #ifdef WIN32
 #define QWT_DLL
 #include <qwt6/qwt_plot.h>
@@ -22,6 +24,8 @@
 #include <qwt_plot_magnifier.h>
 #endif
 
+class Zoomer;
+
 class PlotControl : public QObject
 {
     Q_OBJECT
@@ -31,18 +35,22 @@ public:
 
 public slots:
     void enableSync(bool enable);
+    void zoomIn(Zoomer* zoomer);
     void zoomInFirst();
-    void zoomOutFirst();
     void zoomInSecond();
+    void zoomOut(Zoomer* zoomer);
+    void zoomOutFirst();
     void zoomOutSecond();
+    void zoomReset(Zoomer* zoomer);
+    void zoomResetFirst();
+    void zoomResetSecond();
 
 private:
     QwtPlot *plot1;
     QwtPlot *plot2;
-    QwtPlotZoomer *zoomer1;
-    QwtPlotZoomer *zoomer2;
+    Zoomer *zoomer1;
+    Zoomer *zoomer2;
     QRectF defaultRect;
-    QRectF baseRect;
 };
 
 #endif // SYNCZOOMER_H
