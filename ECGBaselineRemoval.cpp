@@ -20,13 +20,16 @@ void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo &
 
 	switch(baselineRemovalMethod){
 		case MOVING_AVERAGE:
-			movingAverageBaselineRemoval(betterChannel, filteredSignal, 5);
+			movingAverageBaselineRemoval(betterChannel, filteredSignal, this->span);
 			break;
 		case BUTTERWORTH:
-			butterworthBaselineRemoval(betterChannel, filteredSignal, ecgi, 5);
+			butterworthBaselineRemoval(betterChannel, filteredSignal, ecgi, this->order, this->cutoff_frequency, this->attenuation);
 			break;
 		case CHEBYSHEV:
-			chebyshevBaselineRemoval(betterChannel, filteredSignal, ecgi, 5);
+			chebyshevBaselineRemoval(betterChannel, filteredSignal, ecgi, this->order, this->cutoff_frequency, this->ripple);
+			break;
+		default:
+			movingAverageBaselineRemoval(betterChannel, filteredSignal, 5);
 			break;
 	}
 
@@ -38,13 +41,29 @@ void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo &
 */
 void ECGBaselineRemoval::setParams(ParametersTypes &params)
 {
-	this -> baselineRemovalMethod = MOVING_AVERAGE;
+	this -> baselineRemovalMethod = (BASELINE_REMOVAL_METHOD)params["baseline_removal_method"];
+
+	switch(this->baselineRemovalMethod)
+	{
+		case MOVING_AVERAGE:
+			this->span = params["span"];
+			break;
+		case BUTTERWORTH:
+			this->order = params["order"];
+			this->cutoff_frequency = params["cutoff_frequency"];
+			this->attenuation = params["attenuation"];
+			break;
+		case CHEBYSHEV:
+			this->order = params["order"];
+			this->cutoff_frequency = params["cutoff_frequency"];
+			this->ripple = params["ripple"];
+			break;
+	}
 }
 
 /**
-	Moving Average algorithm - we assume that 4 neighbours are considered 
+	Moving Average algorithm - we assume that variable (default = 5) neighbours are considered 
 	while calculating average value for any given point,
-	(--->>> it can be parametrized and number of neighbours might be passed from GUI)
 	for edge points the output values are copies of the corresponding input values
 */
 void ECGBaselineRemoval::movingAverageBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int span)
@@ -80,16 +99,18 @@ double ECGBaselineRemoval::calculateAvgValueOfNeighbours(gsl_vector *signal, int
 	return sum/span;
 }
 
-void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, int cutoffFreq)
+void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal,
+													const ECGInfo &ecgInfo, int order, double cutoffFrequency, double attenuation)
 {
 	int sampleFreq = ecgInfo.channel_one.frequecy;
 	Butterworth * butterworth = new Butterworth();
-	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, cutoffFreq, sampleFreq, 0);
+	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, cutoffFrequency, sampleFreq, 0);
 	
 	Filter * filter = new Filter();
 	filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2);
 }
 
-void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, int cutoffFreq)
+void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, 
+												  const ECGInfo &ecgInfo, int order, double cutoffFrequency, double ripple)
 {
 }

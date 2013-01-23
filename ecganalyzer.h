@@ -89,6 +89,13 @@ private:
     void setModulesParams();
 
 	/**
+	 * Set params for baseline removal module
+	 *
+	 * Should be run *before* analysis
+	 */
+	void setBaselineParams();
+
+	/**
      * Set params for R peaks module
      */
 	void setRpeaksParams();
