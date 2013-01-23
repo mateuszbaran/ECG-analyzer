@@ -182,8 +182,3 @@ doc/*.mtc
 doc/*.mtc1
 doc/*.out
 doc/*.synctex.gz
-doc/*.pdf
-doc/*.pdf
-doc/*.eps
-doc/*.ps
-doc/include/*.eps
