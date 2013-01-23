@@ -149,6 +149,9 @@
     <ClCompile Include="HRV1Analyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QRSMorphologyDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -244,6 +247,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HRV1Analyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QRSMorphologyDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

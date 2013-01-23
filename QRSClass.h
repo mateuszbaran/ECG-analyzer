@@ -9,12 +9,12 @@ using namespace std;
 /**
  * QRS Types.
  */
-/*
+
 enum QRSType
 {
   VENTRICULUS,
   SUPRACENTRICULAR
-};*/
+};
 
 /**
  * @class Represents single QRS Class.
@@ -25,15 +25,12 @@ public:
   QRSClass (void);
   ~QRSClass (void);
 
-  bool QRSClass::classQRS(ECGSignal &signal,ECGWaves &waves);
-  double * QRSClass::pole(ECGSignal * signal);
-  double * QRSClass::dlugosc(ECGSignal * signal);
+  void setQrsMorphology(IntSignal QRS_morphology);
+  void setSize(size_t n);
 
-  ECGSignal getMockedSignal();
-
-  IntSignal GetQRS_class() const
+  IntSignal GetQRS_morphology() const
   {
-	  return QRS_class;
+	  return QRS_morphology;
   }
 
 
@@ -49,6 +46,6 @@ public:
 
 private:
   int id;
-  IntSignal QRS_class;
+  IntSignal QRS_morphology;
 };
 

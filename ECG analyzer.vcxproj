@@ -128,6 +128,7 @@
     <ClCompile Include="plots\ecg2ch.cpp" />
     <ClCompile Include="plots\ecgch.cpp" />
     <ClCompile Include="QRSClass.cpp" />
+    <ClCompile Include="QRSMorphologyDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="tri_logger.cpp" />
     <ClCompile Include="wfdb\annot.c" />
@@ -203,6 +204,7 @@
     </CustomBuild>
     <ClInclude Include="nullstream.hpp" />
     <ClInclude Include="QRSClass.h" />
+    <ClInclude Include="QRSMorphologyDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="tri_logger.hpp" />
     <ClInclude Include="wfdb\ecgcodes.h" />
