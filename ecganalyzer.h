@@ -76,6 +76,8 @@ private slots:
 
     void on_checkBoxShowOnPlotHRVTriangle_toggled(bool checked);
 
+    void on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1);
+
 private:
 	Ui::ECGanalyzerClass ui;
 	AboutWindow aboutWindow;

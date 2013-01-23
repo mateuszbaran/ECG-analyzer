@@ -420,3 +420,9 @@ void ECGanalyzer::on_checkBoxShowOnPlotHRVTriangle_toggled(bool checked)
 {
 
 }
+
+void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
+{
+	ParametersTypes hrv2_params;
+	//hrv2_params["algorithm"] = (double) ui.doubleSpinBoxRPeaksHistogramSize->value();
+}
