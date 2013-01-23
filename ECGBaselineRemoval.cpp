@@ -46,7 +46,12 @@ void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, const ECGInfo &
 */
 void ECGBaselineRemoval::setParams(ParametersTypes &params)
 {
-	this -> baselineRemovalMethod = (BASELINE_REMOVAL_METHOD)params["baseline_removal_method"];
+	if(params["baseline_removal_method"] == 1)
+		this->baselineRemovalMethod = MOVING_AVERAGE;
+	else if(params["baseline_removal_method"] == 2)
+		this->baselineRemovalMethod = BUTTERWORTH;
+	else if(params["baseline_removal_method"] == 3)
+		this->baselineRemovalMethod = CHEBYSHEV;
 
 	switch(this->baselineRemovalMethod)
 	{
