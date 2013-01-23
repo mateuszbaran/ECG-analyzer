@@ -1,6 +1,7 @@
 #include "ECGBaselineRemoval.h"
 #include "MovingAverage.h"
 #include "Butterworth.h"
+#include "Chebyshev.h"
 #include "Filter.h"
 #include "SignalPreprocessor.h"
 #include "math.h"
@@ -96,4 +97,10 @@ void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel &inputSigna
 void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, 
 												  const ECGInfo &ecgInfo, int order, double cutoffFrequency, double ripple)
 {
+	int sampleFreq = ecgInfo.channel_one.frequecy;
+	Chebyshev * chebyshev = new Chebyshev();
+	std::vector<std::vector<double>> cbCoefficients = chebyshev->filterDesign(2, cutoffFrequency, sampleFreq, 0);
+	
+	Filter * filter = new Filter();
+	filter->zeroPhase(cbCoefficients[0], cbCoefficients[1], inputSignal, outputSignal, 2);
 }
