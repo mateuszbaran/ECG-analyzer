@@ -1,8 +1,18 @@
 #include <qevent.h>
+
+#ifdef WIN32
+#define QWT_DLL
+#include <qwt6/qwt_plot_canvas.h>
+#include <qwt6/qwt_plot_layout.h>
+#include <qwt6/qwt_scale_engine.h>
+#include <qwt6/qwt_scale_widget.h>
+#else
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_layout.h>
 #include <qwt_scale_engine.h>
 #include <qwt_scale_widget.h>
+#endif
+
 #include "scrollbar.h"
 #include "scrollzoomer.h"
 

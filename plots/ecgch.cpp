@@ -1,6 +1,7 @@
 #include "ecgch.h"
 #include "timescaledraw.h"
 #include "gainsscaledraw.h"
+#include <QDebug>
 
 EcgCh::EcgCh(QWidget *parent) :
     QwtPlot(parent)
@@ -65,4 +66,9 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal pe
 //    peaksData->setSamples(*peaksSamples);
 //    peaksCurve->setData(data);
 //    replot();
+}
+
+QPointF EcgCh::lastSample()
+{
+    return samples->last();
 }

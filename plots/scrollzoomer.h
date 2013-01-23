@@ -2,7 +2,12 @@
 #define _SCROLLZOOMER_H
 
 #include <qglobal.h>
+#ifdef WIN32
+#define QWT_DLL
+#include <qwt6/qwt_plot_zoomer.h>
+#else
 #include <qwt_plot_zoomer.h>
+#endif
 
 class ScrollData;
 class ScrollBar;

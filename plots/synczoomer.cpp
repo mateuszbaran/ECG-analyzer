@@ -1,6 +1,7 @@
 #include "synczoomer.h"
 #include "scrollzoomer.h"
 #include "qglobal.h"
+#include "stdlib.h"
 
 #ifdef WIN32
 #define QWT_DLL
@@ -87,12 +88,16 @@ PlotControl::PlotControl(QwtPlot *_plot1, QwtPlot *_plot2)
     zoomer2 = new Zoomer(canvas2);
 }
 
-void PlotControl::setZoomBase(QRectF& rect)
+void PlotControl::setZoomBase(QRectF& base, QRectF& current)
 {
+    this->defaultRect = current;
+    this->baseRect = base;
+    zoomer1->zoom(base);
+    zoomer2->zoom(base);
     zoomer1->setZoomBase();
     zoomer2->setZoomBase();
-    zoomer1->zoom(rect);
-    zoomer2->zoom(rect);
+    zoomer1->zoom(current);
+    zoomer2->zoom(current);
 }
 
 void PlotControl::enableSync(bool enable)
@@ -113,8 +118,18 @@ void PlotControl::enableSync(bool enable)
 void PlotControl::zoomOutFirst()
 {
     QRectF rect = zoomer1->zoomStack().last();
-    QPointF topLeft(rect.topLeft().x() - rect.width() * 0.2, rect.topLeft().y() - rect.height() * 0.2);
-    QPointF bottomRight(rect.bottomRight().x() + rect.width() * 0.2, rect.bottomRight().y() + rect.height() * 0.2);
+    float dimensionFactor = rect.width() / rect.height();
+
+    float newLeftX = std::max(baseRect.left(), rect.left() - rect.width() * 0.2);
+    float newRightX = std::min(rect.right() + rect.width() * 0.2, baseRect.right());
+
+    float newWidth = newRightX - newLeftX;
+    float newHeight = dimensionFactor * newWidth;
+
+    float y_offset = (newHeight - rect.height()) * 0.5;
+//    float newRightX = max(rect.bottomRight().x + rect.width() * 0.2, zoomer1->canvas())
+    QPointF topLeft(newLeftX, rect.top() - y_offset);
+    QPointF bottomRight(newRightX, rect.bottom() + y_offset);
     QRectF newRect(topLeft, bottomRight);
     zoomer1->zoom(newRect);
 }

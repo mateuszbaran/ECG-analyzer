@@ -27,7 +27,7 @@ class PlotControl : public QObject
     Q_OBJECT
 public:
     PlotControl(QwtPlot *plot1, QwtPlot *plot2);
-    void setZoomBase(QRectF &rect);
+    void setZoomBase(QRectF &base, QRectF &current);
 
 public slots:
     void enableSync(bool enable);
@@ -41,6 +41,8 @@ private:
     QwtPlot *plot2;
     QwtPlotZoomer *zoomer1;
     QwtPlotZoomer *zoomer2;
+    QRectF defaultRect;
+    QRectF baseRect;
 };
 
 #endif // SYNCZOOMER_H

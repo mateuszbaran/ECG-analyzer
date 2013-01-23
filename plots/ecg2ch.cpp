@@ -62,30 +62,40 @@ Ecg2Ch::~Ecg2Ch()
 
 void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info)
 {
-    double max_value_one, min_value_one, max_value_two, min_value_two;
-    gsl_vector_minmax_to_index(signal->channel_one->signal, &min_value_one, &max_value_one, 1000);
-    gsl_vector_minmax_to_index(signal->channel_two->signal, &min_value_two, &max_value_two, 1000);
-    float max_value = max(max_value_one, max_value_two);
-    float min_value = min(min_value_one, min_value_two);
+//    double max_value_one, min_value_one, max_value_two, min_value_two;
+//    gsl_vector_minmax_to_index(signal->channel_one->signal, &min_value_one, &max_value_one, 1000);
+//    gsl_vector_minmax_to_index(signal->channel_two->signal, &min_value_two, &max_value_two, 1000);
+//    float max_value = max(max_value_one, max_value_two);
+//    float min_value = min(min_value_one, min_value_two);
 
-    ch1->setSignal(signal->channel_one, info->channel_one);
-    ch2->setSignal(signal->channel_two, info->channel_two);
-    QRectF rect(QPointF(0, max_value), QPointF(1000, min_value));
-    control->setZoomBase(rect);
+//    ch1->setSignal(signal->channel_one, info->channel_one);
+//    ch2->setSignal(signal->channel_two, info->channel_two);
+//    QRectF rect(QPointF(0, max_value), QPointF(1000, min_value));
+//    control->setZoomBase(rect);
 }
 
 void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks)
 {
     double max_value_one, min_value_one, max_value_two, min_value_two;
+
     gsl_vector_minmax_to_index(signal->channel_one->signal, &min_value_one, &max_value_one, 1000);
     gsl_vector_minmax_to_index(signal->channel_two->signal, &min_value_two, &max_value_two, 1000);
     float max_value = max(max_value_one, max_value_two);
     float min_value = min(min_value_one, min_value_two);
 
+
     ch1->setSignal(signal->channel_one, info->channel_one, peaks->GetRs());
     ch2->setSignal(signal->channel_two, info->channel_two, peaks->GetRs());
-    QRectF rect(QPointF(0, max_value), QPointF(1000, min_value));
-    control->setZoomBase(rect);
+
+    QRectF defaultRect(QPointF(0, max_value), QPointF((float)min(abs((int)(max_value * 1.3)), (int)signal->channel_one->signal->size), min_value));
+
+    float min_global = min(gsl_vector_min(signal->channel_one->signal), gsl_vector_min(signal->channel_two->signal));
+    float max_global = max(gsl_vector_max(signal->channel_one->signal), gsl_vector_max(signal->channel_two->signal));
+    float last_x = (float)max(signal->channel_one->signal->size, signal->channel_two->signal->size);
+
+    QRectF baseRect(QPointF(0.0, max_global), QPointF(last_x, min_global));
+
+    control->setZoomBase(baseRect, defaultRect);
 }
 
 void Ecg2Ch::syncToggled(bool toggle)
