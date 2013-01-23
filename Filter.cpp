@@ -88,7 +88,7 @@ void Filter::filter(std::vector<double> b, std::vector<double> a, ECGSignalChann
 		}
 	}
 
-	for (int i=order+1;i<signalLength+1;i++)
+	for (int i=order+1;i<signalLength;i++)
 	{
 		//y[i]=0.0;
 		gsl_vector_set (outputSignal -> signal, i, 0.0);
