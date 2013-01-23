@@ -224,7 +224,7 @@ void ECGanalyzer::enableChebyschevGUIControls(bool enable)
 {
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
 	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
-	ui.spinBoxOrderChebyshev->setEnabled(enable);
+	//ui.spinBoxOrderChebyshev->setEnabled(enable);
 }
 
 void ECGanalyzer::enableButterworthGUIControls(bool enable)
@@ -340,15 +340,15 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_intervals_table->setHorizontalHeaderItem(5, new QTableWidgetItem( "Description" ));
   
   i = 0;
-  for(const ECGST::Interval &it: intervals) {
-    ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.jpoint ).c_str() ));
-    ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it.stpoint ).c_str() ) );
-    ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it.length()) ));
-    ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it.slope) ));
-    ui.st_intervals_table->setItem(i,4, new QTableWidgetItem( QString::number(it.offset) ));
-    ui.st_intervals_table->setItem(i,5, new QTableWidgetItem( it.description.c_str() ));
-    ++i;
-  }
+  //for(const ECGST::Interval &it: intervals) {
+  //  ui.st_intervals_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.jpoint ).c_str() ));
+  //  ui.st_intervals_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime( it.stpoint ).c_str() ) );
+  //  ui.st_intervals_table->setItem(i,2, new QTableWidgetItem( QString::number(it.length()) ));
+  //  ui.st_intervals_table->setItem(i,3, new QTableWidgetItem( QString::number(it.slope) ));
+  //  ui.st_intervals_table->setItem(i,4, new QTableWidgetItem( QString::number(it.offset) ));
+  //  ui.st_intervals_table->setItem(i,5, new QTableWidgetItem( it.description.c_str() ));
+  //  ++i;
+  //}
   
   //Set Episodes table
   ui.st_episodes_table->clear();
@@ -358,11 +358,11 @@ void ECGanalyzer::updateSTIntervalTab()
   ui.st_episodes_table->setHorizontalHeaderItem(1, new QTableWidgetItem("Episode end") );
   
   i = 0;
-  for(const ECGST::Episode &it: episodes) {
-    ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.start ).c_str() ));
-    ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  it.end ).c_str() ));
-    ++i;
-  }
+  //for(const ECGST::Episode &it: episodes) {
+  //  ui.st_episodes_table->setItem(i,0, new QTableWidgetItem( info.sampleToTime( it.start ).c_str() ));
+  //  ui.st_episodes_table->setItem(i,1, new QTableWidgetItem( info.sampleToTime(  it.end ).c_str() ));
+  //  ++i;
+  //}
   
   ui.st_plot->setSignal(_ECGcontroller.filtered_signal, _ECGcontroller.ecg_info.channel_one, _ECGcontroller.st_data);
   ui.st_plot->showInterval(_ECGcontroller.st_data.getIntervalAt(0));
@@ -387,7 +387,7 @@ void ECGanalyzer::setBaselineParams()
 	else if(ui.radioButtonChebyschevFilter->isChecked())
 	{
 		params["baseline_removal_method"] = CHEBYSHEV;
-		params["order"] = ui.spinBoxOrderChebyshev->value();
+		//params["order"] = ui.spinBoxOrderChebyshev->value();
 		params["cutoff_frequency"] = ui.spinBoxCutOffFrequencyChebyshev->value();
 		params["ripple"] = ui.doubleSpinBoxRippleChebyschev->value();
 	}
