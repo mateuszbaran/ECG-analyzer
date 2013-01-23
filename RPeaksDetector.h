@@ -1,65 +1,16 @@
 #pragma once
-// Main includes
+#include "fft/kiss_fft.h"
+#include "fft/kiss_fftr.h"
 #include "ModulesInterfaces.h"
 #include "ModulesMethods.h"
-// PanTompkins includes
 #include <fstream>
 #include <sstream>
-// Hilbert includes
-#include <cstdlib>
-#include <stdio.h>
-#include <string.h>
-#include <algorithm>
-#include <list>
-#include <cmath>
-#include <climits>
-#include <vector>
 
-
-
-// *************************************************************
-// funkcja oblicza RMS ci�gu "w"
-// *************************************************************
-double oblicz_rms (const std::vector<double> & w);
-
-// *************************************************************
-// funkcja oblicza maksimum z abs(w)
-// *************************************************************
-double oblicz_max_abs (const std::vector<double> & w);
-
-
-// sygnal - dany sygnal
-// czestotliwosc - jego czetotliwosc
-// y - wektor w kt�rym umieszczone s� wyniki dzia�ania funkcji
-// *************************************************************
-// funkcja oblicza pochodn� sygna�u o zadanej cz�totliwo�ci
-// *************************************************************
-void rozniczkuj(const std::vector<double> &sygnal, int czestotliwosc, 
-		std::vector<double> &y);
-
-// sygnal - zmieniany sygnal
-// *****************************************************************
-//   fukcja odejmuje od sygnalu jego sredni� warto�� a nast�pnie 
-//   ka�dy element wektoa zamienia na jego warto�� bezwzgl�dn�.
-//   Po co to? Ano po to, by p�nejsza naliza transformacji pochodnej 
-//   bra�a pod uwag� tak�e "dolne" R-peaki
-// *****************************************************************
-void zmien_sygnal_na_abs(std::vector<double> &s);
-
-//---------------------------------------------------------------------------------------------------
-
-void detekcja_r_hilbert(const std::vector<double> & sygnal,
-	int czestotliwosc,
-	std::vector<int> & numery_R);
-
-	//--------------------------------------------------------------------------------------------------------
-
-
-// Test definitions
+#define ASSERT(where,what);
 //#define DEBUG
 //#define DEBUG_SIGNAL
 //#define DEBUG_SIGNAL_DETAILS
-#define USE_MOCKED_SIGNAL
+//#define USE_MOCKED_SIGNAL
 
 using namespace std;
 
@@ -146,7 +97,112 @@ private:
   * Returns a part of filtered signal
   * This function is used only for tests!
   */
-  ECGSignalChannel getMockedSignal();
+  ECGSignalChannel getMockedSignal(); 
+  
+  ///////// Hilbert methods /////////
+  /**
+  *  Organizes hilbert R peaks detection
+  */
+  void hilbertDetection(const std::vector<double> & sygnal, int czestotliwosc, std::vector<int> & numery_R);
+  
+  /**
+  *  Add new proposition to recognized R peaks
+  */
+  void addToRecognized( const std::list<int> &propozycje, std::vector<int> &wykryte);
+
+  /**
+  *  Leaves point sonly over threshold
+  */
+  void filterPropositions(int czestotliwosc, const std::vector<double> &h, double threshold, 
+	  std::list<int> & propozycje, int przesuniecie);
+  
+  /**
+  *  
+  */
+  void hilbert(const std::vector<double> & f, std::vector<double> & g);
+
+  /**
+  *  Process one differentiated signal window
+  */
+  void balanceWindow(const std::vector<double> &sygnal, int start, int rozmiar, 
+	  const std::vector<double> &y, int czestotliwosc, std::vector<int> &wykryte);
+
+  /**
+  *  Remove to close points
+  */
+  void removeTooClose(int czestotliwosc, const std::vector<double> & sygnal,
+	  const std::vector<int> &wykryte, std::vector<int> & R) ;
+
+  ///////// HELPERS /////////
+  /**
+  *  Calculate RMS
+  */
+  double rmsCalculate (const std::vector<double> & w);
+
+  /**
+  *  Find max from abs vector
+  */
+  double maxFromAbs (const std::vector<double> & w);
+
+  /**
+  *  Differentiates for given frequency
+  */
+  void differentiates(const std::vector<double> &sygnal, int czestotliwosc, std::vector<double> &y);
+
+  /**
+  *  Make signal abs
+  */
+  void signalAbs(std::vector<double> &s);
+  
+  /**
+  *  Chceks if numbers are almoust equals
+  */
+  bool almostEqual(double x, double y);
+
+  /**
+  *  Finds max value for given vector
+  */
+  int findMax( int nr, const std::vector<double> &sygnal, int czestotliwosc);
+  
+  /**
+  *  
+  */
+  void realMax(int czestotliwosc, const std::vector<double> &sygnal, std::list<int> &propozycje) ;
+  
+  /**
+  *  
+  */
+  void double2kiss(const std::vector<double> &f, kiss_fft_cpx * g);
+  
+  /**
+  *  
+  */
+  void kiss2double(int n, kiss_fft_cpx * f, std::vector<double> &g);
+  
+  /**
+  *  
+  */
+  void fft(const std::vector<double> & f, kiss_fft_cpx * g);
+  
+  /**
+  *  
+  */
+  void ifft(int n, kiss_fft_cpx * f, std::vector<double> & g);
+  
+  /**
+  *  
+  */
+  void multiplyBy1ppixTransformation( int n, kiss_fft_cpx * f );
+
+  /**
+  *  
+  */
+  double average(const std::vector<double> & w);
+
+  /**
+  *  
+  */
+  double round(double liczba);
 
 };
 
