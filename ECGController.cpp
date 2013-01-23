@@ -1,8 +1,8 @@
 #include "ECGController.h"
 
 #include "ECGBaselineRemoval.h"
-#include "RPeaksDetector.h"
 #include "HRV1Analyzer.h"
+#include "RPeaksDetector.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
 

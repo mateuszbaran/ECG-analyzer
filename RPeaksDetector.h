@@ -58,13 +58,14 @@ extern "C" {
 # endif
 #endif
 
-typedef struct {
-    kiss_fft_scalar r;
-    kiss_fft_scalar i;
-}kiss_fft_cpx;
+#ifndef KISS_FFT_H
+	typedef struct {
+		kiss_fft_scalar r;
+		kiss_fft_scalar i;
+	}kiss_fft_cpx;
 
-typedef struct kiss_fft_state* kiss_fft_cfg;
-
+	typedef struct kiss_fft_state* kiss_fft_cfg;
+#endif
 /* 
  *  kiss_fft_alloc
  *  
@@ -298,7 +299,7 @@ struct kiss_fft_state{
 //-----------------------------------------------------------------------------------------------------------
 #define _FAZA_TESTOWA_
 #ifndef _FAZA_TESTOWA_
-#define ASSERT(gdzie,co) ; // gdy ju¿ program prawid³owo dzia³a
+#define ASSERT(gdzie,co) ; // gdy juï¿½ program prawidï¿½owo dziaï¿½a
 #else
 #include <iostream>  // dla ASSERT 
 #include <cstdlib>  // dla ASSERT 
@@ -310,7 +311,7 @@ struct kiss_fft_state{
 
 
 // *************************************************************
-// funkcja oblicza RMS ci¹gu "w"
+// funkcja oblicza RMS ciï¿½gu "w"
 // *************************************************************
 double oblicz_rms (const std::vector<double> & w);
 
@@ -322,19 +323,19 @@ double oblicz_max_abs (const std::vector<double> & w);
 
 // sygnal - dany sygnal
 // czestotliwosc - jego czetotliwosc
-// y - wektor w którym umieszczone s¹ wyniki dzia³ania funkcji
+// y - wektor w ktï¿½rym umieszczone sï¿½ wyniki dziaï¿½ania funkcji
 // *************************************************************
-// funkcja oblicza pochodn¹ sygna³u o zadanej czêtotliwoœci
+// funkcja oblicza pochodnï¿½ sygnaï¿½u o zadanej czï¿½totliwoï¿½ci
 // *************************************************************
 void rozniczkuj(const std::vector<double> &sygnal, int czestotliwosc, 
 		std::vector<double> &y);
 
 // sygnal - zmieniany sygnal
 // *****************************************************************
-//   fukcja odejmuje od sygnalu jego sredni¹ wartoœæ a nastêpnie 
-//   ka¿dy element wektoa zamienia na jego wartoœæ bezwzglêdn¹.
-//   Po co to? Ano po to, by póŸnejsza naliza transformacji pochodnej 
-//   bra³a pod uwagê tak¿e "dolne" R-peaki
+//   fukcja odejmuje od sygnalu jego sredniï¿½ wartoï¿½ï¿½ a nastï¿½pnie 
+//   kaï¿½dy element wektoa zamienia na jego wartoï¿½ï¿½ bezwzglï¿½dnï¿½.
+//   Po co to? Ano po to, by pï¿½nejsza naliza transformacji pochodnej 
+//   braï¿½a pod uwagï¿½ takï¿½e "dolne" R-peaki
 // *****************************************************************
 void zmien_sygnal_na_abs(std::vector<double> &s);
 

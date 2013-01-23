@@ -8,7 +8,9 @@
 
 HRV1Analyzer::HRV1Analyzer() { }
 
-HRV1Analyzer::~HRV1Analyzer() { }
+HRV1Analyzer::~HRV1Analyzer() {
+
+}
 
 void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
 	this->rPeaksData = r_peaks_data;
@@ -157,7 +159,6 @@ void HRV1Analyzer::run() {
 	this->hrv1Data->SDANN = std(mRRI, 0, numberOfSteps);
 	this->hrv1Data->SDANN_index = mean(stdRR5, 0, numberOfSteps);
 
-	delete[] sigAbsolute;
 
 	///////////////////SDSD
 	//OK: accuracy 0.01
@@ -174,9 +175,11 @@ void HRV1Analyzer::run() {
 
 
 	////////////////////FFT
-	//FIXME
 
-    int i,size = signalSize;
+	double* sigAfterSpline = cubicSpline(sigAbsolute, sig, signalSize);
+
+
+    int i,size = (int)(sigAbsolute[signalSize-1]/200) +1;
     int isinverse = 1;
 
     kiss_fft_cpx out_cpx[size], out[size], *cpx_buf;
@@ -184,7 +187,7 @@ void HRV1Analyzer::run() {
     kiss_fftr_cfg fft = kiss_fftr_alloc(size*2 ,0 ,0,0);
     kiss_fftr_cfg ifft = kiss_fftr_alloc(size*2,isinverse,0,0);
 
-    cpx_buf = copycpx(sig,size);
+    cpx_buf = copycpx(sigAfterSpline,size);
     kiss_fftr(fft,(kiss_fft_scalar*)cpx_buf, out_cpx);
     kiss_fftri(ifft,out_cpx,(kiss_fft_scalar*)out );
 
@@ -234,10 +237,26 @@ void HRV1Analyzer::run() {
     this->hrv1Data->TP = this->hrv1Data->ULF + this->hrv1Data->VLF + this->hrv1Data->LF + this->hrv1Data->HF;
     this->hrv1Data->LFHF = this->hrv1Data->LF / this->hrv1Data->HF;
 
+    delete[] sigAbsolute;
+
+    ////////////////////Sygnaly do wyswietlenia
+
+    //OtherSignal freqency;
+    //OtherSignal power;
+
+    this->hrv1Data->freqency = OtherSignal(new WrappedVector);
+
+    this->hrv1Data->power = OtherSignal(new WrappedVector);
+
+    for(int i=0; i<sizeFftIndex; i++) {
+    	this->hrv1Data->freqency->set(i, i);
+    	this->hrv1Data->power->set(i, fftMagnitude[i]);
+    }
+
 }
 
 #ifndef DEV
-void HRV1Analyzer::setParams(ParametersTypes &parameterTypes) { }
+    void HRV1Analyzer::setParams(ParametersTypes &parameterTypes) { }
 #endif
 
 kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) {
@@ -246,12 +265,45 @@ kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) {
 	mat2=(kiss_fft_cpx*)KISS_FFT_MALLOC(sizeof(kiss_fft_cpx)*nframe);
         kiss_fft_scalar zero;
         memset(&zero,0,sizeof(zero) );
-	for(i=0; i<nframe ; i++)
-	{
+	for(i=0; i<nframe ; i++) {
 		mat2[i].r = mat[i];
 		mat2[i].i = zero;
 	}
 	return mat2;
+}
+
+double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) {
+    //magnet::math::Spline spline;
+    int FREQ_SAMPLING = 1000 * 1/5; //bo milisekundy
+
+    alglib::spline1dinterpolant s;
+    alglib::ae_int_t natural_bound_type = 2;
+
+	//for(int i=0; i<nframe ; i++) {
+        //spline.addPoint(x[i], y[i]);
+	//}
+	alglib::real_1d_array *rx = new alglib::real_1d_array();
+	rx->setcontent(nframe, x);
+	alglib::real_1d_array *ry = new alglib::real_1d_array();
+	ry->setcontent(nframe, y);
+	alglib::spline1dbuildcubic(
+                            *const_cast<const alglib::real_1d_array*>(rx),
+                            *const_cast<const alglib::real_1d_array*>(ry),
+                            s);
+
+
+	//wlasciwe interpolowanie funkcji
+    int sizeAfterSpline = (int)(x[signalSize-1]/FREQ_SAMPLING) +1;
+	double* sig = new double[sizeAfterSpline];
+
+
+
+    for(int i=0; i<sizeAfterSpline; i++) {
+        std::cout << sig[i] << "\n";
+        //sig[i] = spline(i*FREQ_SAMPLING);
+        sig[i] = alglib::spline1dcalc(s, i*FREQ_SAMPLING);
+    }
+    return sig;
 }
 
 double HRV1Analyzer::mean(double *tab, int start, int end) {
