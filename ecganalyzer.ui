@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>922</width>
-    <height>577</height>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -188,7 +188,7 @@
                     <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderVisible">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderCascadingSectionResizes">
                     <bool>false</bool>
@@ -297,6 +297,9 @@
              <string>Digital filters:</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="margin">
+              <number>6</number>
+             </property>
              <item>
               <widget class="QRadioButton" name="radioButtonMovingAverage">
                <property name="sizePolicy">
@@ -453,24 +456,26 @@
              </item>
              <item>
               <layout class="QGridLayout" name="gridLayout_9">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>6</number>
+               </property>
                <property name="spacing">
                 <number>6</number>
                </property>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>Cut-off frequency:</string>
+               <item row="2" column="3">
+                <widget class="QSpinBox" name="spinBoxCutOffFrequencyChebyshev">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="value">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_11">
-                 <property name="text">
-                  <string>Ripple:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
+               <item row="3" column="3">
                 <widget class="QDoubleSpinBox" name="doubleSpinBoxRippleChebyschev">
                  <property name="enabled">
                   <bool>false</bool>
@@ -483,31 +488,42 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
-                <widget class="QSpinBox" name="spinBoxCutOffFrequencyChebyshev">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="value">
-                  <number>5</number>
+               <item row="2" column="1">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Cut-off frequency:</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="2">
+               <item row="2" column="4">
                 <widget class="QLabel" name="label_16">
                  <property name="text">
                   <string>Hz</string>
                  </property>
                 </widget>
                </item>
-               <item row="4" column="2">
+               <item row="3" column="4">
                 <widget class="QLabel" name="label_15">
                  <property name="text">
                   <string>dB</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="1" column="1">
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Order:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>Ripple:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
                 <widget class="QSpinBox" name="spinBoxOrderChebyshev">
                  <property name="enabled">
                   <bool>false</bool>
@@ -523,14 +539,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_12">
-                 <property name="text">
-                  <string>Order:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
+               <item row="1" column="2">
                 <spacer name="horizontalSpacer_12">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -570,6 +579,9 @@
              <string>R Peaks:</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <property name="margin">
+              <number>6</number>
+             </property>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <property name="topMargin">
@@ -605,6 +617,68 @@
                      <string>Hilbert</string>
                     </property>
                    </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_18">
+                 <property name="rightMargin">
+                  <number>5</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_13">
+                   <property name="text">
+                    <string>Histogram size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_8">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="doubleSpinBoxRPeaksHistogramSize">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="decimals">
+                    <number>4</number>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>7.812500000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string>ms</string>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -724,7 +798,7 @@
                <item>
                 <widget class="QCheckBox" name="checkBoxRPeaksDetectWindowSizeAutomatically">
                  <property name="text">
-                  <string>Detest Window Size Automatically</string>
+                  <string>Detect Window Size Automatically</string>
                  </property>
                  <property name="checked">
                   <bool>true</bool>
@@ -799,7 +873,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -878,7 +952,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">
@@ -1152,7 +1226,7 @@
                 <bool>false</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
-                <bool>true</bool>
+                <bool>false</bool>
                </attribute>
                <row>
                 <property name="text">
@@ -1276,7 +1350,7 @@
                      <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderVisible">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderCascadingSectionResizes">
                      <bool>false</bool>
@@ -1493,7 +1567,7 @@
                    <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderVisible">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderCascadingSectionResizes">
                    <bool>false</bool>
