@@ -27,6 +27,10 @@ public:
     return rr_integrated;
   }
 
+  double getDFA_scaling_factor() const
+  {
+    return DFA_scaling_factor;
+  }
 
   std::vector<std::vector<std::string >> &getTable ()
   {

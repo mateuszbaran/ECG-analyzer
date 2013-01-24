@@ -65,18 +65,17 @@ PlotHRVTriangle::~PlotHRVTriangle()
 
 void PlotHRVTriangle::setData(ECGHRV2 &data)
 {
-	gsl_vector_int *hx = data.GetHistogram_x()->signal;
-	gsl_vector_int *hy = data.GetHistogram_y()->signal;
+	IntSignal hx = data.GetHistogram_x();
+	IntSignal hy = data.GetHistogram_y();
 	double x = data.GetX();
 	double y = data.GetY();
-	double n = 200.0;
-	double m = 800.0;
-	int size = int(hx->size); // == hy.size
-	
+	double n = data.GetN();
+	double m = data.GetM();
+	size_t size = hx->signal->size;
 	QVector<QPointF> peaks;
 	for (int i = 0; i < size; ++i)
 	{
-		peaks.push_back(QPointF(float(hx->data[i*hx->stride]), float(hy->data[i*hy->stride])));
+		peaks.push_back(QPointF(float(hx->get(i)), float(hy->get(i))));
 	}
 	rr->setSamples(peaks);
 	

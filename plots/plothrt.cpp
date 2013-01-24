@@ -1,4 +1,4 @@
-#include "hrt.h"
+#include "plothrt.h"
 
 class LabeledScaleDraw : public QwtScaleDraw
 {
@@ -44,6 +44,7 @@ PlotHRT::PlotHRT(QWidget *parent) :
 	grid->setMajPen(QPen(Qt::white, 0, Qt::DotLine));
 	grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
 	grid->attach(this);
+    setAxisMaxMinor(QwtPlot::xBottom, 30);
 	setAxisTitle(QwtPlot::xBottom, "relative interval number");
 	setAxisTitle(QwtPlot::yLeft, "RR [ms]");
 	rr = new QwtPlotCurve("RR");

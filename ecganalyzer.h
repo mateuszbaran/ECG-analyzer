@@ -12,9 +12,14 @@
 
 
 #include "ECGController.h"
-#include "plots/hrt.h"
+#include "plots/plottachogram.h"
 #include "plots/plotpoincare.h"
 #include "plots/plothrvtriangle.h"
+#include "plots/plothrvfrequency.h"
+#include "plots/plotdfa1.h"
+#include "plots/plotdfa2.h"
+#include "plots/plotqrs.h"
+#include "plots/plothrt.h"
 #include "AboutWindow.h"
 
 
@@ -73,13 +78,6 @@ private:
     void setModulesParams();
 
 	/**
-	 * Set params for baseline removal module
-	 *
-	 * Should be run *before* analysis
-	 */
-	void setBaselineParams();
-
-	/**
      * Set params for R peaks module
      */
 	void setRpeaksParams();
@@ -100,6 +98,16 @@ private:
 
 	ECGController _ECGcontroller;
 	//Ecg2Ch _ecg2ch;
+	
+	PlotTachogram *plotTachogram;
+	PlotHRVTriangle *plotHRVTriangle;
+	PlotPoincare *plotPoincare;
+	PlotHRVFrequency *plotHRVFrequency;
+	PlotDFA1 *plotDFA1;
+	PlotDFA2 *plotDFA2;
+	PlotQRS *plotQRS;
+	PlotHRT *plotHRT;
+	
 };
 
 #endif // ECGANALYZER_H

@@ -206,7 +206,7 @@ Diagram przypadków użycia, przedstawiony na rys. \ref{fig:use_case_diagram} po
 
 \subsection{Główne elementy kodu systemu}
 
-Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagram}. Metoda \verb+rerunAnalysis+, która się w niej znajduje odpowiada za kilka rzeczy:
+Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagram}. Metoda \verb+rerunAnalysis+, która się w~niej znajduje odpowiada za kilka rzeczy:
 \begin{enumerate}
 \item Upewnianie się, że moduły mają aktualne parametry.
 \item Rozpoczynanie analizy zapisu EKG.
@@ -215,11 +215,11 @@ Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagr
 \end{enumerate}
 Ostatnie zadanie wykonywane jest za pomocą dwóch funkcyjnych argumentów wejściowych.
 
-Parametry, ustawiane metodami \verb+setParam*+ mają postać mapy przypisującej nazwom poszczególnych parametrów odpowiadające im wartości liczbowe. Wykorzystywane są przede wszystkim w modułach usuwania linii bazowej oraz wykrywania załamków R.
+Parametry, ustawiane metodami \verb+setParam*+ mają postać mapy przypisującej nazwom poszczególnych parametrów odpowiadające im wartości liczbowe. Wykorzystywane są przede wszystkim w~modułach usuwania linii bazowej oraz wykrywania załamków R.
 
 Do klas pomocniczych można zaliczyć między innymi \verb+IntSignal+ czy \verb+ECGSignalChannel+. Sygnały, które przechodzą pomiędzy systemami czynią to właśnie poprzez obiekty tych klas. Są one zrealizowane jako sprytne wskaźniki do struktur trzymających wektory w stylu C biblioteki GSL, dzięki czemu możliwe jest pogodzenie szybkości działania z wygodną składnią i semantyką sprytnego wskaźnika.
 
-Poszczególne moduły są tworzone w hierarchii obiektowej (rys. \ref{fig:class_diagram}). Umożliwia to podmianę w przyszłości modułu na lepszą implementację bez poprawiania reszty silnika oraz przyczynia się do zmniejszenia współzależności.
+Poszczególne moduły są tworzone w hierarchii obiektowej (rys. \ref{fig:class_diagram}). Umożliwia to podmianę w~przyszłości modułu na lepszą implementację bez poprawiania reszty silnika oraz przyczynia się do zmniejszenia współzależności.
 
 \section{Opisy modułów}
 \label{sec:mod}
@@ -233,7 +233,7 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \begin{description}
 \item[Temat] Metody filtracji i detekcji izolinii w sygnale EKG
-\item[Opis] Występujące zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej w sygnale EKG niejednokrotnie uniemożliwiają właściwą i poprawną analizę sygnału. Celem projektu jest opracowanie i implementacja metod związanych filtracją i detekcją linii izoelektrycznej w sygnale EKG. W szczególności należy rozważyć:
+\item[Opis] Występujące zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej w sygnale EKG niejednokrotnie uniemożliwiają właściwą i poprawną analizę sygnału. Celem projektu jest opracowanie i implementacja metod związanych filtracją i detekcją linii izoelektrycznej w~sygnale EKG. W szczególności należy rozważyć:
   \begin{itemize}
   \item filtr Butterwortha,
   \item średnią kroczącą,
@@ -302,7 +302,7 @@ y(n) = \frac{x(n)}{\max(|x(n)|)} \label{eq:b}
 Filtracja dolnoprzepustowa $0Hz - 15Hz$ ma na celu usunięcie zakłóceń sygnału powstających
 pod wpływem drżenia mięśni ($35 Hz$), wpływu
 zakłóceń sieci elektroenergetycznej $50/60 Hz$, wpływu załamka $T$ oraz pływającej izolinii
-elektrycznej. Powszechnie stosowany jest filtr o tranzmitancji\eqref{eq:c}.
+elektrycznej. Powszechnie stosowany jest filtr o transmitancji \eqref{eq:c}.
 \begin{equation}
 H(z) = \frac{1}{32} \frac{(1-z^{-6})^2}{(1-z^1)^2}\label{eq:c}
 \end{equation}
@@ -417,7 +417,7 @@ Na rysunku \eqref{qrsgoog} możemy zobaczyć rezultat prawidłowego doboru dług
 \label{movingwindow}
 \end{figure}\\
 \paragraph{Progowanie i detekcja zespołów QRS}
-Ostatnim krokiem metody |verb|PanTompkins jest detekcja progu detekcji oraz sama detekja zespołu QRS. Próg detekji może być ustalony na stałe bądź wyliczony według własnych wzorów.
+Ostatnim krokiem metody |verb|PanTompkins jest detekcja progu detekcji oraz sama detekcja zespołu QRS. Próg detekcji może być ustalony na stałe bądź wyliczony według własnych wzorów.
 \paragraph{Wykrywanie załamka R}
 \indent Aby odnaleźć załamek R należy teraz odnaleźć początek i koniec każdego kompleksu QRS w sygnale oryginalnym, używamy do tego punktów zapisanych w odnalezionym wektorze po operacji progowania. Mając taki wycinek oryginalnego sygnału, wyszukujemy wartości maksymalnej sygnału i oznaczamy ten punkt jako załamek R.\\
 Na rysunku \eqref{rdet} można zobaczyć przykładową detekcję załamków R.
@@ -433,12 +433,12 @@ Na rysunku \eqref{rdet} można zobaczyć przykładową detekcję załamków R.
 
 Implementacja modułu wykrywania załamków \verb|R| znajduje się w klasie \verb|RPeaksDetector| która rozszerza abstrakcyjny moduł wykrywania załamków \verb|R|. Klasa ta posiada implementację dwóch metod wykrywania załamków \verb|R|:
 \begin{itemize}
-	\item Pant-Pompkins
+	\item Pan-Tompkins
 	\item Hilbert
 \end{itemize}
 Moduł na podstawie parametrów jakie otrzymuje z \verb|GUI| wybiera odpowiednią metodę detekcji. Oprócz metody detekcji możliwe jest również ustawienie ręczne parametrów takich jak:
 \begin{itemize}
-	\item dla metody Pant-Pompkins
+	\item dla metody Pan-Tompkins
 	\begin{itemize}
 		\item próg detekcji
 		\item szerokość okna całkowania
@@ -467,7 +467,7 @@ Funkcja otrzymuje na wejściu przefiltrowany sygnał \verb|ECGSignalChannel *sig
 Jeśli podczas wykrywania nie wystąpi żaden problem zostanie stworzony wektor z punktami w jakich zostały wykryte załamki \verb|R|. Natomiast jeśli z jakiegoś powodu wykrycie załamków nie powiedzie się zostanie rzucony wyjątek \verb|RPeaksDetectionExveption|.
 \paragraph{Hilbert}
 \begin{lstlisting}
-bool hilbertRPeaksDetection(ECGSignalChannel *signal);;
+bool hilbertRPeaksDetection(ECGSignalChannel *signal);
 \end{lstlisting}
 Funkcja również na wejściu otrzymuje sygnał z modułu \verb|ECGBaseLine|. Zadania wykonywane podczas detekcji można podzielić następująco:
 \begin{itemize}
@@ -481,8 +481,9 @@ Jeśli podczas wykrywania nie wystąpi żaden problem zostanie stworzony wektor 
 
 \subsubsection{Warunki testowania}
 \label{sec:rs:tests}
-Początkowo moduł był testowany przy użyciu własnego przefiltrowanego sygnału testowego utworzonego w matlabie. Testowy sygnał został pozbawiony składowej stałej, zostały usunięte zakłócenia filtrami: dolnoprzepustowym oraz górnoprzepustowym. Cały sygnał został znormalizowany do zakresu od -1 do 1.\\
+Początkowo moduł był testowany przy użyciu własnego przefiltrowanego sygnału testowego utworzonego w Matlabie. Testowy sygnał został pozbawiony składowej stałej, zostały usunięte zakłócenia filtrami: dolnoprzepustowym oraz górnoprzepustowym. Cały sygnał został znormalizowany do zakresu od -1 do 1.\\
 \indent Sygnał można wczytać przy pomocy funkcji jaka znajduje się w klasie \verb|RPeaksDetector| o nazwie \verb|getMockedSignal|. W pliku \verb|RPeaksDetector.h| znajdują się makrodefinicje które w prosty sposób pozwalają włączyć debugowanie procesu wykrywania sygnału oraz użycie testowego sygnału.\\
+
 \indent Makrodefinicja \verb|USE_MOCKED_SIGNAL| włącza użycie testowego sygnału. Sygnał jaki dostarcza moduł \verb|ECGBaseLine| jest ignorowany. Dodatkowo makrodefinicja \verb|DEBUG| pozwala na wypisanie podstawowych informacji z przebiegu wykrywania załamków \verb|R|. Poniżej przedstawiamy przykładowy log zarówno dla metody \verb|PanTompkins| jak i \verb|Hilbert|:
 \begin{verse}
 Thersold size not found, use automatic calculated value\\ 
@@ -536,7 +537,7 @@ Uzyskane wyniki wykrywania załamków \verb|R| dla sygnałów pochodzących z ba
 \linebreak
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-sygnał & ilośc R & wykryte PanTompkins & wykryte Hilbert & skuteczność PanTompkins & skuteczność Hilbert\\ \hline
+sygnał & ilość R & \parbox{2.7 cm}{\centering wykryte \\ PanTompkins} & wykryte  Hilbert & \parbox{3 cm}{\centering skuteczność \\ PanTompkins} & skuteczność Hilbert\\ \hline
 100   & 2273 & 3001 & 2272  & 91,7\% & 99,9\% \\ \hline
 105   & 2572 & 2982 & 2559  & 85,1\% & 99,5\% \\ \hline
 107   & 2137 & 3803 & 2125  & 33,1\% & 99,4\% \\ \hline
@@ -550,15 +551,16 @@ test100   & 2273 & 2274 & 2272  & 99,9\% & 99,9\% \\ \hline
 \end{tabular}
 \linebreak
 \\
-\indent Uzyskane wyniki pomiarów wyraźnie pokazują przewagę metody \verb|Hilberta|. W wiekszości plików wynik skuteczności wachał sie w około 98\%. Metoda detekcji \verb|PanTompkins| sprawia problemy głównie w sygnałach o dużych zakłuceniach oraz tam gdzie morfologia pochodzenia sygnału udeżenia jest inna niż zatokowo-przedsionkowa.\\
-\indent Ostatni sygnał 'test100' został wygenerowany z matlaba, wczytaliśmy sygnał 100.dat, przefiltrowaliśmy, usunęliśmy skladowa stałą oraz znormalizowaliśmy. Tak przygotowany sygnał został wczytany i przeprowadziliśmy detekcję. Jak widać skuteczność jest znacznie większa niż w przyadku oryginalnego sygnału gdzie przygotowany sygnał dostajemy z modułu \verb|BaseLIne|.\\
-\indent Próbowaliśmy również testować wykrywanie zmieniając ustawienią modułu \verb|BaseLine| wybierając inne filtracje. Wyniki jakie uzyskaliśmy były praktycznie identyczne jak powyżej dlatego nie zamieszczamy ich tutaj.
+\indent Uzyskane wyniki pomiarów wyraźnie pokazują przewagę metody \verb|Hilberta|. W większości plików wynik skuteczności wahał się w około 98\%. Metoda detekcji \verb|PanTompkins| sprawia problemy głównie w~sygnałach o dużych zakłóceniach oraz tam gdzie morfologia pochodzenia sygnału uderzenia jest inna niż zatokowo-przedsionkowa.\\
+\indent Ostatni sygnał 'test100' został wygenerowany z Matlaba, wczytaliśmy sygnał 100.dat, przefiltrowaliśmy, usunęliśmy składową stałą oraz znormalizowaliśmy. Tak przygotowany sygnał został wczytany i przeprowadziliśmy detekcję. Jak widać skuteczność jest znacznie większa niż w przypadku oryginalnego sygnału gdzie przygotowany sygnał dostajemy z modułu \verb|BaseLIne|.\\
+\indent Próbowaliśmy również testować wykrywanie zmieniając ostawienia modułu \verb|BaseLine| wybierając inne filtracje. Wyniki jakie uzyskaliśmy były praktycznie identyczne jak powyżej dlatego nie zamieszczamy ich tutaj.
+
 \subsection{Waves}
 \label{sec:waves}
 Autorzy: Agata Sitnik i Łukasz Zieńkowski.
 
 \subsubsection{Opis zadania}
-\label{sec:st_interval:desc}
+\label{sec:waves:desc}
 Celem modułu było wykrycie zespołów QRS oraz załamków P i T.
 Zespół QRS to największy zespół załamków EKG. Opisuje depolaryzację (pobudzenie) mięśni komór serca i składa się z jednego lub kilku załamków określanych kolejno jako Q, R i S, w zależności od miejsca wystąpienia i kierunku wychylenia. Czas trwania zespołu prawidłowo wynosi od 0,6-0,11 s i składa się z następujących składowych:
 \begin{itemize}
@@ -568,8 +570,8 @@ Zespół QRS to największy zespół załamków EKG. Opisuje depolaryzację (pob
 \end{itemize}
 
 Poza zespołem QRS możemy wyróżnić również załamki P i T.
-Załamek P odpowiada depolaryzacji przedsionków. W warunkach prawidłowych jest on dodatni w odprowadzeniach I, II, aVF i ujemny w aVR; czas jego trwania jest krótszy od 0.12 s, a amplituda nie przekracza 2.5 mm w odprowadzeniach kończynowych.
-Odcinek PQ odpowiada repolaryzacji przedsionków. W warunkach prawidłowych repolaryzacja przedsionków nie powoduje przemieszczenia odcinka PQ w stosunku do odcinka TP i odcinek PQ przebiega w linii izoelektrycznej.
+Załamek P odpowiada depolaryzacji przedsionków. W warunkach prawidłowych jest on dodatni w odprowadzeniach I, II, aVF i ujemny w~aVR; czas jego trwania jest krótszy od 0.12 s, a amplituda nie przekracza 2.5 mm w odprowadzeniach kończynowych.
+Odcinek PQ odpowiada repolaryzacji przedsionków. W warunkach prawidłowych repolaryzacja przedsionków nie powoduje przemieszczenia odcinka PQ w stosunku do odcinka TP i~odcinek PQ przebiega w linii izoelektrycznej.
 Odstęp PQ jest elektrokardiograficznym odpowiednikiem czasu wędrowania bodźca z węzła zatokowego
 przez prawy przedsionek, węzeł przedsionkowo - komorowy, pęczek Hisa i włókna Purkinjego aż do mięśnia komór. W warunkach prawidłowych czas jego trwania zależy od wieku badanej osoby i częstotliwości rytmu serca mieszcząc się w granicach od 0.12 s do 0.20 s; u osób w starszym wieku za górną granicę normy można przyjąć wartość 0.23 s.
 Odcinek ST jest elektrokardiograficznym odpowiednikiem czasu wędrowania bodźca z węzła zatokowego przez prawy przedsionek, węzeł przedsionkowo - komorowy, pęczek Hisa i włókna Purkinjego aż do mięśnia komór. W warunkach prawidłowych czas jego trwania zależy od wieku badanej osoby i częstotliwości rytmu serca mieszcząc się w granicach od 0.12 s do 0.20 s; u osób w starszym wieku za górną granicę normy można przyjąć wartość 0.23 s.
@@ -577,11 +579,11 @@ Załamek T odpowiada fazie szybkiej repolaryzacji mięśnia komór. Prawidłowy 
 
 
 \subsubsection{Badania literaturowe}
-\label{sec:st_interval:papers}
+\label{sec:waves:papers}
 W literaturze można znaleźć kilka rozwiązań problemu odnalezienia zespołów QRS i załamków P i T. Większość z nich opiera się na dyskretnej transformacie falkowej, która polega na splocie
 sygnału pochodzącego z zapisu badania EKG z wybraną falką, pobraną z bazy. Baza jest stale rozwijana o nowe falki. Filtry cyfrowe analizy falkowej odpowiadają falce i funkcji skalującej w postaci tzw.
 spline’ów bramkowych drugiego stopnia o zwartym i krótkim nośniku. Dzięki temu
-podczas analizy sygnału i detekcji osobliwości możemy dokładniej kontrolowa parametry
+podczas analizy sygnału i~detekcji osobliwości możemy dokładniej kontrolować parametry
 procesu separacji wybranych częstotliwości. Dzięki analizie wieloskalowej możliwe jest
 zlokalizowanie miejsca gwałtownej zmiany sygnału, a tym samym lokalizacji zespołu QRS.
 Metoda posiada mniejszą wrażliwość na zmiany morfologii kolejnych zespołów QRS,
@@ -590,10 +592,10 @@ ruchu i napięcia mięśni oraz pozwala na łatwiejszą separację załamka R w 
 załamków P i T.
 
 Wiele rozwiązań zagadnienia detekcji zespołów QRS opiera się na filtracji adaptacyjnej,
-zastosowaniu ukrytych modeli Markova, algorytmów genetycznych lub
-transformacie Hilberta. Wszystkie opierają się na pomyśle utworzenia detektora zespołów QRS, jednak pozwalają jedynie na dropną poprawę
+zastosowaniu ukrytych modeli Markowa, algorytmów genetycznych lub
+transformacie Hilberta. Wszystkie opierają się na pomyśle utworzenia detektora zespołów QRS, jednak pozwalają jedynie na drobną poprawę
 skuteczności lub szybkości działania, gdyż tak naprawdę nie znaleziono jeszcze w 100\% skutecznej funkcji detekcyjnej. 
-Istnieją dane literaturowe, w których detekcja zespołów QRS opiera się na stosowaniu filtrów wysokopasmowych. Filtry pełnią rolę narzędzia różniczkującego, a wykorzystywane są pierwsze i drugie pochodne sygnału. Różniczkowanie w tych metodach wykonuje się w celu uwypuklenia cech charakterystycznych sygnału. Zróżniczkowany sygnał poddaje się progowaniu. Pozwala to na wykrycie potencjalnych zespołów QRS, a dodatkowe progi pozwalają eliminować fałszywych kandydatów. Próg składa się z trzech parametrów: adaptacyjnej wartości slew-rate, drugiej wartości, która rośnie gdy w sygnale obserwuje się wzrost częstotliwości i trzeciej mającej na celu uniknięcie braku niskich wartości amplitudy. Zaletą tych metod jest ich prostota, a wadą niska efektywność i skomplikowane ciągi decyzyjne. Istnieją również metody łączące tosowanie filtrów wysokoprzepustowych z niskoprzepustowymi, pozwala to zwiększyć efektywność wykrywania zespołów QRS.
+Istnieją dane literaturowe, w których detekcja zespołów QRS opiera się na stosowaniu filtrów wysokopasmowych. Filtry pełnią rolę narzędzia różniczkującego, a wykorzystywane są pierwsze i drugie pochodne sygnału. Różniczkowanie w tych metodach wykonuje się w celu uwypuklenia cech charakterystycznych sygnału. Zróżniczkowany sygnał poddaje się progowaniu. Pozwala to na wykrycie potencjalnych zespołów QRS, a dodatkowe progi pozwalają eliminować fałszywych kandydatów. Próg składa się z trzech parametrów: adaptacyjnej wartości slew-rate, drugiej wartości, która rośnie gdy w sygnale obserwuje się wzrost częstotliwości i trzeciej mającej na celu uniknięcie braku niskich wartości amplitudy. Zaletą tych metod jest ich prostota, a wadą niska efektywność i skomplikowane ciągi decyzyjne. Istnieją również metody łączące tosowanie filtrów wysokoprzepustowych z~niskoprzepustowymi, pozwala to zwiększyć efektywność wykrywania zespołów QRS.
 
 
 Jedną z najbardziej innowacyjnych metod automatycznej detekcji zespołów QRS
@@ -613,7 +615,7 @@ W przypadku tego projektu zdecydowano się na wykorzystanie algorytmu treshold b
 
 
 \subsubsection{Opis procedur i metod}
-\label{sec:st_interval:procs}
+\label{sec:waves:procs}
 Detekcja opiera się na algorytmie \verb|treshold based detection|.
 
 
@@ -634,8 +636,7 @@ w zakresie 0-1)
 \end{itemize}
 
 Po normalizacji w funkcji jest wydzielana część sygnału o intensywności powyżej 5\%, które ma na
-celu wyzerowanie sygnału poza obszarem QRS. Funkcja służy do obliczenia parametrów \verb|QRS_onset| i
-\verb|QRS_end|.
+celu wyzerowanie sygnału poza obszarem QRS. Funkcja służy do obliczenia parametrów \verb|QRS_onset| i~\verb|QRS_end|.
 
 \begin{lstlisting}
 bool QRSPointsDetector::detectPT()
@@ -674,7 +675,7 @@ druga). Jeżeli odległość pomiędzy początkiem następnego zespołu QRS, a t
 jest większa niż 25\% długości okresu i jednocześnie odległość między drugą próbką, a końcem
 poprzedzającego ją QRS jest większa niż 90, oznacza to, że druga próbka jest końcem załamka T.
 Pierwsze z tych założeń zapobiega zidentyfikowaniu załamka P jako T, w przypadku gdy T jest
-odwrócone i w sygnale wynikowym nie występuje. Drugie z założeń mówiące o szerokości załamka
+odwrócone i~w~sygnale wynikowym nie występuje. Drugie z założeń mówiące o szerokości załamka
 T, zapobiega zaklasyfikowaniu szumów o małej długości jako załamka T.
 
 
@@ -691,19 +692,19 @@ Funkcja znajdująca maksimum lokalne w danym zakresie sygnału, parametry forBeg
 określają początek i koniec analizowanego okna.
 
 \begin{lstlisting}
-void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal, const ECGInfo &
-ecgi, const ECGRs &ecgRs, ECGWaves & ecgWaves)
+void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal,
+ const ECGInfo &ecgi, const ECGRs &ecgRs, ECGWaves & ecgWaves)
 \end{lstlisting}
 Funkcja uruchamiająca moduł
 
 Parametry:
-\verb|&filteredSignal| - przefiltrowany sygnał
+\verb|&filteredSignal| -- przefiltrowany sygnał
 
-\verb|& ecgi| - informacje o sygnale
+\verb|& ecgi| -- informacje o sygnale
 
-\verb|&ecgRs| - położenie załamków R
+\verb|&ecgRs| -- położenie załamków R
 
-\verb|& ecgWaves| - informacja zwrotna - położenie zespołów QRS i załamków P i T
+\verb|& ecgWaves| -- informacja zwrotna -- położenie zespołów QRS oraz załamków P i T
 
 \begin{lstlisting}
 ECGSignalChannel QRSPointsDetector::gradient(ECGSignalChannel * signal)
@@ -728,13 +729,13 @@ Funkcja ustawiająca wartości sygnału, używana do testowania modułu.
 
 
 \subsubsection{Warunki testowania}
-\label{sec:st_interval:tests}
+\label{sec:waves:tests}
 
-W celu przetestowania algorytu najpierw wykonano implementację w programie Matlab 2009, sprawdzenie akuteczności algorytmu wykonano na sygnałach ściągniętych z bazy wykorzystywanej w poprzednim semestrze na zajęciach z przedmiotu Przetwarzanie sygnałów w systemach diagnostyki medycznej. 
+W celu przetestowania algorytmu najpierw wykonano implementację w programie Matlab 2009, sprawdzenie skuteczności algorytmu wykonano na sygnałach ściągniętych z bazy wykorzystywanej w~poprzednim semestrze na zajęciach z przedmiotu Przetwarzanie sygnałów w systemach diagnostyki medycznej. 
 Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano go za pomocą tych samych sygnałów. Posłużono się jako danymi wejściowymi również wygenerowanym wektorem położenia załamków R.
 
 \subsubsection{Wyniki}
-\label{sec:st_interval:results}
+\label{sec:waves:results}
 \begin{center}
 %
 \begin{figure}
@@ -742,7 +743,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 \includegraphics[scale=0.4]{include/waves_matlab}
 \par\end{centering}
 
-\caption{Wyniki modułu Waves -- Matlab, oznaczne zespoły QRS i załamki R}
+\caption{Wyniki modułu Waves -- Matlab, oznaczone zespoły QRS i załamki R}
 \label{fig:waves_matlab}
 \end{figure}
 
@@ -756,7 +757,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 \includegraphics[scale=0.4]{include/waves_matlab2}
 \par\end{centering}
 
-\caption{Wyniki modułu Waves -- Matlab, oznaczne załamki P, T i R }
+\caption{Wyniki modułu Waves -- Matlab, oznaczone załamki P, T i R }
 \label{fig:waves_matlab2}
 \end{figure}
 
@@ -766,7 +767,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 %
 \begin{figure}
 \begin{centering}
-%\includegraphics[scale=0.4]{include/waves_cpp}
+\includegraphics[scale=0.4]{include/waves_cpp}
 \par\end{centering}
 
 \caption{Wyniki modułu Waves -- Visual Studio 2010}
@@ -778,6 +779,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 Udało się osiągnąć zadowalające wyniki, które nieznacznie odbiegają od danych przewidywanych. 
 Wyniki osiągnięte podczas wstępnej implementacji w Matlabie, gdzie wykonano oznaczenia początków i końców zespołów QRS \ref{fig:waves_matlab} oraz następnie oznaczono położenie załamków P i końców załamków T \ref{fig:waves_matlab2} są nieznacznie gorszej jakości niż uzyskane później w wynikowym programie \ref{fig:waves_cpp} . Jest to spowodowane między innymi tym, że program w Matlabie był przygotowany jako prototyp, który później został dopracowany i rozszerzony o dodatkowe warunki klasyfikacji sygnału jako załamki oraz o dodatkową filtrację.
 
+\subsection{HRV1}
 \label{sec:hrv1}
 
 Autorzy: Łukasz Jaromir i Leszek Sosnowski
@@ -811,7 +813,7 @@ Analiza zmienności rytmu serca opiera się na bieżących wartościach interwa�
 
 Tachogram (po uzupełnieniu luk po zespołach QRS innych niż nadkomorowe) może być podstawą wyznaczania statycznych i geometrycznych współczynników zmienności akcji serca:
 \newline
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|p{14cm}|}
 \hline
 Oznaczenie: & Znaczenie wskaźnika \\ \hline
 Średni RR & Wartość średnia ze wszystkich odstępów RR rytmu zatokowego \\ \hline
@@ -830,8 +832,8 @@ Analiza zmienności rytmu serca w dziedzinie częstotliwości wymaga rozwiązani
 Algorytm interpolacji, który wybraliśmy to algorytm interpolacji funkcjami sklejanymi trzeciego stopnia.
 
 Kolejnym krokiem jest stosowanie przekształcenia Fouriera w celu otrzymania widma sygnału. Wykres widma dzielony jest zwykle na pasma, w których określana jest całkowita moc wyrażana następnie przy użyciu współczynników:
-
-\begin{tabular}{|c|l|}
+\newline
+\begin{tabular}{|c|p{14cm}|}
 \hline
 Oznaczenie: & Znaczenie wskaźnika \\ \hline
 TP & całkowita moc widma (większe lub równe 0.4 Hz)  \\ \hline
@@ -844,34 +846,37 @@ LFHF & stosunek mocy widm w zakresie niskich częstotliwości do wysokich częst
 \end{tabular}
 
 
-Analiza częstotliwościowa dostarcza informacji o dynamicznej równowadze układu autonomicznego umożliwiając ocenę współpracy układu współczulnego i przywspółczulnego. Współczynniki analizy częstotliwościowej HRV dobrze reprezentują zjawiska zmienności. (za: Piotr Augystyniak \textit{Przetwarzanie sygnałów elektrodiagnostycznych}).
+Analiza częstotliwościowa dostarcza informacji o dynamicznej równowadze układu autonomicznego umożliwiając ocenę współpracy układu współczulnego i przywspółczulnego. Współczynniki analizy częstotliwościowej HRV dobrze reprezentują zjawiska zmienności \cite{AUGUST1}.
 
 \subsubsection{Opis procedur i metod}
-\label{sec:baseline:procs}
+\label{sec:hrv1:procs}
 Klasą realizującą obliczenia parametrów analizy czasowej i częstotliwościowej jest klasa HRV1Analyzer.
 Metody w klasie HRV1Analyzer:
 \begin{itemize}
-\item HRV1Analyzer::HRV1Analyzer() - konstruktor klasy
-\item HRV1Analyzer::~HRV1Analyzer() - destruktor klasy
-\item void HRV1Analyzer::runModule(const ECGRs \& r\_peaks\_data, ECGHRV1 \& hrv1\_data) - metoda wywoływana przez kontroler służąca do uruchomienia modułu
-\item void HRV1Analyzer::run() - metoda odpowiedzialna za uruchomienie algorytmów liczenia współczynników
-\item void HRV1Analyzer::setParams(ParametersTypes \&parameterTypes) - metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
-\item double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) - funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia)
-\item kiss\_fft\_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) - funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
-\item double HRV1Analyzer::mean(double *tab, int start, int end) - funkcja obliczająca średnią arytmetyczną
-\item double HRV1Analyzer::std(double *tab, int start, int end) - funkcja obliczająca odchylenie standardowe
+\item \verb+HRV1Analyzer::HRV1Analyzer()+ -- konstruktor klasy
+\item \verb+HRV1Analyzer::~HRV1Analyzer()+ -- destruktor klasy
+\item \verb+void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data)+ -- metoda wywoływana przez kontroler służąca do uruchomienia modułu i realizacji wyliczenia współczynników
+\item \verb+void HRV1Analyzer::prepareSignal()+ -- funkcja zajmująca się przygotowaniem sygnału -- metoda przekształca tablicę z numerami próbek na tablicę zawierającą czas pomiędzy 2 załamkami
+\item \verb+void HRV1Analyzer::prepareSigAbsolute()+ -- funkcja zajmująca się dalszym przygotowaniem sygnału -- tworzy sygnał zawierający bezwzględny czas wystąpienia kolejnych załamków RR
+\item \verb+void HRV1Analyzer::calculateParameters()+ -- właściwa metoda odpowiadająca za wyliczenie wszystkich współczynników ilościowych oraz częstotliwościowych, które składają się na właściwą analizę, za którą odpowiada moduł HRV1
+\item \verb+void HRV1Analyzer::setParams(ParametersTypes &parameterTypes)+ -- metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
+\item \verb+ouble* HRV1Analyzer::doFFT(double* sigAfterSpline)+ -- metoda przeprowadzająca analizę FFT zinterpolowanego sygnału z wykorzystaniem biblioteki KISS FFT
+\item \verb+kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe)+ -- funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
+\item \verb+double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe)+ -- funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia). Zachodzi interpolacja funkcji o wektorach x i y - długość wektorów x i y jest taka sama i wynosi nframe
+\item \verb+double HRV1Analyzer::mean(double *tab, int start, int end)+ -- funkcja obliczająca średnią arytmetyczną elementów z tablicy tab
+\item \verb+double HRV1Analyzer::std(double *tab, int start, int end)+ -- funkcja obliczająca odchylenie standardowe
 \end{itemize}
 
-Klasą przechowywującą współczynniki analizy częstotliwościowej i czasowej jest klasa ECGHRV1.
+Klasą przechowującą współczynniki analizy częstotliwościowej i czasowej jest klasa ECGHRV1.
 
-Szukając bilbioteki odpowiedzialnej za realizację transformaty Fouriera skupiliśmy się na znaleziu narzędzia maksymalnie prostego i szybkiego aby kod pozostał zoptymalizowany. Zdecydowaliśmy się na darmową bilbiotekę KISS (Keep it Simple, Stupid).
+Szukając biblioteki odpowiedzialnej za realizację transformaty Fouriera skupiliśmy się na znalezieniu narzędzia maksymalnie prostego i szybkiego aby kod pozostał zoptymalizowany. Zdecydowaliśmy się na darmową bibliotekę KISS (Keep it Simple, Stupid).
 
 Tymi samymi przesłankami kierowaliśmy się szukając biblioteki odpowiedzialnej za interpolowanie sygnału. Nasz wybór padł na bibliotekę algib.
 
 \subsubsection{Warunki testowania}
 \label{sec:hrv1:tests}
 
-Jako, że realizacja projektu odbywała się w grupach i tempo pracy było różne musieliśmy sobie poradzić i rozpocząć testowanie nie mając R\_PEAKów. Do tego celu stworzyliśmy prosty algorytm, który emulował pracę całego kontrolera. Program ten na wejście podawał zmienne, które w przyszłości otrzymalibysmy z grupy R\_PEAKs - korzystaliśmy z materiałów, które otrzymaliśmy w poprzednim semestrze realizując w Matlabie laboratorium HRV1. Program zwracał natomiast policzone współczynniki analizy czasowej i częstotliwościowej.
+Jako, że realizacja projektu odbywała się w grupach i tempo pracy było różne musieliśmy sobie poradzić i rozpocząć testowanie nie mając R\_PEAKów. Do tego celu stworzyliśmy prosty algorytm, który emulował pracę całego kontrolera. Program ten na wejście podawał zmienne, które w przyszłości otrzymalibyśmy z grupy R\_PEAKs - korzystaliśmy z materiałów, które otrzymaliśmy w poprzednim semestrze realizując w Matlabie laboratorium HRV1. Program zwracał natomiast policzone współczynniki analizy czasowej i częstotliwościowej.
 
 W ten sposób, mogliśmy skutecznie pracować nad optymalizacją algorytmów porównując otrzymane wyniki z tymi, które pochodziły z prototypu napisanego w Matlabie, czekając na sprzężenie naszego modułu z modułem R\_PEAKS.
 
@@ -1033,7 +1038,7 @@ Używane funkcje:
 Używane zmienne:
 \begin{itemize}
 \item \verb+ECGRs rpeaks+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący wektor
-numerów próbek z załamkami R
+numerów próbek z~załamkami R
 \item \verb+double SamplingInterval+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący
 częstotliwość wczytanego sygnału
 \end{itemize}
@@ -1122,7 +1127,7 @@ elementu danego wektora
 \item \verb+gsl_vector_int_get+ -- metoda GSL pobierająca całkowitą wartość danego
 elementu z wektora
 \item \verb+gsl_vector_get+ -- metoda GSL pobierająca zmiennoprzecinkową wartość
-danego elementu z wektora
+danego elementu z~wektora
 \item \verb+gsl_vector_set+ -- metoda GSL zapisująca zmiennoprzecinkową wartość
 w danym elemencie wektora
 \item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
@@ -1175,7 +1180,7 @@ Funkcja zwraca:
 Używane funkcje:
 \begin{itemize}
 \item \verb+gsl_vector_get+ -- metoda GSL pobierająca zmiennoprzecinkową wartość
-danego elementu z wektora
+danego elementu z~wektora
 \item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
 danym elemencie wektora
 \item \verb+gsl_stats_sd+ -- metoda GSL wyliczająca odchylenie standardowe
@@ -1351,7 +1356,160 @@ podsekcji:
 \par\end{center}
 
 \subsection{HRV DFA}
-\label{sec:hrvd_fa}
+\label{sec:dfa}
+Autorzy: Mikołaj Rzepka i Szczepan Czaicki
+
+\subsubsection{Opis zadania}
+\label{sec:dfa:desc}
+
+\begin{description}
+\item[Temat] Beztrendowa analiza fluktuacji tachogramu (ang. Detrended Fluctuation Analysis)
+\item[Opis] Poszukiwanie wciąż nowych rozwiązań oceny ilościowej tachogramu doprowadziło do
+opracowania nowej metody –- beztrendowej analizy fluktuacji, która to jest rozszerzeniem
+zwyczajnej analizy fluktuacji. Podejście to sprawdziło się w „odkrywaniu” rozległych
+i długotrwających korelacji w sygnale EKG. Zasadniczą zaletą tego podejścia jest możliwość
+zastosowania algorytmu dla szeregów czasowych, których podstawowe statystyki mają
+charakter niestacjonarny (zmieniają się w czasie). Celem projektu jest opracowanie
+i implementacja metody wyznaczającej parametry DFA.
+\item[Dane] ciąg próbek załamków R z modułu R\_PEAKS
+\item[Szukane] moduł programu wyznaczający, wyświetlający parametry analizy DFA w postaci
+tabel oraz rysujący wykresy analizy DFA
+\end{description}
+
+\subsubsection{Badania literaturowe}
+\label{sec:dfa:papers}
+Beztrendowa analiza fluktuacyjna polega na określeniu zależności błędu liniowej interpolacji $F(n)$ dla odpowiednio zdefiniowanego szeregu od wielkości okna interpolacji $n$. Metoda ta bierze pod uwagę różnice w lokalnej zawartości danych i może być stosowana dla jednoczesnej analizy całego szeregu danych zawierającego wiele niejednolitych obszarów. W przeciwieństwie do funkcji f(n) analizy fluktuacyjnej, mającej zmienne nachylenie nawet dla n mniejszego od wielkości typowego obszaru stacjonarnego, funkcja beztrendowa F(n) wykazuje nachylenie stałe przez kilka rzędów wielkości. Metoda DFA znakomicie wykazała  różnice między sekwencjami kodującymi a niekodującymi DNA. Użyto więc metody również do wykrywania korelacji w zjawiskach pogodowych, ekonofizyce (np. fluktuacje wartości indeksów giełdowych) oraz do sygnałów fizjologicznych, przede wszystkim zmienności rytmu serca.
+Metoda beztrendowej analizy fluktuacji (ang. Detrended Fluctuation Analysis, DFA) polega
+na powtórnej analizie sygnału w blokach o długościach kolejno rosnących, aż do określonej
+wartości N. W pierwszej kolejności tachogram jest całkowany zgodnie ze wzorem:
+\begin{equation}
+\sum_{i=1}^{N}({RR(i)-RR_{avg}})
+\end{equation}
+gdzie $RR(i)$ to $i$-ty interwał, zaś $RR_{avg}$ to średni interwał między kolejnymi uderzeniami (w dzień średnio około 0.7 sekundy).
+Następnie tak scałkowany sygnał podzielony zostaje na bloki o określonych długościach n
+i w każdym z bloków następuje wyznaczenie trendu lokalnego $y_n(k)$ metodą najmniejszych kwadratów. Skorzystano w tym celu ze wzorów na współczynniki linii trendu $a$ i $b$:
+\begin{equation}
+ \frac {S \cdot S_{xy} - S_x\cdot S_{y}}{\Delta}
+\end{equation}
+\begin{equation}
+b = \frac {S_{xx} \cdot S_y - S_x\cdot S_{xy}}{\Delta}
+\end{equation}
+Wykorzystane we wzorach na współczynniki prostej oznaczenia rozpisano poniżej:
+\begin{equation}
+S = \sum_{i=1}^n 1 = n
+\end{equation}
+\begin{equation}
+S_x = \sum_{i=1}^n x_i
+\end{equation}
+\begin{equation}
+S_y = \sum_{i=1}^n y_i
+\end{equation}
+\begin{equation}
+S_{xx} = \sum_{i=1}^n x_i^2
+\end{equation}
+\begin{equation}
+S_{xy} = \sum_{i=1}^n x_i y_i
+\end{equation}
+\begin{equation}
+S_{yy} = \sum_{i=1}^n y_i^2
+\end{equation}
+\begin{equation}
+\Delta = S \cdot S_{xx} - (S_x)^2
+\end{equation}
+
+Proces jest powtarzany dla coraz większych bloków, aż do pełnej długości N . Wówczas
+można wyznaczyć zależność fluktuacji od rozmiaru bloku jako
+\begin{equation}
+F(n) = \sqrt{\frac{1}{N}\sum_{k=1}^{N}(y(k) - y_n(k))^2}
+\end{equation}
+Zależność ta może zostać umieszczona na wykresie z logarytmiczno-logarytmicznym. Można
+zdefiniować współczynnik skalowania
+\begin{equation}
+\alpha = \lim_{n \to \infty}\frac{\log F(n)}{\log n}
+\end{equation}
+W zależności od wartości wyliczonego współczynnika możemy wyciągnąć różne wnioski odnoszące się do sygnału wejściowego:
+  \begin{itemize}
+  \item Dla 0 $<$ $\alpha$ $<$ 0.5 obserwuje się
+długozasięgowe antykorelacje (po
+krótszym interwale bardziej
+prawdopodobne jest wystąpienie
+dłuższego), natomiast dla 0.5 $<$ $\alpha$ $<$ 1
+dodatnie korelacje długozasięgowe,
+  \item Przypadek $\alpha$ = 1 odpowiada szumowi $1/f$
+  \item Dla $\alpha$ $\geq$ 1 korelacje istnieją, lecz przestają
+mieć charakter potęgowy,
+  \item Wartość $\alpha$ = 1.5 odpowiada scałkowanemu
+sygnałowi widma białego, czyli błądzeniu
+przypadkowemu
+  \end{itemize}
+
+
+\subsubsection{Opis procedur i metod}
+\label{sec:dfa:procs}
+Główna funkcjonalność modułu znajduje się w klasie \verb|DFAAnalyzer|. Klasa ta,
+według przyjętego schematu rozszerza abstrakcyjny moduł analizy beztrendowej analizy fluktuacji tachogramu.
+ 
+
+Lista i opis najważniejszych funkcji:
+
+\begin{lstlisting}
+void DFAAnalyzer::runModule (const ECGRs &ecgRs, ECGHRVDFA &ecghrvdfa)
+\end{lstlisting}
+
+Wirtualna funkcja uruchamiająca moduł HRV DFA. Ustawia instancje klas, w których przechowuje dane i uruchamia fukcję \verb|calcDFA| obliczającą podstawowe parametry związane z beztrendową analiza fluktuacji tachogramu.
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+ECGRs &ecgRs+ -- wektor numerów próbek zawierający załamki R
+\item \verb+ECGHRVDFA &ecghrvdfa+ -- instancja klasy przechowującej wyniki analizy HRV DFA
+\end{itemize}
+\medskip{}
+
+\begin{lstlisting}
+void DFAAnalyzer::calcDFA()
+\end{lstlisting}
+
+Funkcja obliczająca podstawowe parametry związane z beztrendową analiza fluktuacji tachogramu. Najpierw wylicza z sygnału długość interwałów $RR$, następnie całkuje otrzymany sygnał i wywołuje funkcję \verb|calc_all_trends| wyliczającą parametry linii trendów dla kolejnych wielkości okien. Następnie funkcja przelicza wartości fluktuacji w kolejnych oknach, wpisuje je do instancji klasy \verb|ECGHRVDFA| w celu ich późniejszego wyrysowania. Na końcu obliczana jest wartość współczynnika skalowania $\alpha$, również wpisywana do instancji klasy \verb|ECGHRVDFA|.
+\medskip{}
+
+\begin{lstlisting}
+trend_coefs** DFAAnalyzer::calc_all_trends(double* rr_integrated,
+	int length)
+\end{lstlisting}
+
+Funkcja wyliczająca parametry linii trendów dla kolejnych wielkości okien sygnału \verb|rr_integrated|. Dzieli sygnał na okna o wielkości od 2 próbek do całej długości sygnału i dla każdego okna wywołuje funkcję \verb|calc_trend| obliczającą parametry $a$ i $b$ linii trendu metodą najmniejszych kwadratów.
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+double* rr_integrated+ -- sygnał (tablica) interwałów $RR$
+\item \verb+int length+ -- długość tablicy interwałów $RR$
+\end{itemize}
+\medskip{}
+
+\begin{lstlisting}
+trend_coefs* DFAAnalyzer::calc_trend(double* rr_integrated, int start,
+	int w_length)
+\end{lstlisting}
+
+Funkcja obliczająca parametry $a$ i $b$ linii trendu metodą najmniejszych kwadratów dla podanego sygnału od próbki \verb|start| w oknie długości \verb|w_length|.
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+double* rr_integrated+ -- sygnał (tablica) interwałów $RR$
+\item \verb+int start+ -- numer próbki sygnału interwałów $RR$ od którego funkcja zaczyna przeliczenia
+\item \verb+int w_length+ -- ilość próbek sygnału interwałów $RR$ brana do przeliczeń począwszy od próbki \verb|start|
+\end{itemize}
+\medskip{}
+
+\subsubsection{Warunki Testowania}
+\label{sec:dfa:tests}
+
+Grupa wykonująca zadania były uzależniona od wyników grupy implementującej moduł R\_PEAKS. W związku z tym, aby uniezależnić się od pracy tej grupy, do testowania algorytmu używano sygnałów zawierających piki R pobranych z internetu. Wyniki porównywano z wynikami uzyskiwanymi z~wyliczeń skryptu napisanego w Matlabie w poprzednim semestrze.
+
+\subsubsection{Wyniki}
+\label{sec:dfa:results}
+
+W pierwszym etapie prac porównywano wyniki pracy algorytmu do wyników uzyskiwanych z wyliczeń skryptu napisanego w Matlabie, udało się osiągnąć takie same rezultaty. Na efekty wizualizacji wyników czekaliśmy do samego końca, z powodu braku czasu zaimplementowano wizualizację jednego wykresu: zależności logarytmu fluktuacji od logarytmu z wielkości okna.
 
 \subsection{Klasyfikacja zespołów QRS}
 \label{sec:qrs_class}
@@ -1411,7 +1569,7 @@ Dane przyjmowane przez moduł:
 
 Dane zwracane przez moduł:
 \begin{itemize}
-  \item wektor wykrytych odcinków ST zawierających informaje:
+  \item wektor wykrytych odcinków ST zawierających informacje:
   \begin{itemize}
     \item początek i koniec odcinka;
     \item poziom izolinii;
@@ -1438,29 +1596,29 @@ gdyż wiadomo, że wielkość amplitudy zależy często od wielu pozakardiologic
 przyczyn, m.in. jakości kontaktu elektrod ze skórą.
 
 Książka \cite{AUGUST1} prezentuje bardzo prosty algorytm diagnostyki odcinka
-ST. Algorytm składa się z 3 kroków: lokalizacji odcina, obliczenia uniesienia i
+ST. Algorytm składa się z~trzech kroków: lokalizacji odcina, obliczenia uniesienia i
 nachylenia oraz wykrywanie epizodów.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.6\textwidth]{include/ecg_st}
-  \caption{Kluczowe punkty analizy odcinka ST. ISO - punk referencyjny leżący
-  na izolini, J - początek odcinka, ST - koniec odcinka. Opracowanie własne.}
+  \caption{Kluczowe punkty analizy odcinka ST. ISO -- punk referencyjny leżący
+  na izolinii, J -- początek odcinka, ST -- koniec odcinka. Opracowanie własne.}
   \label{fig:ecg_st}
 \end{figure}
 
 Na rysunku \ref{fig:ecg_st} przedstawiono kluczowe punkty, które należy
 wyznaczyć przed wyznaczaniem parametrów diagnostycznych odcinka ST. Według
-wyżej wymianionego algorytmu, punktem referencyjnym w założeniu znajdującym się
-na izolini jest początek zespołu QRS i koniec odcinka P. Punkt J, który jest
+wyżej wymienionego algorytmu, punktem referencyjnym w założeniu znajdującym się
+na izolinii jest początek zespołu QRS i koniec odcinka P. Punkt J, który jest
 początkiem badanego odcinka i znajduje się $45ms$ za szczytem załamka R. Punkt
 ST będący końcem badanego odcinka znajduje się $60ms$ później. Tych stałych
 wartości używa się w prostych algorytmach, dodatkowo można uwzględnić zmienność
-rytmu serca i uzależnić przesunięcie tych wartości od aktualniego odstępu RR.
-Uniesieniem lub obnieżeniem odcinka jest róznica wartości miedzy punktem ISO, a
+rytmu serca i uzależnić przesunięcie tych wartości od aktualnego odstępu RR.
+Uniesieniem lub obniżeniem odcinka jest różnica wartości miedzy punktem ISO, a
 punktem ST. Nachyleniem prostej przechodzącej przez punkty J i ST nazywamy
 nachyleniem odcinka. Prawidłowy odcinek ST powinien być poziomy i nie być
-uniesiony ani obniżony. Algorytm wykrywania epizodów polega na wykrysiu takich
+uniesiony ani obniżony. Algorytm wykrywania epizodów polega na wykryciu takich
 okresów zapisu EKG w którym przez czas dłuższy niż 60 sekund występują ciągle
 nieprawidłowe odcinki ST.
 
@@ -1472,16 +1630,16 @@ najbardziej odległą wartość sygnału od prostej łączącej punkt J i punkt
 szczytowy załamka T.
 
 Obniżenie załamka jest wyznaczane metodą J+X, który polega na wyznaczeniu,
-podobnie jak w pierwszym algorytmie, różnicy miedzy punktem J+X (punkt X
+podobnie jak w~pierwszym algorytmie, różnicy miedzy punktem J+X (punkt X
 milisekund za punktem J), a punktem ISO. X jest wyznaczany na podstawie
-aktualnego HRV. Ocena przesunięcia odcina ST względem izolini odbywa się z
+aktualnego HRV. Ocena przesunięcia odcina ST względem izolinii odbywa się z
 użyciem progu K, dla bazy MIT-BIH użyta wartością może być 0.01. Odcinek uznany
 jest za podniesiony gdy przesunięcie jest większe od K, obniżony gdy jest
-mniejszy od -K i normalny, prawidłowy w pozostałych przypadkach.
+mniejszy od -K i~normalny, prawidłowy w pozostałych przypadkach.
 
 Następnie w zalezności od oceny przesunięcia odcinka wyznaczany jest
 referencyjny punkt końcowy. Dla odcinka uniesionego jest to punkt szczytowy
-fali T, dla normalnego i obniżonego - punkt ST. Kolejno, na podstawie
+fali T, dla normalnego i obniżonego -- punkt ST. Kolejno, na podstawie
 charakteru odcinka do J20 (punkt J przesunięty o 20ms) do końcowego punktu
 referencyjnego okreslane jest czy odcinek jest prosty czy zakrzywiony, a
 następnie określany jest charakter zakrzywienia (wklęsły/wypukły) lub charakter
@@ -1501,8 +1659,8 @@ Epizody ST są wyznaczane podobnie jak w pierwszym algorytmie.
 Podczas implementacji wprowadzono kilka poprawek, z których należy
 wyszczególnić:
 
-Zmina sposobu wyznaczania szczytu fali T. Zamiast dekompozycji falkowej użyto
-pochodnej sygnału.i Ostatni punkt przejścia pochodnej przez zero jest szczytem
+Zmiana sposobu wyznaczania szczytu fali T. Zamiast dekompozycji falkowej użyto
+pochodnej sygnału. Ostatni punkt przejścia pochodnej przez zero jest szczytem
 fali.
 
 Porzucono branie pod uwagę HRV, przy wyznaczaniu kolejnych punktów.
@@ -1661,12 +1819,197 @@ W trakcie implementacji do testowania algorytmów używaliśmy surowego sygnału
 
 \subsubsection{Wyniki}
 \label{sec:st_interval:results}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\textwidth]{include/st_gui}
+  \caption{Zakładka modułu w GUI przedstawiająca przykładowy zespół QRS z
+  zaznaczonymi punktami charakterystycznymi analizy odcinka ST. }
+  \label{fig:st_gui}
+\end{figure}
+
 %%TODO można tu dodać printscreen wykresu ST, gdy zacznie działać aplikacja
 Resultatem projektu są dwa algorytmy wyznaczania i analizy parametrów odcinków ST. Prostrzy algorytm opisany w \cite{AUGUST1} został w całości zaimplementowany i przetestowany. Drugi, rozszerzony algorytm z \cite{SHEN1} również został zrealizowany, jednak ze względu na złożoność matematyczną niezbędne okazało się uproszczenie jednego z kroków. Algorytm ten zakłada wykorzystanie 5-warstwowej dekompozycji falkowej splinów 4-stopnia do detekcji punktu $T_{peak}$, co okazało się być niewykonalne technicznie. Wykrycie tego punktu zostało zrealizowane przy użyciu filtru różnicowego wyszukującego maximum lokalne sygnału. Poprawność wyników z obu algorytmów w dużym stopniu zależy od jakości wyników działania modułów nadrzędnych, dostarczających przefiltrowany sygnał EKG oraz zespoły QRS.
+Na rysunku \ref{fig:st_gui} przedstawiono przykładowy wynik modułu analizy ST.
 
 
 \subsection{T wave alt}
 \label{sec:t_wave_alt}
+
+\subsubsection{Opis zadania}
+\label{sec::t_wave_alt:desc}
+
+\begin{description}
+\item[Temat] Ocena ilościowa alternansu załamka T
+\item[Opis] W ostatnich latach alternans załamka T stał się
+ elementem szczególnych zainteresowań klinistów w środowisku kardiologów.
+ Dowiedziono, że pojawienie się naprzemienności kształtu, amplitudy czy
+ polarności załamka T jest zapowiedzią zaburzeń komorowych rytmu serca 
+(arytmii komorowych). Wykazano również korelację amplitudy alternansu 
+załamka T i spadku progu trzepotania przedsionków i komór. Celem projektu
+ jest oznaczenie załamków T, w których wykryto alternans oraz ich ilościowa analiza.
+\item[Dane] ciąg punktów charakterystycznych z modułu WAVES i sygnał 
+\item[Szukane] moduł programu oznaczający załamki T, w których wykryto alternans
+ oraz dokonujący ich ilościowej analizy. Wszystkie dane należy odpowiednio nanieść
+ na wykresy i przedstawić w~postaci graficznej (parametry alternansu).
+\end{description}
+
+\subsubsection{Badania literaturowe}
+\label{sec::t_wave_alt:papers}
+Alternans załamka T to naprzemienna zmiana wektora oraz amplitudy załamka T w sygnale EKG. Zmiany wielkości są mierzone w mikrowoltach, dlatego do analizy sygnału i detekcji TWA wykorzystywany jest sprzęt o bardzo dużej czułości. 
+
+Detekcja alternansu załamka T jest obecnie przedmiotem wielu badań oraz analiz prowadzonych przez ośrodki kardiologiczne, laboratoria w ośrodkach akademickich oraz centra badawcze na całym świecie. Nie istnieje obecnie jedna uniwersalna metoda dająca obiektywne wyniki i mogącą z 100\% pewnością stwierdzić, że dany przebieg EKG zawiera alternans. Dodatkowo testy skuteczności różnych metod bardzo często dają sprzeczne ze sobą wyniki. W związku z faktem istnienia bardzo dużej różnorodności metod, narzędzi oraz algorytmów mających na celu wykrycie alternansu załamka T postanowiono przeprowadzić badania umożliwiające ocenę różnych metod.
+
+Na podstawie przeanalizowanej literatury oraz algorytmów biorących udział w konkursie \verb|Physionet|  \verb|Challenge 2008|, zostały wyodrębnione trzy główne metody, które zostały ostatecznie wzięte pod uwagę przy wyborze algorytmu detekcji oraz projektowaniu modułu:
+\begin{itemize}
+	\item Moving four-beat window techniqure
+	\item Fast Fourier Transform
+	\item Spectral analysis PCA
+\end{itemize}
+
+Po przeprowadzeniu testów oraz analizie wniosków z pracy  \verb|T-Wave Alternans:|  \verb|A Comparison of|  \verb|Different Measurement Techniques| zdecydowano wybrać podejście  \verb|Moving four-beat window| jako najbardziej odpowiednie do stawianego przed autorami problemu i dającego względnie najlepsze wyniki. O złożoności problemu detekcji TWA świadczy między innymi fakt, że podczas przeprowadzania testów trzech wyżej wymienionych algorytmów jedynie 7 razy wszystkie metody były zgodne co do występowania w sygnale alternansu załamka T. 
+
+Algorytm \verb|Moving four-beat window techniqure| analizuje jednocześnie 4 występujące obok siebie załamki T (okno o rozmiarze 4). W przypadku, gdy zajdą w takim oknie następujące zależności: 
+\begin{itemize}
+	\item A2-A4 \textless A1-A2
+	\item A2-A4 \textless A3-A4
+	\item A2-A4 \textless A1-A2
+	\item A1-A3 \textless A3-A4
+\end{itemize}
+
+dane okno brane jest pod uwagę jako posiadające alternans. Okno jest przesuwane, aż do napotkania końca sygnału. W przypadku gdy 5\% wszystkich okien spełnia wyżej wymieniony warunek, dany sygnał kwalifikowany jest jako zawierający alternans załamka T. 
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/twa_1}
+\par\end{centering}
+
+\caption{Algorytm Movign four-beat window techniqure}
+\label{fig:twa_1}
+\end{figure}
+
+\par\end{center}
+
+\subsubsection{Opis procedur i metod}
+\label{sec::t_wave_alt:procs}
+
+Pełna funkcjonalność modułu została za implementowana w klasie \verb|TWaveAltDetector|. Klasa ta dziedziczy po abstrakcyjnej klasie  \verb|TWaveAltModule|. Moduł uruchamiany jest za pomocą funkcji: 
+
+\paragraph{\texttt{TWaveAltDetector::runModule(const ECGWaves, const ECGSignalChannel, ECGInfo, ECGTWave)}}
+
+\medskip{}
+
+Argumenty funkcji:
+
+\begin{itemize}
+\item \verb+ECGWaves ecgWaves+ -- instancja klasy przechowującej wyniki detekcji punktów charakterystycznych sygnału EKG takich jak QRS-onset, QRS-end, T-end, P-onset, P-end;
+\item \verb+ECGSignalChannel ecgSignal+ -- instancja klasy zawierajacej badany sygnał EKG;
+\item \verb+ECGInfo ecgInfo+ -- informacje na temat wczytanego sygnału;
+\item \verb+ECGTWave ecgTWave+ -- iinstancja klasy przechowującej wyniki detekcji oraz wektor numerów próbek sygnału zawierających alternans załamka T;
+\end{itemize}
+\medskip{}
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+detectTWaveAlt()+ --główna funkcja klasy odpowiedzialna za całą logikę modułu;
+\end{itemize}
+
+\medskip{}
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+filteredSignal+ --  badany sygnał
+\item \verb+wavesDatal+ -- wektor numerów próbek zawierających QRS-onset, QRS-end, T-end, P-onset, P-end
+\item \verb+tWaveAltData+ -- wektor numerów próbek zawierających alternans
+\end{itemize}
+
+
+\medskip{}
+
+Detekcja oraz obliczenie parametrów oceny ilościowej alternansu wykonywane są w metodzie  \verb|detectTWaveAlt()|. Cały algorytm przetwarzania sygnału, detekcji alternansu (zgodnie z algorytmem  \verb|Moving four-beat window techniqure|) oraz obliczenia ilościowe związane z analizowanym sygnałem zostały zawarte właśnie w tej funkcji. Funkcja nie przyjmuje żadnych parametrów wejściowych. Funkcja zwraca wartość logiczną 1 w przypadku wykrycia w sygnale alternansu oraz wartość 0 w~przypadku braku alternansu w sygnale. Funkcja oblicza następujące parametry ilościowe alternansu:
+\begin{itemize}
+\item \verb+ilość okien w sygnale zawierających alternans+
+\item \verb+procentowy udział wszystkich okien o rozmiarze 4 zawierających alternans w sygnale+
+\end{itemize}
+
+
+\paragraph{\texttt{bool TWaveAltDetector::detectTWaveAlt()}}
+
+\medskip{}
+
+Argumenty funkcji:
+
+\begin{itemize}
+\item \verb+brak+
+\end{itemize}
+\medskip{}
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+gsl_vector_int_get()+ --funkcja GSL pobierająca całkowitą wartość danego elementu z wektora
+\item \verb+gsl_vector_int_alloc()+ --funkcja GSL tworząca wskaźnik do nowo utworzonego obiektu 
+\item \verb+gsl_vector_int_set()+ --funkcja GSL zapisująca całkowitą wartość danego elementu wektora
+\item \verb+GetT_end()+ --funkcja zwracająca wektor numerów próbek zawierających załamek T
+\item \verb+setTWaveAlt()+ --funkcja ustawiająca wektor numerów próbek zawierających alternans załamka T
+\end{itemize}
+
+
+\medskip{}
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+filteredSignal+ --  badany sygnał
+\item \verb+wavesDatal+ -- wektor numerów próbek zawierających QRS-onset, QRS-end, T-end, P-onset, P-end
+\item \verb+tWaveAltData+ -- wektor numerów próbek zawierających alternans
+\end{itemize}
+
+
+\medskip{}
+
+\subsubsection{Warunki testowania}
+\label{sec::t_wave_alt:tests}
+Wszystkie algorytmy brane pod uwagę przy wyborze docelowego rozwiązania zostały wstępnie zaimplementowane w środowisku Matlab. Po wybraniu odpowiedniego i najbardziej skutecznego rozwiązania (\verb|Moving four-beat window techniqure|) moduł \verb|TWaveAlt| wraz z detekcją załamków T został zaimplementowany w Matlab, a następnie w C++. 
+
+Zostały przeprowadzone następujące testy:
+
+\begin{itemize}
+\item Testy różnych algorytmów detekcji załamka T: Zostały opracowane prototypy różnych alogtytmów detekcji alternansu w Matlab. 
+\item Testy poprawności działania wybranego algorytmu: Porównanie działania modułu zimplementowanego w Matlab z algorytmem w Visual Studio. 
+\item Testy skuteczności wykrywania alternansu T: Zostały przetestowanie sygnały zawierające alternans T, które przedmiotem badań podczas konkursu "Physionet Challenge 2008". Uzyskane wyniki zostały porównane z oficjalnymi rezultatami prac konkursowych.
+\end{itemize}
+
+\subsubsection{Wyniki}
+\label{sec::t_wave_alt:results}
+Przeprowadzone rysunki przedstawiają testy różnych algorytmów detekcji załamka T.
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/twa_2}
+\par\end{centering}
+
+\caption{Test 1 - TWA algorytmy}
+\label{fig:twa_2}
+\end{figure}
+
+\par\end{center}
+
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/twa_3}
+\par\end{centering}
+
+\caption{Test 2 - TWA skuteczność}
+\label{fig:twa_3}
+\end{figure}
+
+\par\end{center}
 
 \subsection{HRT}
 \label{sec:hrt}
@@ -1686,8 +2029,7 @@ Autorzy: Łukasz Kutrzuba, Mateusz Krasucki
 \textbf{Przedwczesne pobudzenie komorowe}\\
 Przedwczesny skurcz komorowy (ang. Premature Ventricular
 Contraction) powstaje na skutek przedwczesnego rozprzestrzenienia się
-impulsu w komorach powodującego skurcz mięśnia komór (impuls w
-normalnym przypadku powinien pochodzić z węzła zatokowo-przedsionkowego).
+impulsu w komorach powodującego skurcz mięśnia komór (impuls w~normalnym przypadku powinien pochodzić z węzła zatokowo-przedsionkowego).
 Jest to jedna z najczęstszych arytmii.
 \textbf{Turbulencja rytmu serca}\\
 Turbulencja rytmu serca (ang. Heart Rate Turbulence) jest to reakcja fizjologiczna będąca powrotem do stanu równowagi po przedwczesnym skurczu
@@ -1701,7 +2043,7 @@ na długich, 24 godzinnych zapisach EKG.
 \par W zapisie reakcji organizmu na PVC można wskazać charakterystyczne etapy. Po przedwczesnym skurczu komorowym następuje przerwa wyrównawcza, następnie faza akceleracji, deceleracja i ostatecznie powrót do normalnego rytmu.
 Nie zdołano dotychczas określić przyczyn zjawiska turbulencji rytmu serca, istnieją przypuszczenia, że powoduje je odruch z baroreceptorów.
 \par Wystąpienie turbulencji rytmu serca świadczy o prawidłowej reakcji 
-układu przywspółczulnego i zdolności serca do reagowania na przedwczesne pobudzenie - z tego powodu wystąpienie skróconych interwałów po VPC i ich stopniowe wydłużanie jest uznawane za prawidłową reakcję. Z kolei pojawienie się interwałów dłuższych niż przed 
+układu przywspółczulnego i~zdolności serca do reagowania na przedwczesne pobudzenie -- z tego powodu wystąpienie skróconych interwałów po VPC i ich stopniowe wydłużanie jest uznawane za prawidłową reakcję. Z kolei pojawienie się interwałów dłuższych niż przed 
 przedwczesnym pobudzeniem jest negatywnym prognostykiem, świadczy o braku
 reakcji organów kontrolujących pracę serca.
 
@@ -1714,12 +2056,12 @@ reakcji organów kontrolujących pracę serca.
 
 \textbf{Znaczenie diagnostyczne turbulencji rytmu serca}\\
 Analiza turbulencji rytmu serca jest jedną z najważniejszych metod pozwalającą na ocenę ryzyka zgonu pacjentów po przebytym zawale, obok frakcji wyrzutowej lewej komory, ilości przedwczesnych skurczów komorowych oraz analizy rytmu serca. Dowiedziono wysokiej wartości predykcyjnej tej metody badania.
-Przy analizie wyników pacjentów zostaje dokonane przyporządkowanie do jednej trzech grup - oba parametry poprawne, jeden paramer negatywny, oba parametry negatywne.
+Przy analizie wyników pacjentów zostaje dokonane przyporządkowanie do jednej trzech grup -- oba parametry poprawne, jeden parametr negatywny, oba parametry negatywne.
 Na przykład w przypadku obu parametrów negatywnych ryzyko zgonu w ciągu roku od przebytego zawału wynosi powyżej 32 procent.
 
 \textbf{Parametry turbulencji rytmu serca}\\
 W przypadku turbulencji rytmu serca wykorzystuje się zwykle dwa parametry
-- początek turbulencji (turbulence onset) oraz nachylenie turbulencji (turbulence slope). Turbulence Onset (TO) określa procentową różnicę między częstością serca przedwczesnym skurczu komorowym i częstością serca przed tym skurczem. Obliczanie TO opiera się na różnicy pomiędzy sumą długości dwóch interwałów RR występujących bespośrednio po pauzie wyrównawczej a sumą dwóch inteterwałów występujących przed pauzą wyrównawczą.
+-- początek turbulencji (turbulence onset) oraz nachylenie turbulencji (turbulence slope). Turbulence Onset (TO) określa procentową różnicę między częstością serca przedwczesnym skurczu komorowym i częstością serca przed tym skurczem. Obliczanie TO opiera się na różnicy pomiędzy sumą długości dwóch interwałów RR występujących bezpośrednio po pauzie wyrównawczej a sumą dwóch interwałów występujących przed pauzą wyrównawczą.
 Wartości dodatnie TO oznaczają zwolnienie, natomiast ujemne przyspieszenie rytmu zatokowego. Pozytywnym prognostykiem są wartości ujemne.
 
 \begin{figure}[h!]
@@ -1742,8 +2084,8 @@ Wartości dodatnie TO oznaczają zwolnienie, natomiast ujemne przyspieszenie ryt
 
 \textbf{Detekcja PVC}\\
 Przy wyliczeniu parametrów TO i TS brane są pod uwagę niektóre z fragmentów zapisu interwałów RR - zwykle jest to fragment zapisu liczący 27 kolejnych 
-interwałów ( 5 interwałów przed VPC, interwał z VPC, pauza kompensacyjna,
-około 20 inerwałów po pauzie). Dodatkowo, wybierane fragmenty zapisu muszą  charakteryzować się się brakiem występowania nierównego rytmu serca przed i po PVC oraz brakiem zbyt krótkich oraz zbyt długich interwałów RR.
+interwałów ( 5 interwałów przed VPC, interwał z~VPC, pauza kompensacyjna,
+około 20 interwałów po pauzie). Dodatkowo, wybierane fragmenty zapisu muszą  charakteryzować się się brakiem występowania nierównego rytmu serca przed i po PVC oraz brakiem zbyt krótkich oraz zbyt długich interwałów RR.
 \par W celu selekcji odpowiednich odcinków zastosowano następujący algorytm:
 \begin{itemize}
 \item Pobranie sygnału z długościami poszczególnych interwałów
@@ -1753,10 +2095,10 @@ sygnału jako poprawny VPC).
 W przypadku, jeśli fragment sygnału zostanie uznany jako poprawny
 interwał VPC, będzie uwzględniony w obliczaniu TO i TS.
 Warunki pozwalające na uznanie fragmentu jako poprawny VPC określono poniżej.
-\item Dla potencjalnego interwału VPC zostaje wykonane bliczenie długości przedziału referencyjnego 
+\item Dla potencjalnego interwału VPC zostaje wykonane obliczenie długości przedziału referencyjnego 
 (średnia z  5 interwałów poprzedzających VPC).
 \item Potencjalny RR z VPC musi być 
-krótszy o przynajmniej 20 procnet względem przedziału referencyjnego
+krótszy o przynajmniej 20 procent względem przedziału referencyjnego
 \item Interwał występujący po potencjalnym interwale z VPC musi spełniać 
 warunki pauzy kompensacyjnej (jego długość musi być większa o przynajmniej 10 procent od przedziału referencyjnego).
 \item Pośród 5 interwałów przed VPC
@@ -1771,7 +2113,7 @@ od 20 procent.
 \item Jeśli interwał spełnia założone warunki, zostanie 
 wykorzystany do obliczania parametrów TS oraz TO.
 \item Na koniec sprawdzana jest liczba wykrytych 
-PVC - jeśli wykryto mniej niż 5, sygnał nie może być efektywnie 
+PVC -- jeśli wykryto mniej niż 5, sygnał nie może być efektywnie 
 wykorzystany, ponieważ nie zawiera odpowiedniej ilości
 danych diagnostycznych. 
 \end{itemize}
@@ -1779,7 +2121,7 @@ danych diagnostycznych.
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/RRy.eps}
-\caption{Schemat prezentujący umiejscownienie interwałów wykorzystywanych przy wyliczeniu parametru TS. 
+\caption{Schemat prezentujący umiejscowienie interwałów wykorzystywanych przy wyliczeniu parametru TS. 
 \textit{ Źródło: http://www.h-r-t.org, Working Group of Biological Signal Analyses, Technische Universität München} }
 \end{figure}
 Dla poprawnie zidentyfikowanych VPC wyznaczany jest początek turbulencji.
@@ -1799,14 +2141,14 @@ Algorytm obliczania turbulence slope:
 \item Na podstawie wyznaczonych odcinków zawierających poprawne VPC wyznaczany jest 
 uśredniony tachogram.
 \item Poddanych analizie zostaje 20 interwałów uśrednionego tachogramu występujących po pauzie kompensacyjnej. 
-\item Spośród pierwszych dwudziestu interwałów po pauzie kompensacyjnej dla każdych kolejnych 5 inerwałów wyznaczana
+\item Spośród pierwszych dwudziestu interwałów po pauzie kompensacyjnej dla każdych kolejnych 5 interwałów wyznaczana
 jest prosa regresji (brane są kolejno interwały 1-5, 2-6, 3-7 itd).
 \item Spośród wyznaczonych prostych regresji zostaje wybrana ta ze współczynnikiem regresji 
 o największej dodatniej wartości. 
 \end{itemize}
 Prostą regresji obliczamy wykorzystując współrzędne x, y pięciu kolejnych punktów należących
 do uśrednionego tachogramu. Przy wykorzystaniu współrzędnych punktów tworzone są macierze
-A i Y.
+$A$ i $Y$.
 \begin{equation}
 A =  \left[
  \begin{array}{ccc}
@@ -1831,8 +2173,8 @@ Y =  \left[
 \right]
 \end{equation}
 \\
-Następnie, korzystając z równania  (A'A)*C = (A'Y) wyliczana jest macierz C.
-Pierwszy element wynikowej macierzy C to współczynnik kierunkowy prostej \textbf{a} (dla równania y = ax + b).
+Następnie, korzystając z równania  $(A' A)C = (A'Y)$ wyliczana jest macierz $C$.
+Pierwszy element wynikowej macierzy $C$ to współczynnik kierunkowy prostej \textbf{a} (dla równania $y = ax + b$).
 \subsubsection{Opis wykorzystanych w programie klas i funkcji}
 \label{sec:hrt:results}
 
@@ -1843,7 +2185,7 @@ definiować obiekty klasy Matrix reprezentujące dwuwymiarowe macierze oraz wyko
 Klasa Matrix została wykorzystana przy obliczaniu Turbulence Slope.
 
 Klasa  \textbf{HRTAnalyzer} jest główną klasą modułu, dziedziczy po klasie HRTModule. Metody klasy HRTAnalyzer 
-pozwalają na wyliczenie paramterów HRT.
+pozwalają na wyliczenie parametrów HRT.
 
 Klasa \textbf{ECGHRT} jest klasą wykorzystywaną do przechowywania danych uzyskanych podczas pracy - przechowuje
 najważniejsze obiekty będące wynikiem pracy HRTAnalyzera - parametry Turbulence Slope i Turbulence Onset, 
@@ -1852,28 +2194,28 @@ liczbę wykrytych VPC, oraz inne parametry wykorzystywane do rysowania.
 Najważniejsze zmienne klasy ECGHRT:
 \begin{itemize} 
 \item Dane wykorzystywane przy rysowaniu wykresu: \textbf{QVector<QPointF> rr} wektor reprezentujący uśredniony tachogram, 
-\textbf{QLine ts} - linia reprezentująca Turbulence Slope.
-\item Wyświetlane wartości:\textbf{int vpcCounter} - ilość znalezionych VPC, \textbf{double TO} -  średnia wartość Turbulence Onset,\textbf{double TS} - średnia wartość Turbulence Slope.
+\textbf{QLine ts} -- linia reprezentująca Turbulence Slope.
+\item Wyświetlane wartości:\textbf{int vpcCounter} - ilość znalezionych VPC, \textbf{double TO} --  średnia wartość Turbulence Onset,\textbf{double TS} - średnia wartość Turbulence Slope.
 \end{itemize}
 
 
 Funkcje i zmienne klasy HRTAnalyzer:
 \begin{itemize}
 \item \textbf{double* RRs} - zmienna wykorzystywana do tymczasowego przechowywania sygnału.
-\item \textbf{void calculateHrtParams(double *signal, int size, ECGHRT \&)} - funkcja, która zleca obliczenie parametrów HRT dla sygnału wejściowego i zapisuje je w wynikowym obiekcie. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, trzeci argument to referencja do obiektu przechowującego wyniki.
-\item \textbf{vector<int> findVpcOnsets(double *signal, int size)} - funkcja wyszukująca VPC w sygnale, zwracająca wektor 
+\item \textbf{void calculateHrtParams(double *signal, int size, ECGHRT \&)} -- funkcja, która zleca obliczenie parametrów HRT dla sygnału wejściowego i zapisuje je w wynikowym obiekcie. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, trzeci argument to referencja do obiektu przechowującego wyniki.
+\item \textbf{vector<int> findVpcOnsets(double *signal, int size)} -- funkcja wyszukująca VPC w sygnale, zwracająca wektor 
 z numerami próbek uznanymi za poprawne VPC, które mogą być wykorzystane przy działaniu programu. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy.
-\item \textbf{double* calculateAvgTach(double *signal, vector<int> vpc\_list) } - funkcja obliczająca uśredniony tachogram.
+\item \textbf{double* calculateAvgTach(double *signal, vector<int> vpc\_list) } -- funkcja obliczająca uśredniony tachogram.
 Parametry: signal to wskaźnik do tablicy interwałów RR, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
-\item \textbf{double calculateTO(double * signal, int size, vector<int> vpc\_list) }  - funkcja obliczająca parametr TO,
+\item \textbf{double calculateTO(double * signal, int size, vector<int> vpc\_list) }  -- funkcja obliczająca parametr TO,
 Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
-\item \textbf{void calculateTS(double * signal, int size, vector<int> vpc\_list, double* avgTach, double to, ECGHRT\&)} - funkcja obliczająca parametr TS. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
+\item \textbf{void calculateTS(double * signal, int size, vector<int> vpc\_list, double* avgTach, double to, ECGHRT\&)} -- funkcja obliczająca parametr TS. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
 \end{itemize}
 
 \subsubsection{Testy}
 \label{sec:hrt:tests}
 
-Dane do pierwszego etapu testów zostały uzyskane z bazy European ST-T Database (link - http://www.physionet.org/).
+Dane do pierwszego etapu testów zostały uzyskane z bazy European ST-T Database (link: \url{http://www.physionet.org/}).
 Początkowo testy wykonywano za pomocą prototypu aplikacji w matlabie - testy działania aplikacji zakończyły się sukcesem 
 (na wykresie wyświetlały się wartości TO i TS, wartości parametrów były zgodne z oczekiwaniami opartymi o analizę
 wyglądu wykresów). 
@@ -1889,19 +2231,19 @@ na wykresie, ocena wartości TO w odniesieniu do różnic długości ). Testy ni
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/image.eps}
-\caption{Screen prezentujący ostateczny wygląd modułu} 
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/skrin1.eps}
-\caption{Screen prezentujący ostateczny wygląd modułu} 
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/skrin2.eps}
-\caption{Screen prezentujący ostateczny wygląd modułu} 
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
 \end{figure}
 
 \bibliographystyle{plain}
