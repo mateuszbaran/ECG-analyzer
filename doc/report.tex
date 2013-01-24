@@ -1825,6 +1825,181 @@ Resultatem projektu są dwa algorytmy wyznaczania i analizy parametrów odcinkó
 \subsection{T wave alt}
 \label{sec:t_wave_alt}
 
+\subsubsection{Opis zadania}
+\label{sec::t_wave_alt:desc}
+
+\begin{description}
+\item[Temat] Ocena ilościowa alternansu załamka T
+\item[Opis] W ostatnich latach alternans załamka T stał się
+ elementem szczególnych zainteresowań klinistów w środowisku kardiologów.
+ Dowiedziono, że pojawienie się naprzemienności kształtu, amplitudy czy
+ polarności załamka T jest zapowiedzią zaburzeń komorowych rytmu serca 
+(arytmii komorowych). Wykazano również korelację amplitudy alternansu 
+załamka T i spadku progu trzepotania przedsionków i komór. Celem projektu
+ jest oznaczenie załamków T, w których wykryto alternans oraz ich ilościowa analiza.
+\item[Dane] ciąg punktów charakterystycznych z modułu WAVES i sygnał 
+\item[Szukane] moduł programu oznaczający załamki T, w których wykryto alternans
+ oraz dokonujący ich ilościowej analizy. Wszystkie dane należy odpowiednio nanieść
+ na wykresy i przedstawić w postaci graficznej (parametry alternansu).
+\end{description}
+
+\subsubsection{Badania literaturowe}
+\label{sec::t_wave_alt:papers}
+Alternans załamka T to naprzemienna zmiana wektora oraz amplitudy załamka T w sygnale EKG. Zmiany wielkości są mierzone w mikrowoltach, dlatego do analizy sygnału i detekcji TWA wykorzystywany jest sprzęt o bardzo dużej czułości. 
+
+Detekcja alternansu załamka T jest obecnie przedmiotem wielu badań oraz analiz prowadzonych przez ośrodki kardiologiczne, laboratoria w ośrodkach akademickich oraz centra badawcze na całym świecie. Nie istnieje obecnie jedna uniwersalna metoda dająca obiektywne wyniki i mogącą z 100\% pewnością stwierdzić, że dany przebieg EKG zawiera alternans. Dodatkowo testy skuteczności różnych metod bardzo często dają sprzeczne ze sobą wyniki. W związku z faktem istnienia bardzo dużej różnorodności metod, narzędzi oraz algorytmów mających na celu wykrycie alternansu załamka T postanowiono przeprowadzić badania umożliwiające ocenę różnych metod.
+
+Na podstawie przeanalizowanej literatury oraz algorytmów biorących udział w konkursie \verb|Physionet|  \verb|Challenge 2008|, zostały wyodrębnione trzy główne metody, które zostały ostatecznie wzięte pod uwagę przy wyborze algorytmu detekcji oraz projektowaniu modułu:
+\begin{itemize}
+	\item Moving four-beat window techniqure
+	\item Fast Fourier Transform
+	\item Spectral analysis PCA
+\end{itemize}
+
+Po przeprowadzeniu testów oraz analizie wniosków z pracy  \verb|T-Wave Alternans:|  \verb|A Comparison of|  \verb|Different Measurement Techniques| zdecydowano wybrać podejście  \verb|Moving four-beat window| jako najbardziej odpowiednie do stawianego przed autorami problemu i dającego względnie najlepsze wyniki. O złożoności problemu detekcji TWA świadczy między innymi fakt, że podczas przeprowadzania testów trzech wyżej wymienionych algorytmów jedynie 7 razy wszystkie metody były zgodne co do występowania w sygnale alternansu załamka T. 
+
+Algorytm \verb|Moving four-beat window techniqure| analizuje jednocześnie 4 występujące obok siebie załamki T (okno o rozmiarze 4). W przypadku, gdy zajdą w takim oknie następujące zależności: 
+\begin{itemize}
+	\item A2-A4 \textless A1-A2
+	\item A2-A4 \textless A3-A4
+	\item A2-A4 \textless A1-A2
+	\item A1-A3 \textless A3-A4
+\end{itemize}
+
+dane okno brane jest pod uwagę jako posiadające alternans. Okno jest przesuwane, aż do napotkania końca sygnału. W przypadku gdy 5\% wszystkich okien spełnia wyżej wymieniony warunek, dany sygnał kwalifikowany jest jako zawierający alternans załamka T. 
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/twa_1}
+\par\end{centering}
+
+\caption{Algorytm Movign four-beat window techniqure}
+\label{fig:twa_1}
+\end{figure}
+
+\par\end{center}
+
+\subsubsection{Opis procedur i metod}
+\label{sec::t_wave_alt:procs}
+
+Pełna funkcjonalność modułu została za implementowana w klasie \verb|TWaveAltDetector|. Klasa ta dziedziczy po abstrakcyjnej klasie  \verb|TWaveAltModule|. Moduł uruchamiany jest za pomocą funkcji: 
+
+\paragraph{\texttt{TWaveAltDetector::runModule(const ECGWaves, const ECGSignalChannel, ECGInfo, ECGTWave)}}
+
+\medskip{}
+
+Argumenty funkcji:
+
+\begin{itemize}
+\item \verb+ECGWaves ecgWaves+ -- instancja klasy przechowującej wyniki detekcji punktów charakterystycznych sygnału EKG takich jak QRS-onset, QRS-end, T-end, P-onset, P-end;
+\item \verb+ECGSignalChannel ecgSignal+ -- instancja klasy zawierajacej badany sygnał EKG;
+\item \verb+ECGInfo ecgInfo+ -- informacje na temat wczytanego sygnału;
+\item \verb+ECGTWave ecgTWave+ -- iinstancja klasy przechowującej wyniki detekcji oraz wektor numerów próbek sygnału zawierających alternans załamka T;
+\end{itemize}
+\medskip{}
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+detectTWaveAlt()+ --główna funkcja klasy odpowiedzialna za całą logikę modułu;
+\end{itemize}
+
+\medskip{}
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+filteredSignal+ --  badany sygnał
+\item \verb+wavesDatal+ -- wektor numerów próbek zawierających QRS-onset, QRS-end, T-end, P-onset, P-end
+\item \verb+tWaveAltData+ -- wektor numerów próbek zawierających alternans
+\end{itemize}
+
+
+\medskip{}
+
+Detekcja oraz obliczenie parametrów oceny ilościowej alternansu wykonywane są w metodzie  \verb|detectTWaveAlt()|. Cały algorytm przetwarzania sygnału, detekcji alternansu (zgodnie z algorytmem  \verb|Moving four-beat window techniqure|) oraz obliczenia ilościowe związane z analizowanym sygnałem zostały zawarte właśnie w tej funkcji. Funkcja nie przyjmuje żadnych parametrów wejściowych. Funkcja zwraca wartość logiczną 1 w przypadku wykrycia w sygnale alternansu oraz wartość 0 w przypadku braku alternansu w sygnale. Funkcja oblicza następujące parametry ilościowe alternansu:
+\begin{itemize}
+\item \verb+ilość okien w sygnale zawierających alternans+
+\item \verb+procentowy udział wszystkich okien o rozmiarze 4 zawierających alternans w sygnale+
+\end{itemize}
+
+
+\paragraph{\texttt{bool TWaveAltDetector::detectTWaveAlt()}}
+
+\medskip{}
+
+Argumenty funkcji:
+
+\begin{itemize}
+\item \verb+brak+
+\end{itemize}
+\medskip{}
+
+Używane funkcje:
+\begin{itemize}
+\item \verb+gsl_vector_int_get()+ --funkcja GSL pobierająca całkowitą wartość danego elementu z wektora
+\item \verb+gsl_vector_int_alloc()+ --funkcja GSL tworząca wskaźnik do nowo utworzonego obiektu 
+\item \verb+gsl_vector_int_set()+ --funkcja GSL zapisująca całkowitą wartość danego elementu wektora
+\item \verb+GetT_end()+ --funkcja zwracająca wektor numerów próbek zawierających załamek T
+\item \verb+setTWaveAlt()+ --funkcja ustawiająca wektor numerów próbek zawierających alternans załamka T
+\end{itemize}
+
+
+\medskip{}
+
+Używane zmienne:
+\begin{itemize}
+\item \verb+filteredSignal+ --  badany sygnał
+\item \verb+wavesDatal+ -- wektor numerów próbek zawierających QRS-onset, QRS-end, T-end, P-onset, P-end
+\item \verb+tWaveAltData+ -- wektor numerów próbek zawierających alternans
+\end{itemize}
+
+
+\medskip{}
+
+\subsubsection{Warunki testowania}
+\label{sec::t_wave_alt:tests}
+Wszystkie algorytmy brane pod uwagę przy wyborze docelowego rozwiązania zostały wstępnie zaimplementowane w środowisku Matlab. Po wybraniu odpowiedniego i najbardziej skutecznego rozwiązania (\verb|Moving four-beat window techniqure|) moduł \verb|TWaveAlt| wraz z detekcją załamków T został zaimplementowany w Matlab, a następnie w C++. 
+
+Zostały przeprowadzone następujące testy:
+
+\begin{itemize}
+\item Testy różnych algorytmów detekcji załamka T: Zostały opracowane prototypy różnych alogtytmów detekcji alternansu w Matlab. 
+\item Testy poprawności działania wybranego algorytmu: Porównanie działania modułu zimplementowanego w Matlab z algorytmem w Visual Studio. 
+\item Testy skuteczności wykrywania alternansu T: Zostały przetestowanie sygnały zawierające alternans T, które przedmiotem badań podczas konkursu "Physionet Challenge 2008". Uzyskane wyniki zostały porównane z oficjalnymi rezultatami prac konkursowych.
+\end{itemize}
+
+\subsubsection{Wyniki}
+\label{sec::t_wave_alt:results}
+Przeprowadzone rysunki przedstawiają testy różnych algorytmów detekcji załamka T.
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/twa_2}
+\par\end{centering}
+
+\caption{Test 1 - TWA algorytmy}
+\label{fig:twa_2}
+\end{figure}
+
+\par\end{center}
+
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/twa_3}
+\par\end{centering}
+
+\caption{Test 2 - TWA skuteczność}
+\label{fig:twa_3}
+\end{figure}
+
+\par\end{center}
+
 \subsection{HRT}
 \label{sec:hrt}
 
