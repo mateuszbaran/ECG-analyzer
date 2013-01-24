@@ -1,11 +1,11 @@
-/// Multiplier for input parameters - 1 = ms, 0.001 = seconds
-#define MULTIPLIER 1
+/// czestotliwosc probkowania dla fft
+#define SAMPLING_FFT 500
 
-/// Enables development mode - defined => development mode, undefined => standard mode
+/// wlacza development mode: zdefiniowana => development mode, niezdefiniowana => standard mode
 //#define DEV
 
-/// Enables debug mode
-#define DEBUG
+/// wlacza tryb debugowania
+//#define DEBUG
 //#define DEBUG_FFT
 
 #pragma once
@@ -18,6 +18,7 @@
 
 #include "ECGRs.h"
 #include "ECGHRV1.h"
+#include "ECGChannelInfo.h"
 #include "ECGSignal.h"
 
 #ifdef DEV // 4 testing
@@ -25,6 +26,8 @@
 #else
 	#include "ModulesInterfaces.h"
 #endif
+
+#define FREQUENCY_FFT (1000/SAMPLING_FFT)
 
 /**
  * @class Class for parameters created in HRV1 module
@@ -53,7 +56,8 @@ private:
 	//RR peaks signal parameters
 	double *sig;
 	double *sigAbsolute;
-    int signalSize;
+    long signalSize;
+    long sizeFftIndex;
     int signalSampling;
 
     //methods
@@ -61,6 +65,7 @@ private:
     void prepareSigAbsolute();
 	void calculateParameters();
 
+	double* doFFT(double* sigAfterSpline);
 	kiss_fft_cpx* copycpx(double *mat, int nframe);
 	double mean(double *tab, int start, int end);
 	double std(double *tab, int start, int end);
