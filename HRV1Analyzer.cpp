@@ -1,10 +1,5 @@
-/// Multiplier for input parameters - 1 = ms, 0.001 = seconds
-#define MULTIPLIER 1
-
-/// Enables development mode - defined => development mode, undefined => standard mode
-//#define DEV 1
-
 #include "HRV1Analyzer.h"
+#include <QDebug>
 
 HRV1Analyzer::HRV1Analyzer() { }
 
@@ -16,36 +11,63 @@ void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
 	this->rPeaksData = r_peaks_data;
 	this->hrv1Data = &hrv1_data;
 
-	this->run();
+	prepareSignal();
+	calculateParameters();
 }
 
-void HRV1Analyzer::run() {
+/**
+ * Przeksztalcenie tablicy z numerami probek na tablice zawierajaca zbior interwalow
+ * pomiedzy kolejnymi zespolami RR
+ */
+void HRV1Analyzer::prepareSignal() {
 
-    // preparations of input signal (sig)
-    #ifndef DEV
-    	gsl_vector_int* rs = rPeaksData.GetRs()->signal;
+		signalSize = rPeaksData.GetRs()->signal->size;
+		signalSampling = 360;
 
-    	signalSize = rs->size;
-    	sig = new double[signalSize-1];
-    	signalSampling = 360;
+		 //wlasciwe przygotowanie sygnalu wejsciowego (double *sig)
+		#ifdef DEV
 
-    	for(int i = 0; i < signalSize-1; i++) {
-    		sig[i] = (gsl_vector_int_get(rs, i+1)
-    				- gsl_vector_int_get(rs, i))/signalSampling;
-    	}
-		sig[signalSize] = gsl_vector_int_get(rs, signalSize-1)/signalSampling;
+	        ExampleSignal es = ExampleSignal();
 
-    #endif
+	        sig = es.getSignal();
+	        signalSize = es.getLength();
+	        signalSampling = 500;
 
-    #ifdef DEV
-        ExampleSignal es = ExampleSignal();
+			#ifdef DEBUG
+				qDebug() << "ExampleSignal loaded.";
+			#endif
 
-        sig = es.getSignal();
-        signalSize = es.getLength();
-        signalSampling = 500;
+		#else
 
+			sig = new double[signalSize-1];
 
-    #endif
+			double scalingValue = (double)((1/signalSampling)*1000);
+			int v1, v2;
+
+			for(int i = 0; i < signalSize-1; i++) {
+				v1 = gsl_vector_int_get (rPeaksData.GetRs()->signal, i);
+				v2 = gsl_vector_int_get (rPeaksData.GetRs()->signal, i+1);
+
+				sig[i] = (double) abs(v2-v1) * scalingValue;
+			}
+
+		#endif
+
+		#ifdef DEBUG
+			qDebug() << "Preparing input signal data has been completed.";
+		#endif
+
+	}
+
+/**
+ * Metoda odpowiadajaca za wyliczenie wszystkich parametrow ilosciowych oraz czestotliwosciowych,
+ * ktore skladaja sie na analize, ktora ma przeprowadzic modul HRV1
+ */
+void HRV1Analyzer::calculateParameters() {
+
+	#ifdef DEBUG
+		qDebug() << "HRV1 calculateParameters method started";
+	#endif
 
     double temp=0;
 

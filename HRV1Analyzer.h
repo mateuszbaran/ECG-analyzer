@@ -1,5 +1,11 @@
+/// Multiplier for input parameters - 1 = ms, 0.001 = seconds
+#define MULTIPLIER 1
+
 /// Enables development mode - defined => development mode, undefined => standard mode
-// #define DEV 1
+//#define DEV
+
+/// Enables debug mode
+#define DEBUG
 
 #pragma once
 
@@ -16,7 +22,6 @@
 #ifdef DEV // 4 testing
     #include "ExampleSignal.h"
 #else
-	// Main includes
 	#include "ModulesInterfaces.h"
 #endif
 
@@ -40,18 +45,22 @@ public:
     #endif
 
 private:
+    //input parameters
 	ECGRs rPeaksData;
 	ECGHRV1* hrv1Data;
 
+	//RR peaks signal parameters
 	double *sig;
     int signalSize;
     int signalSampling;
 
-	void run();
+    //methods
+    void prepareSignal();
+	void calculateParameters();
+
 	kiss_fft_cpx* copycpx(double *mat, int nframe);
 	double mean(double *tab, int start, int end);
 	double std(double *tab, int start, int end);
 	double* cubicSpline(double* x, double* y, int nframe);
-
 };
 
