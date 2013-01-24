@@ -483,6 +483,7 @@ Jeśli podczas wykrywania nie wystąpi żaden problem zostanie stworzony wektor 
 \label{sec:rs:tests}
 Początkowo moduł był testowany przy użyciu własnego przefiltrowanego sygnału testowego utworzonego w matlabie. Testowy sygnał został pozbawiony składowej stałej, zostały usunięte zakłócenia filtrami: dolnoprzepustowym oraz górnoprzepustowym. Cały sygnał został znormalizowany do zakresu od -1 do 1.\\
 \indent Sygnał można wczytać przy pomocy funkcji jaka znajduje się w klasie \verb|RPeaksDetector| o nazwie \verb|getMockedSignal|. W pliku \verb|RPeaksDetector.h| znajdują się makrodefinicje które w prosty sposób pozwalają włączyć debugowanie procesu wykrywania sygnału oraz użycie testowego sygnału.\\
+
 \indent Makrodefinicja \verb|USE_MOCKED_SIGNAL| włącza użycie testowego sygnału. Sygnał jaki dostarcza moduł \verb|ECGBaseLine| jest ignorowany. Dodatkowo makrodefinicja \verb|DEBUG| pozwala na wypisanie podstawowych informacji z przebiegu wykrywania załamków \verb|R|. Poniżej przedstawiamy przykładowy log zarówno dla metody \verb|PanTompkins| jak i \verb|Hilbert|:
 \begin{verse}
 Thersold size not found, use automatic calculated value\\ 
@@ -553,6 +554,7 @@ test100   & 2273 & 2274 & 2272  & 99,9\% & 99,9\% \\ \hline
 \indent Uzyskane wyniki pomiarów wyraźnie pokazują przewagę metody \verb|Hilberta|. W wiekszości plików wynik skuteczności wachał sie w około 98\%. Metoda detekcji \verb|PanTompkins| sprawia problemy głównie w sygnałach o dużych zakłuceniach oraz tam gdzie morfologia pochodzenia sygnału udeżenia jest inna niż zatokowo-przedsionkowa.\\
 \indent Ostatni sygnał 'test100' został wygenerowany z matlaba, wczytaliśmy sygnał 100.dat, przefiltrowaliśmy, usunęliśmy skladowa stałą oraz znormalizowaliśmy. Tak przygotowany sygnał został wczytany i przeprowadziliśmy detekcję. Jak widać skuteczność jest znacznie większa niż w przyadku oryginalnego sygnału gdzie przygotowany sygnał dostajemy z modułu \verb|BaseLIne|.\\
 \indent Próbowaliśmy również testować wykrywanie zmieniając ustawienią modułu \verb|BaseLine| wybierając inne filtracje. Wyniki jakie uzyskaliśmy były praktycznie identyczne jak powyżej dlatego nie zamieszczamy ich tutaj.
+
 \subsection{Waves}
 \label{sec:waves}
 Autorzy: Agata Sitnik i Łukasz Zieńkowski.
@@ -766,7 +768,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 %
 \begin{figure}
 \begin{centering}
-%\includegraphics[scale=0.4]{include/waves_cpp}
+\includegraphics[scale=0.4]{include/waves_cpp}
 \par\end{centering}
 
 \caption{Wyniki modułu Waves -- Visual Studio 2010}
@@ -778,6 +780,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 Udało się osiągnąć zadowalające wyniki, które nieznacznie odbiegają od danych przewidywanych. 
 Wyniki osiągnięte podczas wstępnej implementacji w Matlabie, gdzie wykonano oznaczenia początków i końców zespołów QRS \ref{fig:waves_matlab} oraz następnie oznaczono położenie załamków P i końców załamków T \ref{fig:waves_matlab2} są nieznacznie gorszej jakości niż uzyskane później w wynikowym programie \ref{fig:waves_cpp} . Jest to spowodowane między innymi tym, że program w Matlabie był przygotowany jako prototyp, który później został dopracowany i rozszerzony o dodatkowe warunki klasyfikacji sygnału jako załamki oraz o dodatkową filtrację.
 
+\subsection{HRV1}
 \label{sec:hrv1}
 
 Autorzy: Łukasz Jaromir i Leszek Sosnowski
