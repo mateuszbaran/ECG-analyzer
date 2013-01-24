@@ -1357,7 +1357,158 @@ podsekcji:
 \par\end{center}
 
 \subsection{HRV DFA}
-\label{sec:hrvd_fa}
+\label{sec:dfa}
+Autorzy: Mikołaj Rzepka i Szczepan Czaicki
+
+\subsubsection{Opis zadania}
+\label{sec:dfa:desc}
+
+\begin{description}
+\item[Temat] Beztrendowa analiza fluktuacji tachogramu (ang. Detrended Fluctuation Analysis)
+\item[Opis] Poszukiwanie wciąż nowych rozwiązań oceny ilościowej tachogramu doprowadziło do
+opracowania nowej metody – beztrendowej analizy fluktuacji, która to jest rozszerzeniem
+zwyczajnej analizy fluktuacji. Podejście to sprawdziło się w „odkrywaniu” rozległych
+i długotrwających korelacji w sygnale EKG. Zasadniczą zaletą tego podejścia jest możliwość
+zastosowania algorytmu dla szeregów czasowych, których podstawowe statystyki mają
+charakter niestacjonarny (zmieniają się w czasie). Celem projektu jest opracowanie
+i implementacja metody wyznaczającej parametry DFA.
+\item[Dane] ciąg próbek załamków R z modułu R\_PEAKS
+\item[Szukane] moduł programu wyznaczający, wyświetlający parametry analizy DFA w postaci
+tabel oraz rysujący wykresy analizy DFA
+\end{description}
+
+\subsubsection{Badania literaturowe}
+\label{sec:dfa:papers}
+Beztrendowa analiza fluktuacyjna polega na określeniu zależności błędu liniowej interpolacji F(n) dla odpowiednio zdefiniowanego szeregu od wielkości okna interpolacji n. Metoda ta bierze pod uwagę różnice w lokalnej zawartości danych i może być stosowana dla jednoczesnej analizy całego szeregu danych zawierającego wiele niejednolitych obszarów. W przeciwieństwie do funkcji f(n) analizy fluktuacyjnej, mającej zmienne nachylenie nawet dla n mniejszego od wielkości typowego obszaru stacjonarnego, funkcja beztrendowa F(n) wykazuje nachylenie stałe przez kilka rzędów wielkości. Metoda DFA znakomicie wykazała  różnice między sekwencjami kodującymi a niekodującymi DNA. Użyto więc metody również do wykrywania korelacji w zjawiskach pogodowych, ekonofizyce (np. fluktuacje wartości indeksów giełdowych) oraz do sygnałów fizjologicznych, przede wszystkim zmienności rytmu serca.
+Metoda beztrendowej analizy fluktuacji (ang. Detrended Fluctuation Analysis, DFA) polega
+na powtórnej analizie sygnału w blokach o długościach kolejno rosnących, aż do określonej
+wartości N. W pierwszej kolejności tachogram jest całkowany zgodnie ze wzorem:
+\begin{equation}
+\sum_{i=1}^{N}({RR(i)-RR_{avg}})
+\end{equation}
+gdzie $RR(i)$ to i-ty interwał, zaś $RR_{avg}$ to średni interwał między kolejnymi uderzeniami (w dzień średnio około 0.7 sekundy).
+Następnie tak scałkowany sygnał podzielony zostaje na bloki o określonych długościach n
+i w każdym z bloków następuje wyznaczenie trendu lokalnego $y_n(k)$ metodą najmniejszych kwadratów. Skorzystano w tym celu ze wzorów na współczynniki linii trendu $a$ i $b$:
+\begin{equation}
+ \frac {S \cdot S_{xy} - S_x\cdot S_{y}}{\Delta}
+\end{equation}
+\begin{equation}
+b = \frac {S_{xx} \cdot S_y - S_x\cdot S_{xy}}{\Delta}
+\end{equation}
+Wykorzystane we wzorach na współczynniki prostej oznaczenia rozpisano poniżej:
+\begin{equation}
+S = \sum_{i=1}^n 1 = n
+\end{equation}
+\begin{equation}
+S_x = \sum_{i=1}^n x_i
+\end{equation}
+\begin{equation}
+S_y = \sum_{i=1}^n y_i
+\end{equation}
+\begin{equation}
+S_{xx} = \sum_{i=1}^n x_i^2
+\end{equation}
+\begin{equation}
+S_{xy} = \sum_{i=1}^n x_i y_i
+\end{equation}
+\begin{equation}
+S_{yy} = \sum_{i=1}^n y_i^2
+\end{equation}
+\begin{equation}
+\Delta = S \cdot S_{xx} - (S_x)^2
+\end{equation}
+
+Proces jest powtarzany dla coraz większycj bloków, aż do pełnej długości N . Wówczas
+można wyznaczyć zależność fluktuacji od rozmiaru bloku jako
+\begin{equation}
+F(n) = \sqrt{\frac{1}{N}\sum_{k=1}^{N}(y(k) - y_n(k))^2}
+\end{equation}
+Zależność ta może zostać umieszczona na wykresie z logarytmiczno-logarytmicznym. Można
+zdefiniować współczynnik skalowania
+\begin{equation}
+\alpha = \lim_{n \to \infty}\frac{\log F(n)}{\log n}
+\end{equation}
+W zależności od wartości wyliczonego współczynnika możemy wyciągnąć różne wnioski odnoszące się do sygnału wejściowego:
+  \begin{itemize}
+  \item Dla 0 $<$ $\alpha$ $<$ 0.5 obserwuje się
+długozasięgowe antykorelacje (po
+krótszym interwale bardziej
+prawdopodobne jest wystąpienie
+dłuższego), natomiast dla 0.5 $<$ $\alpha$ $<$ 1
+dodatnie korelacje długozasięgowe,
+  \item Przypadek $\alpha$ = 1 odpowiada szumowi $1/f$
+  \item Dla $\alpha$ $\geq$ 1 korelacje istnieją, lecz przestają
+mieć charakter potęgowy,
+  \item Wartość $\alpha$ = 1.5 odpowiada scałkowanemu
+sygnałowi widma białego, czyli błądzeniu
+przypadkowemu
+  \end{itemize}
+
+
+\subsubsection{Opis procedur i metod}
+\label{sec:dfa:procs}
+Główna funkcjonalność modułu znajduje się w klasie \verb|DFAAnalyzer|. Klasa ta,
+według przyjętego schematu rozszerza abstrakcyjny moduł analizy beztrendowej analizy fluktuacji tachogramu.
+ 
+
+Lista i opis najważniejszych funkcji:
+
+\begin{lstlisting}
+void DFAAnalyzer::runModule (const ECGRs &ecgRs, ECGHRVDFA &ecghrvdfa)
+\end{lstlisting}
+
+Wirtualna funkcja uruchamiająca moduł HRV DFA. Ustawia instancje klas, w których przechowuje dane i uruchamia fukcję \verb|calcDFA| obliczającą podstawowe parametry związane z beztrendową analiza fluktuacji tachogramu.
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+ECGRs &ecgRs+ -- wektor numerów próbek zawierający załamki R
+\item \verb+ECGHRVDFA &ecghrvdfa+ -- instancja klasy przechowującej wyniki analizy HRV DFA
+\end{itemize}
+\medskip{}
+
+\begin{lstlisting}
+void DFAAnalyzer::calcDFA()
+\end{lstlisting}
+
+Funkcja obliczająca podstawowe parametry związane z beztrendową analiza fluktuacji tachogramu. Najpierw wylicza z sygnału długość interwałów $RR$, następnie całkuje otrzymany sygnał i wywołuje funkcję \verb|calc_all_trends| wyliczającą parametry linii trendów dla kolejnych wielkości okien. Następnie funkcja przelicza wartości fluktuacji w kolejnych oknach, wpisuje je do instancji klasy \verb|ECGHRVDFA| w celu ich późniejszego wyrysowania. Na końcu obliczana jest wartość współczynnika skalowania $\alpha$, również wpisywana do instancji klasy \verb|ECGHRVDFA|.
+\medskip{}
+
+\begin{lstlisting}
+trend_coefs** DFAAnalyzer::calc_all_trends(double* rr_integrated, int length)
+\end{lstlisting}
+
+Funkcja wyliczająca parametry linii trendów dla kolejnych wielkości okien sygnału \verb|rr_integrated|. Dzieli sygnał na okna o wielkości od 2 próbek do całej długości sygnału i dla każdego okna wywołuje funkcję \verb|calc_trend| obliczającą parametry $a$ i $b$ linii trendu metodą najmniejszych kwadratów.
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+double* rr_integrated+ -- sygnał (tablica) interwałów $RR$
+\item \verb+int length+ -- długośc tablicy interwałów $RR$
+\end{itemize}
+\medskip{}
+
+\begin{lstlisting}
+trend_coefs* DFAAnalyzer::calc_trend(double* rr_integrated, int start, int w_length)
+\end{lstlisting}
+
+Funkcja obliczająca parametry $a$ i $b$ linii trendu metodą najmniejszych kwadratów dla podanego sygnału od próbki \verb|start| w oknie długości \verb|w_length|.
+
+Argumenty funkcji:
+\begin{itemize}
+\item \verb+double* rr_integrated+ -- sygnał (tablica) interwałów $RR$
+\item \verb+int start+ -- numer próbki sygnału interwałów $RR$ od którego funkcja zaczyna przeliczenia
+\item \verb+int w_length+ -- ilość próbek sygnału interwałów $RR$ brana do przeliczeń począwszy od próbki \verb|start|
+\end{itemize}
+\medskip{}
+
+\subsubsection{Warunki Testowania}
+\label{sec:dfa:tests}
+
+Grupa wykonująca zadania były uzależniona od wyników grupy implementującej moduł R\_PEAKS. W związku z tym, aby uniezależnić się od pracy tej grupy, do testowania algorytmu używano sygnałów zawierających piki R pobranych z internetu. Wyniki porównywano z wynikami uzyskiwanymi z wyliczeń skryptu napisanego w Matlabie w poprzednim semestrze.
+
+\subsubsection{Wyniki}
+\label{sec:dfa:results}
+
+W pierwszym etapie prac porównywano wyniki pracy algorytmu do wyników uzyskiwanych z wyliczeń skryptu napisanego w Matlabie, udało się osiągnąć takie same rezultaty. Na efekty wizualizacji wyników czekaliśmy do samego końca, z powodu braku czasu zaimplementowano wizualizację jednego wykresu: zależności logarytmu fluktuacji od logarytmu z wielkości okna.
 
 \subsection{Klasyfikacja zespołów QRS}
 \label{sec:qrs_class}
