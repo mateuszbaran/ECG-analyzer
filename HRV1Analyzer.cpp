@@ -4,7 +4,8 @@
 HRV1Analyzer::HRV1Analyzer() { }
 
 HRV1Analyzer::~HRV1Analyzer() {
-
+	delete[] sig;
+	delete[] sigAbsolute;
 }
 
 void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
@@ -12,6 +13,7 @@ void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
 	this->hrv1Data = &hrv1_data;
 
 	prepareSignal();
+	prepareSigAbsolute();
 	calculateParameters();
 }
 
@@ -58,6 +60,16 @@ void HRV1Analyzer::prepareSignal() {
 		#endif
 
 	}
+
+void HRV1Analyzer::prepareSigAbsolute() {
+	sigAbsolute = new double[signalSize];
+
+	sigAbsolute[0] = sig[0];
+
+	for(int i=1; i<signalSize; i++) {
+        sigAbsolute[i] = sig[i] + sigAbsolute[i-1];
+	}
+}
 
 /**
  * Metoda odpowiadajaca za wyliczenie wszystkich parametrow ilosciowych oraz czestotliwosciowych,
@@ -133,27 +145,22 @@ void HRV1Analyzer::calculateParameters() {
 
 	temp=0;
 
-    //sigAbsolute
-	double* sigAbsolute = new double[signalSize];
-	sigAbsolute[0] = sig[0];
-
-	for(int i=1; i<signalSize; i++) {
-        sigAbsolute[i] = sig[i] + sigAbsolute[i-1];
-	}
-
     //temp variables
-    int windowSize = signalSampling*60*5; /* 60 seconds*5minutes */
+    int windowSize = 1000*60*5; /* 60 seconds*5minutes */
 	int numberOfSteps = std::floor( sigAbsolute[signalSize-1]/windowSize );
 
     double * mRRI = new double[numberOfSteps];
     double * stdRR5 = new double[numberOfSteps];
 
-	for(int step=1;step<=numberOfSteps;step++) {
-	    int windowStartTime = (step-1) * windowSize;
-        int windowEndTime = step * windowSize;
+    int windowStartTime, windowEndTime, windowStartIndex, windowEndIndex;
 
-        int windowStartIndex = 0;
-        int windowEndIndex = 0;
+    //wyliczanie wartosci w 5 minutowym oknie czasowym
+	for(int step=1;step<=numberOfSteps;step++) {
+	    windowStartTime = (step-1) * windowSize;
+        windowEndTime = step * windowSize;
+
+        windowStartIndex = 0;
+        windowEndIndex = 0;
 
 	    for(int i=0; i<signalSize; i++) {
 	        if(windowStartTime<=sigAbsolute[i]) {
@@ -171,11 +178,11 @@ void HRV1Analyzer::calculateParameters() {
 	    mRRI[step-1] = mean(sig, windowStartIndex, windowEndIndex+1);
 	    stdRR5[step-1] = std(sig, windowStartIndex, windowEndIndex+1);
 
-	    /*//debug
-	    std::cout << "windowStartIndex=" << windowStartIndex << " windowEndIndex=" << windowEndIndex << std::endl;
-        std::cout << "windowStartTime=" << windowStartTime << " windowEndTime=" << windowEndTime << std::endl;
-	    std::cout << "mRRI=" << mRRI[step-1] << " stdRR5=" << stdRR5[step-1] << std::endl;
-	    */
+		#ifdef DEBUG
+			qDebug() << "windowStartIndex=" << windowStartIndex << " windowEndIndex=" << windowEndIndex;
+			qDebug() << "windowStartTime=" << windowStartTime << " windowEndTime=" << windowEndTime;
+			qDebug() << "mRRI=" << mRRI[step-1] << " stdRR5=" << stdRR5[step-1];
+		#endif
 
 	}
 
@@ -214,14 +221,7 @@ void HRV1Analyzer::calculateParameters() {
     kiss_fftr(fft,(kiss_fft_scalar*)cpx_buf, out_cpx);
     kiss_fftri(ifft,out_cpx,(kiss_fft_scalar*)out );
 
-    /*printf("Input:    \tOutput:\n");
-    for(i=0;i<size;i++)
-    {
-        std::cout << "   " << out_cpx[i].r << std::endl;
-        buf[i] = (out[i].r)/(size*2);
-        printf("%f\t%f\n", sig[i],buf[i]);
-    }*/
-
+    //zwalnianie pamieci
     kiss_fft_cleanup();
     free(fft);
     free(ifft);
@@ -232,16 +232,17 @@ void HRV1Analyzer::calculateParameters() {
     for(int i=0; i<sizeFftIndex; i++) {
         fftMagnitude[i] = 2*(out_cpx[i].r*out_cpx[i].r)/(size*size); //=(abs(out_cpx[i].r)/size)*(abs(out_cpx[i].r)/size)
     }
-    // odd nfft excludes Nyquist point
+    // wziecie tylko polowy wartosci fft (bo jest symetryczne)
     fftMagnitude[0] = fftMagnitude[0]/2;
     if(size%2==0) {
         fftMagnitude[sizeFftIndex-1] = fftMagnitude[sizeFftIndex-1]/2;
     }
 
-    /*for(i=0;i<sizeFftIndex;i++)
-    {
-        std::cout << "   " << fftMagnitude[i] << std::endl;
-    }*/
+	#ifdef DEBUG_FFT
+		for(i=0;i<sizeFftIndex;i++) {
+			qDebug() << "fft#"<< i << ": " << fftMagnitude[i];
+		}
+	#endif
 
     for(int i = 1; i< sizeFftIndex; i++) {
         if(i<=0.003*signalSampling) {
@@ -260,12 +261,8 @@ void HRV1Analyzer::calculateParameters() {
     this->hrv1Data->TP = this->hrv1Data->ULF + this->hrv1Data->VLF + this->hrv1Data->LF + this->hrv1Data->HF;
     this->hrv1Data->LFHF = this->hrv1Data->LF / this->hrv1Data->HF;
 
-    delete[] sigAbsolute;
 
-    ////////////////////Sygnaly do wyswietlenia
-
-    //OtherSignal freqency;
-    //OtherSignal power;
+    ////////////////////power & frequency plot
 
     this->hrv1Data->freqency = OtherSignal(new WrappedVector);
 
@@ -275,11 +272,14 @@ void HRV1Analyzer::calculateParameters() {
     	this->hrv1Data->freqency->set(i, i);
     	this->hrv1Data->power->set(i, fftMagnitude[i]);
     }
-	delete mRRI;
-	delete stdRR5;
-	delete out_cpx;
-	delete out;
-	delete fftMagnitude;
+
+
+    //sprzatanie pamieci
+	delete[] mRRI;
+	delete[] stdRR5;
+	delete[] out_cpx;
+	delete[] out;
+	delete[] fftMagnitude;
 }
 
 #ifndef DEV
@@ -300,15 +300,12 @@ kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) {
 }
 
 double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) {
-    //magnet::math::Spline spline;
+
     int FREQ_SAMPLING = 1000 * 1/5; //bo milisekundy
 
     alglib::spline1dinterpolant s;
     alglib::ae_int_t natural_bound_type = 2;
 
-	//for(int i=0; i<nframe ; i++) {
-        //spline.addPoint(x[i], y[i]);
-	//}
 	alglib::real_1d_array *rx = new alglib::real_1d_array();
 	rx->setcontent(nframe, x);
 	alglib::real_1d_array *ry = new alglib::real_1d_array();
@@ -323,16 +320,18 @@ double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) {
     int sizeAfterSpline = (int)(x[signalSize-1]/FREQ_SAMPLING) +1;
 	double* sig = new double[sizeAfterSpline];
 
-
-
     for(int i=0; i<sizeAfterSpline; i++) {
+
         std::cout << sig[i] << "\n";
-        //sig[i] = spline(i*FREQ_SAMPLING);
         sig[i] = alglib::spline1dcalc(s, i*FREQ_SAMPLING);
     }
+
     return sig;
 }
 
+/**
+ * Oblicza srednia z wartosci przechowywanych w tablicy tab pomiedzy indeksami start i end
+ */
 double HRV1Analyzer::mean(double *tab, int start, int end) {
     double temp=0;
 
@@ -342,6 +341,10 @@ double HRV1Analyzer::mean(double *tab, int start, int end) {
     return temp/(end-start);
 }
 
+/**
+ * Oblicza odchylenie standardowe z wartosci przechowywanych w tablicy tab
+ * pomiedzy indeksami start i end
+ */
 double HRV1Analyzer::std(double *tab, int start, int end) {
     double temp=0;
     double avg = mean(tab, start, end);
@@ -351,7 +354,4 @@ double HRV1Analyzer::std(double *tab, int start, int end) {
     }
     return std::sqrt(temp/(end-start));
 }
-
-
-
 

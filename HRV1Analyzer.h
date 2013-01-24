@@ -6,6 +6,7 @@
 
 /// Enables debug mode
 #define DEBUG
+//#define DEBUG_FFT
 
 #pragma once
 
@@ -51,11 +52,13 @@ private:
 
 	//RR peaks signal parameters
 	double *sig;
+	double *sigAbsolute;
     int signalSize;
     int signalSampling;
 
     //methods
     void prepareSignal();
+    void prepareSigAbsolute();
 	void calculateParameters();
 
 	kiss_fft_cpx* copycpx(double *mat, int nframe);
