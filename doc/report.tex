@@ -766,7 +766,7 @@ Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano 
 %
 \begin{figure}
 \begin{centering}
-\includegraphics[scale=0.4]{include/waves_cpp}
+%\includegraphics[scale=0.4]{include/waves_cpp}
 \par\end{centering}
 
 \caption{Wyniki modułu Waves -- Visual Studio 2010}
@@ -1387,7 +1387,7 @@ Autorzy: Krzysztof Bębenek
 
 \subsection{ST interval}
 \label{sec:st_interval}
-Autorzy: Bartłomiej Bułat i Krzysztof Piekutowski.
+Autorzy: Bartłomiej Bułat i Krzysztof Piekutowski
 
 \subsubsection{Opis zadania}
 \label{sec:st_interval:desc}
@@ -1443,13 +1443,13 @@ nachylenia oraz wykrywanie epizodów.
 
 \begin{figure}[h!]
   \centering
-%  \includegraphics[width=0.6\textwidth]{include/ecg_st}
+  \includegraphics[width=0.6\textwidth]{include/ecg_st}
   \caption{Kluczowe punkty analizy odcinka ST. ISO - punk referencyjny leżący
   na izolini, J - początek odcinka, ST - koniec odcinka. Opracowanie własne.}
   \label{fig:ecg_st}
 \end{figure}
 
-Na rysunku \ref{fig:ecg_st} przedstawiono kluczowe punkty, które nalezy
+Na rysunku \ref{fig:ecg_st} przedstawiono kluczowe punkty, które należy
 wyznaczyć przed wyznaczaniem parametrów diagnostycznych odcinka ST. Według
 wyżej wymianionego algorytmu, punktem referencyjnym w założeniu znajdującym się
 na izolini jest początek zespołu QRS i koniec odcinka P. Punkt J, który jest
@@ -1657,9 +1657,12 @@ Parametry:
 
 \subsubsection{Warunki testowania}
 \label{sec:st_interval:tests}
+W trakcie implementacji do testowania algorytmów używaliśmy surowego sygnału MIT BIH oraz wzorcowych załamków R z pliku z rozszerzeniem atr dostępnego razem z sygnałem. Testy polegały na wizualnej ocenie poprawności wykrytych punków przedstawionych na wykresie. Kolejnym krokiem było testowanie algorytmu na przefiltrowanym sygnale oraz załamkach R zwracanych przez moduł RPeaks, również na bazie oceny wizualnej wyznaczonych właściwości odcinka ST. Flaga \verb|DEVELOPMENT| pozwala na przełączanie się między użyciem załamków wzorcowych (gdy jest ustawiona) i wykrywanych przez moduł RPeaks (gdy nie jest ustawiona).
 
 \subsubsection{Wyniki}
 \label{sec:st_interval:results}
+%%TODO można tu dodać printscreen wykresu ST, gdy zacznie działać aplikacja
+Resultatem projektu są dwa algorytmy wyznaczania i analizy parametrów odcinków ST. Prostrzy algorytm opisany w \cite{AUGUST1} został w całości zaimplementowany i przetestowany. Drugi, rozszerzony algorytm z \cite{SHEN1} również został zrealizowany, jednak ze względu na złożoność matematyczną niezbędne okazało się uproszczenie jednego z kroków. Algorytm ten zakłada wykorzystanie 5-warstwowej dekompozycji falkowej splinów 4-stopnia do detekcji punktu $T_{peak}$, co okazało się być niewykonalne technicznie. Wykrycie tego punktu zostało zrealizowane przy użyciu filtru różnicowego wyszukującego maximum lokalne sygnału. Poprawność wyników z obu algorytmów w dużym stopniu zależy od jakości wyników działania modułów nadrzędnych, dostarczających przefiltrowany sygnał EKG oraz zespoły QRS.
 
 
 \subsection{T wave alt}
