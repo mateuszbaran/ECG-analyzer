@@ -62,7 +62,7 @@
          <enum>QTabWidget::West</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabSignalInfo">
          <attribute name="title">
@@ -188,7 +188,7 @@
                     <bool>false</bool>
                    </attribute>
                    <attribute name="verticalHeaderVisible">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </attribute>
                    <attribute name="verticalHeaderCascadingSectionResizes">
                     <bool>false</bool>
@@ -608,13 +608,13 @@
                     </sizepolicy>
                    </property>
                    <item>
-                    <property name="text">
-                     <string>Pan Tompkins</string>
-                    </property>
+                       <property name="text">
+                           <string>Hilbert</string>
+                       </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Hilbert</string>
+                     <string>Pan Tompkins</string>
                     </property>
                    </item>
                   </widget>
@@ -652,7 +652,7 @@
                  <item>
                   <widget class="QDoubleSpinBox" name="doubleSpinBoxRPeaksHistogramSize">
                    <property name="enabled">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                    <property name="minimumSize">
                     <size>
@@ -952,7 +952,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabHRVAnalysisStatisticalParameters">
               <attribute name="title">
@@ -1366,7 +1366,7 @@
                  </item>
                  <item row="3" column="1">
                   <property name="text">
-                   <string>ms</string>
+                   <string/>
                   </property>
                  </item>
                 </widget>
@@ -1397,7 +1397,7 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_12">
                   <item>
-                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD1">
+                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD1SD2Parameters">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1405,20 +1405,7 @@
                      </sizepolicy>
                     </property>
                     <property name="text">
-                     <string>SD1</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBoxShowOnPlotSD2">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="text">
-                     <string>SD2</string>
+                     <string>SD1/SD2 Parameters</string>
                     </property>
                    </widget>
                   </item>
@@ -1475,7 +1462,7 @@
                 <bool>false</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
-                <bool>false</bool>
+                <bool>true</bool>
                </attribute>
                <row>
                 <property name="text">
@@ -1599,7 +1586,7 @@
                      <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderVisible">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </attribute>
                     <attribute name="verticalHeaderCascadingSectionResizes">
                      <bool>false</bool>
@@ -1633,6 +1620,21 @@
                     <row>
                      <property name="text">
                       <string>P_end</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Number of T_WAVE_ALT</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Percent of T_WAVE_ALT</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Is T_WAVE_ALT detected?</string>
                      </property>
                     </row>
                     <column>
@@ -1826,7 +1828,7 @@
                    <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderVisible">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </attribute>
                   <attribute name="verticalHeaderCascadingSectionResizes">
                    <bool>false</bool>

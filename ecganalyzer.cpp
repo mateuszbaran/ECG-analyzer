@@ -347,7 +347,7 @@ void ECGanalyzer::setRpeaksParams()
 {
 	ParametersTypes params;
 	params["detection_method"] = ui.comboBoxRPeaksDetectionMethod->currentIndex();
-	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
 	{
 		if(!ui.checkBoxRPeaksDetectThresholdAutomatically->isChecked())
 		{
@@ -358,7 +358,7 @@ void ECGanalyzer::setRpeaksParams()
 			params["window_size"] = ui.doubleSpinBoxRPeaksWindowSize->value();
 		}
 	}
-	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
 	{
 		//TODO Hilbert parameters
 	}
@@ -380,3 +380,49 @@ void ECGanalyzer::setSTIntervalParams()
 
 
 
+
+void ECGanalyzer::on_checkBoxT_Wave_AltEnabled_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxP_endEnabled_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxP_onsetEnabled_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxT_endEnabled_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxQRS_endEnabled_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxQRS_onsetEnabled_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxShowOnPlotSD1SD2Parameters_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_checkBoxShowOnPlotHRVTriangle_toggled(bool checked)
+{
+
+}
+
+void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
+{
+	ParametersTypes hrv2_params;
+	//hrv2_params["algorithm"] = (double) ui.doubleSpinBoxRPeaksHistogramSize->value();
+}

@@ -9,6 +9,7 @@
 #include "QRSPointsDetector.h"
 #include "DFAAnalyzer.h"
 #include "GeometricAnalysis.h"
+#include "TWaveAltDetector.h"
 
 #include "wfdb/wfdb.h"
 
@@ -24,6 +25,7 @@ ECGController::ECGController (void) :
   hrv_dfa_module(new DFAAnalyzer()),
   hrt_module(new HRTAnalyzer()),
   waves_module(new QRSPointsDetector()),
+  t_wave_alt_module(new TWaveAltDetector()),
   hrv1_module(new HRV1Analyzer()),
   hrv2_module(new GeometricAnalysis()),
   st_interval_module(new STAnalysis()),
