@@ -51,7 +51,7 @@ public:
   void runWaves();
   void runHRV1();
   void runHRV2();
-  void runHRVDFA();
+  void runHRVDFT();
   void runQRSClass();
   void runSTInterval();
   void runTwaveAlt();
@@ -90,7 +90,7 @@ private:
   boost::scoped_ptr<WavesModule> waves_module;
   boost::scoped_ptr<HRV1Module> hrv1_module;
   boost::scoped_ptr<HRV2Module> hrv2_module;
-  boost::scoped_ptr<HRVDFAModule> hrv_dfa_module;
+  boost::scoped_ptr<HRVDFAModule> hrv_dft_module;
   boost::scoped_ptr<QRSClassModule> qrs_class_module;
   boost::scoped_ptr<STIntervalModule> st_interval_module;
   boost::scoped_ptr<TWaveAltModule> t_wave_alt_module;
