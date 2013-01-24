@@ -8,5 +8,5 @@ public:
 	Butterworth();
 	~Butterworth();
 
-	std::vector<std::vector<double>> filterDesign(int order, int cutoffFreq, int sampleFreq, int type);
+	std::vector<std::vector<double>> filterDesign(int order, double attenuation, double cutoffFreq, int sampleFreq, int type);
 };
