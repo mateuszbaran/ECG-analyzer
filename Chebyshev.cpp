@@ -5,10 +5,10 @@ Chebyshev::~Chebyshev(){}
 
 /*
 	filterDesign for the time being returns precalculated
-	values for Chebyshev 2nd order highpass filter,
+	values for Chebyshev 3rd order highpass filter,
 	given the sample frequency of source signal
 */
-std::vector<std::vector<double>> Chebyshev::filterDesign(int order, int cutoffFreq, int sampleFreq, int type)
+std::vector<std::vector<double>> Chebyshev::filterDesign(int order, double ripple, double cutoffFreq, int sampleFreq, int type)
 {
 	std::vector<std::vector<double>> cbCoefficients(2, std::vector<double>(4,0));
 
