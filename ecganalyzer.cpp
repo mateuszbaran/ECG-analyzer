@@ -18,6 +18,50 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 //#ifndef DEVELOPMENT
 //    ui.run_st_analysis_button->setProperty('visible', false);
 //#endif
+	
+	
+	QVBoxLayout *lay;
+	
+	lay = new QVBoxLayout;
+	plotTachogram = new PlotTachogram(this);
+	lay->addWidget(plotTachogram);
+	ui.tab->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotHRVTriangle = new PlotHRVTriangle(this);
+	lay->addWidget(plotHRVTriangle);
+	ui.tab_2->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotPoincare = new PlotPoincare(this);
+	lay->addWidget(plotPoincare);
+	ui.tab_3->setLayout(lay);
+	
+	//lay = new QVBoxLayout;
+	//plotHRVFrequency = new PlotHRVFrequency(this);
+	//lay->addWidget(plotHRVFrequency);
+	//ui.nowhere->setLayout(lay);
+	
+	//lay = new QVBoxLayout;
+	//plotDFA1 = new PlotDFA1(this);
+	//lay->addWidget(plotDFA1);
+	//ui.nowhere->setLayout(lay);
+	
+	//lay = new QVBoxLayout;
+	//plotDFA2 = new PlotDFA2(this);
+	//lay->addWidget(plotDFA2);
+	//ui.nowhere->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotQRS = new PlotQRS(this);
+	lay->addWidget(plotQRS);
+	ui.groupBox_5->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotHRT = new PlotHRT(this);
+	lay->addWidget(plotHRT);
+	ui.groupBox->setLayout(lay);
+	
 }
 
 ECGanalyzer::~ECGanalyzer()
@@ -61,15 +105,17 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		}
 
 //        _ECGcontroller.runECGBaseline();
-//        _ECGcontroller.runRPeaks();
-\
-        //moje
-        _ECGcontroller.runHRV2();
-        on_run_st_analysis_button_clicked();
+        _ECGcontroller.runRPeaks();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
-
-
+		//moje - czyje?
+		_ECGcontroller.runHRV2();
+		plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
+		plotPoincare->setData(_ECGcontroller.hrv2_data);
+		
+		_ECGcontroller.runHRT();
+		plotHRT->setData(_ECGcontroller.hrt_data);
+		
 		QTableWidgetItem *fileName = new QTableWidgetItem();
 		fileName->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.filename) );
 		ui.tableWidgetSignalInfo->setItem(0, 0, fileName);
@@ -101,31 +147,6 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		QTableWidgetItem *range = new QTableWidgetItem();
 		range->setText(QString().sprintf("%d mV", _ECGcontroller.ecg_info.channel_one.range) );
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
-		
-		/*
-		_ECGcontroller.runHRT();
-
-		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
-		PlotHRT *plotHRT = new PlotHRT(this);
-		plotHARTLayout->addWidget(plotHRT);
-		plotHRT->setData(_ECGcontroller.hrt_data);
-		ui.groupBox->setLayout(plotHARTLayout);*/
-	
-		ECGHRV2 hrv2_data;
-		// ...
-		
-        QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
-        PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
-        plotHRVTriangleLayout->addWidget(plotHRVTriangle);
-        plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
-        ui.tab_2->setLayout(plotHRVTriangleLayout);
-		
-        QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
-        PlotPoincare *plotPoincare = new PlotPoincare(this);
-        plotPoincareLayout->addWidget(plotPoincare);
-        plotPoincare->setData(_ECGcontroller.hrv2_data);
-        ui.tab_3->setLayout(plotPoincareLayout);
-		
 		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
 		
@@ -202,7 +223,7 @@ void ECGanalyzer::enableChebyschevGUIControls(bool enable)
 	ui.spinBoxOrderChebyshev->setEnabled(enable);
 	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
 	ui.doubleSpinBoxRippleChebyschev->setEnabled(enable);
-	ui.spinBoxOrderChebyshev->setEnabled(enable);
+	ui.spinBoxCutOffFrequencyChebyshev->setEnabled(enable);
 }
 
 void ECGanalyzer::enableButterworthGUIControls(bool enable)
@@ -292,7 +313,6 @@ void ECGanalyzer::updateRunButtons( bool analysisOngoing )
 void ECGanalyzer::setModulesParams()
 {
   //TODO: Set params for other modules
-  setBaselineParams();
   setRpeaksParams();
   setSTIntervalParams();
 }
@@ -347,37 +367,11 @@ void ECGanalyzer::updateSTIntervalTab()
   
 }
 
-void ECGanalyzer::setBaselineParams()
-{
-	ParametersTypes params;
-	if(ui.radioButtonMovingAverage->isChecked())
-	{
-		params["baseline_removal_method"] = MOVING_AVERAGE;
-		params["span"] = ui.spinBoxMovingAverageSpan->value();
-	}
-	else if(ui.radioButtonButterworthFilter->isChecked())
-	{
-		params["baseline_removal_method"] = BUTTERWORTH;
-		params["order"] = ui.spinBoxOrderButterworth->value();
-		params["cutoff_frequency"] = ui.spinBoxCutOffFrequencyButterworth->value();
-		params["attenuation"] = ui.doubleSpinBoxAttenuationButterworth->value();
-	}
-	else if(ui.radioButtonChebyschevFilter->isChecked())
-	{
-		params["baseline_removal_method"] = CHEBYSHEV;
-		params["order"] = ui.spinBoxOrderChebyshev->value();
-		params["cutoff_frequency"] = ui.spinBoxCutOffFrequencyChebyshev->value();
-		params["ripple"] = ui.doubleSpinBoxRippleChebyschev->value();
-	}
-
-	_ECGcontroller.setParamsECGBaseline(params);
-}
-
 void ECGanalyzer::setRpeaksParams()
 {
 	ParametersTypes params;
 	params["detection_method"] = ui.comboBoxRPeaksDetectionMethod->currentIndex();
-	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
 	{
 		if(!ui.checkBoxRPeaksDetectThresholdAutomatically->isChecked())
 		{
@@ -388,7 +382,7 @@ void ECGanalyzer::setRpeaksParams()
 			params["window_size"] = ui.doubleSpinBoxRPeaksWindowSize->value();
 		}
 	}
-	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 0)
+	if(ui.comboBoxRPeaksDetectionMethod->currentIndex() == 1)
 	{
 		//TODO Hilbert parameters
 	}

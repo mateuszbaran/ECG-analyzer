@@ -61,7 +61,7 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal pe
     int size = int(v->size);
     peaksSamples->clear();
     for (int i = 0; i < size; i++)
-        peaksSamples->push_back(data->sample(v->data[i*v->stride] - 20));
+        peaksSamples->push_back(data->sample(v->data[i*v->stride]));
     peaksData->setSamples(*peaksSamples);
     peaksCurve->setData(peaksData);
     replot();
