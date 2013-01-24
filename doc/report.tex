@@ -537,7 +537,7 @@ Uzyskane wyniki wykrywania załamków \verb|R| dla sygnałów pochodzących z ba
 \linebreak
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-sygnał & ilość R & wykryte PanTompkins & wykryte Hilbert & skuteczność PanTompkins & skuteczność Hilbert\\ \hline
+sygnał & ilość R & \parbox{2.7 cm}{\centering wykryte \\ PanTompkins} & wykryte  Hilbert & \parbox{3 cm}{\centering skuteczność \\ PanTompkins} & skuteczność Hilbert\\ \hline
 100   & 2273 & 3001 & 2272  & 91,7\% & 99,9\% \\ \hline
 105   & 2572 & 2982 & 2559  & 85,1\% & 99,5\% \\ \hline
 107   & 2137 & 3803 & 2125  & 33,1\% & 99,4\% \\ \hline
@@ -693,8 +693,8 @@ Funkcja znajdująca maksimum lokalne w danym zakresie sygnału, parametry forBeg
 określają początek i koniec analizowanego okna.
 
 \begin{lstlisting}
-void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal, const ECGInfo &
-ecgi, const ECGRs &ecgRs, ECGWaves & ecgWaves)
+void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal,
+ const ECGInfo &ecgi, const ECGRs &ecgRs, ECGWaves & ecgWaves)
 \end{lstlisting}
 Funkcja uruchamiająca moduł
 
@@ -814,7 +814,7 @@ Analiza zmienności rytmu serca opiera się na bieżących wartościach interwa�
 
 Tachogram (po uzupełnieniu luk po zespołach QRS innych niż nadkomorowe) może być podstawą wyznaczania statycznych i geometrycznych współczynników zmienności akcji serca:
 \newline
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|p{14cm}|}
 \hline
 Oznaczenie: & Znaczenie wskaźnika \\ \hline
 Średni RR & Wartość średnia ze wszystkich odstępów RR rytmu zatokowego \\ \hline
@@ -833,8 +833,8 @@ Analiza zmienności rytmu serca w dziedzinie częstotliwości wymaga rozwiązani
 Algorytm interpolacji, który wybraliśmy to algorytm interpolacji funkcjami sklejanymi trzeciego stopnia.
 
 Kolejnym krokiem jest stosowanie przekształcenia Fouriera w celu otrzymania widma sygnału. Wykres widma dzielony jest zwykle na pasma, w których określana jest całkowita moc wyrażana następnie przy użyciu współczynników:
-
-\begin{tabular}{|c|l|}
+\newline
+\begin{tabular}{|c|p{14cm}|}
 \hline
 Oznaczenie: & Znaczenie wskaźnika \\ \hline
 TP & całkowita moc widma (większe lub równe 0.4 Hz)  \\ \hline
@@ -847,25 +847,25 @@ LFHF & stosunek mocy widm w zakresie niskich częstotliwości do wysokich częst
 \end{tabular}
 
 
-Analiza częstotliwościowa dostarcza informacji o dynamicznej równowadze układu autonomicznego umożliwiając ocenę współpracy układu współczulnego i przywspółczulnego. Współczynniki analizy częstotliwościowej HRV dobrze reprezentują zjawiska zmienności. (za: Piotr Augystyniak \textit{Przetwarzanie sygnałów elektrodiagnostycznych}).
+Analiza częstotliwościowa dostarcza informacji o dynamicznej równowadze układu autonomicznego umożliwiając ocenę współpracy układu współczulnego i przywspółczulnego. Współczynniki analizy częstotliwościowej HRV dobrze reprezentują zjawiska zmienności \cite{AUGUST1}.
 
 \subsubsection{Opis procedur i metod}
 \label{sec:hrv1:procs}
 Klasą realizującą obliczenia parametrów analizy czasowej i częstotliwościowej jest klasa HRV1Analyzer.
 Metody w klasie HRV1Analyzer:
 \begin{itemize}
-\item HRV1Analyzer::HRV1Analyzer() -- konstruktor klasy
-\item HRV1Analyzer::~HRV1Analyzer() -- destruktor klasy
-\item void HRV1Analyzer::runModule(const ECGRs \& r\_peaks\_data, ECGHRV1 \& hrv1\_data) - metoda wywoływana przez kontroler służąca do uruchomienia modułu i realizacji wyliczenia współczynników
-\item void HRV1Analyzer::prepareSignal() -- funkcja zajmująca się przygotowaniem sygnału - metoda przekształca tablicę z numerami próbek na tablicę zawierającą czas pomiędzy 2 załamkami
-\item void HRV1Analyzer::prepareSigAbsolute() -- funkcja zajmująca się dalszym przygotowaniem sygnału -- tworzy sygnał zawierający bezwzględny czas wystąpienia kolejnych załamków RR
-\item void HRV1Analyzer::calculateParameters() -- właściwa metoda odpowiadająca za wyliczenie wszystkich współczynników ilościowych oraz częstotliwościowych, które składają się na właściwą analiże, za którą odpowiada moduł HRV1
-\item void HRV1Analyzer::setParams(ParametersTypes \&parameterTypes) -- metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
-\item double* HRV1Analyzer::doFFT(double* sigAfterSpline) -- metoda przeprowadzająca analizę FFT zinterpolowanego sygnału z wykorzystaniem biblioteki KISS FFT
-\item kiss\_fft\_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) -- funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
-\item double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) -- funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia). Zachodzi interpolacja funkcji o wektorach x i y - długość wektorów x i y jest taka sama i wynosi nframe
-\item double HRV1Analyzer::mean(double *tab, int start, int end) -- funkcja obliczająca średnią arytmetyczną elementów z tablicy tab
-\item double HRV1Analyzer::std(double *tab, int start, int end) -- funkcja obliczająca odchylenie standardowe
+\item \verb+HRV1Analyzer::HRV1Analyzer()+ -- konstruktor klasy
+\item \verb+HRV1Analyzer::~HRV1Analyzer()+ -- destruktor klasy
+\item \verb+void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data)+ -- metoda wywoływana przez kontroler służąca do uruchomienia modułu i realizacji wyliczenia współczynników
+\item \verb+void HRV1Analyzer::prepareSignal()+ -- funkcja zajmująca się przygotowaniem sygnału -- metoda przekształca tablicę z numerami próbek na tablicę zawierającą czas pomiędzy 2 załamkami
+\item \verb+void HRV1Analyzer::prepareSigAbsolute()+ -- funkcja zajmująca się dalszym przygotowaniem sygnału -- tworzy sygnał zawierający bezwzględny czas wystąpienia kolejnych załamków RR
+\item \verb+void HRV1Analyzer::calculateParameters()+ -- właściwa metoda odpowiadająca za wyliczenie wszystkich współczynników ilościowych oraz częstotliwościowych, które składają się na właściwą analizę, za którą odpowiada moduł HRV1
+\item \verb+void HRV1Analyzer::setParams(ParametersTypes &parameterTypes)+ -- metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
+\item \verb+ouble* HRV1Analyzer::doFFT(double* sigAfterSpline)+ -- metoda przeprowadzająca analizę FFT zinterpolowanego sygnału z wykorzystaniem biblioteki KISS FFT
+\item \verb+kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe)+ -- funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
+\item \verb+double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe)+ -- funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia). Zachodzi interpolacja funkcji o wektorach x i y - długość wektorów x i y jest taka sama i wynosi nframe
+\item \verb+double HRV1Analyzer::mean(double *tab, int start, int end)+ -- funkcja obliczająca średnią arytmetyczną elementów z tablicy tab
+\item \verb+double HRV1Analyzer::std(double *tab, int start, int end)+ -- funkcja obliczająca odchylenie standardowe
 \end{itemize}
 
 Klasą przechowującą współczynniki analizy częstotliwościowej i czasowej jest klasa ECGHRV1.
@@ -1474,7 +1474,8 @@ Funkcja obliczająca podstawowe parametry związane z beztrendową analiza flukt
 \medskip{}
 
 \begin{lstlisting}
-trend_coefs** DFAAnalyzer::calc_all_trends(double* rr_integrated, int length)
+trend_coefs** DFAAnalyzer::calc_all_trends(double* rr_integrated,
+	int length)
 \end{lstlisting}
 
 Funkcja wyliczająca parametry linii trendów dla kolejnych wielkości okien sygnału \verb|rr_integrated|. Dzieli sygnał na okna o wielkości od 2 próbek do całej długości sygnału i dla każdego okna wywołuje funkcję \verb|calc_trend| obliczającą parametry $a$ i $b$ linii trendu metodą najmniejszych kwadratów.
@@ -1487,7 +1488,8 @@ Argumenty funkcji:
 \medskip{}
 
 \begin{lstlisting}
-trend_coefs* DFAAnalyzer::calc_trend(double* rr_integrated, int start, int w_length)
+trend_coefs* DFAAnalyzer::calc_trend(double* rr_integrated, int start,
+	int w_length)
 \end{lstlisting}
 
 Funkcja obliczająca parametry $a$ i $b$ linii trendu metodą najmniejszych kwadratów dla podanego sygnału od próbki \verb|start| w oknie długości \verb|w_length|.
@@ -2221,19 +2223,19 @@ na wykresie, ocena wartości TO w odniesieniu do różnic długości ). Testy ni
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/image.eps}
-\caption{Screen prezentujący ostateczny wygląd modułu} 
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/skrin1.eps}
-\caption{Screen prezentujący ostateczny wygląd modułu} 
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 %\includegraphics[width=15cm]{include/skrin2.eps}
-\caption{Screen prezentujący ostateczny wygląd modułu} 
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
 \end{figure}
 
 \bibliographystyle{plain}
