@@ -264,14 +264,14 @@ bool QRSPointsDetector::detectPT(){
 
     IntSignal tEnd;
 	tEnd = IntSignal(new WrappedVectorInt);
-	tEnd->signal = gsl_vector_int_alloc(qrsCount);
+	tEnd->signal = gsl_vector_int_alloc(qrsCount-1);
 
 	IntSignal pOnset;
 	pOnset = IntSignal(new WrappedVectorInt);
-	pOnset->signal = gsl_vector_int_alloc(qrsCount);
+	pOnset->signal = gsl_vector_int_alloc(qrsCount-1);
 	IntSignal pEnd;
 	pEnd = IntSignal(new WrappedVectorInt);
-	pEnd->signal = gsl_vector_int_alloc(qrsCount);
+	pEnd->signal = gsl_vector_int_alloc(qrsCount-1);
 
 	for(int i = 0; i < qrsCount-1; i++)
 	{	
