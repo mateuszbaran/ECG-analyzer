@@ -362,6 +362,9 @@
     <ClCompile Include="plots\timescaledraw.cpp">
       <Filter>Source Files\plots</Filter>
     </ClCompile>
+    <ClCompile Include="QRSMorphologyDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ecganalyzer.h">
@@ -511,6 +514,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HRV1Analyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QRSMorphologyDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_AboutWindow.h">

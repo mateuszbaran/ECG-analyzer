@@ -6,7 +6,7 @@
 #include "ECGHRV1.h"
 #include "ECGHRV2.h"
 #include "ECGHRVDFA.h"
-#include "ECGClasses.h"
+#include "QRSClass.h"
 #include "ECGHRT.h"
 #include "ECGST.h"
 #include "ECGTWave.h"
@@ -66,7 +66,7 @@ public:
   ECGHRV1 hrv1_data;
   ECGHRV2 hrv2_data;
   ECGHRVDFA hrv_dfa_data;
-  ECGClasses classes_data;
+  QRSClass classes_data;
   ECGST st_data;
   ECGTWave twave_data;
   ECGHRT hrt_data;

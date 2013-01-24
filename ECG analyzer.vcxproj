@@ -238,6 +238,7 @@
     <ClCompile Include="plots\timescaledraw.cpp" />
     <ClCompile Include="QRSClass.cpp" />
     <ClCompile Include="QRSPointsDetector.cpp" />
+    <ClCompile Include="QRSMorphologyDetector.cpp" />
     <ClCompile Include="RPeaksDetector.cpp" />
     <ClCompile Include="SignalPreprocessor.cpp" />
     <ClCompile Include="Snr.cpp" />
@@ -471,6 +472,7 @@
     <ClInclude Include="plots\timescaledraw.h" />
     <ClInclude Include="QRSClass.h" />
     <ClInclude Include="QRSPointsDetector.h" />
+    <ClInclude Include="QRSMorphologyDetector.h" />
     <ClInclude Include="RPeaksDetector.h" />
     <ClInclude Include="SignalPreprocessor.h" />
     <ClInclude Include="Snr.h" />
