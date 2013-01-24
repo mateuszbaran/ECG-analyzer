@@ -88,7 +88,7 @@ void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel &inputSigna
 {
 	int sampleFreq = ecgInfo.channel_one.frequecy;
 	Butterworth * butterworth = new Butterworth();
-	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, cutoffFrequency, sampleFreq, 0);
+	std::vector<std::vector<double>> bcCoefficients = butterworth->filterDesign(2, attenuation, cutoffFrequency, sampleFreq, 0);
 	
 	Filter * filter = new Filter();
 	filter->zeroPhase(bcCoefficients[0], bcCoefficients[1], inputSignal, outputSignal, 2);
@@ -99,8 +99,8 @@ void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel &inputSignal,
 {
 	int sampleFreq = ecgInfo.channel_one.frequecy;
 	Chebyshev * chebyshev = new Chebyshev();
-	std::vector<std::vector<double>> cbCoefficients = chebyshev->filterDesign(2, cutoffFrequency, sampleFreq, 0);
-	
+	std::vector<std::vector<double>> cbCoefficients = chebyshev->filterDesign(2, ripple, cutoffFrequency, sampleFreq, 0);
+
 	Filter * filter = new Filter();
 	filter->zeroPhase(cbCoefficients[0], cbCoefficients[1], inputSignal, outputSignal, 2);
 }
