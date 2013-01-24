@@ -856,12 +856,14 @@ Metody w klasie HRV1Analyzer:
 \begin{itemize}
 \item HRV1Analyzer::HRV1Analyzer() - konstruktor klasy
 \item HRV1Analyzer::~HRV1Analyzer() - destruktor klasy
-\item void HRV1Analyzer::runModule(const ECGRs \& r\_peaks\_data, ECGHRV1 \& hrv1\_data) - metoda wywoływana przez kontroler służąca do uruchomienia modułu
-\item void HRV1Analyzer::run() - metoda odpowiedzialna za uruchomienie algorytmów liczenia współczynników
+\item void HRV1Analyzer::runModule(const ECGRs \& r\_peaks\_data, ECGHRV1 \& hrv1\_data) - metoda wywoływana przez kontroler służąca do uruchomienia modułu i realizacji wyliczenia współczynników
+\item void HRV1Analyzer::prepareSignal() - funkcja zajmująca się przygotowaniem sygnału - metoda przekształca tablicę z numerami próbek na tablicę zawierającą zbiór interwałów pomiędzy kolejnymi zespołami RR
+\item void HRV1Analyzer::calculateParameters() - właściwa metoda odpowiadająca za wyliczenie wszystkich współczynników ilościowych oraz częstotliwościowych, które składają się na właściwą analiże, za którą odpowiada moduł HRV1
 \item void HRV1Analyzer::setParams(ParametersTypes \&parameterTypes) - metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
-\item double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) - funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia)
+\item double* HRV1Analyzer::doFFT(double* sigAfterSpline) - metoda przeprowadzająca analizę FFT zinterpolowanego sygnału z wykorzystaniem biblioteki KISS FFT
 \item kiss\_fft\_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) - funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
-\item double HRV1Analyzer::mean(double *tab, int start, int end) - funkcja obliczająca średnią arytmetyczną
+\item double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) - funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia). Zachodzi interpolacja funkcji o wektorach x i y - długość wektorów x i y jest taka sama i wynosi nframe
+\item double HRV1Analyzer::mean(double *tab, int start, int end) - funkcja obliczająca średnią arytmetyczną elementów z tablicy tab
 \item double HRV1Analyzer::std(double *tab, int start, int end) - funkcja obliczająca odchylenie standardowe
 \end{itemize}
 
