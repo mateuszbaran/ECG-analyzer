@@ -11,6 +11,7 @@
 #include "GeometricAnalysis.h"
 #include "TWaveAltDetector.h"
 
+
 #include "wfdb/wfdb.h"
 
 #include "tri_logger.hpp"
@@ -29,10 +30,11 @@ ECGController::ECGController (void) :
   hrv1_module(new HRV1Analyzer()),
   hrv2_module(new GeometricAnalysis()),
   st_interval_module(new STAnalysis()),
+  qrs_class_module(NULL),
   computation(NULL),
   analysisCompl(false)
 {
-  TRI_LOG_STR("ECGController created, 20:51 17-12-2012");
+  TRI_LOG_STR("ECGController created, 14:50 24-01-2013");
   //TODO: create modules objects
 }
 
@@ -205,8 +207,11 @@ void ECGController::runQRSClass ()
   {
     runWaves();
   }
-  qrs_class_module->runModule(waves_data, filtered_signal, ecg_info, classes_data);
-  qrs_class_module->run_ = true;
+  if (qrs_class_module)
+  {
+    qrs_class_module->runModule(waves_data, filtered_signal, ecg_info, classes_data);
+    qrs_class_module->run_ = true;
+  }
   LOG_END
 }
 
@@ -475,7 +480,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
       runHRVDFT();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRVDFT analysis completed; QRS analysis ongoing.");
-			runHRVDFT();
+			runWaves();
       HANDLE_INTERRUPTION
 			statusUpdate("QRS analysis completed; QRS class analysis ongoing.");
       runQRSClass();
