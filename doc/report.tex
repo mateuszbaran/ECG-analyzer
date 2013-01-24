@@ -134,6 +134,8 @@ Minimalne wymagania kompilacji projektu są następujące:
     \item gsl 1.15
     \item WFDB 10.5.16 (zawarta w źródłach projektu)
     \item FFTW 3.3.2
+   \item KissFFT 1.3.0  (zawarta w źródłach projektu)
+   \item ALGLIB 3.7.0   (zawarta w źródłach projektu)
   \end{itemize}
 \end{itemize}
 
@@ -619,6 +621,108 @@ Wyniki osiągnięte podczas wstępnej implementacji w Matlabie, gdzie wykonano o
 
 \subsection{HRV1}
 \label{sec:hrv1}
+
+Autorzy: Łukasz Jaromir i Leszek Sosnowski
+\subsubsection{Opis zadania}
+\label{sec:hrv1:desc}
+\begin{description}
+\item[Temat] Analiza zmienności rytmu serca (HRV) \#1
+\item[Opis] Zmienność rytmu zatokowego opisuje różnice w długościach interwałów RR
+wyznaczanych przez kolejne szczyty zespołów QRS. Występowanie tych różnic świadczy
+o zdolności serca do adaptacji względem zewnętrznych bodźców i przedstawia informacje
+o pracy autonomicznego systemu nerwowego. Najprostsze ze stosowanych metod to analiza
+statystyczna w dziedzinie czasu oraz analiza częstotliwościowa. Celem projektu jest
+opracowanie i implementacja metod czasowych oraz częstotliwościowych analizy zmienności
+rytmu serca.
+\item[Dane] ciąg próbek załamków R z modułu RPEAKS
+\item[Szukane] moduł programu wyznaczający, wyświetlający parametry analizy czasowej
+i częstotliwościowej, a także rysujący postać częstotliwościową tachogramu wraz
+z naniesionymi zakresami parametrów HF, LF, VLF, ULF
+\end{description}
+
+\subsubsection{Badania literaturowe}
+\label{sec:hrv1:papers}
+Ocena zmienności rytmu serca jest podstawową techniką umozliwiającą ocenę wpływu układu współczulnego (pobudzanie) i przywspółczulnego (hamowanie) na akcję serca. Ponieważ rola tych układów silnie zależy od stanu człowieka (sen, czuwanie) dopiero analiza całodobowych zmian rytmu serca pozwala diagnozować poprawność tego współdziałania.
+
+Analiza zmienności rytmu serca opiera się na bieżących wartościach interwałów międzyuderzeniowych (odstępów RR) i może być prowadzona:
+\begin{itemize}
+\item w dziedzinie czasu (metodami statycznymi),
+\item metodami geometrycznymi (aproksymacja histogramu trójkątem),
+\item metodami częstotliwościowymi (z wykorzystaniem funkcji autokorelacji lub przekształcenia Fouriera).
+\end{itemize}
+
+Tachogram (po uzupełnieniu luk po zespołach QRS innych niż nadkomorowe) może być podstawą wyznaczania statycznych i geometrycznych współczynników zmienności akcji serca:
+\newline
+\begin{tabular}{|l|l|}
+\hline
+Oznaczenie: & Znaczenie wskaźnika \\ \hline
+Średni RR & Wartość średnia ze wszystkich odstępów RR rytmu zatokowego \\ \hline
+SDNN & odchylenie standardowe interwałów RR (ang. standard deviation normal-to-normal) \\ \hline
+rMSSD & pierwiastek kwadratowy ze średniej kwadratów różnic pomiędzy kolejnymi dwoma interwałami RR \\ \hline
+NN50 & liczba interwałów RR, których różnica przekracza 50 ms \\ \hline
+pNN50 & odsetek różnic pomiędzy interwałami RR, które przekraczają 50 ms [\%] \\ \hline
+SDANN & odchylenie standardowe ze wszystkich średnich interwałów RR w 5 minutowych segmentach czasu całego zapisu [ms] \\ \hline
+SDANNindex & średnia z odchyleń standardowych interwałów RR w 5 minutowych segmentach czasu całego zapisu [ms] \\ \hline
+SDSD & odchylenie standardowe różnic pomiędzy dwoma sąsiadującymi interwałami RR [ms] \\
+\hline
+\end{tabular}
+\linebreak
+
+Analiza zmienności rytmu serca w dziedzinie częstotliwości wymaga rozwiązania problemu dotyczącego natury sygnału: tachogram jest dyskretną funkcją czasu próbkowaną niejednorodnie (interwał próbkowania nie jest stały). Konieczne jest więc odtworzenie ciągłej funkcji czasu na podstawie posiadanego tachogramu, a następnie ponowna jej dyskretyzacja w sposób jednorodny.
+Algorytm interpolacji, który wybraliśmy to algorytm interpolacji funkcjami sklejanymi trzeciego stopnia.
+
+Kolejnym krokiem jest stosowanie przekształcenia Fouriera w celu otrzymania widma sygnału. Wykres widma dzielony jest zwykle na pasma, w których określana jest całkowita moc wyrażana następnie przy użyciu współczynników:
+
+\begin{tabular}{|c|l|}
+\hline
+Oznaczenie: & Znaczenie wskaźnika \\ \hline
+TP & całkowita moc widma (większe lub równe 0.4 Hz)  \\ \hline
+HF & moc widma w zakresie wysokich częstotliwości (0.15 − 0.4 Hz) \\ \hline
+LF & moc widma w zakresie niskich częstotliwości (0.04 − 0.15 Hz) \\ \hline
+VLF & moc widma w zakresie bardzo niskich częstotliwości (0.003 − 0.04 Hz)  \\ \hline
+ULF & moc widma w zakresie ultra niskich częstotliwości (0.003 Hz)  \\ \hline
+LFHF & stosunek mocy widm w zakresie niskich częstotliwości do wysokich częstotliwości  \\
+\hline
+\end{tabular}
+
+
+Analiza częstotliwościowa dostarcza informacji o dynamicznej równowadze układu autonomicznego umożliwiając ocenę współpracy układu współczulnego i przywspółczulnego. Współczynniki analizy częstotliwościowej HRV dobrze reprezentują zjawiska zmienności. (za: Piotr Augystyniak \textit{Przetwarzanie sygnałów elektrodiagnostycznych}).
+
+\subsubsection{Opis procedur i metod}
+\label{sec:baseline:procs}
+Klasą realizującą obliczenia parametrów analizy czasowej i częstotliwościowej jest klasa HRV1Analyzer.
+Metody w klasie HRV1Analyzer:
+\begin{itemize}
+\item HRV1Analyzer::HRV1Analyzer() - konstruktor klasy
+\item HRV1Analyzer::~HRV1Analyzer() - destruktor klasy
+\item void HRV1Analyzer::runModule(const ECGRs \& r\_peaks\_data, ECGHRV1 \& hrv1\_data) - metoda wywoływana przez kontroler służąca do uruchomienia modułu
+\item void HRV1Analyzer::run() - metoda odpowiedzialna za uruchomienie algorytmów liczenia współczynników
+\item void HRV1Analyzer::setParams(ParametersTypes \&parameterTypes) - metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
+\item double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) - funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia)
+\item kiss\_fft\_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) - funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
+\item double HRV1Analyzer::mean(double *tab, int start, int end) - funkcja obliczająca średnią arytmetyczną
+\item double HRV1Analyzer::std(double *tab, int start, int end) - funkcja obliczająca odchylenie standardowe
+\end{itemize}
+
+Klasą przechowywującą współczynniki analizy częstotliwościowej i czasowej jest klasa ECGHRV1.
+
+Szukając bilbioteki odpowiedzialnej za realizację transformaty Fouriera skupiliśmy się na znaleziu narzędzia maksymalnie prostego i szybkiego aby kod pozostał zoptymalizowany. Zdecydowaliśmy się na darmową bilbiotekę KISS (Keep it Simple, Stupid).
+
+Tymi samymi przesłankami kierowaliśmy się szukając biblioteki odpowiedzialnej za interpolowanie sygnału. Nasz wybór padł na bibliotekę algib.
+
+\subsubsection{Warunki testowania}
+\label{sec:hrv1:tests}
+
+Jako, że realizacja projektu odbywała się w grupach i tempo pracy było różne musieliśmy sobie poradzić i rozpocząć testowanie nie mając R\_PEAKów. Do tego celu stworzyliśmy prosty algorytm, który emulował pracę całego kontrolera. Program ten na wejście podawał zmienne, które w przyszłości otrzymalibysmy z grupy R\_PEAKs - korzystaliśmy z materiałów, które otrzymaliśmy w poprzednim semestrze realizując w Matlabie laboratorium HRV1. Program zwracał natomiast policzone współczynniki analizy czasowej i częstotliwościowej.
+
+W ten sposób, mogliśmy skutecznie pracować nad optymalizacją algorytmów porównując otrzymane wyniki z tymi, które pochodziły z prototypu napisanego w Matlabie, czekając na sprzężenie naszego modułu z modułem R\_PEAKS.
+
+\subsubsection{Wyniki}
+\label{sec:hrv1:results}
+Pierwszy etap prac, który zakończyliśmy implementując metody odpowiedzialne za obliczanie poszczególnych współczynników, pozwolił nam na ich porównanie do tych otrzymywanych z prototypu napisanego w środowisku Matlab. Były one zbliżone, ale nie satysfakcjonujące: brak algorytmu aproksymacji w sposób istotny zwiększał błędy.
+
+Dopiero dalsze poprawki i optymalizacja, a przede wszystkim implementacja algorytmu aproksymacji skutecznie zminimalizował błędy, tak że wyniki przez nas otrzymane były zadowalające.
+
 
 \subsection{HRV2}
 \label{sec:hrv2}
