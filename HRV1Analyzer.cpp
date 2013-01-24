@@ -157,6 +157,11 @@ void HRV1Analyzer::calculateParameters() {
     //temp variables
     int windowSize = 1000*60*5; /* 60 seconds*5minutes */
 	int numberOfSteps = std::floor( sigAbsolute[signalSize-1]/windowSize );
+  if (numberOfSteps < 0)
+  {
+    //TODO: something went wrong, fix
+    return;
+  }
 
     double * mRRI = new double[numberOfSteps];
     double * stdRR5 = new double[numberOfSteps];
