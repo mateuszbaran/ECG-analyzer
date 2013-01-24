@@ -43,7 +43,7 @@ bool TWaveAltDetector::detectTWaveAlt() {
 	int sS = wavesData.GetT_end()->signal->size;
 		
     int ilosc = 0;
-    int A1, A2, A3, A4;
+    unsigned int A1, A2, A3, A4;
     double ECG_A1, ECG_A2, ECG_A3, ECG_A4;
     int k0 = 0, k1 = 0, k2 = 0, k3 = 0;
     
@@ -60,6 +60,12 @@ bool TWaveAltDetector::detectTWaveAlt() {
         A2 = gsl_vector_int_get(wavesData.GetT_end()->signal, i + 1);
         A3 = gsl_vector_int_get(wavesData.GetT_end()->signal, i + 2);
         A4 = gsl_vector_int_get(wavesData.GetT_end()->signal, i + 3);
+        unsigned int size_size = filteredSignal->signal->size;
+        if (A1 > size_size || A2 > size_size || A3 > size_size || A4 > size_size)
+        {
+          //TODO: something went wrong - fix
+          continue;
+        }
 
 		ECG_A1 = gsl_vector_get(filteredSignal->signal, A1);
         ECG_A2 = gsl_vector_get(filteredSignal->signal, A2);
