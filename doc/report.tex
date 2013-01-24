@@ -428,6 +428,64 @@ Na rysunku \eqref{rdet} można zobaczyć przykładową detekcję załamków R.
 \label{rdet}
 \end{figure}\\
 
+\paragraph{Hilbert}
+\label{sec:rs:papers}
+\subparagraph{Usuwanie stałej DC i normalizacja sygnału}
+Procedura operacji usuwania stałej DC i normalizacji sygnału przebiega w identyczny sposób jak opisano w procedurze "Pan-Thompkins"
+\subparagraph{Filtr dolnoprzepustowy}
+Filtracja dolnoprzepustowa przebiega w identyczny sposób jak opisano w procedurze "Pan - Thompkins"
+\subparagraph{Filtr górnoprzepustowy}
+Filtracja górnoprzepustowa przebiega w identyczny sposób jak opisano w procedurze "Pan - Thompkins"
+\subparagraph{Różniczkowanie sygnału}
+Po filtracji sygnału EKG, następnym krokiem jest różniczkowanie sygnału. Efektem takiego różniczkowania jest podkreślenie w sygnale nachyleń zespołów $QRS$ oraz stłumienie załamków $P$ i $T$. Pierwszą pochodną dla danego sygnału EKG można uzyskać za pomocą równania:
+\begin{equation}
+y(n) = \frac{1}{2 \Delta t}[x(n+1)-x(n-1)], dla n=0,1,2,3...,m-1\label{eq:h}
+\end{equation}
+gdzie m jest całkowita liczbą próbek w sygnale, a $\Delta t$ jest częstotliwością próbkowania.
+Początkowy stan jest określony przez $x(-1)$ kiedy n = 0, a końcowy $x(m)$, kiedy n=m-1.
+Warunki te minimalizują błąd na granicach.
+
+\subparagraph{Podział sygnału w przesuwnym oknie}
+Opisany poniżej algorytm transformaty Hilberta działa dobrze z krótkimi ciągami. Dlatego używa się okna o szerokości 1024 próbek do podziału zróżniczkowanego sygnału $y(n)$ przed uzyskaniem jego transformaty Hilberta. DO optymalizacji dokładności, początkowy punkt kolejnego okna powinien być zlokalizowany w punkcie ostatniego załamka $R$ w poprzednim oknie. 
+\subparagraph{Transformata Hilberta}
+Transformata Hilberta rzeczywistej funkcji x(t) jest zdefiniowana jako:
+\begin{equation}
+hat{x}=H[x(t)]=\frac{1}{\pi}\int_{-\infty}^\infty x(\tau)\frac{1}{t -\tau}d\tau \label{eq:i}
+\end{equation}
+Transformata Hilberta może być zinterpretowana jako konwolucja pomiędzy $x(t)$ i $\frac{1}{\pi t}$\\
+Stosując transformatę Fouriera do \eqref{eq:i}, otrzymujemy:
+\begin{equation}
+F\lbrace \hat{x}(t)\rbrace= \frac{1}{\pi} F \lbrace \frac{1}{t} \rbrace F \lbrace x(t) \rbrace \label{eq:j}
+\end{equation}
+Ponieważ 
+\begin{equation}
+F\lbrace \frac{1}{t} \rbrace = \int_{-\infty}^{+\infty} \frac{1}{x} e^{-j 2 \pi fxdx} = -j \pi sgn f  \label{eq:k}
+\end{equation}
+gdzie $sgn f$ równe jest $+1$ dla $f > 0$, $0$ dla $f = 0$ i $-1$ dla $f<0$,\\
+wtedy transformacja Fouriera transformaty Hilberta $x(t)$ jest podana przez \eqref{eq:j} jako:
+\begin{equation}
+F \lbrace \hat{x}(t) \rbrace= -j sgn f F \lbrace x(t) \rbrace \label{eq:l}
+\end{equation}
+W dziedzinie częstotliwości, wynik jest wtedy uzyskiwany przez przemnożenie widma $x(t)$ przez $j(+90^o)$ dla ujemnych częstotliwości i $-j(-90^o)$ dla dodatnich częstotliwości. Dziedzina czasowa może zostać uzyskana przez wyliczenie odwrotnej transformaty Fouriera. Dlatego, transformata Hilberta oryginalnej funkcji $x(t)$ reprezentuje jesgo harmoniczną koniugację.\\
+Transformatę Hilberta $h(n)$ ciągu $y(n)$, który reprezentuje pierwszą pochodną sygnału EKG, jest uzyskiwana w według następujących kroków :
+\begin{itemize}
+		\item Uzyskaj transformatę Fouriera $F(n)$ wejściowego sygnału $y(n)$,
+		\item Przemnóż dodatnie oraz ujemne harmoniczne odpowiednio przez $-j$ i $j$,
+		\item Wyzeruj stałą składową $DC$,
+		\item Wylicz odwrotną transformatę Fouriera poprzedniego ciągu.
+\end{itemize}
+\subparagraph{Adaptacyjny próg}
+Szczyty w przetransformowanym sygnał metodą Hilberta $h(n)$ reprezentują obszary o wysokim prawdopodobieństwie wystąpienia prawdziwych załamków QRS. W praktyce, te szczyty różnią się od prawdziwych szczytów $R$ o kilka milisekund. W celu zagwarantowania dokładności detekcji załamków $R$, detektor drugiego poziomu jest wymagany. Ponieważ fale $P$ i $T$ są zminimalizowane w relacji do odpowiednich załamków w zespole QRS w ciągu Hilberta, detekcja prostym progiem jest używana do zlokalizowania załamków w ciągu $h(n)$. Próg musi być adaptacyjny w celu zagwarantowania dokładności detekcji załamków R.\\
+poziom progu jest ustalony według poniższych kryteriów:
+\begin{itemize}
+		\item Początkowo poziom szumu w analizowanym podciągu jest określany równoważną wartością $RMS(Root Mean Square)$ ciągu $h(n)$ i jego maksymalnej amplitudy w oknie, 
+		\item Jeżeli wartość $RMS$ jest równa lub większa $18\%$ maksymalnej wartości ciągu $h(n)$, poziom szumu w segmencie uważany jest za wysoki i dlatego poziom progu ustawiany jest na $39\%$ maksymalnej amplitudy ciągu $h(n)$,  
+		\item Jeżeli maksymalna wartość rozważanego ciągu jest dwukrotnie większa od maksymalnej wartości amplitudy poprzedniego okna 1024 próbek, wtedy próg jest powiększany do $39\%$ maksymalnej amplitudy poprzedniego okna $h(n)$, 
+		\item Kiedy wartość $RMS$ jest niższa niż $18\%$ maksymalnej wartości ciągu $h(n)$, poziom szumu uważany jest za niski i poziom progu zmniejszany o $1.6$ raza wartości $RMS$,
+		\item Jeżeli dwa załamki $R$ w ciągu Hilberta $h(n)$ są zlokalizowane blisko siebie(w mniejszym odstępie czasowym niż $200ms$), tylko jeden załamek jest prawdopodobnie rzeczywistym załamkiem $R$,
+		\item Decyzja jest podejmowana na podstawie amplitudy załamka i ich pozycji w stosunku do ostatniego załamka $R$ zlokalizowanego za pomocą adaptacyjnego progu czasowego średniej długości interwału $R-R$ od poprzedniego zlokalizowanego załamka $R$.
+\end{itemize}
+
 \subsubsection{Opis procedur i metod}
 \label{sec:rs:procs}
 
@@ -471,11 +529,11 @@ bool hilbertRPeaksDetection(ECGSignalChannel *signal);
 \end{lstlisting}
 Funkcja również na wejściu otrzymuje sygnał z modułu \verb|ECGBaseLine|. Zadania wykonywane podczas detekcji można podzielić następująco:
 \begin{itemize}
-	\item TODO
-	\item TODO
-	\item TODO
-	\item TODO
-	\item TODO
+	\item różniczkowanie sygnału
+	\item podział sygnału ruchomym oknem
+	\item transformacja Hilberta
+	\item wyznaczanie adaptacyjnego progu
+	\item wykrywanie załamków R
 \end{itemize}
 Jeśli podczas wykrywania nie wystąpi żaden problem zostanie stworzony wektor z punktami w jakich zostały wykryte załamki \verb|R|. Natomiast jeśli z jakiegoś powodu wykrycie załamków nie powiedzie się zostanie rzucony wyjątek \verb|RPeaksDetectionExveption|
 
