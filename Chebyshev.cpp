@@ -10,51 +10,60 @@ Chebyshev::~Chebyshev(){}
 */
 std::vector<std::vector<double>> Chebyshev::filterDesign(int order, int cutoffFreq, int sampleFreq, int type)
 {
-	std::vector<std::vector<double>> baCoefficients(2, std::vector<double>(3,0));
+	std::vector<std::vector<double>> cbCoefficients(2, std::vector<double>(4,0));
 
-	//FIXME
 	switch(sampleFreq){
 		case 200:
-			baCoefficients[0][0] = 0.8949;
-			baCoefficients[0][1] = -1.7897;
-			baCoefficients[0][2] = 0.8949;
-			baCoefficients[1][0] = 1.0000;
-			baCoefficients[1][1] = -1.7786;
-			baCoefficients[1][2] = 0.8008;
+			cbCoefficients[0][0] = 0,9953;
+			cbCoefficients[0][1] = -2.9858;
+			cbCoefficients[0][2] = 2,9858;
+			cbCoefficients[0][3] = -0,9953;
+			cbCoefficients[1][0] = 1.0000;
+			cbCoefficients[1][1] = -2,9904;
+			cbCoefficients[1][2] = 2,9811;
+			cbCoefficients[1][3] = -0,9906;
 			break;
 		case 250:
-			baCoefficients[0][0] = 0.9150;
-			baCoefficients[0][1] = -1.8299;
-			baCoefficients[0][2] = 0.9150;
-			baCoefficients[1][0] = 1.0000;
-			baCoefficients[1][1] = -1.8227;
-			baCoefficients[1][2] = 0.8372;
+			cbCoefficients[0][0] = 0,9963;
+			cbCoefficients[0][1] = -2,9887;
+			cbCoefficients[0][2] = 2,9887;
+			cbCoefficients[0][3] = -0,9963;
+			cbCoefficients[1][0] = 1.0000;
+			cbCoefficients[1][1] = -2,9924;
+			cbCoefficients[1][2] = 2,9850;
+			cbCoefficients[1][3] = -0,9926;
 			break;
 		case 300:
-			baCoefficients[0][0] = 0.9286;
-			baCoefficients[0][1] = -1.8572;
-			baCoefficients[0][2] = 0.9286;
-			baCoefficients[1][0] = 1.0000;
-			baCoefficients[1][1] = -1.8521;
-			baCoefficients[1][2] = 0.8623;
+			cbCoefficients[0][0] = 0.9969;
+			cbCoefficients[0][1] = -2.9906;
+			cbCoefficients[0][2] = 2.9906;
+			cbCoefficients[0][3] = -0.9969;
+			cbCoefficients[1][0] = 1.0000;
+			cbCoefficients[1][1] = -2.9937;
+			cbCoefficients[1][2] = 2.9875;
+			cbCoefficients[1][3] = -0.9938;
 			break;
 		case 360:
-			baCoefficients[0][0] = 0.9402;
-			baCoefficients[0][1] = -1.8803;
-			baCoefficients[0][2] = 0.9402;
-			baCoefficients[1][0] = 1.0000;
-			baCoefficients[1][1] = -1.8767;
-			baCoefficients[1][2] = 0.8839;
+			cbCoefficients[0][0] = 0,9974;
+			cbCoefficients[0][1] = -2,9921;
+			cbCoefficients[0][2] = 2,9921;
+			cbCoefficients[0][3] = -0,9974;
+			cbCoefficients[1][0] = 1.0000;
+			cbCoefficients[1][1] = -2.9947;
+			cbCoefficients[1][2] = 2.9895;
+			cbCoefficients[1][3] = -0.9948;
 			break;
 		case 500:
-			baCoefficients[0][0] = 0.9565;
-			baCoefficients[0][1] = -1.9131;
-			baCoefficients[0][2] = 0.9565;
-			baCoefficients[1][0] = 1.0000;
-			baCoefficients[1][1] = -1.9112;
-			baCoefficients[1][2] = 0.9150;
+			cbCoefficients[0][0] = 0.9981;
+			cbCoefficients[0][1] = -2.9944;
+			cbCoefficients[0][2] = 2.9944;
+			cbCoefficients[0][3] = -0.9969;
+			cbCoefficients[1][0] = 1.0000;
+			cbCoefficients[1][1] = -2.9962;
+			cbCoefficients[1][2] = 2.9925;
+			cbCoefficients[1][3] = -0.9938;
 			break;
 	}
 
-	return baCoefficients;
+	return cbCoefficients;
 }
