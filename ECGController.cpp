@@ -165,7 +165,7 @@ void ECGController::runHRV1 ()
   {
     runRPeaks();
   }
-  hrv1_module->runModule(r_peaks_data, hrv1_data);
+  hrv1_module->runModule(ecg_info, r_peaks_data, hrv1_data);
   hrv1_module->run_ = true;
   LOG_END
 }
