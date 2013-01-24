@@ -8,8 +8,8 @@ ECGST::~ECGST (void) { }
 
 double ECGST::Interval::thresh = 0.05;
 
-ECGST::Interval::Interval(int r, int iso, int j, int st, double sl, double of) :
-  rpoint(r), isopoint(iso), jpoint(j), stpoint(st), slope(sl), offset(of)
+ECGST::Interval::Interval(int p, int t, int r, int iso, int j, int st, double sl, double of) :
+  ponsetpoint(p), tendpoint(t), rpoint(r), isopoint(iso), jpoint(j), stpoint(st), slope(sl), offset(of)
 { }
 
 bool ECGST::Interval::higher(const double &thresh) const
@@ -29,7 +29,9 @@ bool ECGST::Interval::normal(const double &thresh) const
 
 std::pair< int, int > ECGST::Interval::span() const
 {
-  return std::make_pair(isopoint - 10, stpoint + 10);
+  int start = (ponsetpoint == 0) ? isopoint - 10 : ponsetpoint - 10,
+    end = (tendpoint == 0) ? stpoint + 10 : tendpoint + 10;
+  return std::make_pair(start, end);
 }
 
 

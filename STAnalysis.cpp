@@ -68,6 +68,8 @@ void STAnalysis::SimpleAnalizer::analyse(const int it, const ECGRs& rpeaks, cons
 #else
   interval.isopoint = waves.GetQRS_onset()->get(it);
   interval.jpoint = waves.GetQRS_end()->get(it);
+  interval.tendpoint = waves.GetT_end()->get(it);
+  interval.ponsetpoint = waves.GetP_onset()->get(it);
 #endif
   interval.stpoint = interval.jpoint + _60ms_in_samples;
   
@@ -189,6 +191,8 @@ void STAnalysis::ComplexAnalizer::analyse(const int it, const ECGRs& rpeaks, con
 #else
   interval.isopoint = waves.GetQRS_onset()->get(it);
   interval.jpoint = waves.GetQRS_end()->get(it);
+  interval.tendpoint = waves.GetT_end()->get(it);
+  interval.ponsetpoint = waves.GetP_onset()->get(it);
   int tend = waves.GetT_end()->get(it);
 #endif
   

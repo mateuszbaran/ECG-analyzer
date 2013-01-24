@@ -21,12 +21,14 @@ public:
   
   class Interval {
   public:
-    Interval(int r = 0, int iso = 0, int j = 0, int st = 0, double sl = 0.0, double of = 0.0);
+    Interval(int p = 0, int t = 0, int r = 0, int iso = 0, int j = 0, int st = 0, double sl = 0.0, double of = 0.0);
     std::string description;
     int rpoint;
     int isopoint;
     int jpoint;
     int stpoint;
+    int tendpoint;
+    int ponsetpoint;
     double slope;
     double offset;
     static double thresh;
