@@ -13,7 +13,7 @@ EcgCh::EcgCh(QWidget *parent) :
      grid->setMajPen(QPen(Qt::white, 0, Qt::DotLine));
      grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
      grid->attach(this);
-     setAxisTitle(QwtPlot::xBottom, "Czas [hh:mm:ss.ms]");
+     setAxisTitle(QwtPlot::xBottom, "Czas [mm:ss.ms]");
      setAxisTitle(QwtPlot::yLeft, "Amplituda [mV]");
 //     picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, canvas());
 //     picker->setStateMachine(new QwtPickerDragPointMachine());
@@ -51,21 +51,20 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info)
     curve->setData(data);
     setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(info.frequecy));
     setAxisScaleDraw(QwtPlot::yLeft, new GainScaleDraw(info.gain));
-	replot();
+//	replot();
 }
 
 void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks)
 {
     this->setSignal(signal, info);
-//    gsl_vector_int *v = peaks->signal;
-
-//    int size = int(v->size);
-//    peaksSamples->clear();
-//    for (int i = 0; i < size; i++)
-//        peaksSamples->push_back(data->sample(i));
-//    peaksData->setSamples(*peaksSamples);
-//    peaksCurve->setData(data);
-//    replot();
+    gsl_vector_int *v = peaks->signal;
+    int size = int(v->size);
+    peaksSamples->clear();
+    for (int i = 0; i < size; i++)
+        peaksSamples->push_back(data->sample(v->data[i*v->stride] - 20));
+    peaksData->setSamples(*peaksSamples);
+    peaksCurve->setData(peaksData);
+    replot();
 }
 
 QPointF EcgCh::lastSample()

@@ -25,6 +25,7 @@ signals:
 public slots:
     void setSignal(ECGSignal *signal, ECGInfo *info);
     void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks);
+    void setSignal(ECGSignalChannel filtered_signal, ECGSignalChannel raw_signal, ECGInfo *info, ECGRs *peaks);
     void syncToggled(bool);
 private:
     EcgCh *ch1;

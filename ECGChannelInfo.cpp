@@ -14,7 +14,7 @@ std::string ECGChannelInfo::sampleToTime( int sample, int frequency )
 	boost::posix_time::time_duration td = boost::posix_time::milliseconds(milis);
 	const int FRACTIONAL_DIGITS = 2;
 	int div = pow(10, td.num_fractional_digits()-FRACTIONAL_DIGITS);
-	return (boost::format("%02d:%02d:%02d.%02d") % td.hours() % td.minutes() % td.seconds() % (td.fractional_seconds()/div)).str();
+    return (boost::format("%02d:%02d.%02d") % td.minutes() % td.seconds() % (td.fractional_seconds()/div)).str();
 }
 
 std::string ECGChannelInfo::sampleToTime( int sample ) const
