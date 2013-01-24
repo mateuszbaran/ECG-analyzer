@@ -65,22 +65,6 @@ private slots:
 
     void on_radioButtonChebyschevFilter_toggled(bool checked);
 
-    void on_checkBoxT_Wave_AltEnabled_toggled(bool checked);
-
-    void on_checkBoxP_endEnabled_toggled(bool checked);
-
-    void on_checkBoxP_onsetEnabled_toggled(bool checked);
-
-    void on_checkBoxT_endEnabled_toggled(bool checked);
-
-    void on_checkBoxQRS_endEnabled_toggled(bool checked);
-
-    void on_checkBoxQRS_onsetEnabled_toggled(bool checked);
-
-    void on_checkBoxShowOnPlotSD1SD2Parameters_toggled(bool checked);
-
-    void on_checkBoxShowOnPlotHRVTriangle_toggled(bool checked);
-
     void on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1);
 
 private:
