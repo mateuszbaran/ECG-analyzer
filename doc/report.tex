@@ -885,6 +885,83 @@ Dane zwracane przez moduł:
 \subsubsection{Badania literaturowe}
 \label{sec:st_interval:papers}
 
+Analiza odcinka ST w sygnale EKG jest kluczowa we wczesnym wykrywaniu chorób
+wieńcowych, chorobach niedokrwiennych i miażdżycy. Badając uniesienie i
+nachylenie odcinka względem izolini można uzyskać informacje na temat
+zagrożenia wymienionymi chorobami i podjąć wczesną interwencję. Dość sporym
+mankamentem tych parametrów diagnostycznych jest ich charakter amplitudowy,
+gdyż wiadomo, że wielkość amplitudy zależy często od wielu pozakardiologicznych
+przyczyn, m.in. jakości kontaktu elektrod ze skórą.
+
+Książka \cite{AUGUST1} prezentuje bardzo prosty algorytm diagnostyki odcinka
+ST. Algorytm składa się z 3 kroków: lokalizacji odcina, obliczenia uniesienia i
+nachylenia oraz wykrywanie epizodów.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{include/ecg_st}
+  \caption{Kluczowe punkty analizy odcinka ST. ISO - punk referencyjny leżący
+  na izolini, J - początek odcinka, ST - koniec odcinka. Opracowanie własne.}
+  \label{fig:ecg_st}
+\end{figure}
+
+Na rysunku \ref{fig:ecg_st} przedstawiono kluczowe punkty, które nalezy
+wyznaczyć przed wyznaczaniem parametrów diagnostycznych odcinka ST. Według
+wyżej wymianionego algorytmu, punktem referencyjnym w założeniu znajdującym się
+na izolini jest początek zespołu QRS i koniec odcinka P. Punkt J, który jest
+początkiem badanego odcinka i znajduje się $45ms$ za szczytem załamka R. Punkt
+ST będący końcem badanego odcinka znajduje się $60ms$ później. Tych stałych
+wartości używa się w prostych algorytmach, dodatkowo można uwzględnić zmienność
+rytmu serca i uzależnić przesunięcie tych wartości od aktualniego odstępu RR.
+Uniesieniem lub obnieżeniem odcinka jest róznica wartości miedzy punktem ISO, a
+punktem ST. Nachyleniem prostej przechodzącej przez punkty J i ST nazywamy
+nachyleniem odcinka. Prawidłowy odcinek ST powinien być poziomy i nie być
+uniesiony ani obniżony. Algorytm wykrywania epizodów polega na wykrysiu takich
+okresów zapisu EKG w którym przez czas dłuższy niż 60 sekund występują ciągle
+nieprawidłowe odcinki ST.
+
+W artykule \cite{SHEN1} przedstawiono bardziej złożoną procedurę wyznaczania
+punktów charakterystycznych odcinka. W oparciu o znalezione wcześniej punkty
+ISO, J i punkt końca odcinka T ($T_{end}$) znajduje szczyt załamka T z
+wykorzystaniem dekompozycji falkowej. następnie wyznacza punkt ST jako
+najbardziej odległą wartość sygnału od prostej łączącej punkt J i punkt
+szczytowy załamka T.
+
+Obniżenie załamka jest wyznaczane metodą J+X, który polega na wyznaczeniu,
+podobnie jak w pierwszym algorytmie, różnicy miedzy punktem J+X (punkt X
+milisekund za punktem J), a punktem ISO. X jest wyznaczany na podstawie
+aktualnego HRV. Ocena przesunięcia odcina ST względem izolini odbywa się z
+użyciem progu K, dla bazy MIT-BIH użyta wartością może być 0.01. Odcinek uznany
+jest za podniesiony gdy przesunięcie jest większe od K, obniżony gdy jest
+mniejszy od -K i normalny, prawidłowy w pozostałych przypadkach.
+
+Następnie w zalezności od oceny przesunięcia odcinka wyznaczany jest
+referencyjny punkt końcowy. Dla odcinka uniesionego jest to punkt szczytowy
+fali T, dla normalnego i obniżonego - punkt ST. Kolejno, na podstawie
+charakteru odcinka do J20 (punkt J przesunięty o 20ms) do końcowego punktu
+referencyjnego okreslane jest czy odcinek jest prosty czy zakrzywiony, a
+następnie określany jest charakter zakrzywienia (wklęsły/wypukły) lub charakter
+monotoniczny odcinka prostego.
+
+Rodzaj zakrzywienia odcinka ST wyznaczany jest na podstawie stosunku liczby
+punktów badanego fragmentu sygnału które są ponad/poniżej liniowej interpolacji
+odcinka do liczby wszystkich punktów odcinka. Jeżeli ten stosunek dla punków
+ponad prostą jest większy od 70\% to odcinek jest wypukły, jeżeli 70\% punktów
+jest poniżej prostej, odcinek jest wklęsły.
+
+Charakter monotoniczny prostego odcinka ST jest określany na podstawie
+nachylenia interpolacji liniowej badanego fragmentu sygnału.
+
+Epizody ST są wyznaczane podobnie jak w pierwszym algorytmie.
+
+Podczas implementacji wprowadzono kilka poprawek, z których należy
+wyszczególnić:
+
+Zmina sposobu wyznaczania szczytu fali T. Zamiast dekompozycji falkowej użyto
+pochodnej sygnału.i Ostatni punkt przejścia pochodnej przez zero jest szczytem
+fali.
+
+Porzucono branie pod uwagę HRV, przy wyznaczaniu kolejnych punktów.
 \subsubsection{Opis procedur i metod}
 \label{sec:st_interval:procs}
 
@@ -1037,8 +1114,10 @@ Parametry:
 \subsubsection{Warunki testowania}
 \label{sec:st_interval:tests}
 
+
 \subsubsection{Wyniki}
 \label{sec:st_interval:results}
+
 
 \subsection{T wave alt}
 \label{sec:t_wave_alt}
