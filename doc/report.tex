@@ -206,7 +206,7 @@ Diagram przypadków użycia, przedstawiony na rys. \ref{fig:use_case_diagram} po
 
 \subsection{Główne elementy kodu systemu}
 
-Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagram}. Metoda \verb+rerunAnalysis+, która się w niej znajduje odpowiada za kilka rzeczy:
+Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagram}. Metoda \verb+rerunAnalysis+, która się w~niej znajduje odpowiada za kilka rzeczy:
 \begin{enumerate}
 \item Upewnianie się, że moduły mają aktualne parametry.
 \item Rozpoczynanie analizy zapisu EKG.
@@ -215,11 +215,11 @@ Głównym elementem systemu jest klasa \verb+ECGController+ \ref{fig:class_diagr
 \end{enumerate}
 Ostatnie zadanie wykonywane jest za pomocą dwóch funkcyjnych argumentów wejściowych.
 
-Parametry, ustawiane metodami \verb+setParam*+ mają postać mapy przypisującej nazwom poszczególnych parametrów odpowiadające im wartości liczbowe. Wykorzystywane są przede wszystkim w modułach usuwania linii bazowej oraz wykrywania załamków R.
+Parametry, ustawiane metodami \verb+setParam*+ mają postać mapy przypisującej nazwom poszczególnych parametrów odpowiadające im wartości liczbowe. Wykorzystywane są przede wszystkim w~modułach usuwania linii bazowej oraz wykrywania załamków R.
 
 Do klas pomocniczych można zaliczyć między innymi \verb+IntSignal+ czy \verb+ECGSignalChannel+. Sygnały, które przechodzą pomiędzy systemami czynią to właśnie poprzez obiekty tych klas. Są one zrealizowane jako sprytne wskaźniki do struktur trzymających wektory w stylu C biblioteki GSL, dzięki czemu możliwe jest pogodzenie szybkości działania z wygodną składnią i semantyką sprytnego wskaźnika.
 
-Poszczególne moduły są tworzone w hierarchii obiektowej (rys. \ref{fig:class_diagram}). Umożliwia to podmianę w przyszłości modułu na lepszą implementację bez poprawiania reszty silnika oraz przyczynia się do zmniejszenia współzależności.
+Poszczególne moduły są tworzone w hierarchii obiektowej (rys. \ref{fig:class_diagram}). Umożliwia to podmianę w~przyszłości modułu na lepszą implementację bez poprawiania reszty silnika oraz przyczynia się do zmniejszenia współzależności.
 
 \section{Opisy modułów}
 \label{sec:mod}
@@ -233,7 +233,7 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \begin{description}
 \item[Temat] Metody filtracji i detekcji izolinii w sygnale EKG
-\item[Opis] Występujące zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej w sygnale EKG niejednokrotnie uniemożliwiają właściwą i poprawną analizę sygnału. Celem projektu jest opracowanie i implementacja metod związanych filtracją i detekcją linii izoelektrycznej w sygnale EKG. W szczególności należy rozważyć:
+\item[Opis] Występujące zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej w sygnale EKG niejednokrotnie uniemożliwiają właściwą i poprawną analizę sygnału. Celem projektu jest opracowanie i implementacja metod związanych filtracją i detekcją linii izoelektrycznej w~sygnale EKG. W szczególności należy rozważyć:
   \begin{itemize}
   \item filtr Butterwortha,
   \item średnią kroczącą,
@@ -551,7 +551,7 @@ test100   & 2273 & 2274 & 2272  & 99,9\% & 99,9\% \\ \hline
 \end{tabular}
 \linebreak
 \\
-\indent Uzyskane wyniki pomiarów wyraźnie pokazują przewagę metody \verb|Hilberta|. W większości plików wynik skuteczności wahał się w około 98\%. Metoda detekcji \verb|PanTompkins| sprawia problemy głównie w sygnałach o dużych zakłóceniach oraz tam gdzie morfologia pochodzenia sygnału uderzenia jest inna niż zatokowo-przedsionkowa.\\
+\indent Uzyskane wyniki pomiarów wyraźnie pokazują przewagę metody \verb|Hilberta|. W większości plików wynik skuteczności wahał się w około 98\%. Metoda detekcji \verb|PanTompkins| sprawia problemy głównie w~sygnałach o dużych zakłóceniach oraz tam gdzie morfologia pochodzenia sygnału uderzenia jest inna niż zatokowo-przedsionkowa.\\
 \indent Ostatni sygnał 'test100' został wygenerowany z Matlaba, wczytaliśmy sygnał 100.dat, przefiltrowaliśmy, usunęliśmy składową stałą oraz znormalizowaliśmy. Tak przygotowany sygnał został wczytany i przeprowadziliśmy detekcję. Jak widać skuteczność jest znacznie większa niż w przypadku oryginalnego sygnału gdzie przygotowany sygnał dostajemy z modułu \verb|BaseLIne|.\\
 \indent Próbowaliśmy również testować wykrywanie zmieniając ostawienia modułu \verb|BaseLine| wybierając inne filtracje. Wyniki jakie uzyskaliśmy były praktycznie identyczne jak powyżej dlatego nie zamieszczamy ich tutaj.
 
@@ -570,8 +570,8 @@ Zespół QRS to największy zespół załamków EKG. Opisuje depolaryzację (pob
 \end{itemize}
 
 Poza zespołem QRS możemy wyróżnić również załamki P i T.
-Załamek P odpowiada depolaryzacji przedsionków. W warunkach prawidłowych jest on dodatni w odprowadzeniach I, II, aVF i ujemny w aVR; czas jego trwania jest krótszy od 0.12 s, a amplituda nie przekracza 2.5 mm w odprowadzeniach kończynowych.
-Odcinek PQ odpowiada repolaryzacji przedsionków. W warunkach prawidłowych repolaryzacja przedsionków nie powoduje przemieszczenia odcinka PQ w stosunku do odcinka TP i odcinek PQ przebiega w linii izoelektrycznej.
+Załamek P odpowiada depolaryzacji przedsionków. W warunkach prawidłowych jest on dodatni w odprowadzeniach I, II, aVF i ujemny w~aVR; czas jego trwania jest krótszy od 0.12 s, a amplituda nie przekracza 2.5 mm w odprowadzeniach kończynowych.
+Odcinek PQ odpowiada repolaryzacji przedsionków. W warunkach prawidłowych repolaryzacja przedsionków nie powoduje przemieszczenia odcinka PQ w stosunku do odcinka TP i~odcinek PQ przebiega w linii izoelektrycznej.
 Odstęp PQ jest elektrokardiograficznym odpowiednikiem czasu wędrowania bodźca z węzła zatokowego
 przez prawy przedsionek, węzeł przedsionkowo - komorowy, pęczek Hisa i włókna Purkinjego aż do mięśnia komór. W warunkach prawidłowych czas jego trwania zależy od wieku badanej osoby i częstotliwości rytmu serca mieszcząc się w granicach od 0.12 s do 0.20 s; u osób w starszym wieku za górną granicę normy można przyjąć wartość 0.23 s.
 Odcinek ST jest elektrokardiograficznym odpowiednikiem czasu wędrowania bodźca z węzła zatokowego przez prawy przedsionek, węzeł przedsionkowo - komorowy, pęczek Hisa i włókna Purkinjego aż do mięśnia komór. W warunkach prawidłowych czas jego trwania zależy od wieku badanej osoby i częstotliwości rytmu serca mieszcząc się w granicach od 0.12 s do 0.20 s; u osób w starszym wieku za górną granicę normy można przyjąć wartość 0.23 s.
@@ -583,7 +583,7 @@ Załamek T odpowiada fazie szybkiej repolaryzacji mięśnia komór. Prawidłowy 
 W literaturze można znaleźć kilka rozwiązań problemu odnalezienia zespołów QRS i załamków P i T. Większość z nich opiera się na dyskretnej transformacie falkowej, która polega na splocie
 sygnału pochodzącego z zapisu badania EKG z wybraną falką, pobraną z bazy. Baza jest stale rozwijana o nowe falki. Filtry cyfrowe analizy falkowej odpowiadają falce i funkcji skalującej w postaci tzw.
 spline’ów bramkowych drugiego stopnia o zwartym i krótkim nośniku. Dzięki temu
-podczas analizy sygnału i detekcji osobliwości możemy dokładniej kontrolować parametry
+podczas analizy sygnału i~detekcji osobliwości możemy dokładniej kontrolować parametry
 procesu separacji wybranych częstotliwości. Dzięki analizie wieloskalowej możliwe jest
 zlokalizowanie miejsca gwałtownej zmiany sygnału, a tym samym lokalizacji zespołu QRS.
 Metoda posiada mniejszą wrażliwość na zmiany morfologii kolejnych zespołów QRS,
@@ -595,7 +595,7 @@ Wiele rozwiązań zagadnienia detekcji zespołów QRS opiera się na filtracji a
 zastosowaniu ukrytych modeli Markowa, algorytmów genetycznych lub
 transformacie Hilberta. Wszystkie opierają się na pomyśle utworzenia detektora zespołów QRS, jednak pozwalają jedynie na drobną poprawę
 skuteczności lub szybkości działania, gdyż tak naprawdę nie znaleziono jeszcze w 100\% skutecznej funkcji detekcyjnej. 
-Istnieją dane literaturowe, w których detekcja zespołów QRS opiera się na stosowaniu filtrów wysokopasmowych. Filtry pełnią rolę narzędzia różniczkującego, a wykorzystywane są pierwsze i drugie pochodne sygnału. Różniczkowanie w tych metodach wykonuje się w celu uwypuklenia cech charakterystycznych sygnału. Zróżniczkowany sygnał poddaje się progowaniu. Pozwala to na wykrycie potencjalnych zespołów QRS, a dodatkowe progi pozwalają eliminować fałszywych kandydatów. Próg składa się z trzech parametrów: adaptacyjnej wartości slew-rate, drugiej wartości, która rośnie gdy w sygnale obserwuje się wzrost częstotliwości i trzeciej mającej na celu uniknięcie braku niskich wartości amplitudy. Zaletą tych metod jest ich prostota, a wadą niska efektywność i skomplikowane ciągi decyzyjne. Istnieją również metody łączące tosowanie filtrów wysokoprzepustowych z niskoprzepustowymi, pozwala to zwiększyć efektywność wykrywania zespołów QRS.
+Istnieją dane literaturowe, w których detekcja zespołów QRS opiera się na stosowaniu filtrów wysokopasmowych. Filtry pełnią rolę narzędzia różniczkującego, a wykorzystywane są pierwsze i drugie pochodne sygnału. Różniczkowanie w tych metodach wykonuje się w celu uwypuklenia cech charakterystycznych sygnału. Zróżniczkowany sygnał poddaje się progowaniu. Pozwala to na wykrycie potencjalnych zespołów QRS, a dodatkowe progi pozwalają eliminować fałszywych kandydatów. Próg składa się z trzech parametrów: adaptacyjnej wartości slew-rate, drugiej wartości, która rośnie gdy w sygnale obserwuje się wzrost częstotliwości i trzeciej mającej na celu uniknięcie braku niskich wartości amplitudy. Zaletą tych metod jest ich prostota, a wadą niska efektywność i skomplikowane ciągi decyzyjne. Istnieją również metody łączące tosowanie filtrów wysokoprzepustowych z~niskoprzepustowymi, pozwala to zwiększyć efektywność wykrywania zespołów QRS.
 
 
 Jedną z najbardziej innowacyjnych metod automatycznej detekcji zespołów QRS
@@ -636,8 +636,7 @@ w zakresie 0-1)
 \end{itemize}
 
 Po normalizacji w funkcji jest wydzielana część sygnału o intensywności powyżej 5\%, które ma na
-celu wyzerowanie sygnału poza obszarem QRS. Funkcja służy do obliczenia parametrów \verb|QRS_onset| i
-\verb|QRS_end|.
+celu wyzerowanie sygnału poza obszarem QRS. Funkcja służy do obliczenia parametrów \verb|QRS_onset| i~\verb|QRS_end|.
 
 \begin{lstlisting}
 bool QRSPointsDetector::detectPT()
@@ -676,7 +675,7 @@ druga). Jeżeli odległość pomiędzy początkiem następnego zespołu QRS, a t
 jest większa niż 25\% długości okresu i jednocześnie odległość między drugą próbką, a końcem
 poprzedzającego ją QRS jest większa niż 90, oznacza to, że druga próbka jest końcem załamka T.
 Pierwsze z tych założeń zapobiega zidentyfikowaniu załamka P jako T, w przypadku gdy T jest
-odwrócone i w sygnale wynikowym nie występuje. Drugie z założeń mówiące o szerokości załamka
+odwrócone i~w~sygnale wynikowym nie występuje. Drugie z założeń mówiące o szerokości załamka
 T, zapobiega zaklasyfikowaniu szumów o małej długości jako załamka T.
 
 
@@ -732,7 +731,7 @@ Funkcja ustawiająca wartości sygnału, używana do testowania modułu.
 \subsubsection{Warunki testowania}
 \label{sec:waves:tests}
 
-W celu przetestowania algorytmu najpierw wykonano implementację w programie Matlab 2009, sprawdzenie skuteczności algorytmu wykonano na sygnałach ściągniętych z bazy wykorzystywanej w poprzednim semestrze na zajęciach z przedmiotu Przetwarzanie sygnałów w systemach diagnostyki medycznej. 
+W celu przetestowania algorytmu najpierw wykonano implementację w programie Matlab 2009, sprawdzenie skuteczności algorytmu wykonano na sygnałach ściągniętych z bazy wykorzystywanej w~poprzednim semestrze na zajęciach z przedmiotu Przetwarzanie sygnałów w systemach diagnostyki medycznej. 
 Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano go za pomocą tych samych sygnałów. Posłużono się jako danymi wejściowymi również wygenerowanym wektorem położenia załamków R.
 
 \subsubsection{Wyniki}
@@ -1039,7 +1038,7 @@ Używane funkcje:
 Używane zmienne:
 \begin{itemize}
 \item \verb+ECGRs rpeaks+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący wektor
-numerów próbek z załamkami R
+numerów próbek z~załamkami R
 \item \verb+double SamplingInterval+ -- atrybut klasy \verb+GeometricAnalysis+ przechowujący
 częstotliwość wczytanego sygnału
 \end{itemize}
@@ -1128,7 +1127,7 @@ elementu danego wektora
 \item \verb+gsl_vector_int_get+ -- metoda GSL pobierająca całkowitą wartość danego
 elementu z wektora
 \item \verb+gsl_vector_get+ -- metoda GSL pobierająca zmiennoprzecinkową wartość
-danego elementu z wektora
+danego elementu z~wektora
 \item \verb+gsl_vector_set+ -- metoda GSL zapisująca zmiennoprzecinkową wartość
 w danym elemencie wektora
 \item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
@@ -1181,7 +1180,7 @@ Funkcja zwraca:
 Używane funkcje:
 \begin{itemize}
 \item \verb+gsl_vector_get+ -- metoda GSL pobierająca zmiennoprzecinkową wartość
-danego elementu z wektora
+danego elementu z~wektora
 \item \verb+gsl_vector_int_set+ -- metoda GSL zapisująca całkowitą wartość w
 danym elemencie wektora
 \item \verb+gsl_stats_sd+ -- metoda GSL wyliczająca odchylenie standardowe
@@ -1505,7 +1504,7 @@ Argumenty funkcji:
 \subsubsection{Warunki Testowania}
 \label{sec:dfa:tests}
 
-Grupa wykonująca zadania były uzależniona od wyników grupy implementującej moduł R\_PEAKS. W związku z tym, aby uniezależnić się od pracy tej grupy, do testowania algorytmu używano sygnałów zawierających piki R pobranych z internetu. Wyniki porównywano z wynikami uzyskiwanymi z wyliczeń skryptu napisanego w Matlabie w poprzednim semestrze.
+Grupa wykonująca zadania były uzależniona od wyników grupy implementującej moduł R\_PEAKS. W związku z tym, aby uniezależnić się od pracy tej grupy, do testowania algorytmu używano sygnałów zawierających piki R pobranych z internetu. Wyniki porównywano z wynikami uzyskiwanymi z~wyliczeń skryptu napisanego w Matlabie w poprzednim semestrze.
 
 \subsubsection{Wyniki}
 \label{sec:dfa:results}
@@ -1597,14 +1596,14 @@ gdyż wiadomo, że wielkość amplitudy zależy często od wielu pozakardiologic
 przyczyn, m.in. jakości kontaktu elektrod ze skórą.
 
 Książka \cite{AUGUST1} prezentuje bardzo prosty algorytm diagnostyki odcinka
-ST. Algorytm składa się z 3 kroków: lokalizacji odcina, obliczenia uniesienia i
+ST. Algorytm składa się z~trzech kroków: lokalizacji odcina, obliczenia uniesienia i
 nachylenia oraz wykrywanie epizodów.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.6\textwidth]{include/ecg_st}
-  \caption{Kluczowe punkty analizy odcinka ST. ISO - punk referencyjny leżący
-  na izolinii, J - początek odcinka, ST - koniec odcinka. Opracowanie własne.}
+  \caption{Kluczowe punkty analizy odcinka ST. ISO -- punk referencyjny leżący
+  na izolinii, J -- początek odcinka, ST -- koniec odcinka. Opracowanie własne.}
   \label{fig:ecg_st}
 \end{figure}
 
@@ -1631,12 +1630,12 @@ najbardziej odległą wartość sygnału od prostej łączącej punkt J i punkt
 szczytowy załamka T.
 
 Obniżenie załamka jest wyznaczane metodą J+X, który polega na wyznaczeniu,
-podobnie jak w pierwszym algorytmie, różnicy miedzy punktem J+X (punkt X
+podobnie jak w~pierwszym algorytmie, różnicy miedzy punktem J+X (punkt X
 milisekund za punktem J), a punktem ISO. X jest wyznaczany na podstawie
 aktualnego HRV. Ocena przesunięcia odcina ST względem izolinii odbywa się z
 użyciem progu K, dla bazy MIT-BIH użyta wartością może być 0.01. Odcinek uznany
 jest za podniesiony gdy przesunięcie jest większe od K, obniżony gdy jest
-mniejszy od -K i normalny, prawidłowy w pozostałych przypadkach.
+mniejszy od -K i~normalny, prawidłowy w pozostałych przypadkach.
 
 Następnie w zalezności od oceny przesunięcia odcinka wyznaczany jest
 referencyjny punkt końcowy. Dla odcinka uniesionego jest to punkt szczytowy
@@ -1842,7 +1841,7 @@ załamka T i spadku progu trzepotania przedsionków i komór. Celem projektu
 \item[Dane] ciąg punktów charakterystycznych z modułu WAVES i sygnał 
 \item[Szukane] moduł programu oznaczający załamki T, w których wykryto alternans
  oraz dokonujący ich ilościowej analizy. Wszystkie dane należy odpowiednio nanieść
- na wykresy i przedstawić w postaci graficznej (parametry alternansu).
+ na wykresy i przedstawić w~postaci graficznej (parametry alternansu).
 \end{description}
 
 \subsubsection{Badania literaturowe}
@@ -1919,7 +1918,7 @@ Używane zmienne:
 
 \medskip{}
 
-Detekcja oraz obliczenie parametrów oceny ilościowej alternansu wykonywane są w metodzie  \verb|detectTWaveAlt()|. Cały algorytm przetwarzania sygnału, detekcji alternansu (zgodnie z algorytmem  \verb|Moving four-beat window techniqure|) oraz obliczenia ilościowe związane z analizowanym sygnałem zostały zawarte właśnie w tej funkcji. Funkcja nie przyjmuje żadnych parametrów wejściowych. Funkcja zwraca wartość logiczną 1 w przypadku wykrycia w sygnale alternansu oraz wartość 0 w przypadku braku alternansu w sygnale. Funkcja oblicza następujące parametry ilościowe alternansu:
+Detekcja oraz obliczenie parametrów oceny ilościowej alternansu wykonywane są w metodzie  \verb|detectTWaveAlt()|. Cały algorytm przetwarzania sygnału, detekcji alternansu (zgodnie z algorytmem  \verb|Moving four-beat window techniqure|) oraz obliczenia ilościowe związane z analizowanym sygnałem zostały zawarte właśnie w tej funkcji. Funkcja nie przyjmuje żadnych parametrów wejściowych. Funkcja zwraca wartość logiczną 1 w przypadku wykrycia w sygnale alternansu oraz wartość 0 w~przypadku braku alternansu w sygnale. Funkcja oblicza następujące parametry ilościowe alternansu:
 \begin{itemize}
 \item \verb+ilość okien w sygnale zawierających alternans+
 \item \verb+procentowy udział wszystkich okien o rozmiarze 4 zawierających alternans w sygnale+
@@ -2020,8 +2019,7 @@ Autorzy: Łukasz Kutrzuba, Mateusz Krasucki
 \textbf{Przedwczesne pobudzenie komorowe}\\
 Przedwczesny skurcz komorowy (ang. Premature Ventricular
 Contraction) powstaje na skutek przedwczesnego rozprzestrzenienia się
-impulsu w komorach powodującego skurcz mięśnia komór (impuls w
-normalnym przypadku powinien pochodzić z węzła zatokowo-przedsionkowego).
+impulsu w komorach powodującego skurcz mięśnia komór (impuls w~normalnym przypadku powinien pochodzić z węzła zatokowo-przedsionkowego).
 Jest to jedna z najczęstszych arytmii.
 \textbf{Turbulencja rytmu serca}\\
 Turbulencja rytmu serca (ang. Heart Rate Turbulence) jest to reakcja fizjologiczna będąca powrotem do stanu równowagi po przedwczesnym skurczu
@@ -2035,7 +2033,7 @@ na długich, 24 godzinnych zapisach EKG.
 \par W zapisie reakcji organizmu na PVC można wskazać charakterystyczne etapy. Po przedwczesnym skurczu komorowym następuje przerwa wyrównawcza, następnie faza akceleracji, deceleracja i ostatecznie powrót do normalnego rytmu.
 Nie zdołano dotychczas określić przyczyn zjawiska turbulencji rytmu serca, istnieją przypuszczenia, że powoduje je odruch z baroreceptorów.
 \par Wystąpienie turbulencji rytmu serca świadczy o prawidłowej reakcji 
-układu przywspółczulnego i zdolności serca do reagowania na przedwczesne pobudzenie -- z tego powodu wystąpienie skróconych interwałów po VPC i ich stopniowe wydłużanie jest uznawane za prawidłową reakcję. Z kolei pojawienie się interwałów dłuższych niż przed 
+układu przywspółczulnego i~zdolności serca do reagowania na przedwczesne pobudzenie -- z tego powodu wystąpienie skróconych interwałów po VPC i ich stopniowe wydłużanie jest uznawane za prawidłową reakcję. Z kolei pojawienie się interwałów dłuższych niż przed 
 przedwczesnym pobudzeniem jest negatywnym prognostykiem, świadczy o braku
 reakcji organów kontrolujących pracę serca.
 
@@ -2076,7 +2074,7 @@ Wartości dodatnie TO oznaczają zwolnienie, natomiast ujemne przyspieszenie ryt
 
 \textbf{Detekcja PVC}\\
 Przy wyliczeniu parametrów TO i TS brane są pod uwagę niektóre z fragmentów zapisu interwałów RR - zwykle jest to fragment zapisu liczący 27 kolejnych 
-interwałów ( 5 interwałów przed VPC, interwał z VPC, pauza kompensacyjna,
+interwałów ( 5 interwałów przed VPC, interwał z~VPC, pauza kompensacyjna,
 około 20 interwałów po pauzie). Dodatkowo, wybierane fragmenty zapisu muszą  charakteryzować się się brakiem występowania nierównego rytmu serca przed i po PVC oraz brakiem zbyt krótkich oraz zbyt długich interwałów RR.
 \par W celu selekcji odpowiednich odcinków zastosowano następujący algorytm:
 \begin{itemize}
