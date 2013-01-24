@@ -408,49 +408,6 @@ void ECGanalyzer::setSTIntervalParams()
 
 
 
-
-
-
-void ECGanalyzer::on_checkBoxT_Wave_AltEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxP_endEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxP_onsetEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxT_endEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxQRS_endEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxQRS_onsetEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxShowOnPlotSD1SD2Parameters_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxShowOnPlotHRVTriangle_toggled(bool checked)
-{
-
-}
-
 void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
 {
 	ParametersTypes hrv2_params;
