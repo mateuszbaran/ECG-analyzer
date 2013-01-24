@@ -1668,6 +1668,239 @@ Parametry:
 \subsection{HRT}
 \label{sec:hrt}
 
+\subsubsection{Opis zadania}
+\label{sec:hrt:desc}
+
+Turbulencja rytmu serca jest nową, jeszcze nie do końca poznaną techniką służącą do oceny odpowiedzi węzła zatokowego na przedwczesny skurcz komorowy. Podejście okazało się trafnym narzędziem predykcji nagłych zgonów pacjenta.
+Celem projektu była implementacja modułu programu wyznaczającego podstawowe parametry turbulencji rytmu serca (m. in. początek turbulencji, nachylenie turbulencji, itp…).
+\\
+\\
+Autorzy: Łukasz Kutrzuba, Mateusz Krasucki
+\\
+\subsubsection{Badania literaturowe}
+\label{sec:hrt:papers}
+
+\textbf{Przedwczesne pobudzenie komorowe}\\
+Przedwczesny skurcz komorowy (ang. Premature Ventricular
+Contraction) powstaje na skutek przedwczesnego rozprzestrzenienia się
+impulsu w komorach powodującego skurcz mięśnia komór (impuls w
+normalnym przypadku powinien pochodzić z węzła zatokowo-przedsionkowego).
+Jest to jedna z najczęstszych arytmii.
+\textbf{Turbulencja rytmu serca}\\
+Turbulencja rytmu serca (ang. Heart Rate Turbulence) jest to reakcja fizjologiczna będąca powrotem do stanu równowagi po przedwczesnym skurczu
+komorowym. Analiza sygnałów HRT pozwala na ocenienie jak
+szybko i jak energicznie serce reaguje na przedwczesny skurcz
+komorowy. Duże znaczenie ma fakt, że występowanie tego
+ostatniego zjawiska fizjologicznego jest naturalne dla ogółu osób
+dorosłych, co pozwala na wykorzystanie oceny HRT dla
+diagnostyki stanu zdrowia. Analiza HRT jest zwykle wykonywana
+na długich, 24 godzinnych zapisach EKG.
+\par W zapisie reakcji organizmu na PVC można wskazać charakterystyczne etapy. Po przedwczesnym skurczu komorowym następuje przerwa wyrównawcza, następnie faza akceleracji, deceleracja i ostatecznie powrót do normalnego rytmu.
+Nie zdołano dotychczas określić przyczyn zjawiska turbulencji rytmu serca, istnieją przypuszczenia, że powoduje je odruch z baroreceptorów.
+\par Wystąpienie turbulencji rytmu serca świadczy o prawidłowej reakcji 
+układu przywspółczulnego i zdolności serca do reagowania na przedwczesne pobudzenie - z tego powodu wystąpienie skróconych interwałów po VPC i ich stopniowe wydłużanie jest uznawane za prawidłową reakcję. Z kolei pojawienie się interwałów dłuższych niż przed 
+przedwczesnym pobudzeniem jest negatywnym prognostykiem, świadczy o braku
+reakcji organów kontrolujących pracę serca.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=13cm]{include/HRTSample.eps}
+\caption{Wykres przedstawiający wykresy HRT dla zdrowego i chorego człowieka. 
+\textit{Źródło: http://www.h-r-t.org, Working Group of Biological Signal Analyses, Technische Universität München Źródło: Axel Bauer, Marek Malik, Georg Schmidt: „Heart Rate Turbulence: Standards of Measurement, Physiological Interpretation, and Clinical Use”, Journal of the American College of Cardiology 2008, tom 52, nr 17} }
+\end{figure}
+
+\textbf{Znaczenie diagnostyczne turbulencji rytmu serca}\\
+Analiza turbulencji rytmu serca jest jedną z najważniejszych metod pozwalającą na ocenę ryzyka zgonu pacjentów po przebytym zawale, obok frakcji wyrzutowej lewej komory, ilości przedwczesnych skurczów komorowych oraz analizy rytmu serca. Dowiedziono wysokiej wartości predykcyjnej tej metody badania.
+Przy analizie wyników pacjentów zostaje dokonane przyporządkowanie do jednej trzech grup - oba parametry poprawne, jeden paramer negatywny, oba parametry negatywne.
+Na przykład w przypadku obu parametrów negatywnych ryzyko zgonu w ciągu roku od przebytego zawału wynosi powyżej 32 procent.
+
+\textbf{Parametry turbulencji rytmu serca}\\
+W przypadku turbulencji rytmu serca wykorzystuje się zwykle dwa parametry
+- początek turbulencji (turbulence onset) oraz nachylenie turbulencji (turbulence slope). Turbulence Onset (TO) określa procentową różnicę między częstością serca przedwczesnym skurczu komorowym i częstością serca przed tym skurczem. Obliczanie TO opiera się na różnicy pomiędzy sumą długości dwóch interwałów RR występujących bespośrednio po pauzie wyrównawczej a sumą dwóch inteterwałów występujących przed pauzą wyrównawczą.
+Wartości dodatnie TO oznaczają zwolnienie, natomiast ujemne przyspieszenie rytmu zatokowego. Pozytywnym prognostykiem są wartości ujemne.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/to1.eps}
+\caption{Przykładowy schemat ilustrujący wyznaczanie parametru Turbulence Onset.
+\textit{ Źródło: http://www.h-r-t.org, Working Group of Biological Signal Analyses, Technische Universität München} }
+\end{figure}
+\par Turbulence Slope (TS) odpowiada najbardziej stromej linii regresji przeprowadzona przez każde 5 kolejnych odstępów prawidłowego rytmu w tachogramie (spośród 20 kolejnych interwałów występujących zaraz po przerwie wyrónawczej). Obliczenia Turbulence Slope opierają się na tachogramie uśrednionym z wszystkich fragmentów rytmu zatokowego po skurczu komorowym. Warości TS wyrażone w ms/odstęp RR. Prawidłowa wartość parametru to 2.5ms/RR.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/ts.eps}
+\caption{Przykładowy schemat ilustrujący wyznaczanie parametru Turbulence Slope.
+\textit{ Źródło: http://www.h-r-t.org, Working Group of Biological Signal Analyses, Technische Universität München} }
+\end{figure}
+\newpage
+
+\subsubsection{Koncepcja rozwiązania}
+\label{sec:hrt:procs}
+
+\textbf{Detekcja PVC}\\
+Przy wyliczeniu parametrów TO i TS brane są pod uwagę niektóre z fragmentów zapisu interwałów RR - zwykle jest to fragment zapisu liczący 27 kolejnych 
+interwałów ( 5 interwałów przed VPC, interwał z VPC, pauza kompensacyjna,
+około 20 inerwałów po pauzie). Dodatkowo, wybierane fragmenty zapisu muszą  charakteryzować się się brakiem występowania nierównego rytmu serca przed i po PVC oraz brakiem zbyt krótkich oraz zbyt długich interwałów RR.
+\par W celu selekcji odpowiednich odcinków zastosowano następujący algorytm:
+\begin{itemize}
+\item Pobranie sygnału z długościami poszczególnych interwałów
+\item Każdy kolejny interwał RR jest traktowany jako
+potencjalny interwał VPC (z kolei 5 interwałów poprzedzających oraz 20 interwałów występujących po tym interwale będzie wykorzystanych do oceny
+sygnału jako poprawny VPC). 
+W przypadku, jeśli fragment sygnału zostanie uznany jako poprawny
+interwał VPC, będzie uwzględniony w obliczaniu TO i TS.
+Warunki pozwalające na uznanie fragmentu jako poprawny VPC określono poniżej.
+\item Dla potencjalnego interwału VPC zostaje wykonane bliczenie długości przedziału referencyjnego 
+(średnia z  5 interwałów poprzedzających VPC).
+\item Potencjalny RR z VPC musi być 
+krótszy o przynajmniej 20 procnet względem przedziału referencyjnego
+\item Interwał występujący po potencjalnym interwale z VPC musi spełniać 
+warunki pauzy kompensacyjnej (jego długość musi być większa o przynajmniej 10 procent od przedziału referencyjnego).
+\item Pośród 5 interwałów przed VPC
+oraz 20 interwałów po pauzie kompensacyjnej nie mogą znajdować się
+interwały o długościach
+mniejszych od 300 ms oraz większych od 2000 ms.
+\item W ciągu 5 interwałów przed VPC
+oraz 20 interwałów po pauzie kompensacyjnej musi występować
+równy rytm - sąsiadujące interwały muszą różnić się o mniej
+niż 200 ms oraz ich różnica względem przedziału referencyjnego musi być mniejsza
+od 20 procent.
+\item Jeśli interwał spełnia założone warunki, zostanie 
+wykorzystany do obliczania parametrów TS oraz TO.
+\item Na koniec sprawdzana jest liczba wykrytych 
+PVC - jeśli wykryto mniej niż 5, sygnał nie może być efektywnie 
+wykorzystany, ponieważ nie zawiera odpowiedniej ilości
+danych diagnostycznych. 
+\end{itemize}
+\textbf{Obliczanie TO}\\
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/RRy.eps}
+\caption{Schemat prezentujący umiejscownienie interwałów wykorzystywanych przy wyliczeniu parametru TS. 
+\textit{ Źródło: http://www.h-r-t.org, Working Group of Biological Signal Analyses, Technische Universität München} }
+\end{figure}
+Dla poprawnie zidentyfikowanych VPC wyznaczany jest początek turbulencji.
+Wykorzystywany jest przy tym wzór:
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/ONSETequation.eps}
+\caption{Wzór pozwalający na wyliczenie TO. }
+\end{figure}
+\noindent RR-2 i RR-1 to długości interwałów występujących bezpośrednio przed VPC,
+a RR1 i RR2 to długości interwałów występujących bezpośrednio po pauzie 
+kompensacyjnej.
+Wstępnie TO określa się dla każdego pojedynczego VPC a następnie uśrednia się wszystkie wartości TO z analizowanego zapisu EKG.
+\textbf{Obliczanie TS}\\
+Algorytm obliczania turbulence slope:
+\begin{itemize}
+\item Na podstawie wyznaczonych odcinków zawierających poprawne VPC wyznaczany jest 
+uśredniony tachogram.
+\item Poddanych analizie zostaje 20 interwałów uśrednionego tachogramu występujących po pauzie kompensacyjnej. 
+\item Spośród pierwszych dwudziestu interwałów po pauzie kompensacyjnej dla każdych kolejnych 5 inerwałów wyznaczana
+jest prosa regresji (brane są kolejno interwały 1-5, 2-6, 3-7 itd).
+\item Spośród wyznaczonych prostych regresji zostaje wybrana ta ze współczynnikiem regresji 
+o największej dodatniej wartości. 
+\end{itemize}
+Prostą regresji obliczamy wykorzystując współrzędne x, y pięciu kolejnych punktów należących
+do uśrednionego tachogramu. Przy wykorzystaniu współrzędnych punktów tworzone są macierze
+A i Y.
+\begin{equation}
+A =  \left[
+ \begin{array}{ccc}
+   x_{1} & 1 \\
+   x_{2} & 1 \\
+   x_{3} & 1 \\ 
+   x_{4} & 1 \\
+   x_{5} & 1 \\ 
+ \end{array}
+\right]
+\end{equation}
+
+\begin{equation}
+Y =  \left[
+ \begin{array}{ccc}
+   y_{1} \\
+   y_{2} \\
+   y_{3} \\ 
+   y_{4} \\
+   y_{5} \\ 
+ \end{array}
+\right]
+\end{equation}
+\\
+Następnie, korzystając z równania  (A'A)*C = (A'Y) wyliczana jest macierz C.
+Pierwszy element wynikowej macierzy C to współczynnik kierunkowy prostej \textbf{a} (dla równania y = ax + b).
+\subsubsection{Opis wykorzystanych w programie klas i funkcji}
+\label{sec:hrt:results}
+
+Poniżej opisano najważniejsze klasy, funkcje i zmienne wykorzystane w module:
+   
+Dołączona do projektu klasa \textbf{Matrix} jest klasą wykorzystywaną do wykonywania obliczeń. Dzięki niej można
+definiować obiekty klasy Matrix reprezentujące dwuwymiarowe macierze oraz wykonywać na nich najważniejsze obliczenia.
+Klasa Matrix została wykorzystana przy obliczaniu Turbulence Slope.
+
+Klasa  \textbf{HRTAnalyzer} jest główną klasą modułu, dziedziczy po klasie HRTModule. Metody klasy HRTAnalyzer 
+pozwalają na wyliczenie paramterów HRT.
+
+Klasa \textbf{ECGHRT} jest klasą wykorzystywaną do przechowywania danych uzyskanych podczas pracy - przechowuje
+najważniejsze obiekty będące wynikiem pracy HRTAnalyzera - parametry Turbulence Slope i Turbulence Onset, 
+liczbę wykrytych VPC, oraz inne parametry wykorzystywane do rysowania.
+
+Najważniejsze zmienne klasy ECGHRT:
+\begin{itemize} 
+\item Dane wykorzystywane przy rysowaniu wykresu: \textbf{QVector<QPointF> rr} wektor reprezentujący uśredniony tachogram, 
+\textbf{QLine ts} - linia reprezentująca Turbulence Slope.
+\item Wyświetlane wartości:\textbf{int vpcCounter} - ilość znalezionych VPC, \textbf{double TO} -  średnia wartość Turbulence Onset,\textbf{double TS} - średnia wartość Turbulence Slope.
+\end{itemize}
+
+
+Funkcje i zmienne klasy HRTAnalyzer:
+\begin{itemize}
+\item \textbf{double* RRs} - zmienna wykorzystywana do tymczasowego przechowywania sygnału.
+\item \textbf{void calculateHrtParams(double *signal, int size, ECGHRT \&)} - funkcja, która zleca obliczenie parametrów HRT dla sygnału wejściowego i zapisuje je w wynikowym obiekcie. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, trzeci argument to referencja do obiektu przechowującego wyniki.
+\item \textbf{vector<int> findVpcOnsets(double *signal, int size)} - funkcja wyszukująca VPC w sygnale, zwracająca wektor 
+z numerami próbek uznanymi za poprawne VPC, które mogą być wykorzystane przy działaniu programu. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy.
+\item \textbf{double* calculateAvgTach(double *signal, vector<int> vpc\_list) } - funkcja obliczająca uśredniony tachogram.
+Parametry: signal to wskaźnik do tablicy interwałów RR, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
+\item \textbf{double calculateTO(double * signal, int size, vector<int> vpc\_list) }  - funkcja obliczająca parametr TO,
+Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
+\item \textbf{void calculateTS(double * signal, int size, vector<int> vpc\_list, double* avgTach, double to, ECGHRT\&)} - funkcja obliczająca parametr TS. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
+\end{itemize}
+
+\subsubsection{Testy}
+\label{sec:hrt:tests}
+
+Dane do pierwszego etapu testów zostały uzyskane z bazy European ST-T Database (link - http://www.physionet.org/).
+Początkowo testy wykonywano za pomocą prototypu aplikacji w matlabie - testy działania aplikacji zakończyły się sukcesem 
+(na wykresie wyświetlały się wartości TO i TS, wartości parametrów były zgodne z oczekiwaniami opartymi o analizę
+wyglądu wykresów). 
+Dla sygnału e0113 otrzymano wartości: turbulence slope -1.962, turbulence onset 6.03.
+Dla sygnału e0123 otrzymano wartości: turbulence slope -0.957, turbulence onset 3.82.
+Dla sygnału e0104 otrzymano wartości: turbulence slope -2.891, turbulence onset 8.272.
+Niestety, w związku z faktem, że niektóre moduły, od których moduł HRT był zależny nie funkcjonowały
+poprawnie na 13 godzin przed terminem oddania, poniechano dalszych bezowocnych prób dokonania bardziej miarodajnych
+rodzajów testów na aplikacji. Nie mniej jednak, wcześniej dokonano podstawowej analizy działania modułu.
+Testy polegały na ocenieniu poprawności rozwiązania w oparciu o analizę wyglądu wykresów. Dzięki wykresowi możliwa była
+wzrokowa ocena poprawności otrzymywanych wyników (np. sprawdzenie, czy prosta regresji pokrywa się z najbardziej stromym zboczem
+na wykresie, ocena wartości TO w odniesieniu do różnic długości ). Testy nie wykazały uchybień. 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/image.eps}
+\caption{Screen prezentujący ostateczny wygląd modułu} 
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/skrin1.eps}
+\caption{Screen prezentujący ostateczny wygląd modułu} 
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/skrin2.eps}
+\caption{Screen prezentujący ostateczny wygląd modułu} 
+\end{figure}
+
 \bibliographystyle{plain}
 \bibliography{report}
 \end{document}
