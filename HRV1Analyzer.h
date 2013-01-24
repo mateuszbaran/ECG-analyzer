@@ -39,7 +39,7 @@ public:
 	HRV1Analyzer();
 	~HRV1Analyzer();
 
-	void runModule(const ECGRs &, ECGHRV1 &);
+	void runModule(const ECGInfo &, const ECGRs &, ECGHRV1 &);
 
 	#ifndef DEV
         void setParams(ParametersTypes &);

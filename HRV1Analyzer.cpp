@@ -8,9 +8,10 @@ HRV1Analyzer::~HRV1Analyzer() {
 	delete[] sigAbsolute;
 }
 
-void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
+void HRV1Analyzer::runModule(const ECGInfo &info, const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
 	this->rPeaksData = r_peaks_data;
 	this->hrv1Data = &hrv1_data;
+	this->signalSampling = (int) info.channel_one.frequecy;
 
 	prepareSignal();
 	prepareSigAbsolute();
@@ -24,7 +25,6 @@ void HRV1Analyzer::runModule(const ECGRs & r_peaks_data, ECGHRV1 & hrv1_data) {
 void HRV1Analyzer::prepareSignal() {
 
 		signalSize = rPeaksData.GetRs()->signal->size;
-		signalSampling = 360;
 
 		 //wlasciwe przygotowanie sygnalu wejsciowego (double *sig)
 		#ifdef DEV
