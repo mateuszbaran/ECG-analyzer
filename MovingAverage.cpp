@@ -8,15 +8,16 @@ void MovingAverage::removeBaseline(ECGSignalChannel &inputSignal, ECGSignalChann
 	{
 		auto edge = ceil((float)span/2);
 
+		auto inputValue = gsl_vector_get (inputSignal -> signal, index);
+
 		if(index < edge || index > signalLength - edge) 
 		{
-			auto inputValue = gsl_vector_get (inputSignal -> signal, index);
 			gsl_vector_set(outputSignal -> signal, index, inputValue);
 		}
 		else
 		{
 			auto avgValue = this->calculateAvgValueOfNeighbours(inputSignal -> signal, index, span);		
-			gsl_vector_set (outputSignal -> signal, index, avgValue);
+			gsl_vector_set (outputSignal -> signal, index, -(inputValue-avgValue));
 		}
 	}
 }
