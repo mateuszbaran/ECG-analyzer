@@ -8,7 +8,7 @@ Butterworth::~Butterworth(){}
 	values for Butterworth 2nd order highpass filter,
 	given the sample frequency of source signal
 */
-std::vector<std::vector<double>> Butterworth::filterDesign(int order, int cutoffFreq, int sampleFreq, int type)
+std::vector<std::vector<double>> Butterworth::filterDesign(int order, double attenuation, double cutoffFreq, int sampleFreq, int type)
 {
 	std::vector<std::vector<double>> baCoefficients(2, std::vector<double>(3,0));
 
