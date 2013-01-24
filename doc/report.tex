@@ -215,7 +215,159 @@ i jakościową sygnału EKG.
 \subsubsection{Badania literaturowe}
 \label{sec:rs:papers}
 
-TODO BADANIA LITERATUROWE
+
+\paragraph{Usuwanie stałej DC i normalizacja sygnału}
+Często w sygnałach EKG można spotkać dodatkową stałą DC w sygnale którą można skutecznie usunąć stosując wzór
+\eqref{eq:a}. Obliczanie średniej sygnału i odejmowanie jej od każdej próbki sygnału jest przybliżoną metodą usuwania składowej stałej.
+\begin{equation}
+y(n) = x(n)-\frac{x(1)+x(2)+...+x(n)}{n} \label{eq:a}
+\end{equation}
+\indent Aby ułatwić wszystkie obliczenia dokonywane na wybranym sygnale można znormalizować sygnał tak by wartości amplitudy były w zakresie od $-1$ do $1$. Normalizację sygnału można uzyskać stosując wzór \eqref{eq:b}.
+\begin{equation}
+y(n) = \frac{x(n)}{\max(|x(n)|)} \label{eq:b} 
+\end{equation}
+\indent Rezultaty operacji usuwania składowej DC oraz normalizacji sygnału możemy zobaczyć na rysunku \eqref{znorm}.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/surowy.eps}
+\caption{Sygnał EKG oryginalny(100\_ MLII.dat)}
+\label{surowy}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/znormalizowany.eps}
+\caption{Sygnał EKG znormalizowany bez składowej stałej(100\_ MLII.dat)}
+\label{znorm}
+\end{figure}
+\paragraph{Filtr dolnoprzepustowy}
+Filtracja dolnoprzepustowa $0Hz - 15Hz$ ma na celu usunięcie zakłóceń sygnału powstających
+pod wpływem drżenia mięśni ($35 Hz$), wpływu
+zakłóceń sieci elektroenergetycznej $50/60 Hz$, wpływu załamka $T$ oraz pływającej izolinii
+elektrycznej. Powszechnie stosowany jest filtr o tranzmitancji\eqref{eq:c}.
+\begin{equation}
+H(z) = \frac{1}{32} \frac{(1-z^{-6})^2}{(1-z^1)^2}\label{eq:c}
+\end{equation}
+\indent Dla częstotliwości próbkowania $fs = 200 Hz$, częstotliwość odcięcia
+ dla filtru \eqref{eq:c} wynosi $fc = 11 Hz$. Filtr wprowadza opóźnienie $6$ próbek ($30 ms$). Dla $60 Hz$ filtr
+tłumi sygnał na poziomie większym niż $35 dB$.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/lowpassampres.eps}
+\caption{Odpowiedź amplitudowa filtru dolnoprzepustowego}
+\label{lowpassampres}
+\end{figure}
+\begin{figure}[htl]
+\centering
+\includegraphics[scale=0.5]{include/lowpassphaseres.eps}
+\caption{Odpowiedź fazowa filtru dolnoprzepustowego}
+\label{lowpassphaseres}
+\end{figure}
+\newpage
+Rysunek \eqref{lowpassampres} oraz \eqref{lowpassphaseres} przedstawiają dokładne charakterystyki filtru dolnoprzepustowego. Filtr ten ma liniową odpowiedź fazową. Bardzo dobrze tłumi zakłócenia z linii energetycznych($50/60Hz$) oraz pozostałe zakłócenia na poziomie powyżej $25dB$.\\
+\indent Rysunek \eqref{lowpass} przedstawia sygnał EKG po filtracji filtrem dolnoprzepustowym. Rezultat można porównać z oryginalnym sygnałem znajdującym się na rysunku \eqref{surowy}, możemy dostrzec znaczną eliminację zakłóceń pochodzących od wyższych częstotliwości.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/lowpass.eps}
+\caption{Sygnał EKG po filtracji dolnoprzepustowej (100\_ MLII.dat)}
+\label{lowpass}
+\end{figure}\\
+\paragraph{Filtr górnoprzepustowy}
+Filtracja górnoprzepustowa ma na celu wyeliminowanie wszystkich niepożądanych sygnałów o niskich częstotliwościach. Transmitancja użytego filtru jest przedstawiona równaniem \eqref{eq:d}
+\begin{equation}
+H(z) = 32z^{-16} -\frac{1-z^{-32}}{1-z^{-1}}\label{eq:d}
+\end{equation}
+\indent Dla częstotliwości próbkowania $fs = 200 Hz$, częstotliwość odcięcia wynosi $fc = 5 Hz$.
+Filtr wprowadza opóźnienie $16$ próbek ($80 ms$).
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/hipassampres.eps}
+\caption{Odpowiedź amplitudowa filtru górnoprzepustowego}
+\label{hipassampres}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/hipassphaseres.eps}
+\caption{Odpowiedź fazowa filtru górnoprzepustowego}
+\label{hipassphaseres}
+\end{figure}
+\newpage
+Rysunek \eqref{hipassampres} oraz \eqref{hipassphaseres} przedstawiają dokładne charakterystyki filtru górnoprzepustowego. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/hipass.eps}
+\caption{Sygnał EKG po filtracji górnoprzepustowej(100\_ MLII.dat)}
+\label{hipass}
+\end{figure}\\
+\paragraph{Różniczkowanie sygnału}
+Po filtracji sygnału EKG, następnym krokiem jest różniczkowanie sygnału. Efektem takiego różniczkowania jest podkreślenie w sygnale nachyleń zespołów $QRS$ oraz stłumienie załamków $P$ i $T$. Przykładowa transmitancja do wykonania tej operacji jest przedstawiona równaniem \eqref{eq:e}.
+\begin{equation}
+H(z) = 0.1(2+z^{-1} - z^{-3} - 2z^{-4})\label{eq:e}
+\end{equation}
+\indent Na rysunku \eqref{dif} można dostrzec efekt różniczkowania sygnału.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/diferentiation.eps}
+\caption{Sygnał EKG po różniczkowaniu (100\_ MLII.dat)}
+\label{dif}
+\end{figure}\\
+\paragraph{Potęgowanie sygnału}
+Potęgowanie sygnału ma na celu jeszcze bardziej stłumić załamki $P$ i $T$ oraz wzmocnić próbki
+sygnału reprezentujące zespół QRS. Dodatkowo odwraca ujemną część sygnału i dzięki temu ujemne zespoły $QRS$ również zostaną poddane analizie.
+\begin{equation}
+y(n) = (x(n))^2\label{eq:f}
+\end{equation}
+\indent Efekt potęgowania sygnału możemy zaobserwować na rysunku \eqref{squaring}.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/squaring.eps}
+\caption{Sygnał EKG po potęgowaniu (100\_ MLII.dat)}
+\label{squaring}
+\end{figure}\\
+\newpage
+\paragraph{Całkowanie sygnału w ruchomym oknie}
+Całkowanie sygnału w ruchomym oknie ma na celu uzyskanie pojedynczej “fali” w obrębie
+zespołu $QRS$. Bardzo ważną sprawą jest poprawne dobranie długości okna całkowania. Całkowanie sygnału w ruchomym oknie można uzyskać stosując wzór \eqref{eq:g}.
+\begin{equation}
+y(n) = \frac{1}{N}[x(n-(N-1)+)x(n-(N-2)+...+ x(n)]\label{eq:g}
+\end{equation}
+Na rysunku \eqref{qrsgoog} możemy zobaczyć rezultat prawidłowego doboru długości okna, cały zespół $QRS$ jest widoczny bez dodatkowych zbędnych informacji, na rysunku \eqref{qrsshor} widać efekt zbyt krótkiego okna całkującego, kompleks $QRS$ kończy się już przed załamkiem $R$, na rysunku \eqref{qrslong} widać efekt zbyt długiego okna całkowania, oprócz zespołu $QRS$ widać jeszcze część sygnału poza nim.
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{include/qrsgood.eps}
+\caption{Prawidłowo wykryty kompleks QRS (100\_ MLII.dat)}
+\label{qrsgoog}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{include/qrsshort.eps}
+\caption{Za krótki wykryty kompleks QRS (100\_ MLII.dat)}
+\label{qrsshor}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{include/qrslong.eps}
+\caption{Za długi wykryty kompleks QRS (100\_ MLII.dat)}
+\label{qrslong}
+\end{figure}
+\newpage
+\indent Postać sygnału otrzymanego po całkowaniu ruchomym oknem jest przedstawiona na rysunku \eqref{movingwindow}.\\
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{include/movingwindow.eps}
+\caption{Sygnał EKG scałkowany ruchomym oknem (100\_ MLII.dat)}
+\label{movingwindow}
+\end{figure}\\
+\paragraph{Progowanie i detekcja zespołów QRS}
+Ostatnim krokiem metody |verb|PanTompkins jest detekcja progu detekcji oraz sama detekja zespołu QRS. Próg detekji może być ustalony na stałe bądź wyliczony według własnych wzorów.
+\paragraph{Wykrywanie załamka R}
+\indent Aby odnaleźć załamek R należy teraz odnaleźć początek i koniec każdego kompleksu QRS w sygnale oryginalnym, używamy do tego punktów zapisanych w odnalezionym wektorze po operacji progowania. Mając taki wycinek oryginalnego sygnału, wyszukujemy wartości maksymalnej sygnału i oznaczamy ten punkt jako załamek R.\\
+Na rysunku \eqref{rdet} można zobaczyć przykładową detekcję załamków R.
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{include/rpeaks.eps}
+\caption{Detekcja załamków R (100\_ MLII.dat)}
+\label{rdet}
+\end{figure}\\
 
 \subsubsection{Opis procedur i metod}
 \label{sec:rs:procs}
@@ -272,7 +424,7 @@ Jeśli podczas wykrywania nie wystąpi żaden problem zostanie stworzony wektor 
 \label{sec:rs:tests}
 Początkowo moduł był testowany przy użyciu własnego przefiltrowanego sygnału testowego utworzonego w matlabie. Testowy sygnał został pozbawiony składowej stałej, zostały usunięte zakłócenia filtrami: dolnoprzepustowym oraz górnoprzepustowym. Cały sygnał został znormalizowany do zakresu od -1 do 1.\\
 \indent Sygnał można wczytać przy pomocy funkcji jaka znajduje się w klasie \verb|RPeaksDetector| o nazwie \verb|getMockedSignal|. W pliku \verb|RPeaksDetector.h| znajdują się makrodefinicje które w prosty sposób pozwalają włączyć debugowanie procesu wykrywania sygnału oraz użycie testowego sygnału.\\
-\indent Makrodefinicja \verb|USE_MOCKED_SIGNAL| włącza użycie testowego sygnału. Sygnał jaki dostarcza moduł \verb|ECGBaseLine| jest ignorowany. Dodatkowo makrodefinicja \verb|DEBUG| pozwala na wypisanie podstawowych informacji z przebiegu wykrywania załamków \verb|R|. Poniżej przedstawiamy przykładowy log:
+\indent Makrodefinicja \verb|USE_MOCKED_SIGNAL| włącza użycie testowego sygnału. Sygnał jaki dostarcza moduł \verb|ECGBaseLine| jest ignorowany. Dodatkowo makrodefinicja \verb|DEBUG| pozwala na wypisanie podstawowych informacji z przebiegu wykrywania załamków \verb|R|. Poniżej przedstawiamy przykładowy log zarówno dla metody \verb|PanTompkins| jak i \verb|Hilbert|:
 \begin{verse}
 Thersold size not found, use automatic calculated value\\ 
 Input parameters for R peaks module:\\
@@ -304,6 +456,19 @@ Number of detected R-peaks: 2093 \\
 Done
 \end{verse}
 
+\begin{verse}
+R peaks module started \\
+Running module with default parameters \\
+Window size not found, use automatic calculated value \\
+Thersold size not found, use automatic calculated value \\
+Input parameters for R peaks module:\\
+Detection method: Hilbert \\
+R peaks module started \\
+Running module with custom parameters \\
+Number of detected R-peaks: 2272 
+\end{verse}
+
+
 \indent Kiedy moduł \verb|ECGBaseLine| dostarczył nam prawidłowo przygotowany sygnał, rozpoczęliśmy testowanie na plikach pochodzących z bazy \verb|MIT_BIH|. Wyniki jakie otrzymaliśmy można znaleźć w kolejnym rozdziale.
 
 \subsubsection{Wyniki}
@@ -313,29 +478,24 @@ Uzyskane wyniki wykrywania załamków \verb|R| dla sygnałów pochodzących z ba
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 sygnał & ilośc R & wykryte PanTompkins & wykryte Hilbert & skuteczność PanTompkins & skuteczność Hilbert\\ \hline
-100   & 2273 & TODO & TODO  & TODO & TODO\\ \hline
-101   & 1865 & TODO & TODO  & TODO & TODO\\ \hline
-102   & 2187 & TODO & TODO  & TODO & TODO\\ \hline
-103   & 2084 & TODO & TODO  & TODO & TODO\\ \hline
-104   & 2229 & TODO & TODO  & TODO & TODO\\ \hline
-105   & 2572 & TODO & TODO  & TODO & TODO\\ \hline
-106   & 2027 & TODO & TODO  & TODO & TODO\\ \hline
-107   & 2137 & TODO & TODO  & TODO & TODO\\ \hline
-108   & 1774 & TODO & TODO  & TODO & TODO\\ \hline
-109   & 2532 & TODO & TODO  & TODO & TODO\\ \hline
-200   & 2601 & TODO & TODO  & TODO & TODO\\ \hline
-201   & 2000 & TODO & TODO  & TODO & TODO\\ \hline
-202   & 2136 & TODO & TODO  & TODO & TODO\\ \hline
-203   & 2980 & TODO & TODO  & TODO & TODO\\ \hline
-205   & 2656 & TODO & TODO  & TODO & TODO\\ \hline
-207   & 2332 & TODO & TODO  & TODO & TODO\\ \hline
-208   & 2955 & TODO & TODO  & TODO & TODO\\ \hline
+100   & 2273 & 3001 & 2272  & 91,7\% & 99,9\% \\ \hline
+105   & 2572 & 2982 & 2559  & 85,1\% & 99,5\% \\ \hline
+107   & 2137 & 3803 & 2125  & 33,1\% & 99,4\% \\ \hline
+109   & 2532 & 2904 & 2492  & 85,4\% & 98,4\% \\ \hline
+111   & 1774 & 3535 & 2089  & 12,2\% & 83,3\% \\ \hline
+200   & 2601 & 3716 & 2593  & 66,8\% & 99,7\% \\ \hline
+202   & 2136 & 3711 & 2116  & 36,3\% & 99\%   \\ \hline
+220   & 2955 & 2055 & 2047  & 70\%   & 69,2\% \\ \hline
+223   & 2332 & 3187 & 2501  & 63,2\% & 93,2\% \\ \hline
+test100   & 2273 & 2274 & 2272  & 99,9\% & 99,9\% \\ \hline
 \end{tabular}
-
+\linebreak
+\\
+\indent Uzyskane wyniki pomiarów wyraźnie pokazują przewagę metody \verb|Hilberta|. W wiekszości plików wynik skuteczności wachał sie w około 98\%. Metoda detekcji \verb|PanTompkins| sprawia problemy głównie w sygnałach o dużych zakłuceniach oraz tam gdzie morfologia pochodzenia sygnału udeżenia jest inna niż zatokowo-przedsionkowa.\\
+\indent Ostatni sygnał 'test100' został wygenerowany z matlaba, wczytaliśmy sygnał 100.dat, przefiltrowaliśmy, usunęliśmy skladowa stałą oraz znormalizowaliśmy. Tak przygotowany sygnał został wczytany i przeprowadziliśmy detekcję. Jak widać skuteczność jest znacznie większa niż w przyadku oryginalnego sygnału gdzie przygotowany sygnał dostajemy z modułu \verb|BaseLIne|.\\
+\indent Próbowaliśmy również testować wykrywanie zmieniając ustawienią modułu \verb|BaseLine| wybierając inne filtracje. Wyniki jakie uzyskaliśmy były praktycznie identyczne jak powyżej dlatego nie zamieszczamy ich tutaj.
 \subsection{Waves}
 \label{sec:waves}
-
-\subsection{HRV1}
 \label{sec:hrv1}
 
 \subsection{HRV2}

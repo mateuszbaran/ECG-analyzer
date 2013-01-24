@@ -153,7 +153,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	ECGSignalChannel sig;
 	sig = *signal;
 	int sigSize = 0;
-	if(sig->signal->size == NULL || sig->signal->size == 0)
+	if(sig->signal->size < 1)
 	{
 		#ifdef DEBUG
 			qDebug() << "Input signal size is 0";
@@ -507,7 +507,7 @@ bool RPeaksDetector::hilbertRPeaksDetection(ECGSignalChannel *signal)
 
 	ECGSignalChannel sig = *signal;
 
-	if(sig->signal->size == NULL || sig->signal->size == 0)
+    if(sig->signal->size < 1)
 	{
 		#ifdef DEBUG
 				qDebug() << "Input signal size is 0";
@@ -716,9 +716,8 @@ void RPeaksDetector::removeTooClose(int czestotliwosc, const std::vector<double>
 							R.back() = wykryte[i];
 						}
 						if (!rozstrzygniete) {
-							if (sygnal[R.back()] > sygnal[wykryte[i]])
-								// pierwszy
-								;
+							if (sygnal[R.back()] > sygnal[wykryte[i]]){
+                            }
 							if (sygnal[R.back()] < sygnal[wykryte[i]])
 								// drugi
 								R.back() = wykryte[i];
