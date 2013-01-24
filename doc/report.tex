@@ -1818,8 +1818,18 @@ W trakcie implementacji do testowania algorytmów używaliśmy surowego sygnału
 
 \subsubsection{Wyniki}
 \label{sec:st_interval:results}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\textwidth]{include/st_gui}
+  \caption{Zakładka modułu w GUI przedstawiająca przykładowy zespół QRS z
+  zaznaczonymi punktami charakterystycznymi analizy odcinka ST. }
+  \label{fig:st_gui}
+\end{figure}
+
 %%TODO można tu dodać printscreen wykresu ST, gdy zacznie działać aplikacja
 Resultatem projektu są dwa algorytmy wyznaczania i analizy parametrów odcinków ST. Prostrzy algorytm opisany w \cite{AUGUST1} został w całości zaimplementowany i przetestowany. Drugi, rozszerzony algorytm z \cite{SHEN1} również został zrealizowany, jednak ze względu na złożoność matematyczną niezbędne okazało się uproszczenie jednego z kroków. Algorytm ten zakłada wykorzystanie 5-warstwowej dekompozycji falkowej splinów 4-stopnia do detekcji punktu $T_{peak}$, co okazało się być niewykonalne technicznie. Wykrycie tego punktu zostało zrealizowane przy użyciu filtru różnicowego wyszukującego maximum lokalne sygnału. Poprawność wyników z obu algorytmów w dużym stopniu zależy od jakości wyników działania modułów nadrzędnych, dostarczających przefiltrowany sygnał EKG oraz zespoły QRS.
+Na rysunku \ref{fig:st_gui} przedstawiono przykładowy wynik modułu analizy ST.
 
 
 \subsection{T wave alt}
