@@ -334,6 +334,229 @@ sygnał & ilośc R & wykryte PanTompkins & wykryte Hilbert & skuteczność PanTo
 
 \subsection{Waves}
 \label{sec:waves}
+Autorzy: Agata Sitnik i Łukasz Zieńkowski.
+
+\subsubsection{Opis zadania}
+\label{sec:st_interval:desc}
+Celem modułu było wykrycie zespołów QRS oraz załamków P i T.
+Zespół QRS to największy zespół załamków EKG. Opisuje depolaryzację (pobudzenie) mięśni komór serca i składa się z jednego lub kilku załamków określanych kolejno jako Q, R i S, w zależności od miejsca wystąpienia i kierunku wychylenia. Czas trwania zespołu prawidłowo wynosi od 0,6-0,11 s i składa się z następujących składowych:
+\begin{itemize}
+     \item \verb|Załamek Q| - pierwsze ujemne wychylenie zespołu QRS
+     \item \verb|Załamek R| - pierwsze dodatnie wychylenie zespołu QRS
+     \item \verb|Załamek S| - każde ujemne wychylenie za załamkiem R
+\end{itemize}
+
+Poza zespołem QRS możemy wyróżnić również załamki P i T.
+Załamek P odpowiada depolaryzacji przedsionków. W warunkach prawidłowych jest on dodatni w odprowadzeniach I, II, aVF i ujemny w aVR; czas jego trwania jest krótszy od 0.12 s, a amplituda nie przekracza 2.5 mm w odprowadzeniach kończynowych.
+Odcinek PQ odpowiada repolaryzacji przedsionków. W warunkach prawidłowych repolaryzacja przedsionków nie powoduje przemieszczenia odcinka PQ w stosunku do odcinka TP i odcinek PQ przebiega w linii izoelektrycznej.
+Odstęp PQ jest elektrokardiograficznym odpowiednikiem czasu wędrowania bodźca z węzła zatokowego
+przez prawy przedsionek, węzeł przedsionkowo - komorowy, pęczek Hisa i włókna Purkinjego aż do mięśnia komór. W warunkach prawidłowych czas jego trwania zależy od wieku badanej osoby i częstotliwości rytmu serca mieszcząc się w granicach od 0.12 s do 0.20 s; u osób w starszym wieku za górną granicę normy można przyjąć wartość 0.23 s.
+Odcinek ST jest elektrokardiograficznym odpowiednikiem czasu wędrowania bodźca z węzła zatokowego przez prawy przedsionek, węzeł przedsionkowo - komorowy, pęczek Hisa i włókna Purkinjego aż do mięśnia komór. W warunkach prawidłowych czas jego trwania zależy od wieku badanej osoby i częstotliwości rytmu serca mieszcząc się w granicach od 0.12 s do 0.20 s; u osób w starszym wieku za górną granicę normy można przyjąć wartość 0.23 s.
+Załamek T odpowiada fazie szybkiej repolaryzacji mięśnia komór. Prawidłowy załamek T jest dodatni w odprowadzeniach I, II, aVL, V3 - V6 a ujemny w aVR.
+
+
+\subsubsection{Badania literaturowe}
+\label{sec:st_interval:papers}
+W literaturze można znaleźć kilka rozwiązań problemu odnalezienia zespołów QRS i załamków P i T. Większość z nich opiera się na dyskretnej transformacie falkowej, która polega na splocie
+sygnału pochodzącego z zapisu badania EKG z wybraną falką, pobraną z bazy. Baza jest stale rozwijana o nowe falki. Filtry cyfrowe analizy falkowej odpowiadają falce i funkcji skalującej w postaci tzw.
+spline’ów bramkowych drugiego stopnia o zwartym i krótkim nośniku. Dzięki temu
+podczas analizy sygnału i detekcji osobliwości możemy dokładniej kontrolowa parametry
+procesu separacji wybranych częstotliwości. Dzięki analizie wieloskalowej możliwe jest
+zlokalizowanie miejsca gwałtownej zmiany sygnału, a tym samym lokalizacji zespołu QRS.
+Metoda posiada mniejszą wrażliwość na zmiany morfologii kolejnych zespołów QRS,
+minimalizuje problemy związane z występowaniem składowej wolnozmiennej, artefaktów
+ruchu i napięcia mięśni oraz pozwala na łatwiejszą separację załamka R w stosunku do
+załamków P i T.
+
+Wiele rozwiązań zagadnienia detekcji zespołów QRS opiera się na filtracji adaptacyjnej,
+zastosowaniu ukrytych modeli Markova, algorytmów genetycznych lub
+transformacie Hilberta. Wszystkie opierają się na pomyśle utworzenia detektora zespołów QRS, jednak pozwalają jedynie na dropną poprawę
+skuteczności lub szybkości działania, gdyż tak naprawdę nie znaleziono jeszcze w 100\% skutecznej funkcji detekcyjnej. 
+Istnieją dane literaturowe, w których detekcja zespołów QRS opiera się na stosowaniu filtrów wysokopasmowych. Filtry pełnią rolę narzędzia różniczkującego, a wykorzystywane są pierwsze i drugie pochodne sygnału. Różniczkowanie w tych metodach wykonuje się w celu uwypuklenia cech charakterystycznych sygnału. Zróżniczkowany sygnał poddaje się progowaniu. Pozwala to na wykrycie potencjalnych zespołów QRS, a dodatkowe progi pozwalają eliminować fałszywych kandydatów. Próg składa się z trzech parametrów: adaptacyjnej wartości slew-rate, drugiej wartości, która rośnie gdy w sygnale obserwuje się wzrost częstotliwości i trzeciej mającej na celu uniknięcie braku niskich wartości amplitudy. Zaletą tych metod jest ich prostota, a wadą niska efektywność i skomplikowane ciągi decyzyjne. Istnieją również metody łączące tosowanie filtrów wysokoprzepustowych z niskoprzepustowymi, pozwala to zwiększyć efektywność wykrywania zespołów QRS.
+
+
+Jedną z najbardziej innowacyjnych metod automatycznej detekcji zespołów QRS
+jest stosowanie do tego celu sieci neuronowych typu wielowarstwowego
+perceptronu lub sieci LVQ. Budowa sieci MLP opiera się na konstrukcji z prostych neuronów o funkcji przejścia w postaci
+tangensa hiperbolicznego lub sigmoidy. Liczba warstw sieci nie powinna
+przekraczać 3, a liczba neuronów również powinna być ograniczona. 
+Sieć neuronowa MPL działa na zasadzie próby przewidzenia stanu
+przyszłego w oparciu o stan poprzedni. Wadą tego rozwiązania jest to, że najpierw należy przeprowadzić uczenie sieci oraz duża wrażliwość na zaszumienie sygnału.  Sieci typu LVQ działają inaczej: neurony środkowej warstwy uczą się rozpoznawania
+sygnałów określonego typu. Ich liczba określa liczbę grup sygnałów.
+Wadą sieci LVQ jest to, że jest bardzo rozbudowana oraz
+wymaga dosyć dużego zbioru testowego. Jednak dobrze nauczona sieć typu LVQ działa w zasadzie dla każdego zapisu EKG.
+Obie metody MLP i LVQ wymagają jednak
+dużego nakładu pracy przy tworzeniu sieci oraz ich uczeniu. Ważne jest również to, ze błędnie przeprowadzony sposób uczenia, może znacząco pogorszyć wykrywalność zespołów QRS.
+
+W przypadku tego projektu zdecydowano się na wykorzystanie algorytmu treshold based detection.
+
+
+\subsubsection{Opis procedur i metod}
+\label{sec:st_interval:procs}
+Detekcja opiera się na algorytmie \verb|treshold based detection|.
+
+
+zastosowane funkcje:
+
+
+\begin{lstlisting}
+bool QRSPointsDetector::detectQRS()
+\end{lstlisting}
+Główna funkcja odpowiedzialna za detekcję zespołów QRS. Funkcja korzysta ze znajomości położenia
+załamków R, uzyskanych z modułu Rpeaks. Określa ona minima po obu stronach tych załamków,
+następnie wykonuje normalizację sygnału, na którą składa się:
+\begin{itemize}
+     \item odjęcie średniej z całego sygnału
+     \item spotęgowanie (wzmocnienie)
+     \itempodzielenie przez maksymalną wartość występującą w sygnale (otrzymujemy sygnał
+w zakresie 0-1)
+\end{itemize}
+
+Po normalizacji w funkcji jest wydzielana część sygnału o intensywności powyżej 5\%, które ma na
+celu wyzerowanie sygnału poza obszarem QRS. Funkcja służy do obliczenia parametrów \verb|QRS_onset| i
+\verb|QRS_end|.
+
+\begin{lstlisting}
+bool QRSPointsDetector::detectPT()
+\end{lstlisting}
+
+Główna funkcja odpowiedzialna za detekcję załamków P i T. Funkcja najpierw wstępnie przetwarza
+otrzymany sygnał, wraz z oznaczonymi miejscami występowania zespołów QRS. Pierwszym etapem jest
+wyzerowanie sygnału w miejscach występowania QRS. Następnie wykonywana jest normalizacja sygnału
+składająca się z następujących etapów:
+\begin{itemize}
+     \item Każdą część sygnału znajdującą się w okresie podzielić przez maksymalną wartość w danym okresie
+     \item Filtracja sygnału
+     \item Odjęcie mediany dla danego okresu od wszystkich wartości w okresie
+     \item wydzielenie części sygnału o intensywności powyżej 7\% (usunięcie sygnału poza
+QRS)
+\end{itemize}
+
+Funkcja następnie wykonuje właściwą detekcję załamków P i T. Ich wykrycie opiera się na następujących
+założeniach:
+\begin{itemize}
+     \item Załamek T zawsze jest dłuższy niż 90 próbek (najmniejszy zanotowany to 95, a
+największy 208).
+     \item Długość załamka jest większa niż 30\% długości okresu.
+     \item Odległość między końcem załamka T, a początkiem następnego QRS jest zawsze
+większa niż 25\% długości okresu.
+     \item Załamek P zawsze jest dłuższy niż 9 próbek (najmniejszy zanotowany to 10).
+     \item Odległość między początkiem załamka P, a początkiem następnego QRS jest
+zawsze mniejsza niż 23\% długości okresu.
+\end{itemize}
+
+W celu wyznaczenia załamków P i T w funkcji są najpierw wyznaczane początki załamków T jako
+końce poprzedzającego go zespołu QRS . W danym okresie sygnału wynikowego, funkcja znajduje
+pierwszą próbkę, której wartość jest różna od zera (dalej pod nazwą próbka pierwsza). Następnie
+znajduje pierwszą próbkę po tej poprzedniej, której wartość jest równa zero (dalej pod nazwą próbka
+druga). Jeżeli odległość pomiędzy początkiem następnego zespołu QRS, a tą pierwszą próbką
+jest większa niż 25\% długości okresu i jednocześnie odległość między drugą próbką, a końcem
+poprzedzającego ją QRS jest większa niż 90, oznacza to, że druga próbka jest końcem załamka T.
+Pierwsze z tych założeń zapobiega zidentyfikowaniu załamka P jako T, w przypadku gdy T jest
+odwrócone i w sygnale wynikowym nie występuje. Drugie z założeń mówiące o szerokości załamka
+T, zapobiega zaklasyfikowaniu szumów o małej długości jako załamka T.
+
+
+\begin{lstlisting}
+double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd)
+\end{lstlisting}
+Funkcja znajdująca minimum lokalne w danym zakresie sygnału, parametry forBegin i forEnd
+określają początek i koniec analizowanego okna.
+
+\begin{lstlisting}
+double findMaximum (ECGSignalChannel *signal,int forBegin, int forEnd)
+\end{lstlisting}
+Funkcja znajdująca maksimum lokalne w danym zakresie sygnału, parametry forBegin i forEnd
+określają początek i koniec analizowanego okna.
+
+\begin{lstlisting}
+void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal, const ECGInfo &
+ecgi, const ECGRs &ecgRs, ECGWaves & ecgWaves)
+\end{lstlisting}
+Funkcja uruchamiająca moduł
+
+Parametry:
+\verb|&filteredSignal| - przefiltrowany sygnał
+
+\verb|& ecgi| - informacje o sygnale
+
+\verb|&ecgRs| - położenie załamków R
+
+\verb|& ecgWaves| - informacja zwrotna - położenie zespołów QRS i załamków P i T
+
+\begin{lstlisting}
+ECGSignalChannel QRSPointsDetector::gradient(ECGSignalChannel * signal)
+\end{lstlisting}
+
+\begin{lstlisting}
+ECGSignalChannel QRSPointsDetector::averageFilter(ECGSignalChannel * signal)
+\end{lstlisting}
+
+Funkcja realizująca filtr uśredniający sygnał
+
+\begin{lstlisting}
+ECGRs QRSPointsDetector::getMockedRPeak()
+\end{lstlisting}
+Funkcja ustawiająca wartości załamków R, używana do testowania modułu.
+
+\begin{lstlisting}
+ECGSignalChannel QRSPointsDetector::getMockedSignal()
+\end{lstlisting}
+Funkcja ustawiająca wartości sygnału, używana do testowania modułu.
+
+
+
+\subsubsection{Warunki testowania}
+\label{sec:st_interval:tests}
+
+W celu przetestowania algorytu najpierw wykonano implementację w programie Matlab 2009, sprawdzenie akuteczności algorytmu wykonano na sygnałach ściągniętych z bazy wykorzystywanej w poprzednim semestrze na zajęciach z przedmiotu Przetwarzanie sygnałów w systemach diagnostyki medycznej. 
+Następnie kod przepisano w C++ w środowisku VisualStudio 2010 i tam testowano go za pomocą tych samych sygnałów. Posłużono się jako danymi wejściowymi również wygenerowanym wektorem położenia załamków R.
+
+\subsubsection{Wyniki}
+\label{sec:st_interval:results}
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/waves_matlab}
+\par\end{centering}
+
+\caption{Wyniki modułu Waves -- Matlab, oznaczne zespoły QRS i załamki R}
+\label{fig:waves_matlab}
+\end{figure}
+
+\par\end{center}
+
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/waves_matlab2}
+\par\end{centering}
+
+\caption{Wyniki modułu Waves -- Matlab, oznaczne załamki P, T i R }
+\label{fig:waves_matlab2}
+\end{figure}
+
+\par\end{center}
+
+\begin{center}
+%
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.4]{include/waves_cpp}
+\par\end{centering}
+
+\caption{Wyniki modułu Waves -- Visual Studio 2010}
+\label{fig:waves_cpp}
+\end{figure}
+
+\par\end{center}
+
+Udało się osiągnąć zadowalające wyniki, które nieznacznie odbiegają od danych przewidywanych. 
+Wyniki osiągnięte podczas wstępnej implementacji w Matlabie, gdzie wykonano oznaczenia początków i końców zespołów QRS \ref{fig:waves_matlab} oraz następnie oznaczono położenie załamków P i końców załamków T \ref{fig:waves_matlab2} są nieznacznie gorszej jakości niż uzyskane później w wynikowym programie \ref{fig:waves_cpp} . Jest to spowodowane między innymi tym, że program w Matlabie był przygotowany jako prototyp, który później został dopracowany i rozszerzony o dodatkowe warunki klasyfikacji sygnału jako załamki oraz o dodatkową filtrację.
+
 
 \subsection{HRV1}
 \label{sec:hrv1}
