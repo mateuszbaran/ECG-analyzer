@@ -931,6 +931,11 @@
                <string>Tachogram</string>
               </attribute>
              </widget>
+             <widget class="QWidget" name="tabHRVDFA_4">
+              <attribute name="title">
+               <string>HRV DFA</string>
+              </attribute>
+             </widget>
              <widget class="QWidget" name="tab_2">
               <attribute name="title">
                <string>HRV Triangle</string>
