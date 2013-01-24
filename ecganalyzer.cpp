@@ -60,12 +60,15 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 			return;//throw new exception("Nie udało się wczytać sygnału");
 		}
 
-        _ECGcontroller.runECGBaseline();
+//        _ECGcontroller.runECGBaseline();
 //        _ECGcontroller.runRPeaks();
+\
+        //moje
+        _ECGcontroller.runHRV2();
+        on_run_st_analysis_button_clicked();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
-		//moje
-		_ECGcontroller.runHRV2();
+
 
 		QTableWidgetItem *fileName = new QTableWidgetItem();
 		fileName->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.filename) );
@@ -111,17 +114,17 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		ECGHRV2 hrv2_data;
 		// ...
 		
-		QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
-		PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
-		plotHRVTriangleLayout->addWidget(plotHRVTriangle);
-		plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
-		ui.tab_2->setLayout(plotHRVTriangleLayout);
+        QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
+        PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
+        plotHRVTriangleLayout->addWidget(plotHRVTriangle);
+        plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
+        ui.tab_2->setLayout(plotHRVTriangleLayout);
 		
-		QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
-		PlotPoincare *plotPoincare = new PlotPoincare(this);
-		plotPoincareLayout->addWidget(plotPoincare);
-		plotPoincare->setData(_ECGcontroller.hrv2_data);
-		ui.tab_3->setLayout(plotPoincareLayout);
+        QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
+        PlotPoincare *plotPoincare = new PlotPoincare(this);
+        plotPoincareLayout->addWidget(plotPoincare);
+        plotPoincare->setData(_ECGcontroller.hrv2_data);
+        ui.tab_3->setLayout(plotPoincareLayout);
 		
 		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);

@@ -125,6 +125,29 @@ void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks)
     control->setZoomBase(baseRect, defaultRect);
 }
 
+void Ecg2Ch::setSignal(ECGSignalChannel filtered_signal, ECGSignalChannel raw_signal, ECGInfo *info, ECGRs *peaks)
+{
+    double max_value_one, min_value_one, max_value_two, min_value_two;
+
+    gsl_vector_minmax_to_index(filtered_signal->signal, &min_value_one, &max_value_one, 1000);
+    gsl_vector_minmax_to_index(raw_signal->signal, &min_value_two, &max_value_two, 1000);
+    float max_value = max(max_value_one, max_value_two);
+    float min_value = min(min_value_one, min_value_two);
+
+    ch1->setSignal(filtered_signal, info->channel_one, peaks->GetRs());
+    ch2->setSignal(raw_signal, info->channel_one, peaks->GetRs());
+
+    QRectF defaultRect(QPointF(0, max_value), QPointF((float)min(abs((int)(max_value * 1.3)), (int)raw_signal->signal->size), min_value));
+
+    float min_global = min(gsl_vector_min(raw_signal->signal), gsl_vector_min(filtered_signal->signal));
+    float max_global = max(gsl_vector_max(raw_signal->signal), gsl_vector_max(filtered_signal->signal));
+    float last_x = (float)max(raw_signal->signal->size, filtered_signal->signal->size);
+
+    QRectF baseRect(QPointF(0.0, max_global), QPointF(last_x, min_global));
+
+    control->setZoomBase(baseRect, defaultRect);
+}
+
 void Ecg2Ch::syncToggled(bool toggle)
 {
     if (toggle)
