@@ -64,6 +64,7 @@ public:
   ECGST st_data;
   ECGTWave twave_data;
   ECGHRT hrt_data;
+  QRSClass qrsclass_data;
 
 private:
   //method for setting not run

@@ -50,6 +50,23 @@ double stosunek(ECGSignalChannel * signal, int forBegin, int forEnd)
 	return tmp1/tmp2;
 }
 
+double szybkosc(ECGSignalChannel * signal, int forBegin, int forEnd)
+{
+	ECGSignalChannel sig;
+	sig = *signal;
+
+	double tmp1 = 0;
+	double tmp2;
+
+	for(int i=forBegin;i<forEnd-5;i++){
+		tmp2 = gsl_vector_get(sig->signal,i+5) - gsl_vector_get(sig->signal,i);
+		if (tmp2<0) tmp2 = -tmp2;
+		if(tmp2>tmp1) tmp1 = tmp2;
+	}
+
+	return tmp1;
+}
+
 QRSMorphologyDetector::QRSMorphologyDetector(void)
 {
 }
@@ -94,11 +111,12 @@ bool QRSMorphologyDetector::detectQRSMorphology()
 		double dlugoscV = dlugosc(&filteredSignal,start,stop);
 		double rm1 = (dlugoscV/2*sqrt(3.14*poleV))-1;
 		double stosunekV = stosunek(&filteredSignal,start,stop);
+		double szybkoscV = szybkosc(&filteredSignal,start,stop);
 
 		//dokonczyc ocene rodzaju pobudzenia
 
-		if (rm1>0.5 && rm1<1.5) gsl_vector_int_set(tmpSig->signal,i,VENTRICULUS);
-		else gsl_vector_int_set(tmpSig->signal,i,SUPRACENTRICULAR);
+		if (rm1>0.5 && rm1<1.5) gsl_vector_int_set(tmpSig->signal,i,SUPRACENTRICULAR);
+		else gsl_vector_int_set(tmpSig->signal,i,VENTRICULUS);
 
 	}
 
