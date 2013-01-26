@@ -199,7 +199,7 @@ bool QRSPointsDetector::detectQRS()
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto pre_fqValueChannelOne = gsl_vector_get (pre_fq->signal, i);			
-		//auto pre_fqtValueChannelTwo = gsl_vector_get (pre_fq.channel_two->signal, i);
+		double rr = (pre_fqValueChannelOne>0.05)?pre_fqValueChannelOne:0;
 		gsl_vector_set(ts4Sig->signal, i, (pre_fqValueChannelOne>0.05)?pre_fqValueChannelOne:0);
 	}
 
@@ -220,6 +220,7 @@ bool QRSPointsDetector::detectQRS()
 		#ifdef DEBUG
 			cout << "Rpeak no "<<ithRpeak <<" value :" << rPeak  << endl;	
 		#endif
+		
 		for(int j = rPeak;j>rPeak-100;j--){
 			auto value = gsl_vector_get (ts4Sig->signal, j);
 			if(value==0){
@@ -264,14 +265,19 @@ bool QRSPointsDetector::detectPT(){
 
     IntSignal tEnd;
 	tEnd = IntSignal(new WrappedVectorInt);
-	tEnd->signal = gsl_vector_int_alloc(qrsCount-1);
+	tEnd->signal = gsl_vector_int_alloc(qrsCount);
 
 	IntSignal pOnset;
 	pOnset = IntSignal(new WrappedVectorInt);
-	pOnset->signal = gsl_vector_int_alloc(qrsCount-1);
+	pOnset->signal = gsl_vector_int_alloc(qrsCount);
 	IntSignal pEnd;
 	pEnd = IntSignal(new WrappedVectorInt);
-	pEnd->signal = gsl_vector_int_alloc(qrsCount-1);
+	pEnd->signal = gsl_vector_int_alloc(qrsCount);
+
+	auto qrsOnset = gsl_vector_int_get (qrsPoints->GetQRS_onset()->signal, 0);
+
+	gsl_vector_int_set(pOnset->signal,0,(qrsOnset-20<0?0:qrsOnset-20));
+	gsl_vector_int_set(pEnd->signal,0,(qrsOnset-10<0?1:qrsOnset-10));
 
 	for(int i = 0; i < qrsCount-1; i++)
 	{	
@@ -373,8 +379,8 @@ bool QRSPointsDetector::detectPT(){
 		}
 		//p in last 23%
 
-		gsl_vector_int_set(pOnset->signal,i,qrsOnset2);
-		gsl_vector_int_set(pEnd->signal,i,qrsOnset2);
+		gsl_vector_int_set(pOnset->signal,i+1,qrsOnset2);
+		gsl_vector_int_set(pEnd->signal,i+1,qrsOnset2);
 		p1 = p2 =0;
 		for(int j = qrsEnd+cycleSize*3/4; j < qrsOnset2; j++)
 		{
@@ -402,6 +408,9 @@ bool QRSPointsDetector::detectPT(){
 		}
 
 	}
+
+	auto qrsEnd = gsl_vector_int_get (qrsPoints->GetQRS_end()->signal, qrsCount-1);
+	gsl_vector_int_set(tEnd->signal,qrsCount-1,(qrsEnd+20>signalSize?signalSize:qrsEnd+20));
 	qrsPoints->setTend(tEnd);
 	qrsPoints->setPonset(pOnset);
 	qrsPoints->setPend(pEnd);

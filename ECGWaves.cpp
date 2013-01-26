@@ -40,12 +40,12 @@ void ECGWaves::setSize(size_t n)
   this->QRS_end->signal = gsl_vector_int_alloc(n);
   
   this->T_end = IntSignal(new WrappedVectorInt);
-  this->T_end->signal = gsl_vector_int_alloc(n-1);
+  this->T_end->signal = gsl_vector_int_alloc(n);
   
   this->P_onset = IntSignal(new WrappedVectorInt);
-  this->P_onset->signal = gsl_vector_int_alloc(n-1);
+  this->P_onset->signal = gsl_vector_int_alloc(n);
   
   this->P_end = IntSignal(new WrappedVectorInt);
-  this->P_end->signal = gsl_vector_int_alloc(n-1);
+  this->P_end->signal = gsl_vector_int_alloc(n);
 
 }
