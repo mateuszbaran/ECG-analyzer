@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QToolBar>
 #include <QToolButton>
+#include <QMenu>
 #include "ecgch.h"
 #include "../ECGController.h"
 #include "synczoomer.h"
@@ -20,19 +21,27 @@ public:
     explicit Ecg2Ch(QWidget *parent = 0);
     ~Ecg2Ch();
     
-signals:
-    
 public slots:
-    void setSignal(ECGSignal *signal, ECGInfo *info);
-    void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks);
-    void setSignal(ECGSignalChannel filtered_signal, ECGSignalChannel raw_signal, ECGInfo *info, ECGRs *peaks);
+//    void setSignal(ECGSignal *signal, ECGInfo *info);
+    void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves *waves);
+//    void setSignal(ECGSignalChannel filtered_signal, ECGSignalChannel raw_signal, ECGInfo *info, ECGRs *peaks);
     void syncToggled(bool);
+    void setLegendRPeaksEnabled(bool enabled);
+    void setLegendQrsOnEnabled(bool enabled);
+    void setLegendQrsOffEnabled(bool enabled);
+    void setLegendPOnEnabled(bool enabled);
+    void setLegendPOffEnabled(bool enabled);
+    void setLegendTOffEnabled(bool enabled);
+
 private:
     EcgCh *ch1;
     EcgCh *ch2;
     PlotControl *control;
 
-    QToolButton *syncButton, *zoomResetFirstButton, *zoomInFirstButton, *zoomOutFirstButton, *zoomResetSecondButton, *zoomInSecondButton, *zoomOutSecondButton;
+    QToolButton *syncButton, *zoomResetFirstButton, *zoomInFirstButton, *zoomOutFirstButton, *zoomResetSecondButton, *zoomInSecondButton, *zoomOutSecondButton, *legendButton;
+    QMenu *legendMenu;
+    QAction *legendRpeaks, *legendQrsOn, *legendQrsOff, *legendPOn, *legendPOff, *legendTOff;
+
 };
 
 #endif // ECG2CH_H
