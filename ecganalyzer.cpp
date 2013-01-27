@@ -115,6 +115,39 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		
 		_ECGcontroller.runHRT();
 		plotHRT->setData(_ECGcontroller.hrt_data);
+
+		QTableWidgetItem *vpc_number = new QTableWidgetItem();
+		vpc_number->setText(QString::number(_ECGcontroller.hrt_data.vpcCounter) );
+		ui.tableWidgetHRTAnalysis->setItem(0, 0, vpc_number);
+
+		if(_ECGcontroller.hrt_data.isCorrect)	{
+			QTableWidgetItem *iscorrect = new QTableWidgetItem();
+			iscorrect->setText(QString("YES") );
+			ui.tableWidgetHRTAnalysis->setItem(0, 1, iscorrect);
+
+			QTableWidgetItem *ts = new QTableWidgetItem();
+			ts->setText(QString::number(_ECGcontroller.hrt_data.TS) );
+			ui.tableWidgetHRTAnalysis->setItem(0, 2,  ts);
+
+			QTableWidgetItem *to = new QTableWidgetItem();
+			to->setText(QString::number(_ECGcontroller.hrt_data.TO) );
+			ui.tableWidgetHRTAnalysis->setItem(0, 3,  to);
+		}
+		else	{
+			QTableWidgetItem *iscorrect = new QTableWidgetItem();
+			iscorrect->setText(QString("NO") );
+			ui.tableWidgetHRTAnalysis->setItem(0, 1, iscorrect);
+
+			QTableWidgetItem *ts = new QTableWidgetItem();
+			ts->setText(QString("-") );
+			ui.tableWidgetHRTAnalysis->setItem(1, 0,  ts);
+
+			QTableWidgetItem *to = new QTableWidgetItem();
+			ts->setText(QString("-") );
+			ui.tableWidgetHRTAnalysis->setItem(1, 1,  to);
+		}
+
+
 		
 		QTableWidgetItem *fileName = new QTableWidgetItem();
 		fileName->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.filename) );
@@ -401,49 +434,6 @@ void ECGanalyzer::setSTIntervalParams()
 }
 
 
-
-
-
-
-void ECGanalyzer::on_checkBoxT_Wave_AltEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxP_endEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxP_onsetEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxT_endEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxQRS_endEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxQRS_onsetEnabled_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxShowOnPlotSD1SD2Parameters_toggled(bool checked)
-{
-
-}
-
-void ECGanalyzer::on_checkBoxShowOnPlotHRVTriangle_toggled(bool checked)
-{
-
-}
 
 void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
 {
