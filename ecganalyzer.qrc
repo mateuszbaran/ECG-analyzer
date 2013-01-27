@@ -20,5 +20,6 @@
         <file>icons/legend_blue.png</file>
         <file>icons/legend_dark_green.png</file>
         <file>icons/legend_green.png</file>
+        <file>icons/legend.png</file>
     </qresource>
 </RCC>

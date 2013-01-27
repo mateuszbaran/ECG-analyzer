@@ -22,6 +22,8 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     QToolBar *toolBar = new QToolBar(this);
     syncButton = new QToolButton(toolBar);
     syncButton->setIcon(QIcon(":/ECGanalyzer/icons/locked.png"));
+    syncButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    syncButton->setText("Synchronizacja");
     syncButton->setCheckable(true);
     syncButton->setChecked(true);
     syncButton->setEnabled(false);
@@ -100,8 +102,9 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     setLegendTOffEnabled(false);
 
     legendButton = new QToolButton(toolBar);
+    legendButton->setIcon(QIcon(":/ECGanalyzer/icons/legend.png"));
     legendButton->setText("Legenda");
-
+    legendButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     legendButton->setMenu(legendMenu);
     legendButton->setPopupMode(QToolButton::InstantPopup);
     legendButton->setEnabled(false);
@@ -127,8 +130,6 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     control->enableSync(true);
 
     connect(syncButton, SIGNAL(toggled(bool)), this, SLOT(syncToggled(bool)));
-//    connect(legendButton, SIGNAL(toggled(bool)), this, SLOT(legendToggled(bool)));
-//    connect(legendMenu, SIGNAL(aboutToHide()), legendButton, SLOT(toggle()));
     connect(zoomResetFirstButton, SIGNAL(clicked()), control, SLOT(zoomResetFirst()));
     connect(zoomInFirstButton, SIGNAL(clicked()), control, SLOT(zoomInFirst()));
     connect(zoomOutFirstButton, SIGNAL(clicked()), control, SLOT(zoomOutFirst()));
@@ -235,6 +236,9 @@ void Ecg2Ch::setLegendTOffEnabled(bool enabled) {
     legendTOff->setChecked(enabled);
 }
 
+void Ecg2Ch::resizeEvent(QResizeEvent *e) {
+    control->resize(e);
+}
 
 
 

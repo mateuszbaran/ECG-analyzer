@@ -40,7 +40,7 @@ EcgCh::EcgCh(QWidget *parent) :
      pOnSetCurve = new QwtPlotCurve("pOnSet");
      pOnSetCurve->setYAxis(QwtPlot::yLeft);
      pOnSetCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
-     pOnSetCurve->setPen(QPen(QColor(0,255,0), 5));
+     pOnSetCurve->setPen(QPen(QColor(0,0,255), 5));
      pOnSetCurve->attach(this);
 
      pEndSetCurve = new QwtPlotCurve("pEndSet");

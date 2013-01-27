@@ -22,9 +22,7 @@ public:
     ~Ecg2Ch();
     
 public slots:
-//    void setSignal(ECGSignal *signal, ECGInfo *info);
     void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves *waves);
-//    void setSignal(ECGSignalChannel filtered_signal, ECGSignalChannel raw_signal, ECGInfo *info, ECGRs *peaks);
     void syncToggled(bool);
     void setLegendRPeaksEnabled(bool enabled);
     void setLegendQrsOnEnabled(bool enabled);
@@ -33,6 +31,7 @@ public slots:
     void setLegendPOffEnabled(bool enabled);
     void setLegendTOffEnabled(bool enabled);
 
+    virtual void resizeEvent(QResizeEvent* e);
 private:
     EcgCh *ch1;
     EcgCh *ch2;

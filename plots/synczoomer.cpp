@@ -2,7 +2,7 @@
 #include "scrollzoomer.h"
 #include "qglobal.h"
 #include "stdlib.h"
-
+#include <QResizeEvent>
 #ifdef WIN32
 #define QWT_DLL
 #include <qwt6/qwt_plot_grid.h>
@@ -88,6 +88,7 @@ PlotControl::PlotControl(QwtPlot *_plot1, QwtPlot *_plot2)
     QwtPlotCanvas *canvas2 = plot2->canvas();
     zoomer1 = new Zoomer(canvas1);
     zoomer2 = new Zoomer(canvas2);
+    isSyncEnabled = true;
 }
 
 void PlotControl::setZoomBase(QRectF& base, QRectF& current)
@@ -103,6 +104,7 @@ void PlotControl::setZoomBase(QRectF& base, QRectF& current)
 
 void PlotControl::enableSync(bool enable)
 {
+    isSyncEnabled = enable;
     if (enable)
     {
         connect(zoomer1, SIGNAL(zoomed(QRectF)), zoomer2, SLOT(zoom(QRectF)));
@@ -211,3 +213,74 @@ void PlotControl::zoomResetSecond()
     this->zoomReset(zoomer2);
 }
 
+void PlotControl::resize(QResizeEvent *e)
+{
+    double diff = (e->size().width() - e->oldSize().width()) * (defaultRect.width() / zoomer1->canvas()->width());
+    qDebug() << diff;
+    if (defaultRect.width())
+    {
+        double nleft = defaultRect.left() - diff/2.0f;
+        double nright = defaultRect.right() + diff/2.0f;
+        defaultRect.setLeft(nleft);
+        defaultRect.setRight(nright);
+    }
+
+    if (diff < 0)
+    {
+
+        QRectF zoom_rect1 = zoomer1->zoomRect();
+        double nleft = zoom_rect1.left() - diff/2.0f;
+        double nright = zoom_rect1.right() + diff/2.0f;
+        zoom_rect1.setLeft(nleft);
+        zoom_rect1.setRight(nright);
+        zoomer1->zoom(zoom_rect1);
+
+        if (!isSyncEnabled)
+        {
+            QRectF zoom_rect2 = zoomer2->zoomRect();
+            nleft = zoom_rect2.left() - diff/2.0f;
+            nright = zoom_rect2.right() + diff/2.0f;
+            zoom_rect2.setLeft(nleft);
+            zoom_rect2.setRight(nright);
+            zoomer2->zoom(zoom_rect2);
+        }
+    }
+    else
+    {
+        QRectF zoom_rect1 = zoomer1->zoomRect();
+        double nleft = std::max(zoom_rect1.left() - diff/2.0f, 0.0);
+        double nright = std::min(zoom_rect1.right() + diff/2.0f, (double)zoomer1->zoomBase().right());
+        if (zoom_rect1.left() < diff/2.0f)
+        {
+            nright += diff/2.0f - zoom_rect1.left();
+        }
+        if ((double)zoomer1->zoomBase().right() - zoom_rect1.right() < diff/2.0f)
+        {
+            nleft -= diff/2.0f - ((double)zoomer1->zoomBase().right() - zoom_rect1.right());
+        }
+        zoom_rect1.setLeft(nleft);
+        zoom_rect1.setRight(nright);
+        zoomer1->zoom(zoom_rect1);
+
+        QRectF zoom_rect2 = zoomer2->zoomRect();
+        if (!isSyncEnabled)
+        {
+            nleft = std::max(zoom_rect2.left() - diff/2.0f, 0.0);
+            nright = std::min(zoom_rect2.right() + diff/2.0f, (double)zoomer2->zoomBase().right());
+            if (zoom_rect2.left() < diff/2.0f)
+            {
+                nright += diff/2.0f - zoom_rect2.left();
+            }
+            if ((double)zoomer2->zoomBase().right() - zoom_rect2.right() < diff/2.0f)
+            {
+                nleft -= diff/2.0f - ((double)zoomer2->zoomBase().right() - zoom_rect2.right());
+            }
+            zoom_rect2.setLeft(nleft);
+            zoom_rect2.setRight(nright);
+            zoomer2->zoom(zoom_rect2);
+        }
+    }
+
+    zoomer1->plot()->replot();
+    zoomer2->plot()->replot();
+}
