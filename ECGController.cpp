@@ -7,6 +7,7 @@
 #include "RPeaksDetector.h"
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
+#include "QRSMorphologyDetector.h"
 #include "DFAAnalyzer.h"
 #include "GeometricAnalysis.h"
 #include "TWaveAltDetector.h"
@@ -30,7 +31,7 @@ ECGController::ECGController (void) :
   hrv1_module(new HRV1Analyzer()),
   hrv2_module(new GeometricAnalysis()),
   st_interval_module(new STAnalysis()),
-  qrs_class_module(NULL),
+  qrs_class_module(new QRSMorphologyDetector()),
   computation(NULL),
   analysisCompl(false)
 {
@@ -262,10 +263,10 @@ void ECGController::runHRT ()
   {
     runRPeaks();
   }
-  /*if (!qrs_class_module->run_)
+  if (!qrs_class_module->run_)
   {
     runQRSClass();
-  }*/
+  }
   hrt_module->runModule(r_peaks_data, classes_data, ecg_info, hrt_data);
   hrt_module->run_ = true;
   LOG_END
