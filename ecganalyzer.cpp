@@ -108,10 +108,29 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
         _ECGcontroller.runRPeaks();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
 
-		//moje - czyje?
+		//HRV2 - poczatek, kfarganus
+		setHRV2Params();
 		_ECGcontroller.runHRV2();
 		plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
 		plotPoincare->setData(_ECGcontroller.hrv2_data);
+
+		QTableWidgetItem *SD1 = new QTableWidgetItem();
+		SD1->setText(QString::number(_ECGcontroller.hrv2_data.GetSD1()) );
+		ui.tableWidgetGeometricalParameters->setItem(0, 0, SD1);
+
+		QTableWidgetItem *SD2 = new QTableWidgetItem();
+		SD2->setText(QString::number(_ECGcontroller.hrv2_data.GetSD2()) );
+		ui.tableWidgetGeometricalParameters->setItem(1, 0, SD2);
+
+		QTableWidgetItem *TINN = new QTableWidgetItem();
+		TINN->setText(QString::number(_ECGcontroller.hrv2_data.GetTINN()) );
+		ui.tableWidgetGeometricalParameters->setItem(2, 0, TINN);
+
+		QTableWidgetItem *HRVTriangularIndex = new QTableWidgetItem();
+		HRVTriangularIndex->setText(QString::number(_ECGcontroller.hrv2_data.GetHRVTriangularIndex()) );
+		ui.tableWidgetGeometricalParameters->setItem(3, 0, HRVTriangularIndex);
+
+		//HRV2 koniec
 		
 		_ECGcontroller.runHRT();
 		plotHRT->setData(_ECGcontroller.hrt_data);
@@ -348,6 +367,7 @@ void ECGanalyzer::setModulesParams()
   //TODO: Set params for other modules
   setRpeaksParams();
   setSTIntervalParams();
+  setHRV2Params(); //HRV2 kfarganus
 }
 
 
@@ -433,7 +453,13 @@ void ECGanalyzer::setSTIntervalParams()
   _ECGcontroller.setParamsSTInterval(st_params);
 }
 
+void ECGanalyzer::setHRV2Params() // HRV2 kfarganus
+{
+	ParametersTypes hrv2_params;
+	hrv2_params["histogram_bin_length"] = (double) ui.doubleSpinBoxRPeaksHistogramSize->value();
 
+	_ECGcontroller.setParamsHRV2(hrv2_params);
+}
 
 void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
 {
