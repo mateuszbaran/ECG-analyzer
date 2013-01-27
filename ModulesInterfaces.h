@@ -52,14 +52,14 @@ class HRV1Module : public GlobalInterface
 {
 public:
   HRV1Module() : GlobalInterface() {}
-  virtual void runModule (const ECGRs &, ECGHRV1 &) = 0;
+  virtual void runModule (const ECGInfo &, const ECGRs &, ECGHRV1 &) = 0;
 };
 
 class HRV2Module : public GlobalInterface
 {
 public:
   HRV2Module() : GlobalInterface() {}
-  virtual void runModule (const ECGRs &, ECGHRV2 &) = 0;
+  virtual void runModule (const ECGInfo &info, const ECGRs &, ECGHRV2 &) = 0;
 };
 
 class HRVDFAModule : public GlobalInterface
@@ -94,5 +94,5 @@ class HRTModule : public GlobalInterface
 {
 public:
   HRTModule() : GlobalInterface() {}
-  virtual void runModule (const ECGRs &, const ECGClasses &, const ECGInfo &, ECGHRT &) = 0;
+  virtual void runModule (const ECGRs &, const QRSClass &, const ECGInfo &, ECGHRT &) = 0;
 };

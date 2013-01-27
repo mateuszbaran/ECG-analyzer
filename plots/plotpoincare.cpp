@@ -29,25 +29,33 @@ PlotPoincare::~PlotPoincare()
 
 void PlotPoincare::setData(ECGHRV2 &data)
 {
-	gsl_vector_int *px = data.GetPoincare_x()->signal;
-	gsl_vector_int *py = data.GetPoincare_y()->signal;
-	double x = data.GetTriple_index_x();
-	double y = data.GetTriple_index_y();
-	double s1 = data.SD1;
-	double s2 = data.SD2;
-	int size = int(px->size); // == py.size
+	IntSignal px = data.GetPoincare_x();
+	IntSignal py = data.GetPoincare_y();
+	float x = 0.0;
+	float y = 0.0;
+	float ax = 0.0;
+	float ay = 0.0;
+	float s1 = data.GetSD1() * 1.414;
+	float s2 = data.GetSD2() * 1.414;
+	size_t size = px->signal->size;
 	QVector<QPointF> points;
 	for (int i = 0; i < size; ++i)
 	{
-		points.push_back(QPointF(float(px->data[i*px->stride]), float(py->data[i*py->stride])));
+		x = float(px->get(i));
+		y = float(py->get(i));
+		ax += x;
+		ay += y;
+		points.push_back(QPointF(x, y));
 	}
 	rr->setSamples(points);
+	ax /= float(size);
+	ay /= float(size);
 	QVector<QPointF> l1;
-	l1.push_back(QPointF(x,y));
-	l1.push_back(QPointF(x-s1,y+s1));
+	l1.push_back(QPointF(ax,ay));
+	l1.push_back(QPointF(ax-s1,ay+s1));
 	QVector<QPointF> l2;
-	l2.push_back(QPointF(x,y));
-	l2.push_back(QPointF(x+s2,y+s2));
+	l2.push_back(QPointF(ax,ay));
+	l2.push_back(QPointF(ax+s2,ay+s2));
 	sd1->setSamples(l1);
 	sd1->setSamples(l2);
 	replot();

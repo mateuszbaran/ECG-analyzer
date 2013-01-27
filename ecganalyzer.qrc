@@ -14,5 +14,11 @@
         <file>icons/magnifier_minus.png</file>
         <file>icons/magnifier_plus.png</file>
         <file>icons/magnifier_one.png</file>
+        <file>icons/legend_red.png</file>
+        <file>icons/legend_dark_blue.png</file>
+        <file>icons/legend_brown.png</file>
+        <file>icons/legend_blue.png</file>
+        <file>icons/legend_dark_green.png</file>
+        <file>icons/legend_green.png</file>
     </qresource>
 </RCC>

@@ -1,5 +1,12 @@
-/// Enables development mode - defined => development mode, undefined => standard mode
-// #define DEV 1
+/// czestotliwosc probkowania dla fft
+#define SAMPLING_FFT 500
+
+/// wlacza development mode: zdefiniowana => development mode, niezdefiniowana => standard mode
+//#define DEV
+
+/// wlacza tryb debugowania
+//#define DEBUG
+//#define DEBUG_FFT
 
 #pragma once
 
@@ -11,14 +18,16 @@
 
 #include "ECGRs.h"
 #include "ECGHRV1.h"
+#include "ECGChannelInfo.h"
 #include "ECGSignal.h"
 
 #ifdef DEV // 4 testing
     #include "ExampleSignal.h"
 #else
-	// Main includes
 	#include "ModulesInterfaces.h"
 #endif
+
+#define FREQUENCY_FFT (1000/SAMPLING_FFT)
 
 /**
  * @class Class for parameters created in HRV1 module
@@ -33,25 +42,33 @@ public:
 	HRV1Analyzer();
 	~HRV1Analyzer();
 
-	void runModule(const ECGRs &, ECGHRV1 &);
+	void runModule(const ECGInfo &, const ECGRs &, ECGHRV1 &);
 
 	#ifndef DEV
         void setParams(ParametersTypes &);
     #endif
 
 private:
+    //input parameters
 	ECGRs rPeaksData;
 	ECGHRV1* hrv1Data;
 
+	//RR peaks signal parameters
 	double *sig;
-    int signalSize;
+	double *sigAbsolute;
+    long signalSize;
+    long sizeFftIndex;
     int signalSampling;
 
-	void run();
+    //methods
+    void prepareSignal();
+    void prepareSigAbsolute();
+	void calculateParameters();
+
+	double* doFFT(double* sigAfterSpline);
 	kiss_fft_cpx* copycpx(double *mat, int nframe);
 	double mean(double *tab, int start, int end);
 	double std(double *tab, int start, int end);
 	double* cubicSpline(double* x, double* y, int nframe);
-
 };
 

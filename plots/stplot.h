@@ -1,3 +1,4 @@
+
 #ifndef STPLOT_H
 #define STPLOT_H
 
@@ -18,7 +19,6 @@ public:
   void setSignal(const ECGSignalChannel&, const ECGChannelInfo&, const ECGST&);
   virtual void resizeEvent(QResizeEvent* e);
 private:
-  double invgain, dt;
   QwtPlotCurve* curve;
   QwtPointSeriesData* data;
   QVector<QPointF>* samples;

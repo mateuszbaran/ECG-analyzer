@@ -140,24 +140,6 @@
     <ClCompile Include="RPeaksDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ecg2ch.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ecg2ch.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ecgch.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ecgch.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\ecg2ch.cpp">
-      <Filter>Source Files\plots</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\ecgch.cpp">
-      <Filter>Source Files\plots</Filter>
-    </ClCompile>
     <ClCompile Include="tri_logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -172,51 +154,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_AboutWindow.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_synczoomer.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_synczoomer.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\synczoomer.cpp">
-      <Filter>Source Files\plots</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_hrt.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_hrt.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_plothrvtriangle.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_plothrvtriangle.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_plotpoincare.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_plotpoincare.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\hrt.cpp">
-      <Filter>Source Files\plots</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\plothrvtriangle.cpp">
-      <Filter>Source Files\plots</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\plotpoincare.cpp">
-      <Filter>Source Files\plots</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_stplot.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_stplot.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="plots\stplot.cpp">
-      <Filter>Source Files\plots</Filter>
     </ClCompile>
     <ClCompile Include="STAnalysis.cpp">
       <Filter>Source Files</Filter>
@@ -269,17 +206,89 @@
     <ClCompile Include="spline\specialfunctions.cpp">
       <Filter>Source Files\spline</Filter>
     </ClCompile>
-    <ClCompile Include="plots\gainsscaledraw.cpp">
-      <Filter>Source Files\plots</Filter>
+    <ClCompile Include="DFAAnalyzer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="plots\scrollbar.cpp">
-      <Filter>Source Files\plots</Filter>
+    <ClCompile Include="matrix\Matrix.cpp">
+      <Filter>Source Files\matrix</Filter>
     </ClCompile>
-    <ClCompile Include="plots\scrollzoomer.cpp">
-      <Filter>Source Files\plots</Filter>
+    <ClCompile Include="HRTAnalyzer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="plots\timescaledraw.cpp">
-      <Filter>Source Files\plots</Filter>
+    <ClCompile Include="GeometricAnalysis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TWaveAltDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Snr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingAverage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Chebyshev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ecg2ch.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ecg2ch.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ecgch.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ecgch.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plotdfa1.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plotdfa1.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plotdfa2.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plotdfa2.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plothrt.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plothrt.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plothrvfrequency.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plothrvfrequency.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plothrvtriangle.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plothrvtriangle.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plotpoincare.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plotpoincare.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plotqrs.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plotqrs.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_plottachogram.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_plottachogram.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_scrollbar.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -293,14 +302,65 @@
     <ClCompile Include="GeneratedFiles\Release\moc_scrollzoomer.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="DFAAnalyzer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GeneratedFiles\Debug\moc_stplot.cpp">
+      <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="matrix\Matrix.cpp">
-      <Filter>Source Files\matrix</Filter>
+    <ClCompile Include="GeneratedFiles\Release\moc_stplot.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="HRTAnalyzer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GeneratedFiles\Debug\moc_synczoomer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_synczoomer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\ecg2ch.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\ecgch.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\gainsscaledraw.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plotdfa1.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plotdfa2.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plothrt.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plothrvfrequency.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plothrvtriangle.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plotpoincare.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plotqrs.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\plottachogram.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\scrollbar.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\scrollzoomer.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\stplot.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\synczoomer.cpp">
+      <Filter>Source Files\plots</Filter>
+    </ClCompile>
+    <ClCompile Include="plots\timescaledraw.cpp">
+      <Filter>Source Files\plots</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -313,37 +373,67 @@
     <CustomBuild Include="ecganalyzer.qrc">
       <Filter>Header Files\Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="plots\ecg2ch.h">
-      <Filter>Header Files\plots</Filter>
-    </CustomBuild>
-    <CustomBuild Include="plots\ecgch.h">
-      <Filter>Header Files\plots</Filter>
-    </CustomBuild>
     <CustomBuild Include="AboutWindow.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="AboutWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="plots\synczoomer.h">
-      <Filter>Header Files\plots</Filter>
+    <CustomBuild Include="plots\hrt.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plothrvtriangle.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plotpoincare.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\stplot.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\hrt.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\ecg2ch.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\ecgch.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plotdfa1.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plotdfa2.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plothrt.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plothrvfrequency.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\plothrvtriangle.h">
-      <Filter>Header Files\plots</Filter>
+      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\plotpoincare.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\plotqrs.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
-    <CustomBuild Include="plots\stplot.h">
+    <CustomBuild Include="plots\plottachogram.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\scrollbar.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
     <CustomBuild Include="plots\scrollzoomer.h">
+      <Filter>Header Files\plots</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\stplot.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plots\synczoomer.h">
       <Filter>Header Files\plots</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -483,12 +573,6 @@
     <ClInclude Include="spline\stdafx.h">
       <Filter>Header Files\spline</Filter>
     </ClInclude>
-    <ClInclude Include="plots\gainsscaledraw.h">
-      <Filter>Header Files\plots</Filter>
-    </ClInclude>
-    <ClInclude Include="plots\timescaledraw.h">
-      <Filter>Header Files\plots</Filter>
-    </ClInclude>
     <ClInclude Include="DFAAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -497,6 +581,36 @@
     </ClInclude>
     <ClInclude Include="HRTAnalyzer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometricAnalysis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TWaveAltDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Snr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingAverage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chebyshev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\gainsscaledraw.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\plothrvtriangle.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\plotpoincare.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\stplot.h">
+      <Filter>Header Files\plots</Filter>
+    </ClInclude>
+    <ClInclude Include="plots\timescaledraw.h">
+      <Filter>Header Files\plots</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

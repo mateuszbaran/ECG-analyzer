@@ -4,6 +4,7 @@
 #define LOG_END TRI_LOG_STR("END: " << __FUNCTION__);
 
 double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd) {
+
     ECGSignalChannel sig;
     sig = *signal;
     auto sigSize = sig->signal->size;
@@ -13,6 +14,7 @@ double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd) {
         auto currentValue = gsl_vector_get (sig->signal, i);
         if (currentValue<minChannelOne) minChannelOne=currentValue;
     }
+
     return minChannelOne;
 }
 
@@ -85,7 +87,7 @@ bool QRSPointsDetector::detectQRS()
 	powerSig->signal = gsl_vector_alloc(signalSize);
 	for(int i = 0; i < signalSize; i++)
 	{
-		auto inputValueChannelOne = gsl_vector_get (filteredSignal->signal, i);			
+		auto inputValueChannelOne = gsl_vector_get (filteredSignal->signal, i);	
 		double pp = inputValueChannelOne*inputValueChannelOne;
 		gsl_vector_set(powerSig->signal, i, inputValueChannelOne*inputValueChannelOne);
 	}
@@ -110,6 +112,7 @@ bool QRSPointsDetector::detectQRS()
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto inputValueChannelOne = gsl_vector_get (gradSig->signal, i);			
+		//auto inputValueChannelTwo = gsl_vector_get (gradSig.channel_two->signal, i);
 		double expp = 1-(2/ exp(2*inputValueChannelOne)+1);
 		gsl_vector_set(expSig->signal, i, 1-(2/ exp(2*inputValueChannelOne)+1));
 	}
@@ -130,6 +133,7 @@ bool QRSPointsDetector::detectQRS()
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto originalValueChannelOne = gsl_vector_get (filteredSignal->signal, i);			
+		//auto originaltValueChannelTwo = gsl_vector_get (signal.channel_two->signal, i);
 		auto inputValueChannelOne = gsl_vector_get (fg2Sig->signal, i);			
 		//auto inputValueChannelTwo = gsl_vector_get (fg2Sig.channel_two->signal, i);
 		gsl_vector_set(ts3Sig->signal, i, originalValueChannelOne * inputValueChannelOne);
@@ -151,6 +155,7 @@ bool QRSPointsDetector::detectQRS()
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto fg1ValueChannelOne = gsl_vector_get (fg1Sig->signal, i);			
+		//auto fg1tValueChannelTwo = gsl_vector_get (fg1Sig.channel_two->signal, i);
 		auto fg3ValueChannelOne = gsl_vector_get (fg3->signal, i);			
 		//auto fg3ValueChannelTwo = gsl_vector_get (fg3.channel_two->signal, i);
 		gsl_vector_set(ts4Sig->signal, i, fg1ValueChannelOne + fg3ValueChannelOne);
@@ -163,17 +168,15 @@ bool QRSPointsDetector::detectQRS()
 	pre_fq->signal = gsl_vector_alloc(signalSize);
 
 	double max_absoluteC1 = gsl_vector_get (ts4Sig->signal, 10);
-	//double max_absoluteC2 =gsl_vector_get (ts4Sig.channel_two->signal, 10);
 	double min_C1 = gsl_vector_get (ts4Sig->signal, 10);
 	//double min_C2 =gsl_vector_get (ts4Sig.channel_two->signal, 10);
 
 	for(int i = 10; i < signalSize-100; i++)
 	{
-		auto ValueChannelOne = gsl_vector_get (ts4Sig->signal, i);			
+		auto ValueChannelOne = gsl_vector_get (ts4Sig->signal, i);		
 		if(ValueChannelOne> max_absoluteC1) max_absoluteC1 = ValueChannelOne;
 
 		if(ValueChannelOne< min_C1) min_C1 = ValueChannelOne;
-		//if(ValueChannelTwo< min_C2) min_C1 = ValueChannelTwo;
 	}
 	#ifdef DEBUG
 		cout << "Minimal value "<< min_C1 << endl;
@@ -183,9 +186,9 @@ bool QRSPointsDetector::detectQRS()
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto ValueChannelOne = gsl_vector_get (ts4Sig->signal, i);			
+		//auto ValueChannelTwo = gsl_vector_get (ts4Sig.channel_two->signal, i);
 		double pprr = (ValueChannelOne-min_C1) / (max_absoluteC1-min_C1);
 		gsl_vector_set(pre_fq->signal, i, (ValueChannelOne-min_C1) / (max_absoluteC1-min_C1));
-		//gsl_vector_set(pre_fq.channel_two->signal, i, (ValueChannelTwo-min_C2) /  (max_absoluteC2-min_C2));
 	}
 
 
@@ -196,8 +199,8 @@ bool QRSPointsDetector::detectQRS()
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto pre_fqValueChannelOne = gsl_vector_get (pre_fq->signal, i);			
+		//auto pre_fqtValueChannelTwo = gsl_vector_get (pre_fq.channel_two->signal, i);
 		gsl_vector_set(ts4Sig->signal, i, (pre_fqValueChannelOne>0.05)?pre_fqValueChannelOne:0);
-		//gsl_vector_set(ts4Sig.channel_two->signal, i, (pre_fqtValueChannelTwo>0.05)?pre_fqtValueChannelTwo:0 );
 	}
 
 	gsl_vector_int *v = rsPositions.GetRs()->signal;
@@ -247,6 +250,7 @@ bool QRSPointsDetector::detectQRS()
 
 bool QRSPointsDetector::detectPT(){
 	double qrsCount = qrsPoints->GetQRS_onset()->signal->size;
+	
 
 	auto signalSize = filteredSignal->signal->size;
 	
@@ -482,10 +486,10 @@ ECGSignalChannel QRSPointsDetector::averageFilter(ECGSignalChannel * signal){
 	gsl_vector_set(tmpSig->signal, 4, sumC1/11);
 	gsl_vector_set(tmpSig->signal, 5, sumC1/11);
 
+
 	for (int i=6;i<limit;i++){
 		sumC1 = sumC1 - gsl_vector_get (sig->signal, i-6) + gsl_vector_get (sig->signal, i+5); 
-		gsl_vector_set(tmpSig->signal, i-1, sumC1/11);					 
-	
+		gsl_vector_set(tmpSig->signal, i-1, sumC1/11);
 	}
  	
 	gsl_vector_set(tmpSig->signal, signalSize-1, sumC1/11);

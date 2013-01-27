@@ -1,4 +1,7 @@
 #include "stplot.h"
+#include "timescaledraw.h"
+#include "gainsscaledraw.h"
+
 #ifdef WIN32
 #include <qwt6/qwt_symbol.h>
 #include <qwt6/qwt_legend.h>
@@ -80,13 +83,11 @@ StPlot::~StPlot()
 void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& info, const ECGST& stdata)
 {
   gsl_vector *v = signal->signal;
-  invgain = 1.0 / float(info.gain);
-  dt = 1.0 / float(info.frequecy);
   int size = int(v->size);
   samples->clear();
   
   for (int i = 0; i < size; i++)
-    samples->push_back(QPointF(float(i)*dt, float(v->data[i*v->stride])*invgain));
+    samples->push_back(QPointF(float(i), float(v->data[i*v->stride])));
   
   QVector<QPointF>* ISOVector = new QVector<QPointF>;
   QVector<QPointF>* JVector = new QVector<QPointF>;
@@ -95,15 +96,17 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   const std::vector<ECGST::Interval> intervals = stdata.getIntervals();
   for (std::vector<ECGST::Interval>::const_iterator it = intervals.begin() ; it != intervals.end(); ++it)
   {
-    ISOVector->push_back(QPointF(float(it->isopoint)*dt, float(v->data[(it->isopoint)*v->stride]*invgain)));
-    JVector->push_back(QPointF(float(it->jpoint)*dt, float(v->data[(it->jpoint)*v->stride]*invgain)));
-    STVector->push_back(QPointF(float(it->stpoint)*dt, float(v->data[(it->stpoint)*v->stride]*invgain)));
+    ISOVector->push_back(QPointF(float(it->isopoint), float(v->data[(it->isopoint)*v->stride])));
+    JVector->push_back(QPointF(float(it->jpoint), float(v->data[(it->jpoint)*v->stride])));
+    STVector->push_back(QPointF(float(it->stpoint), float(v->data[(it->stpoint)*v->stride])));
     //RVector->push_back(QPointF(float(it->rpoint)*dt, float(v->data[(it->rpoint)*v->stride]*invgain)));
   }
   ISOPoints->setSamples(*ISOVector);
   JPoints->setSamples(*JVector);
   STPoints->setSamples(*STVector);
   //RPoints->setSamples(*RVector);
+  setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(info.frequecy));
+  setAxisScaleDraw(QwtPlot::yLeft, new GainScaleDraw(info.gain));
   data->setSamples(*samples);
   curve->setData(data);
   zoomer->setZoomBase();
@@ -137,8 +140,8 @@ void StPlot::zoomX(int from, int to, bool vscale)
 {
   QRectF rect = zoomer->zoomBase();
   
-  rect.setLeft(from*dt);
-  rect.setRight(to*dt);
+  rect.setLeft(from);
+  rect.setRight(to);
   viewFactor = rect.width()/canvas()->width();
   
   if (vscale) {
@@ -178,4 +181,3 @@ void StPlot::resizeEvent(QResizeEvent* e)
   }
   replot();
 }
-

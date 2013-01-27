@@ -14,6 +14,54 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 	ui.setupUi(this);
+    
+//#ifndef DEVELOPMENT
+//    ui.run_st_analysis_button->setProperty('visible', false);
+//#endif
+	
+	
+	QVBoxLayout *lay;
+	
+	lay = new QVBoxLayout;
+	plotTachogram = new PlotTachogram(this);
+	lay->addWidget(plotTachogram);
+	ui.tab->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotHRVTriangle = new PlotHRVTriangle(this);
+	lay->addWidget(plotHRVTriangle);
+	ui.tab_2->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotPoincare = new PlotPoincare(this);
+	lay->addWidget(plotPoincare);
+	ui.tab_3->setLayout(lay);
+	
+	//lay = new QVBoxLayout;
+	//plotHRVFrequency = new PlotHRVFrequency(this);
+	//lay->addWidget(plotHRVFrequency);
+	//ui.nowhere->setLayout(lay);
+	
+	//lay = new QVBoxLayout;
+	//plotDFA1 = new PlotDFA1(this);
+	//lay->addWidget(plotDFA1);
+	//ui.nowhere->setLayout(lay);
+	
+	//lay = new QVBoxLayout;
+	//plotDFA2 = new PlotDFA2(this);
+	//lay->addWidget(plotDFA2);
+	//ui.nowhere->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotQRS = new PlotQRS(this);
+	lay->addWidget(plotQRS);
+	ui.groupBox_5->setLayout(lay);
+	
+	lay = new QVBoxLayout;
+	plotHRT = new PlotHRT(this);
+	lay->addWidget(plotHRT);
+	ui.groupBox->setLayout(lay);
+	
 }
 
 ECGanalyzer::~ECGanalyzer()
@@ -29,28 +77,6 @@ void ECGanalyzer::on_actionO_Qt_triggered()
 void ECGanalyzer::on_actionO_Programie_triggered()
 {
 	aboutWindow.show();
-   // QMessageBox::about(this, tr("About ECG Analyzer"),
-   //         tr("<h2><div align=\"center\">ECG Analyzer</div></h2>"
-			//"<br/><b>Moduły:</b>"
-			//"<ul><li>ECG Baseline: Weronika Łabaj, Piotr Matuszkiewicz"
-			//"R Peaks: Paweł Maślanka, Norbert Pabian<ul>"
-			//"<li>Waves: Agata Sitnik, Łukasz Zieńkowski<ul>"
-			//"<li>QRS class: Krzysztof Bębenek, Aleksander Steliga"
-			//"<ul><li>HRT: Łukasz Kutrzuba, Mateusz Krasucki</li></ul>"
-			//"</li>"
-			//"<li>ST interval: Krzysiek Piekutowski, Bartłomiej Bułat</li>"
-			//"<li>T Wave alt: Grzegorz Pietrzyk, Łukasz Krzyżek</li>"
-			//"</ul>"
-			//"</li>"
-			//"<li>HRV 1: Łukasz Jaromi, Leszek Sosnowski</li>"
-			//"<li>HRV 2: Krzysztof Farganus</li>"
-			//"<li>HRV DFA: Mikołaj Rzepka, Szczepan Czaicki</li>"
-			//"</ul>"
-			//"</li></ul>"
-			////"</li></ul>"
-			//"<br/><div align=\"center\"><p>Wydział Elektrotechniki, Automatyki, "
-   //         "Informatyki i Inżynierii Biomedycznej</p>"
-   //         "<p>2012/2013 AGH Kraków</p></div>"));
 }
 
 
@@ -78,12 +104,70 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 			return;//throw new exception("Nie udało się wczytać sygnału");
 		}
 
-        _ECGcontroller.runECGBaseline();
-//        _ECGcontroller.runRPeaks();
-        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data));
+//        _ECGcontroller.runECGBaseline();
+        _ECGcontroller.runRPeaks();
+        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data), &(_ECGcontroller.waves_data));
+
+		//HRV2 - poczatek, kfarganus
+		setHRV2Params();
+		_ECGcontroller.runHRV2();
+		plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
+		plotPoincare->setData(_ECGcontroller.hrv2_data);
+
+		QTableWidgetItem *SD1 = new QTableWidgetItem();
+		SD1->setText(QString::number(_ECGcontroller.hrv2_data.GetSD1()) );
+		ui.tableWidgetGeometricalParameters->setItem(0, 0, SD1);
+
+		QTableWidgetItem *SD2 = new QTableWidgetItem();
+		SD2->setText(QString::number(_ECGcontroller.hrv2_data.GetSD2()) );
+		ui.tableWidgetGeometricalParameters->setItem(1, 0, SD2);
+
+		QTableWidgetItem *TINN = new QTableWidgetItem();
+		TINN->setText(QString::number(_ECGcontroller.hrv2_data.GetTINN()) );
+		ui.tableWidgetGeometricalParameters->setItem(2, 0, TINN);
+
+		QTableWidgetItem *HRVTriangularIndex = new QTableWidgetItem();
+		HRVTriangularIndex->setText(QString::number(_ECGcontroller.hrv2_data.GetHRVTriangularIndex()) );
+		ui.tableWidgetGeometricalParameters->setItem(3, 0, HRVTriangularIndex);
+
+		//HRV2 koniec
+		
+		_ECGcontroller.runHRT();
+		plotHRT->setData(_ECGcontroller.hrt_data);
+
+		QTableWidgetItem *vpc_number = new QTableWidgetItem();
+		vpc_number->setText(QString::number(_ECGcontroller.hrt_data.vpcCounter) );
+		ui.tableWidgetHRTAnalysis->setItem(0, 0, vpc_number);
+
+		if(_ECGcontroller.hrt_data.isCorrect)	{
+			QTableWidgetItem *iscorrect = new QTableWidgetItem();
+			iscorrect->setText(QString("YES") );
+			ui.tableWidgetHRTAnalysis->setItem(0, 1, iscorrect);
+
+			QTableWidgetItem *ts = new QTableWidgetItem();
+			ts->setText(QString::number(_ECGcontroller.hrt_data.TS) );
+			ui.tableWidgetHRTAnalysis->setItem(0, 2,  ts);
+
+			QTableWidgetItem *to = new QTableWidgetItem();
+			to->setText(QString::number(_ECGcontroller.hrt_data.TO) );
+			ui.tableWidgetHRTAnalysis->setItem(0, 3,  to);
+		}
+		else	{
+			QTableWidgetItem *iscorrect = new QTableWidgetItem();
+			iscorrect->setText(QString("NO") );
+			ui.tableWidgetHRTAnalysis->setItem(0, 1, iscorrect);
+
+			QTableWidgetItem *ts = new QTableWidgetItem();
+			ts->setText(QString("-") );
+			ui.tableWidgetHRTAnalysis->setItem(0, 2,  ts);
+
+			QTableWidgetItem *to = new QTableWidgetItem();
+			ts->setText(QString("-") );
+			ui.tableWidgetHRTAnalysis->setItem(0, 3,  to);
+		}
 
 
-
+		
 		QTableWidgetItem *fileName = new QTableWidgetItem();
 		fileName->setText(QString::fromStdString(_ECGcontroller.ecg_info.channel_one.filename) );
 		ui.tableWidgetSignalInfo->setItem(0, 0, fileName);
@@ -115,31 +199,6 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		QTableWidgetItem *range = new QTableWidgetItem();
 		range->setText(QString().sprintf("%d mV", _ECGcontroller.ecg_info.channel_one.range) );
 		ui.tableWidgetSignalInfo->setItem(7, 0, range);
-		
-		/*
-		_ECGcontroller.runHRT();
-
-		QVBoxLayout *plotHARTLayout = new QVBoxLayout;
-		PlotHRT *plotHRT = new PlotHRT(this);
-		plotHARTLayout->addWidget(plotHRT);
-		plotHRT->setData(_ECGcontroller.hrt_data);
-		ui.groupBox->setLayout(plotHARTLayout);*/
-	
-		ECGHRV2 hrv2_data;
-		// ...
-		
-		QVBoxLayout *plotHRVTriangleLayout = new QVBoxLayout;
-		PlotHRVTriangle *plotHRVTriangle = new PlotHRVTriangle(this);
-		plotHRVTriangleLayout->addWidget(plotHRVTriangle);
-		//plotHRVTriangle->setData(hrv2_data);
-		ui.tab_2->setLayout(plotHRVTriangleLayout);
-		
-		QVBoxLayout *plotPoincareLayout = new QVBoxLayout;
-		PlotPoincare *plotPoincare = new PlotPoincare(this);
-		plotPoincareLayout->addWidget(plotPoincare);
-		//plotPoincare->setData(hrv2_data);
-		ui.tab_3->setLayout(plotPoincareLayout);
-		
 		
 		ui.actionPrzeprowadzPonownieAnalizeSygnalu->setEnabled(true);
 		
@@ -308,6 +367,7 @@ void ECGanalyzer::setModulesParams()
   //TODO: Set params for other modules
   setRpeaksParams();
   setSTIntervalParams();
+  setHRV2Params(); //HRV2 kfarganus
 }
 
 
@@ -393,7 +453,16 @@ void ECGanalyzer::setSTIntervalParams()
   _ECGcontroller.setParamsSTInterval(st_params);
 }
 
+void ECGanalyzer::setHRV2Params() // HRV2 kfarganus
+{
+	ParametersTypes hrv2_params;
+	hrv2_params["histogram_bin_length"] = (double) ui.doubleSpinBoxRPeaksHistogramSize->value();
 
+	_ECGcontroller.setParamsHRV2(hrv2_params);
+}
 
-
-
+void ECGanalyzer::on_doubleSpinBoxRPeaksHistogramSize_valueChanged(double arg1)
+{
+	ParametersTypes hrv2_params;
+	//hrv2_params["algorithm"] = (double) ui.doubleSpinBoxRPeaksHistogramSize->value();
+}

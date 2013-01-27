@@ -8,6 +8,8 @@
 #include "STAnalysis.h"
 #include "QRSPointsDetector.h"
 #include "DFAAnalyzer.h"
+#include "GeometricAnalysis.h"
+#include "TWaveAltDetector.h"
 
 #include "wfdb/wfdb.h"
 
@@ -23,7 +25,9 @@ ECGController::ECGController (void) :
   hrv_dfa_module(new DFAAnalyzer()),
   hrt_module(new HRTAnalyzer()),
   waves_module(new QRSPointsDetector()),
+  t_wave_alt_module(new TWaveAltDetector()),
   hrv1_module(new HRV1Analyzer()),
+  hrv2_module(new GeometricAnalysis()),
   st_interval_module(new STAnalysis()),
   computation(NULL),
   analysisCompl(false)
@@ -161,7 +165,7 @@ void ECGController::runHRV1 ()
   {
     runRPeaks();
   }
-  hrv1_module->runModule(r_peaks_data, hrv1_data);
+  hrv1_module->runModule(ecg_info, r_peaks_data, hrv1_data);
   hrv1_module->run_ = true;
   LOG_END
 }
@@ -173,7 +177,7 @@ void ECGController::runHRV2 ()
   {
     runRPeaks();
   }
-  hrv2_module->runModule(r_peaks_data, hrv2_data);
+  hrv2_module->runModule(ecg_info,r_peaks_data, hrv2_data);
   hrv2_module->run_ = true;
   LOG_END
 }
@@ -253,11 +257,12 @@ void ECGController::runHRT ()
   {
     runRPeaks();
   }
+  // jeœli zostanie podpiêty modu³ qrs_class odkomentowaæ 
   /*if (!qrs_class_module->run_)
   {
     runQRSClass();
   }*/
-  hrt_module->runModule(r_peaks_data, classes_data, ecg_info, hrt_data);
+  hrt_module->runModule(r_peaks_data, qrsclass_data, ecg_info, hrt_data);
   hrt_module->run_ = true;
   LOG_END
 }
@@ -464,7 +469,10 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
 			runHRV1();
 			HANDLE_INTERRUPTION
-			statusUpdate("HRV1 analysis completed; ST segment analysis ongoing.");
+			statusUpdate("HRV1 analysis completed; HRV2 analysis ongoing.");
+			runSTInterval();
+			HANDLE_INTERRUPTION
+			statusUpdate("HRV2 analysis completed; ST segment analysis ongoing.");
 			runSTInterval();
 			HANDLE_INTERRUPTION
 			statusUpdate("ST segment analysis completed; QRS analysis ongoing.");
