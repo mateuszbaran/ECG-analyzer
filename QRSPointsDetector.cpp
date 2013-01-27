@@ -284,6 +284,13 @@ bool QRSPointsDetector::detectPT(){
 		auto qrsOnset2 = gsl_vector_int_get (qrsPoints->GetQRS_onset()->signal, i+1);
 		auto qrsEnd_2 = gsl_vector_int_get (qrsPoints->GetQRS_end()->signal, i+1);
 		double cycleSize = qrsOnset2 - qrsEnd;
+		
+		gsl_vector_int_set(tEnd->signal,i,qrsEnd);
+		gsl_vector_int_set(pOnset->signal,i+1,qrsOnset2);
+		gsl_vector_int_set(pEnd->signal,i+1,qrsOnset2);
+
+		if(cycleSize<1)
+			continue;
 
 #ifdef DEBUG
 		cout << "Cycle     :  " << i << endl;
@@ -296,18 +303,19 @@ bool QRSPointsDetector::detectPT(){
 
 		double min,max = 0;
 		min = gsl_vector_get (filteredSignal->signal, qrsEnd);
-
+		
 		ECGSignalChannel cycleSig;
 		cycleSig = ECGSignalChannel(new WrappedVector);
 		cycleSig->signal = gsl_vector_alloc(cycleSize);
-
+		
+		
 		for(int j = qrsEnd+10; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (filteredSignal->signal, j);
 			max = (max>value)? max:value;
 			min = (min<value)? min:value;
 		}
-
+		
 #ifdef DEBUG
 		cout << "Maximal value in cycle " << max  << endl;
 		cout << "Minimal value in cycle " << min  << endl;
@@ -346,7 +354,6 @@ bool QRSPointsDetector::detectPT(){
 		}
 
 		//finding points 
-		gsl_vector_int_set(tEnd->signal,i,qrsEnd);
 		double p1=0,p2=0;
 		//T is in first 75%
 		for(int j = qrsEnd; j < qrsEnd+cycleSize*3/4; j++)
@@ -377,9 +384,8 @@ bool QRSPointsDetector::detectPT(){
 		}
 		//p in last 23%
 
-		gsl_vector_int_set(pOnset->signal,i+1,qrsOnset2);
-		gsl_vector_int_set(pEnd->signal,i+1,qrsOnset2);
 		p1 = p2 =0;
+
 		for(int j = qrsEnd+cycleSize*3/4; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (allPTSig->signal, j);	

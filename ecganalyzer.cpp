@@ -106,7 +106,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
 //        _ECGcontroller.runECGBaseline();
         _ECGcontroller.runRPeaks();
-//        _ECGcontroller.runWaves();
+        _ECGcontroller.runQRSClass();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data), &(_ECGcontroller.waves_data));
 
 		//HRV2 - poczatek, kfarganus
