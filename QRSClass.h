@@ -1,10 +1,15 @@
 #pragma once
 
-#include <ECGSignal.h>
+#include <gsl/gsl_sort_vector.h>
+#include "ECGSignal.h"
+#include "ECGWaves.h"
+
+using namespace std;
 
 /**
  * QRS Types.
  */
+
 enum QRSType
 {
   VENTRICULUS,
@@ -20,19 +25,18 @@ public:
   QRSClass (void);
   ~QRSClass (void);
 
+  void setQrsMorphology(IntSignal QRS_morphology);
+  void setSize(size_t n);
+
+  IntSignal GetQRS_morphology() const
+  {
+	  return QRS_morphology;
+  }
+
+
   void SetId (int id)
   {
     this->id = id;
-  }
-
-  void SetType (QRSType type)
-  {
-    this->type = type;
-  }
-
-  OtherSignal GetExample () const
-  {
-    return example;
   }
 
   int GetId () const
@@ -40,15 +44,7 @@ public:
     return id;
   }
 
-  QRSType GetType () const
-  {
-    return type;
-  }
-
-
 private:
   int id;
-  QRSType type;
-  OtherSignal example;
+  IntSignal QRS_morphology;
 };
-
