@@ -96,6 +96,11 @@ private:
      */
     void updateSTIntervalTab();
 
+	 /**
+     * Set params for HRV2 module
+     */
+    void setHRV2Params();
+
 	ECGController _ECGcontroller;
 	//Ecg2Ch _ecg2ch;
 	

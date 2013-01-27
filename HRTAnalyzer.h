@@ -1,7 +1,10 @@
 #pragma once
 //#define USE_MOCKED_INTERVALS_SIGNAL
+#define USE_MOCKED_QRS_CLASSIFICATION
 #include "ModulesInterfaces.h"
 #include "ECGHRT.h"
+#include "ECGSignal.h"
+#include "QRSClass.h"
 #include "matrix/Matrix.h"
 using namespace std;
 
@@ -28,16 +31,16 @@ class HRTAnalyzer : public HRTModule {
 public:
 	HRTAnalyzer();
 	~HRTAnalyzer();
-	void runModule(const ECGRs &, const ECGClasses &,  const ECGInfo &, ECGHRT &);
+	void runModule(const ECGRs &, const QRSClass &,  const ECGInfo &, ECGHRT &);
 	void run(ECGHRT &);
 	void setParams(ParametersTypes &);
 
 private:
 	double* RRs;
 
-	void calculateHrtParams(double *signal, int size, ECGHRT &);
+	void calculateHrtParams(double *signal,  const QRSClass & qrsclass, int size, ECGHRT &);
 	
-	vector<int> findVpcOnsets(double *signal, int size);
+	vector<int> findVpcOnsets(double *signal,  const QRSClass & qrsclass, int size);
 	double* calculateAvgTach(double *signal, vector<int> vpc_list);
 
 	// wyliczenie TO
