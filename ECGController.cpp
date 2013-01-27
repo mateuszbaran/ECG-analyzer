@@ -257,11 +257,12 @@ void ECGController::runHRT ()
   {
     runRPeaks();
   }
+  // jeœli zostanie podpiêty modu³ qrs_class odkomentowaæ 
   /*if (!qrs_class_module->run_)
   {
     runQRSClass();
   }*/
-  hrt_module->runModule(r_peaks_data, classes_data, ecg_info, hrt_data);
+  hrt_module->runModule(r_peaks_data, qrsclass_data, ecg_info, hrt_data);
   hrt_module->run_ = true;
   LOG_END
 }

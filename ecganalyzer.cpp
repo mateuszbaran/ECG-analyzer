@@ -140,11 +140,11 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
 			QTableWidgetItem *ts = new QTableWidgetItem();
 			ts->setText(QString("-") );
-			ui.tableWidgetHRTAnalysis->setItem(1, 0,  ts);
+			ui.tableWidgetHRTAnalysis->setItem(0, 2,  ts);
 
 			QTableWidgetItem *to = new QTableWidgetItem();
 			ts->setText(QString("-") );
-			ui.tableWidgetHRTAnalysis->setItem(1, 1,  to);
+			ui.tableWidgetHRTAnalysis->setItem(0, 3,  to);
 		}
 
 
