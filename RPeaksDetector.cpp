@@ -297,7 +297,7 @@ bool RPeaksDetector::panTompkinsRPeaksDetection(ECGSignalChannel *signal)
 	double threshold = 0;
 	if( this->panTompkinsThershold == 0)
 	{
-		threshold = meanVal + (sigMaxVal * 0.5);
+		threshold = meanVal + (sigMaxVal * 0.04);
 	}
 	else
 	{
