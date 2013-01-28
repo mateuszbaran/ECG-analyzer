@@ -155,10 +155,11 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal pe
         QVector<QPointF> vSamples;
         for (long int i = 0; i < v->size; i++)
         {
+
             if (v->data[i*v->stride])
-                svSamples.push_back(qrsOnSetCurve->sample(v->data[i*v->stride]));
+                svSamples.push_back(qrsOnSetCurve->sample(i));
             else
-                vSamples.push_back(qrsOnSetCurve->sample(v->data[i*v->stride]));
+                vSamples.push_back(qrsOnSetCurve->sample(i));
         }
 
         vCurve->setSamples(vSamples);
