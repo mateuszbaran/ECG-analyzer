@@ -233,33 +233,33 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \begin{description}
 \item[Temat] Metody filtracji i detekcji izolinii w sygnale EKG
-\item[Opis] Wystepujace w sygnale EKG zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej niejednokrotnie uniemożliwiaja przeprowadzenie własciwej i poprawną analizy sygnału. W szczególności mają one wpływ na detekcję odcinków ST. W zwiazku z tym detekcja i usunięcie izolini, zwanej również linią bazową (\textit{ang. baseline}) jest standardowym pierwszym elementem w tym procesie. Od tego, w jakim stopniu sygnał oddany do dalszej analizy pozbawiony bedzie zakłóceń zależy jej dokładność i powodzenie. Celem niniejszej części projektu jest opracowanie i implementacja metod zwiazanych z detekcją i filtracją linii bazowej w sygnale EKG.
+\item[Opis] Występujące w sygnale EKG zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej niejednokrotnie uniemożliwiają przeprowadzenie właściwej i poprawną analizy sygnału. W szczególności mają one wpływ na detekcję odcinków ST. W związku z tym detekcja i usunięcie izolinii, zwanej również linią bazową (\textit{ang. baseline}) jest standardowym pierwszym elementem w~tym procesie. Od tego, w jakim stopniu sygnał oddany do dalszej analizy pozbawiony będzie zakłóceń zależy jej dokładność i powodzenie. Celem niniejszej części projektu jest opracowanie i~implementacja metod związanych z detekcją i filtracją linii bazowej w sygnale EKG.
 \item[Dane] Do przetwarzania w projekcie wykorzystywane są ciągi próbek sygnału EKG z bazy Physionet.org (\verb|MIT-BIH|)
 \item[Szukane] Efektem pracy ma być moduł programu filtrujący sygnał EKG z zakłóceń sieciowych/mięśniowych oraz usuwający z sygnału falowanie linii izoelektrycznej przy wykorzystaniu różnych metod. Moduł powinien umożliwiać wybór metody detekcji i usuwania oraz ustawienie parametrów.
 \end{description}
 
 \subsubsection{Badania literaturowe}
 \label{sec:baseline:papers}
-Problem detekcji i usuwania lini bazowej jest szeroko omawiany zarówno w książkach związanych z tematyką przetwarzania sygnałow diagnostycznych \cite{AUGUST1}, jak i w publikacjach i pracach naukowych \cite{KAUR1}\cite{MUKA1}. W kontekście tego klasycznego problemu porównywano już wiele metod - zarówno typowe filtry FIR i IIR, transformację falkową, uśrednianie sygnału, czy też filtry adaptacyjne, biorąc pod uwagę zmiany współczynników jakości w zależności od ustalonych parametrów. Wśród parametrów, jakie stosowane są do oceny jakości działania filtrów można wymienić:
+Problem detekcji i usuwania linii bazowej jest szeroko omawiany zarówno w książkach związanych z tematyką przetwarzania sygnałów diagnostycznych \cite{AUGUST1}, jak i w publikacjach i pracach naukowych \cite{KAUR1}\cite{MUKA1}. W kontekście tego klasycznego problemu porównywano już wiele metod -- zarówno typowe filtry FIR i IIR, transformację falkową, uśrednianie sygnału, czy też filtry adaptacyjne, biorąc pod uwagę zmiany współczynników jakości w zależności od ustalonych parametrów. Wśród parametrów, jakie stosowane są do oceny jakości działania filtrów można wymienić:
 \begin{enumerate}
-\item \verb+SNR+ - \textit{Signal-to-Noise Ratio} -  stosunek sygnału do szumu, jeden z popularniejszych parametrów
-\item \verb+PSD+ - \textit{Power Spectral Density} - gęstość widmowa mocy
-\item \verb+PRD+ - \textit{Percent Root Mean Square Difference} - procentowa różnica średnio-kwadratowa
-\item \verb+PSNR+ - \textit{Peak Signal-to-Noise Ratio} - szczytowy stosunek sygnału do szumu
+\item \verb+SNR+  -- \textit{Signal-to-Noise Ratio} --  stosunek sygnału do szumu, jeden z popularniejszych parametrów
+\item \verb+PSD+  -- \textit{Power Spectral Density} -- gęstość widmowa mocy
+\item \verb+PRD+  -- \textit{Percent Root Mean Square Difference} -- procentowa różnica średnio-kwadratowa
+\item \verb+PSNR+  -- \textit{Peak Signal-to-Noise Ratio} -- szczytowy stosunek sygnału do szumu
 \end{enumerate}
 Każda metoda ma zarówno wady i zalety, dlatego dokonanie wyboru w celu implementacji w projekcie nie było łatwym zadaniem.
 
 \paragraph{Wybór metod}
 \mbox{} \\
-Biorąc pod uwagę fakt, iż nadrzędnym celem projektu jest zbudowanie oprogramowania do analizy sygnału EKG, a nie badanie wydajności metod na poszczególnych etapach przetwarzania, wybór padł na metody sprawdzone. Wybrano jedną metodę uśredniającą - \verb|metodę średniej| \verb|kroczącej| (\textit{ang. moving average method}) oraz filtry o \verb|nieskończonej odpowiedzi impulsowej| (\verb|IIR|) - \verb|Butterwortha| i \verb|Czebyszewa|. Taki zestaw, bazując na informacjach ze źródeł, powinien spełnić stawianie przed nim wymagania. Do oceny jakości działania filtrów zastosowano \verb|SNR| i \verb|PSNR|.
+Biorąc pod uwagę fakt, iż nadrzędnym celem projektu jest zbudowanie oprogramowania do analizy sygnału EKG, a nie badanie wydajności metod na poszczególnych etapach przetwarzania, wybór padł na metody sprawdzone. Wybrano jedną metodę uśredniającą -- \verb|metodę średniej| \verb|kroczącej| (\textit{ang. moving average method}) oraz filtry o \verb|nieskończonej odpowiedzi impulsowej| (\verb|IIR|) -- \verb|Butterwortha| i \verb|Czebyszewa|. Taki zestaw, bazując na informacjach ze źródeł, powinien spełnić stawianie przed nim wymagania. Do oceny jakości działania filtrów zastosowano \verb|SNR| i \verb|PSNR|.
 
 \subparagraph{Metoda średniej kroczącej}
 \mbox{} \\
-Algorytm uśredniania sygnału w ruchomym oknie jest bardzo prostą metodą usuwania zakłóceń sygnału. Sygnał jest wygładzany poprzez zastąpienie wartości średnią wyliczoną wartością sygnału w oknie o ustalonej szerokości (nieparzystej, \textit{2N+1}, gdzie \verb|N| to sąsiedztwo) \eqref{eq:I}. Po dokonaniu obliczenia okno przesuwane jest o jedną próbkę i kalkulacje są powtarzane. 
+Algorytm uśredniania sygnału w ruchomym oknie jest bardzo prostą metodą usuwania zakłóceń sygnału. Sygnał jest wygładzany poprzez zastąpienie wartości średnią wyliczoną wartością sygnału w~oknie o ustalonej szerokości (nieparzystej, \textit{2N+1}, gdzie \verb|N| to sąsiedztwo) \eqref{eq:I}. Po dokonaniu obliczenia okno przesuwane jest o jedną próbkę i kalkulacje są powtarzane. 
 \begin{equation}
 Ys(i) = \frac{1}{2N+1}(Y(i+N)+Y(i+N-1)+...+Y(i-N) \label{eq:I}
 \end{equation}
-Oczywistym jest, że na krańcach przedziału nie można stosować tej metody, ze względu na brak możliwości obrania odpowiednio dużego sąsiedztwa - w takim przypadku przepisuje się wartości sygnału bazowego do wektora wynikowego.\\
+Oczywistym jest, że na krańcach przedziału nie można stosować tej metody, ze względu na brak możliwości obrania odpowiednio dużego sąsiedztwa -- w takim przypadku przepisuje się wartości sygnału bazowego do wektora wynikowego.\\
 Aby średnią kroczącą zastosować do usuwania lini bazowej należy wyliczone wartości odejmować od odpowiednich próbek sygnału bazowego. Metoda zachowuje się wtedy jak swego rodzaju filtr górnoprzepustowy \cite{KAUR1}. Metoda ta została wybrana do projektu ze względu na prostotę i szybkość implementacji. Nie jest ona jednak pozbawiona wad. Usuwa zakłócenia w sposób zadowalający, niemniej jednak powoduje dość znaczące zatracanie cech charakterystycznych sygnału, na przykład w przypadku EKG wyraźnych "pików". Jest to łatwe do stwierdzenia empirycznie, zestawiając wykresy sygnału bazowego i przefiltrowanego \eqref{fig:fig_srednia}.
 
 \subparagraph{Filtr Butterwortha}
@@ -272,24 +272,24 @@ Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Butterwortha| (II
 \item \textit{górnoprzepustowa} drugiego rzędu, o częstotliwości odcięcia (\textit{ang. cut-off frequency}) \verb|5Hz|\eqref{fig_butter}
 \item \textit{dolnoprzepustowa} czwartego rzędu, o częstotliwości odcięcia \verb|100Hz|
 \end{enumerate}
-O ile w przypadku filtru dolnoprzepustowego dobór częstotliwości nie dziwi - bo jak już wcześniej wspomniano na 100Hz kończy się pasmo informacyjne EKG - o tyle w przypadku górnoprzepustowego może paść pytanie, dlaczego akurat 5Hz. W sygnale EKG, do poziomu 5Hz, można napotkać artefakty wynikające z ruchy pacjenta (\textit{motion artifacts}, a dodatkowo filtr wyeliminuje również zakłócenia na niższych częstotliwościach.
+O ile w przypadku filtru dolnoprzepustowego dobór częstotliwości nie dziwi -- bo jak już wcześniej wspomniano na 100Hz kończy się pasmo informacyjne EKG -- o tyle w przypadku górnoprzepustowego może paść pytanie, dlaczego akurat 5Hz. W sygnale EKG, do poziomu 5Hz, można napotkać artefakty wynikające z ruchy pacjenta (\textit{motion artifacts}, a dodatkowo filtr wyeliminuje również zakłócenia na niższych częstotliwościach.
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.5]{include/fig_butter.eps}
 \caption{Odpowiedź amplitudowa filtru Butterwortha (górnoprzepustowego)}
 \label{fig_butter}
 \end{figure}
-Jak już to zostało wspomniane - filtr Butterwortha jest bardzo skuteczny, niemniej jednak równniez on nie jest pozbawiony wad. Przez to, że jako filtr IIR ma nieliniową odpowiedź fazową, istnieje tendencja do znacznego zniekształcania sygnału bazowego. Aby uniknąć tego zjawiska stosuje się tzw. \verb|filtrowanie o charakterystyce zero-fazowej| \textit{ang. Zero-Phase filtering}, opisan w kolejnych paragrafch.
+Jak już to zostało wspomniane -- filtr Butterwortha jest bardzo skuteczny, niemniej jednak równniez on nie jest pozbawiony wad. Przez to, że jako filtr IIR ma nieliniową odpowiedź fazową, istnieje tendencja do znacznego zniekształcania sygnału bazowego. Aby uniknąć tego zjawiska stosuje się tzw. \verb|filtrowanie o charakterystyce zero-fazowej| \textit{ang. Zero-Phase filtering}, opisan w kolejnych paragrafch.
 
 \subparagraph{Filtr Czebyszewa} 
 \mbox{} \\
 Jest to rodzaj filtru elektrycznego, którego charakterystyczną cechą jest wykorzystanie \textit{wielomianów Czebyszewa} do aproksymacji charakterystyki częstotliwościowej amplitudowej. Optymalizacja przebiegu charakterystyki częstotliwościowej amplitudowej w filtrach tego typu ma kluczowe znaczenie.\\
 Wyróżnia się dwa typy filtrów:
 \begin{enumerate}
-\item \verb|filtry Czebyszewa typu I| - zafalowania przebiegu wzmocnienia w paśmie przepustowym, oraz płaski przebieg charakterystyki w paśmie zaporowym
-\item \verb|filtry Czebyszewa typu II| - zafalowania przebiegu wzmocnienia w paśmie zaporowym, oraz płaski przebieg charakterystyki w paśmie przepustowym, nazywany przez to zwykle \textit{inwersyjnym}
+\item \verb|filtry Czebyszewa typu I| -- zafalowania przebiegu wzmocnienia w paśmie przepustowym, oraz płaski przebieg charakterystyki w paśmie zaporowym
+\item \verb|filtry Czebyszewa typu II| -- zafalowania przebiegu wzmocnienia w paśmie zaporowym, oraz płaski przebieg charakterystyki w paśmie przepustowym, nazywany przez to zwykle \textit{inwersyjnym}
 \end{enumerate}
-Filtry \verb|Czebyszewa| mają porównywalną skuteczność do filtrów \verb|Butterwortha|. Na ich korzyśc przemawia zdecydowanie lepsze tłumienie za pasmem przepustowym (stroma charakterystyka). Wsród minusów można wymienić falowanie w pasmie przepustowym w przypadku filtru \verb|typu I| oraz dodatkowy parametru - \verb|tętnienie, ang. ripple| - niezbędny do zdefiniowania filtru. Dla porównania w przypadku \verb|Butterwortha| wystarczy częstotliwośc odcięcia.\\
+Filtry \verb|Czebyszewa| mają porównywalną skuteczność do filtrów \verb|Butterwortha|. Na ich korzyśc przemawia zdecydowanie lepsze tłumienie za pasmem przepustowym (stroma charakterystyka). Wsród minusów można wymienić falowanie w pasmie przepustowym w przypadku filtru \verb|typu I| oraz dodatkowy parametru -- \verb|tętnienie, ang. ripple| -- niezbędny do zdefiniowania filtru. Dla porównania w~przypadku \verb|Butterwortha| wystarczy częstotliwośc odcięcia.\\
 Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Czebyszewa|:
 \begin{enumerate}
 \item \textit{górnoprzepustowa typu II}, trzeciego rzędu, o częstotliwości odcięcia \verb|0.5Hz| i tętnieniu \verb|-3dB|
@@ -299,10 +299,10 @@ Również w przypadku tego filtru konieczne będzie zastosowanie się tzw. \verb
 
 \subparagraph{Filtrowanie o charakterystyce zero-fazowej}
 \mbox{} \\
-Filtrowanie \verb|Zero-Phase| wykorzystuje w swym działaniu współczynniki filtru bazowego (np. Butterwortha czy też Czebyszewa) i wykonuje filtrowanie dwukrotnie, stosując małe okno, w obie strony sygnału - od początku do końca i od końca do początku. Rezultatem tego filtrowania jest:
+Filtrowanie \verb|Zero-Phase| wykorzystuje w swym działaniu współczynniki filtru bazowego (np. Butterwortha czy też Czebyszewa) i wykonuje filtrowanie dwukrotnie, stosując małe okno, w obie strony sygnału -- od początku do końca i od końca do początku. Rezultatem tego filtrowania jest:
 \begin{enumerate}
 \item brak opóźnień w sygnale przefiltrowanym, ze względu na przejście sygnału w obie strony
-\item redukcja zaburzeń sygnału na krańcach przedziału - poprzez zachowanie warunków początkowych
+\item redukcja zaburzeń sygnału na krańcach przedziału -- poprzez zachowanie warunków początkowych
 \item zachowanie cech charakterystycznych sygnału bazowego (w przeciwieństwie do samego filtru IIR czy też np. średniej kroczącej)
 \item rząd filtru zero-fazowego jest równy podwojonemu rzędowi filtru bazowego.
 \end{enumerate}
@@ -342,7 +342,7 @@ Nadrzędnym przeznaczeniem modułu jest filtracja i usuwanie lini bazowej. Niemn
 Realizowane są następujące funkcjonalności:
 \begin{enumerate}
 \item Wybór kanału, który będzie przetwarzany w kolejnych etapach działania aplikacji. Wybór dokonywany jest poprzez porównanie SNR obu kanałów.
-\item Detekcja i usunięcie zakłóceń lini bazowej sygnału - główne zadanie.
+\item Detekcja i usunięcie zakłóceń lini bazowej sygnału -- główne zadanie.
 \item Normalizacja sygnału przed zwróceniem do dalszej analizy.
 \end{enumerate}
 \begin{figure}[h]
@@ -356,18 +356,18 @@ Koniecznosć wprowadzenia oceny i wyboru kanału do dalszej analizy został pody
 \subsubsection{Opis procedur i metod}
 \label{sec:baseline:procs}
 \paragraph{Klasa: ECGBaselineRemoval}
-- Główna klasa modułu, dziedzicząca po wirtualnym ECGBaselineModule. Jest ona odpowiedzialna za przetworzenie sygnału pierwotnego i zwrócenie sygnału przefiltrowanego (pozbawionego zakłóceń lini bazowej). Pojedyńcza instancja tej klasy tworzona jest wraz z uruchomieniem aplikacji.
+- Główna klasa modułu, dziedzicząca po wirtualnym ECGBaselineModule. Jest ona odpowiedzialna za przetworzenie sygnału pierwotnego i zwrócenie sygnału przefiltrowanego (pozbawionego zakłóceń linii bazowej). Pojedyncza instancja tej klasy tworzona jest wraz z uruchomieniem aplikacji.
 
 \begin{lstlisting}
 void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, 
 const ECGInfo & ecgi, ECGSignalChannel &outputSignal)
 \end{lstlisting}
-Podstawowa metoda w module. Jest odpowiedzialna za uruchomienie głównej funkcjonalności - przetworzenia sygnału. Pod hasłem "przetworzenie" kryje się wybranie odpowiedniego kanału, realizacja filtrowania oraz normalizacja. \\
+Podstawowa metoda w module. Jest odpowiedzialna za uruchomienie głównej funkcjonalności -- przetworzenia sygnału. Pod hasłem "przetworzenie" kryje się wybranie odpowiedniego kanału, realizacja filtrowania oraz normalizacja. \\
 Parametry:
 \begin{enumerate}
-\item \verb|const ECGSignal &inputSignal| - referencja do sygnału bazowego, zawierającego dwa kanały
-\item \verb|const ECGInfo & ecgi| - referencja do obiektu informacyjnego typu \verb|ECGInfo|, przechowującego dane dotyczące sygnału (m.in. częstotliwość próbkowania, ilość próbek)
-\item \verb|ECGSignalChannel &outputSignal| - referencja do sygnału wyjściowego - po wykonaniu metody \verb|ECGBaselineRemoval::runModule| odnosi się do sygnału przefiltrowanego; instancja klasy \verb|ECGSignalChannel| - pojedyńczy kanał
+\item \verb|const ECGSignal &inputSignal| -- referencja do sygnału bazowego, zawierającego dwa kanały
+\item \verb|const ECGInfo & ecgi| -- referencja do obiektu informacyjnego typu \verb|ECGInfo|, przechowującego dane dotyczące sygnału (m.in. częstotliwość próbkowania, ilość próbek)
+\item \verb|ECGSignalChannel &outputSignal| -- referencja do sygnału wyjściowego -- po wykonaniu metody \verb|ECGBaselineRemoval::runModule| odnosi się do sygnału przefiltrowanego; instancja klasy \verb|ECGSignalChannel| -- pojedynczy kanał
 \end{enumerate}
 
 \begin{lstlisting}
@@ -376,7 +376,7 @@ void ECGBaselineRemoval::setParams(ParametersTypes &params)
 Metoda pozwala na wybór algorytmu filtracji poprzez ustawienie flagi \verb|baselineRemovalMethod|, oraz ustawienie parametrów, korzystając z wartości pochodzących z graficznego interfejsu użytkownika. \\
 Parametry:
 \begin{enumerate}
-\item \verb|ParametersTypes &params| - referencja do obiektu typu \verb|PatametersTypes| - zawierającego parametry przekazane z graficznego interfejsu użytkownika
+\item \verb|ParametersTypes &params| -- referencja do obiektu typu \verb|PatametersTypes| -- zawierającego parametry przekazane z graficznego interfejsu użytkownika
 \end{enumerate}
 
 \begin{lstlisting}
@@ -386,9 +386,9 @@ void ECGBaselineRemoval::movingAverageBaselineRemoval(ECGSignalChannel
 Metoda opakowująca (tzw. \textit{wrapper}) instancję klasy realizującej filtrowanie metodą średniej kroczącej \ref{sec:baseline:papers}. \\
 Parametry parametry:
 \begin{enumerate}
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
-\item \verb|int span| - wartość całkowita - nieparzysta - będąca rozmiarem okna w algorytmie średniej kroczącej
+\item \verb|ECGSignalChannel &inputSignal| -- referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| -- referencja do obiektu wyjściowego
+\item \verb|int span| -- wartość całkowita -- nieparzysta -- będąca rozmiarem okna w algorytmie średniej kroczącej
 \end{enumerate}
 
 \begin{lstlisting}
@@ -400,12 +400,12 @@ Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Butterwor
 
 Parametry:
 \begin{enumerate}
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
-\item \verb|const ECGInfo &ecgi| - referencja do obiektu informacyjnego \verb|ECGInfo|, przechowującego dane sygnału (m.in. częstotliwość próbkowania, ilość próbek)
-\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
-\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
-\item \verb|double attenuation| - tłumienie 
+\item \verb|ECGSignalChannel &inputSignal| -- referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| -- referencja do obiektu wyjściowego
+\item \verb|const ECGInfo &ecgi| -- referencja do obiektu informacyjnego \verb|ECGInfo|, przechowującego dane sygnału (m.in. częstotliwość próbkowania, ilość próbek)
+\item \verb|int order| -- wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double cutoffFrequency| -- częstotliwość odcięcia filtra -- wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|double attenuation| -- tłumienie 
 \end{enumerate}
 
 \begin{lstlisting}
@@ -417,12 +417,12 @@ Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Czebyszew
 
 Parametry:
 \begin{enumerate}
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
-\item \verb|const ECGInfo &ecgi| - referencja do obiektu informacyjnego \verb|ECGInfo|, przechowującego dane sygnału (m.in. częstotliwość próbkowania, ilość próbek)
-\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
-\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
-\item \verb|double ripple| - tętnienie 
+\item \verb|ECGSignalChannel &inputSignal| -- referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| -- referencja do obiektu wyjściowego
+\item \verb|const ECGInfo &ecgi|  -- referencja do obiektu informacyjnego \verb|ECGInfo|, przechowującego dane sygnału (m.in. częstotliwość próbkowania, ilość próbek)
+\item \verb|int order|  -- wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double cutoffFrequency|  -- częstotliwość odcięcia filtra  -- wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|double ripple|  -- tętnienie 
 \end{enumerate}
 
 \paragraph{Klasa: SignalPreprocessor}
@@ -435,7 +435,7 @@ Metoda realizująca porównanie kanałów, bazując na wyliczeniu współczynnik
 
 Parametry:
 \begin{enumerate}
-\item \verb|const ECGSignal &inputSignal| - referencja do sygnału bazowego (dwa kanały)
+\item \verb|const ECGSignal &inputSignal|  -- referencja do sygnału bazowego (dwa kanały)
 \end{enumerate}
 Wartość zwracana:
 \begin{enumerate}
@@ -446,11 +446,11 @@ Wartość zwracana:
 void SignalPreprocessor::normalize(ECGSignalChannel &inputSignal, 
 ECGSignalChannel &outputSignal)
 \end{lstlisting}
-Metoda odpowiedzialna za normalizację sygnału, tj. przeskalowanie do przedziału wartości 0..1. Wywoływana jako ostatni etap realizacji przetwarzania wstępnego - \verb|ECGBaselineRemoval::runModule()|.\\
+Metoda odpowiedzialna za normalizację sygnału, tj. przeskalowanie do przedziału wartości 0..1. Wywoływana jako ostatni etap realizacji przetwarzania wstępnego  -- \verb|ECGBaselineRemoval::runModule()|.\\
 Parametry:
 \begin{enumerate}
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|ECGSignalChannel &inputSignal|  -- referencja do obiektu wejściowego
+\item \verb|ECGSignalChannel &outputSignal|  -- referencja do obiektu wyjściowego
 \end{enumerate}
 
 \paragraph{Klasa: Filter}
@@ -464,11 +464,11 @@ Metoda realizująca filtrowanie typu Zero-Phase \ref{sec:baseline:papers}. Wykor
 
 Parametry:
 \begin{enumerate}
-\item \verb|(std::vector<double> b| - wektor współczynników pochodzących z licznika transmitancji zaprojektowanego filtra
-\item \verb|(std::vector<double> a| - wektor współczynników pochodzących z mianownika transmitancji zaprojektowanego filtra
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
-\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|(std::vector<double> b|  -- wektor współczynników pochodzących z licznika transmitancji zaprojektowanego filtra
+\item \verb|(std::vector<double> a|  -- wektor współczynników pochodzących z mianownika transmitancji zaprojektowanego filtra
+\item \verb|ECGSignalChannel &inputSignal|  -- referencja do obiektu wejściowego
+\item \verb|ECGSignalChannel &outputSignal|  -- referencja do obiektu wyjściowego
+\item \verb|int order|  -- wartość całkowita dodatnia, odpowiadająca rzędowi filtra
 \end{enumerate}
 
 \begin{lstlisting}
@@ -480,11 +480,11 @@ Metoda realizująca filtr \verb|IIR| na bazie zestawu współczynników transmit
 
 Parametry:
 \begin{enumerate}
-\item \verb|(std::vector<double> b| - wektor współczynników pochodzących z licznika transmitancji zaprojektowanego filtra
-\item \verb|(std::vector<double> a| - wektor współczynników pochodzących z mianownika transmitancji zaprojektowanego filtra
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
-\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|(std::vector<double> b|  -- wektor współczynników pochodzących z licznika transmitancji zaprojektowanego filtra
+\item \verb|(std::vector<double> a|  -- wektor współczynników pochodzących z mianownika transmitancji zaprojektowanego filtra
+\item \verb|ECGSignalChannel &inputSignal|  -- referencja do obiektu wejściowego
+\item \verb|ECGSignalChannel &outputSignal|  -- referencja do obiektu wyjściowego
+\item \verb|int order|  -- wartość całkowita dodatnia, odpowiadająca rzędowi filtra
 \end{enumerate}
 
 \paragraph{Klasa: MovingAverage}
@@ -498,9 +498,9 @@ Metoda realizująca uswanie linii bazowej algorytmem średniej kroczącej. Głó
 
 Parametry:
 \begin{enumerate}
-\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
-\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
-\item \verb|int span| - wartość całkowita - nieparzysta - będąca rozmiarem okna w algorytmie średniej kroczącej
+\item \verb|ECGSignalChannel &inputSignal|  -- referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal|  -- referencja do obiektu wyjściowego
+\item \verb|int span|  -- wartość całkowita  -- nieparzysta  -- będąca rozmiarem okna w algorytmie średniej kroczącej
 \end{enumerate}
 
 \begin{lstlisting}
@@ -511,9 +511,9 @@ Metoda obliczająca średnią wartość próbek w sąsiedztwie danej próbki, w 
 
 Przyjmowane parametry
 \begin{enumerate}
-\item \verb|gsl_vector *signal| - wektor przechowujący próbki przetwarzanego sygnału
-\item \verb|int currentIndex| - indeks aktualnie analizowanej próbki
-\item \verb|int span| - wartość całkowita - nieparzysta - będąca rozmiarem okna w algorytmie średniej kroczącej
+\item \verb|gsl_vector *signal|  -- wektor przechowujący próbki przetwarzanego sygnału
+\item \verb|int currentIndex|  -- indeks aktualnie analizowanej próbki
+\item \verb|int span|  -- wartość całkowita  -- nieparzysta  -- będąca rozmiarem okna w algorytmie średniej kroczącej
 \end{enumerate}
 
 \paragraph{Klasa: Butterworth}
@@ -527,15 +527,15 @@ Metoda odpowiedzialna za zaprojektowanie filtra \verb|Butterwortha|.\\
 
 Parametry:
 \begin{enumerate}
-\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
-\item \verb|double attenuation| - tłumienie 
-\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
-\item \verb|int sampleFreq| - częstotliwość próbkowania sygnału wejściowego, potrzebną do obliczenia współczynników filtra
-\item \verb|int type| - zmienna określająca typ (lowpass -1, highpass - 2) filtra do zaprojektowania
+\item \verb|int order|  -- wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double attenuation|  -- tłumienie 
+\item \verb|double cutoffFrequency|  -- częstotliwość odcięcia filtra  -- wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|int sampleFreq|  -- częstotliwość próbkowania sygnału wejściowego, potrzebną do obliczenia współczynników filtra
+\item \verb|int type|  -- zmienna określająca typ (lowpass -1, highpass - 2) filtra do zaprojektowania
 \end{enumerate}
 Wartość zwracana:
 \begin{enumerate}
-\item \verb|std::vector<std::vector<double>>| - dwuwymiarowy wektor wartości zmiennoprzecinkowych, zwracający zestaw współczynników z mianownika i licznika transmitancji zaprojektowanego filtra
+\item \verb|std::vector<std::vector<double>>|  -- dwuwymiarowy wektor wartości zmiennoprzecinkowych, zwracający zestaw współczynników z mianownika i licznika transmitancji zaprojektowanego filtra
 \end{enumerate}
 
 \paragraph{Klasa: Chebyshev}
@@ -549,26 +549,26 @@ Metoda odpowiedzialna za zaprojektowanie filtra \verb|Czebyszewa|\\
 
 Parametry:
 \begin{enumerate}
-\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
-\item \verb|double ripple| - tętnienie pasma przepustowego 
-\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
-\item \verb|int sampleFreq| - częstotliwość próbkowania sygnału wejściowego, potrzebną do obliczenia współczynników filtra
-\item \verb|int type| - zmienna określająca typ (\textit{lowpass} - 1, \textit{highpass} - 2) filtra do zaprojektowania
+\item \verb|int order|  -- wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double ripple|  -- tętnienie pasma przepustowego 
+\item \verb|double cutoffFrequency|  -- częstotliwość odcięcia filtra  -- wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|int sampleFreq|  -- częstotliwość próbkowania sygnału wejściowego, potrzebną do obliczenia współczynników filtra
+\item \verb|int type|  -- zmienna określająca typ (\textit{lowpass} - 1, \textit{highpass} - 2) filtra do zaprojektowania
 \end{enumerate}
 Wartość zwracana:
 \begin{enumerate}
-\item \verb|std::vector<std::vector<double>>| - dwuwymiarowy wektor wartości zmiennoprzecinkowych, zwracający zestaw współczynników z mianownika i licznika transmitancji zaprojektowanego filtra
+\item \verb|std::vector<std::vector<double>>|  -- dwuwymiarowy wektor wartości zmiennoprzecinkowych, zwracający zestaw współczynników z mianownika i licznika transmitancji zaprojektowanego filtra
 \end{enumerate}
 
 \paragraph{Klasa: Snr}
 - Klasa realizująca metody ewaluacji filtrów, wraz z metodami pomocniczymi zgodnie ze wzorami \eqref{eq:IV},\eqref{eq:V} i \eqref{eq:VI}. Pozwala na wyliczenie współczynników \verb|SNR| (\verb|Snr::snr|) oraz \verb|PSNR| (\verb|Snr::psnr|) dla zadanych sygnałów. Ze względu na generyczność rozwiązań w niej zaimplementowanych opis interfejsu zostaje pominięty.
 
-\paragraph{Projektowanie filtrów - realizacja}\mbox{} \\
-Do projektowania filtrów \verb|Butterwortha| oraz \verb|Czebyszewa| miała zostać wykorzystana biblioteka \verb|SPUC -| \verb|Signal Processing using C++| (\textit{http://spuc.sourceforge.net/}). Niestety po jej zbudowaniu zgodnie z zaleceniami twórców okazało się, że praktycznie niemożliwe jest linkowanie jej w sposób klasyczny z projektem Visual Studio. Ze względu na ten fakt próby jej wykorzystania zostały porzucone na rzecz implementacji analogicznej z tą, która występuje w pakiecie Matlab.
+\paragraph{Projektowanie filtrów  -- realizacja}\mbox{} \\
+Do projektowania filtrów \verb|Butterwortha| oraz \verb|Czebyszewa| miała zostać wykorzystana biblioteka \verb|SPUC -| \verb|Signal Processing using C++| (\textit{http://spuc.sourceforge.net/}). Niestety po jej zbudowaniu zgodnie z zaleceniami twórców okazało się, że praktycznie niemożliwe jest linkowanie jej w sposób klasyczny z~projektem Visual Studio. Ze względu na ten fakt próby jej wykorzystania zostały porzucone na rzecz implementacji analogicznej z tą, która występuje w pakiecie Matlab.
 
 \subsubsection{Warunki testowania}
 \label{sec:baseline:tests}
-Testy na etapie prototypowania przeprowadzane były w środowisku Matlab. Dało to pogląd na wymagania, jakie niesie za sobą proces usuwania linii bazowej. Na etapie realizacji projektu przeprowadzano równolegle testy zarówno w aplikacji jak i ponownie w Matlab. Dane testowe pochodzą z bazy \verb|MIT-BIH|.\\\\
+Testy na etapie prototypowania przeprowadzane były w środowisku Matlab. Dało to pogląd na wymagania, jakie niesie za sobą proces usuwania linii bazowej. Na etapie realizacji projektu przeprowadzano równolegle testy zarówno w aplikacji jak i ponownie w Matlab. Dane testowe pochodzą z~bazy \verb|MIT-BIH|.\\\\
 Wartości proponowanych parametrów dla poszczególnych metod zostały dobrane na bazie doświadczeń oraz informacji ze źródeł naukowych, o czym zostało już nadmienione powyżej \ref{sec:baseline:papers}.\\
 
 \paragraph{Parametry filtrów}
@@ -631,11 +631,11 @@ W przypadku jedynej metody uśredniającej w zestawieniu wynik poglądowy jest z
 \label{fig:fig_srednia}
 \end{figure}
 
-Niestety wyraźnie widać utratę cech charaktetystycznych sygnału bazowego - "piki" dalej występują w tych samych miejscach, niemniej jednak zostały one wyraźnie spłaszczone. Istnieje podejrzenie, że nie każda metoda ekstrakcji cech sygnału poradzi sobie z tak niewyraźnymi "pikami". W tym przypadku należy przeprowadzić testy polegające na stosowaniu różnych metod analizy sygnału, aby ostatecznie ocenić skuteczność średniej kroczącej.
+Niestety wyraźnie widać utratę cech charaktetystycznych sygnału bazowego  -- "piki" dalej występują w tych samych miejscach, niemniej jednak zostały one wyraźnie spłaszczone. Istnieje podejrzenie, że nie każda metoda ekstrakcji cech sygnału poradzi sobie z tak niewyraźnymi "pikami". W tym przypadku należy przeprowadzić testy polegające na stosowaniu różnych metod analizy sygnału, aby ostatecznie ocenić skuteczność średniej kroczącej.
 
 \subparagraph{Filtry górnoprzepustowe}
 \mbox{} \\
-Filtry górnoprzepustowe, niezależnie od typu - czy \verb|Butterwortha|, czy też \verb|Czebyszewa| - wykazały się dobrą skutecznoscią w usuwaniu linii bazowej. Jak widać na wykresie \ref{fig:fig_skuteczne} falowanie sygnału zostało w znaczącym stopniu zredukowane. Minimalnie lepszy efekt w przypadku filtrów górnoprzepustowych dawał \verb|Butterworth|.
+Filtry górnoprzepustowe, niezależnie od typu -- czy \verb|Butterwortha|, czy też \verb|Czebyszewa|  -- wykazały się dobrą skutecznoscią w usuwaniu linii bazowej. Jak widać na wykresie \ref{fig:fig_skuteczne} falowanie sygnału zostało w~znaczącym stopniu zredukowane. Minimalnie lepszy efekt w przypadku filtrów górnoprzepustowych dawał \verb|Butterworth|.
 
 \begin{figure}[h]
 \centering
@@ -681,7 +681,7 @@ sygnał & Butter. (high) & Czeby. (high) & Śr. krocząca & Butter. (low) & Czeb
 \end{tabular}
 \mbox{} \\
 \end{center}
-Niestety oba parametry w przypadku badanych sygnałów okazały się zwracać nieoczekiwane - pozornie błędne - wyniki. W idealnym przypadku zarówno \verb|SNR| jak i \verb|PSNR| powinny zwracać wartości dodatnie. Co więcej - bardziej skuteczne metody (w tym przypadku filtry górnoprzepustowe oraz metoda średniej kroczącej) powinny zwracać wyniki znacząco wyższe od metod nieskutecznych. Otrzymane wyniki mogłyby wskazywać na istnienie błędu w implementacji metody, jednak była ona weryfikowana wielokrotnie.\\
+Niestety oba parametry w przypadku badanych sygnałów okazały się zwracać nieoczekiwane  -- pozornie błędne  -- wyniki. W idealnym przypadku zarówno \verb|SNR| jak i \verb|PSNR| powinny zwracać wartości dodatnie. Co więcej  -- bardziej skuteczne metody (w tym przypadku filtry górnoprzepustowe oraz metoda średniej kroczącej) powinny zwracać wyniki znacząco wyższe od metod nieskutecznych. Otrzymane wyniki mogłyby wskazywać na istnienie błędu w implementacji metody, jednak była ona weryfikowana wielokrotnie.\\
 Dopóki nie zostaną roziwązane zaistniałe problemy nie można traktować parametrów \verb|SNR| oraz \verb|PSNR| jako wiążących w procesie oceny skuteczności filtracji.
 
 \paragraph{Wnioski}
@@ -883,11 +883,11 @@ Początkowy stan jest określony przez $x(-1)$ kiedy n = 0, a końcowy $x(m)$, k
 Warunki te minimalizują błąd na granicach.
 
 \subparagraph{Podział sygnału w przesuwnym oknie}
-Opisany poniżej algorytm transformaty Hilberta działa dobrze z krótkimi ciągami. Dlatego używa się okna o szerokości 1024 próbek do podziału zróżniczkowanego sygnału $y(n)$ przed uzyskaniem jego transformaty Hilberta. DO optymalizacji dokładności, początkowy punkt kolejnego okna powinien być zlokalizowany w punkcie ostatniego załamka $R$ w poprzednim oknie. 
+Opisany poniżej algorytm transformaty Hilberta działa dobrze z krótkimi ciągami. Dlatego używa się okna o szerokości 1024 próbek do podziału zróżniczkowanego sygnału $y(n)$ przed uzyskaniem jego transformaty Hilberta. DO optymalizacji dokładności, początkowy punkt kolejnego okna powinien być zlokalizowany w punkcie ostatniego załamka $R$ w~poprzednim oknie. 
 \subparagraph{Transformata Hilberta}
 Transformata Hilberta rzeczywistej funkcji x(t) jest zdefiniowana jako:
 \begin{equation}
-hat{x}=H[x(t)]=\frac{1}{\pi}\int_{-\infty}^\infty x(\tau)\frac{1}{t -\tau}d\tau \label{eq:i}
+\hat{x}=H[x(t)]=\frac{1}{\pi}\int_{-\infty}^\infty x(\tau)\frac{1}{t -\tau}d\tau \label{eq:i}
 \end{equation}
 Transformata Hilberta może być zinterpretowana jako konwolucja pomiędzy $x(t)$ i $\frac{1}{\pi t}$\\
 Stosując transformatę Fouriera do \eqref{eq:i}, otrzymujemy:
@@ -912,7 +912,7 @@ Transformatę Hilberta $h(n)$ ciągu $y(n)$, który reprezentuje pierwszą pocho
 		\item Wylicz odwrotną transformatę Fouriera poprzedniego ciągu.
 \end{itemize}
 \subparagraph{Adaptacyjny próg}
-Szczyty w przetransformowanym sygnał metodą Hilberta $h(n)$ reprezentują obszary o wysokim prawdopodobieństwie wystąpienia prawdziwych załamków QRS. W praktyce, te szczyty różnią się od prawdziwych szczytów $R$ o kilka milisekund. W celu zagwarantowania dokładności detekcji załamków $R$, detektor drugiego poziomu jest wymagany. Ponieważ fale $P$ i $T$ są zminimalizowane w relacji do odpowiednich załamków w zespole QRS w ciągu Hilberta, detekcja prostym progiem jest używana do zlokalizowania załamków w ciągu $h(n)$. Próg musi być adaptacyjny w celu zagwarantowania dokładności detekcji załamków R.\\
+Szczyty w przetransformowanym sygnał metodą Hilberta $h(n)$ reprezentują obszary o wysokim prawdopodobieństwie wystąpienia prawdziwych załamków QRS. W praktyce, te szczyty różnią się od prawdziwych szczytów $R$ o kilka milisekund. W celu zagwarantowania dokładności detekcji załamków $R$, detektor drugiego poziomu jest wymagany. Ponieważ fale $P$ i $T$ są zminimalizowane w relacji do odpowiednich załamków w zespole QRS w ciągu Hilberta, detekcja prostym progiem jest używana do zlokalizowania załamków w ciągu $h(n)$. Próg musi być adaptacyjny w~celu zagwarantowania dokładności detekcji załamków R.\\
 poziom progu jest ustalony według poniższych kryteriów:
 \begin{itemize}
 		\item Początkowo poziom szumu w analizowanym podciągu jest określany równoważną wartością $RMS(Root Mean Square)$ ciągu $h(n)$ i jego maksymalnej amplitudy w oknie, 
@@ -1059,9 +1059,9 @@ Autorzy: Agata Sitnik i Łukasz Zieńkowski.
 Celem modułu było wykrycie zespołów QRS oraz załamków P i T.
 Zespół QRS to największy zespół załamków EKG. Opisuje depolaryzację (pobudzenie) mięśni komór serca i składa się z jednego lub kilku załamków określanych kolejno jako Q, R i S, w zależności od miejsca wystąpienia i kierunku wychylenia. Czas trwania zespołu prawidłowo wynosi od 0,6-0,11 s i składa się z następujących składowych:
 \begin{itemize}
-     \item \verb|Załamek Q| - pierwsze ujemne wychylenie zespołu QRS
-     \item \verb|Załamek R| - pierwsze dodatnie wychylenie zespołu QRS
-     \item \verb|Załamek S| - każde ujemne wychylenie za załamkiem R
+     \item \verb|Załamek Q|  -- pierwsze ujemne wychylenie zespołu QRS
+     \item \verb|Załamek R|  -- pierwsze dodatnie wychylenie zespołu QRS
+     \item \verb|Załamek S|  -- każde ujemne wychylenie za załamkiem R
 \end{itemize}
 
 Poza zespołem QRS możemy wyróżnić również załamki P i T.
@@ -1357,7 +1357,7 @@ Metody w klasie HRV1Analyzer:
 \item \verb+void HRV1Analyzer::setParams(ParametersTypes &parameterTypes)+ -- metoda odpowiedzialna za ustawianie parametrów (w naszym module nie wykorzystywana)
 \item \verb+ouble* HRV1Analyzer::doFFT(double* sigAfterSpline)+ -- metoda przeprowadzająca analizę FFT zinterpolowanego sygnału z wykorzystaniem biblioteki KISS FFT
 \item \verb+kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe)+ -- funkcja alokująca klasę z danymi potrzebnymi do realizacji transformaty Fouriera
-\item \verb+double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe)+ -- funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia). Zachodzi interpolacja funkcji o wektorach x i y - długość wektorów x i y jest taka sama i wynosi nframe
+\item \verb+double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe)+ -- funkcja odpowiedzialna za interpolowanie próbek (wykonywana jest interpolacja funkcjami sklejanymi trzeciego stopnia). Zachodzi interpolacja funkcji o wektorach x i y  -- długość wektorów x i y jest taka sama i wynosi nframe
 \item \verb+double HRV1Analyzer::mean(double *tab, int start, int end)+ -- funkcja obliczająca średnią arytmetyczną elementów z tablicy tab
 \item \verb+double HRV1Analyzer::std(double *tab, int start, int end)+ -- funkcja obliczająca odchylenie standardowe
 \end{itemize}
@@ -1371,7 +1371,7 @@ Tymi samymi przesłankami kierowaliśmy się szukając biblioteki odpowiedzialne
 \subsubsection{Warunki testowania}
 \label{sec:hrv1:tests}
 
-Jako, że realizacja projektu odbywała się w grupach i tempo pracy było różne musieliśmy sobie poradzić i rozpocząć testowanie nie mając R\_PEAKów. Do tego celu stworzyliśmy prosty algorytm, który emulował pracę całego kontrolera. Program ten na wejście podawał zmienne, które w przyszłości otrzymalibyśmy z grupy R\_PEAKs - korzystaliśmy z materiałów, które otrzymaliśmy w poprzednim semestrze realizując w Matlabie laboratorium HRV1. Program zwracał natomiast policzone współczynniki analizy czasowej i częstotliwościowej.
+Jako, że realizacja projektu odbywała się w grupach i tempo pracy było różne musieliśmy sobie poradzić i rozpocząć testowanie nie mając R\_PEAKów. Do tego celu stworzyliśmy prosty algorytm, który emulował pracę całego kontrolera. Program ten na wejście podawał zmienne, które w przyszłości otrzymalibyśmy z grupy R\_PEAKs  -- korzystaliśmy z materiałów, które otrzymaliśmy w poprzednim semestrze realizując w Matlabie laboratorium HRV1. Program zwracał natomiast policzone współczynniki analizy czasowej i częstotliwościowej.
 
 W ten sposób, mogliśmy skutecznie pracować nad optymalizacją algorytmów porównując otrzymane wyniki z tymi, które pochodziły z prototypu napisanego w Matlabie, czekając na sprzężenie naszego modułu z modułem R\_PEAKS.
 
@@ -1429,13 +1429,13 @@ czas zapisu \textendash{} 20 minut)
 Do najbardziej rozpowszechnionych metod należą: 
 \begin{itemize}
 \item Wykres histogramu przedstawiający rozkład interwałów RR
-\item Indeks trójkątny (HRV triangular index ) - całkowita liczba wszystkich
+\item Indeks trójkątny (HRV triangular index )  -- całkowita liczba wszystkich
 odstępów RR podzielona przez liczbę odstępów RR o najczęściej spotykanym
 czasie trwania. 
 \item Trójkątna interpolacja odstępów RR (TINN) \textendash{} długość podstawy
 trójkąta aproksymującego histogram kolejnych odstępów interwałów RR
 rytmu zatokowego wyrażana w milisekundach. 
-\item Wykres Poincare - graficzna reprezentacja korelacji pomiędzy kolejnymi
+\item Wykres Poincare  -- graficzna reprezentacja korelacji pomiędzy kolejnymi
 interwałami , gdzie każdy odstęp RR jest opisany funkcją RR+1. Do
 analizy rozproszenia punktów na wykresie stosuje się dwa deskryptory:
 SD1 oraz SD2, odpowiadające odchyleniom standardowym. Pierwszy charakteryzuje
@@ -2265,9 +2265,9 @@ dyskretną pochodną sygnału.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const OtherSignal& sig| - cały, odfiltrowany sygnał EKG
-  \item \verb|int from| - numer próbki, w której należy zacząć poszukiwania
-  \item \verb|int to| - numer próbki, w której należy skończyć poszukiwania
+  \item \verb|const OtherSignal& sig|  -- cały, odfiltrowany sygnał EKG
+  \item \verb|int from|  -- numer próbki, w której należy zacząć poszukiwania
+  \item \verb|int to|  -- numer próbki, w której należy skończyć poszukiwania
 \end{itemize}
 
 
@@ -2283,10 +2283,10 @@ prostą interpolacji.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const OtherSignal& signal| - badany sygnał
-  \item \verb|int from| - numer próbki będącej początkiem interesującego
+  \item \verb|const OtherSignal& signal|  -- badany sygnał
+  \item \verb|int from|  -- numer próbki będącej początkiem interesującego
     fragmentu sygnału, równocześnie, pierwszy punkt interpolacji liniowej.
-  \item \verb|int to| - numer próbki będącej końcem interesującego fragmentu
+  \item \verb|int to|  -- numer próbki będącej końcem interesującego fragmentu
     sygnału, równocześnie, drugi punkt interpolacji
 \end{itemize}
 
@@ -2301,10 +2301,10 @@ odcinka ST.
 
 Parametry:
 \begin{itemize}
-  \item \verb|const OtherSignal& signal| - badany sygnał
-  \item \verb|int from| - numer próbki będącej początkiem interesującego
+  \item \verb|const OtherSignal& signal|  -- badany sygnał
+  \item \verb|int from|  -- numer próbki będącej początkiem interesującego
     fragmentu sygnału, równocześnie, pierwszy punkt interpolacji liniowej.
-  \item \verb|int to| - numer próbki będącej końcem interesującego fragmentu
+  \item \verb|int to|  -- numer próbki będącej końcem interesującego fragmentu
     sygnału, równocześnie, drugi punkt interpolacji
 \end{itemize}
 
@@ -2486,7 +2486,7 @@ Przeprowadzone rysunki przedstawiają testy różnych algorytmów detekcji zała
 \includegraphics[scale=0.4]{include/twa_2}
 \par\end{centering}
 
-\caption{Test 1 - TWA algorytmy}
+\caption{Test 1  -- TWA algorytmy}
 \label{fig:twa_2}
 \end{figure}
 
@@ -2500,7 +2500,7 @@ Przeprowadzone rysunki przedstawiają testy różnych algorytmów detekcji zała
 \includegraphics[scale=0.4]{include/twa_3}
 \par\end{centering}
 
-\caption{Test 2 - TWA skuteczność}
+\caption{Test 2  -- TWA skuteczność}
 \label{fig:twa_3}
 \end{figure}
 
@@ -2578,7 +2578,7 @@ Wartości dodatnie TO oznaczają zwolnienie, natomiast ujemne przyspieszenie ryt
 \label{sec:hrt:procs}
 
 \textbf{Detekcja PVC}\\
-Przy wyliczeniu parametrów TO i TS brane są pod uwagę niektóre z fragmentów zapisu interwałów RR - zwykle jest to fragment zapisu liczący 27 kolejnych 
+Przy wyliczeniu parametrów TO i TS brane są pod uwagę niektóre z fragmentów zapisu interwałów RR  -- zwykle jest to fragment zapisu liczący 27 kolejnych 
 interwałów ( 5 interwałów przed VPC, interwał z~VPC, pauza kompensacyjna,
 około 20 interwałów po pauzie). Dodatkowo, wybierane fragmenty zapisu muszą  charakteryzować się się brakiem występowania nierównego rytmu serca przed i po PVC oraz brakiem zbyt krótkich oraz zbyt długich interwałów RR.
 \par W celu selekcji odpowiednich odcinków zastosowano następujący algorytm:
@@ -2602,7 +2602,7 @@ interwały o długościach
 mniejszych od 300 ms oraz większych od 2000 ms.
 \item W ciągu 5 interwałów przed VPC
 oraz 20 interwałów po pauzie kompensacyjnej musi występować
-równy rytm - sąsiadujące interwały muszą różnić się o mniej
+równy rytm  -- sąsiadujące interwały muszą różnić się o mniej
 niż 200 ms oraz ich różnica względem przedziału referencyjnego musi być mniejsza
 od 20 procent.
 \item Jeśli interwał spełnia założone warunki, zostanie 
@@ -2682,36 +2682,54 @@ Klasa Matrix została wykorzystana przy obliczaniu Turbulence Slope.
 Klasa  \textbf{HRTAnalyzer} jest główną klasą modułu, dziedziczy po klasie HRTModule. Metody klasy HRTAnalyzer 
 pozwalają na wyliczenie parametrów HRT.
 
-Klasa \textbf{ECGHRT} jest klasą wykorzystywaną do przechowywania danych uzyskanych podczas pracy - przechowuje
-najważniejsze obiekty będące wynikiem pracy HRTAnalyzera - parametry Turbulence Slope i Turbulence Onset, 
+Klasa \textbf{ECGHRT} jest klasą wykorzystywaną do przechowywania danych uzyskanych podczas pracy  -- przechowuje
+najważniejsze obiekty będące wynikiem pracy HRTAnalyzera  -- parametry Turbulence Slope i Turbulence Onset, 
 liczbę wykrytych VPC, oraz inne parametry wykorzystywane do rysowania.
 
 Najważniejsze zmienne klasy ECGHRT:
 \begin{itemize} 
 \item Dane wykorzystywane przy rysowaniu wykresu: \textbf{QVector<QPointF> rr} wektor reprezentujący uśredniony tachogram, 
 \textbf{QLine ts} -- linia reprezentująca Turbulence Slope.
-\item Wyświetlane wartości:\textbf{int vpcCounter} - ilość znalezionych VPC, \textbf{double TO} --  średnia wartość Turbulence Onset,\textbf{double TS} - średnia wartość Turbulence Slope.
+\item Wyświetlane wartości:\textbf{int vpcCounter}  -- ilość znalezionych VPC, \textbf{double TO} --  średnia wartość Turbulence Onset,\textbf{double TS}  -- średnia wartość Turbulence Slope.
 \end{itemize}
 
 
 Funkcje i zmienne klasy HRTAnalyzer:
 \begin{itemize}
-\item \textbf{double* RRs} - zmienna wykorzystywana do tymczasowego przechowywania sygnału.
+\item \textbf{double* RRs}  -- zmienna wykorzystywana do tymczasowego przechowywania sygnału.
 \item \textbf{void calculateHrtParams(double *signal, int size, ECGHRT \&)} -- funkcja, która zleca obliczenie parametrów HRT dla sygnału wejściowego i zapisuje je w wynikowym obiekcie. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, trzeci argument to referencja do obiektu przechowującego wyniki.
 \item \textbf{vector<int> findVpcOnsets(double *signal, int size)} -- funkcja wyszukująca VPC w sygnale, zwracająca wektor 
 z numerami próbek uznanymi za poprawne VPC, które mogą być wykorzystane przy działaniu programu. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy.
 \item \textbf{double* calculateAvgTach(double *signal, vector<int> vpc\_list) } -- funkcja obliczająca uśredniony tachogram.
 Parametry: signal to wskaźnik do tablicy interwałów RR, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
 \item \textbf{double calculateTO(double * signal, int size, vector<int> vpc\_list) }  -- funkcja obliczająca parametr TO,
-Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
-\item \textbf{void calculateTS(double * signal, int size, vector<int> vpc\_list, double* avgTach, double to, ECGHRT\&)} -- funkcja obliczająca parametr TS. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczajacych wystąpienie VPC.
+Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczających wystąpienie VPC.
+\item \textbf{void calculateTS(double * signal, int size, vector<int> vpc\_list, double* avgTach, double to, ECGHRT\&)} -- funkcja obliczająca parametr TS. Parametry: signal to wskaźnik do tablicy interwałów RR, size to rozmiar tablicy, vpc\_list to wektor indeksów oznaczających wystąpienie VPC.
 \end{itemize}
 
 \subsubsection{Testy}
 \label{sec:hrt:tests}
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/image.eps}
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/skrin1.eps}
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{include/skrin2.eps}
+\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
+\end{figure}
+
 Dane do pierwszego etapu testów zostały uzyskane z bazy European ST-T Database (link: \url{http://www.physionet.org/}).
-Początkowo testy wykonywano za pomocą prototypu aplikacji w matlabie - testy działania aplikacji zakończyły się sukcesem 
+Początkowo testy wykonywano za pomocą prototypu aplikacji w Matlabie  -- testy działania aplikacji zakończyły się sukcesem 
 (na wykresie wyświetlały się wartości TO i TS, wartości parametrów były zgodne z oczekiwaniami opartymi o analizę
 wyglądu wykresów). 
 Dla sygnału e0113 otrzymano wartości: turbulence slope -1.962, turbulence onset 6.03.
@@ -2722,24 +2740,8 @@ poprawnie na 13 godzin przed terminem oddania, poniechano dalszych bezowocnych p
 rodzajów testów na aplikacji. Nie mniej jednak, wcześniej dokonano podstawowej analizy działania modułu.
 Testy polegały na ocenieniu poprawności rozwiązania w oparciu o analizę wyglądu wykresów. Dzięki wykresowi możliwa była
 wzrokowa ocena poprawności otrzymywanych wyników (np. sprawdzenie, czy prosta regresji pokrywa się z najbardziej stromym zboczem
-na wykresie, ocena wartości TO w odniesieniu do różnic długości ). Testy nie wykazały uchybień. 
-\begin{figure}[h!]
-\centering
-%\includegraphics[width=15cm]{include/image.eps}
-\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
-\end{figure}
+na wykresie, ocena wartości TO w odniesieniu do różnic długości). Testy nie wykazały uchybień. 
 
-\begin{figure}[h!]
-\centering
-%\includegraphics[width=15cm]{include/skrin1.eps}
-\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
-\end{figure}
-
-\begin{figure}[h!]
-\centering
-%\includegraphics[width=15cm]{include/skrin2.eps}
-\caption{Zrzut ekranu prezentujący ostateczny wygląd modułu} 
-\end{figure}
 
 \bibliographystyle{plain}
 \bibliography{report}
