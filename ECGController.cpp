@@ -474,7 +474,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			runRPeaks();
 			HANDLE_INTERRUPTION
 			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
-			//runHRV1();
+			runHRV1();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRV1 analysis completed; HRV2 analysis ongoing.");
 			runHRV2();
@@ -482,17 +482,17 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			statusUpdate("HRV2 analysis completed; waves analysis ongoing.");
 			runWaves();
 			HANDLE_INTERRUPTION
-			statusUpdate("HRVDFT analysis completed; QRS analysis ongoing.");
+			statusUpdate("Waves analysis completed; HRVDFA analysis ongoing.");
 			runQRSClass();
-      HANDLE_INTERRUPTION
+			HANDLE_INTERRUPTION
 			statusUpdate("QRS analysis completed; ST interval analysis ongoing.");
 			runSTInterval();
 			HANDLE_INTERRUPTION
 			statusUpdate("ST interval analysis completed; HRVDFA analysis ongoing.");
-      runSTInterval();
+			runHRVDFA();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRVDFA analysis completed; T wave alternans analysis ongoing.");
-			//runTwaveAlt();
+			runTwaveAlt();
 			HANDLE_INTERRUPTION
 			statusUpdate("T wave alternans analysis completed; HRT analysis ongoing.");
 			runHRT();

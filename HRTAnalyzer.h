@@ -31,7 +31,7 @@ class HRTAnalyzer : public HRTModule {
 public:
 	HRTAnalyzer();
 	~HRTAnalyzer();
-  void runModule(const ECGRs &, const QRSClass &,  const ECGInfo &, ECGHRT &);
+	void runModule(const ECGRs &, const QRSClass &,  const ECGInfo &, ECGHRT &);
 	void run(ECGHRT &);
 	void setParams(ParametersTypes &);
 

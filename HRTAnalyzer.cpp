@@ -5,7 +5,8 @@ HRTAnalyzer::HRTAnalyzer() { }
 
 HRTAnalyzer::~HRTAnalyzer() { }
 
-void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclasses, const ECGInfo & ecginfo, ECGHRT & hrt_data) {
+
+void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclass, const ECGInfo & ecginfo, ECGHRT & hrt_data) {
 	#ifdef USE_MOCKED_INTERVALS_SIGNAL
 		int N = 380; 
 		QRSClass qrsclassification;
