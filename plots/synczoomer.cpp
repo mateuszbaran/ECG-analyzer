@@ -216,7 +216,7 @@ void PlotControl::zoomResetSecond()
 void PlotControl::resize(QResizeEvent *e)
 {
     double diff = (e->size().width() - e->oldSize().width()) * (defaultRect.width() / zoomer1->canvas()->width());
-    qDebug() << diff;
+
     if (defaultRect.width())
     {
         double nleft = defaultRect.left() - diff/2.0f;

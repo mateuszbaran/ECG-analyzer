@@ -30,7 +30,7 @@ QwtText LabeledScaleDraw::label(double value) const
 	}
 	else
 	{
-		return QLocale::system().toString(index - offset + 1);
+        return QLocale::system().toString(index - offset);
 	}
 }
 
@@ -44,9 +44,11 @@ PlotHRT::PlotHRT(QWidget *parent) :
 	grid->setMajPen(QPen(Qt::white, 0, Qt::DotLine));
 	grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
 	grid->attach(this);
-    setAxisMaxMinor(QwtPlot::xBottom, 30);
+
 	setAxisTitle(QwtPlot::xBottom, "relative interval number");
 	setAxisTitle(QwtPlot::yLeft, "RR [ms]");
+
+    setAxisMaxMajor(QwtPlot::xBottom, 30);
 	rr = new QwtPlotCurve("RR");
 	ts = new QwtPlotCurve("TS");
 	ts->setPen(QPen(Qt::red, 2));

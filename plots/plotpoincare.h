@@ -9,10 +9,12 @@
 #include <qwt6/qwt_plot.h>
 #include <qwt6/qwt_plot_curve.h>
 #include <qwt6/qwt_symbol.h>
+#include <qwt6/qwt_plot_canvas.h>
 #else
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_symbol.h>
+#include <qwt_plot_canvas.h>
 #endif
 
 class PlotPoincare : public QwtPlot
@@ -27,6 +29,7 @@ signals:
     
 public slots:
     void setData(ECGHRV2 &data);
+    void toggleSD(bool checked);
 
 private:
     QwtPlotCurve *rr;

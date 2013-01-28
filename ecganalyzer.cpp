@@ -22,45 +22,48 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
 	
 	QVBoxLayout *lay;
 	
-	lay = new QVBoxLayout;
-	plotTachogram = new PlotTachogram(this);
-	lay->addWidget(plotTachogram);
-	ui.tab->setLayout(lay);
-	
-	lay = new QVBoxLayout;
-	plotHRVTriangle = new PlotHRVTriangle(this);
-	lay->addWidget(plotHRVTriangle);
-	ui.tab_2->setLayout(lay);
-	
-	lay = new QVBoxLayout;
-	plotPoincare = new PlotPoincare(this);
-	lay->addWidget(plotPoincare);
-	ui.tab_3->setLayout(lay);
-	
-	//lay = new QVBoxLayout;
-	//plotHRVFrequency = new PlotHRVFrequency(this);
-	//lay->addWidget(plotHRVFrequency);
-	//ui.nowhere->setLayout(lay);
-	
-	//lay = new QVBoxLayout;
-	//plotDFA1 = new PlotDFA1(this);
-	//lay->addWidget(plotDFA1);
-	//ui.nowhere->setLayout(lay);
-	
-	//lay = new QVBoxLayout;
-	//plotDFA2 = new PlotDFA2(this);
-	//lay->addWidget(plotDFA2);
-	//ui.nowhere->setLayout(lay);
-	
-	lay = new QVBoxLayout;
-	plotQRS = new PlotQRS(this);
-	lay->addWidget(plotQRS);
-	ui.groupBox_5->setLayout(lay);
-	
-	lay = new QVBoxLayout;
-	plotHRT = new PlotHRT(this);
-	lay->addWidget(plotHRT);
-	ui.groupBox->setLayout(lay);
+    lay = new QVBoxLayout;
+    plotTachogram = new PlotTachogram(this);
+    lay->addWidget(plotTachogram);
+    ui.tab->setLayout(lay);
+
+    lay = new QVBoxLayout;
+    plotHRVTriangle = new PlotHRVTriangle(this);
+    lay->addWidget(plotHRVTriangle);
+    ui.tab_2->setLayout(lay);
+    ui.checkBoxShowOnPlotHRVTriangle->setChecked(true);
+    connect(ui.checkBoxShowOnPlotHRVTriangle, SIGNAL(toggled(bool)), plotHRVTriangle, SLOT(toggleTriangle(bool)));
+
+    lay = new QVBoxLayout;
+    plotPoincare = new PlotPoincare(this);
+    lay->addWidget(plotPoincare);
+    ui.tab_3->setLayout(lay);
+    ui.checkBoxShowOnPlotSD1SD2Parameters->setChecked(true);
+    connect(ui.checkBoxShowOnPlotSD1SD2Parameters, SIGNAL(toggled(bool)), plotPoincare, SLOT(toggleSD(bool)));
+    //lay = new QVBoxLayout;
+    //plotHRVFrequency = new PlotHRVFrequency(this);
+    //lay->addWidget(plotHRVFrequency);
+    //ui.nowhere->setLayout(lay);
+
+    lay = new QVBoxLayout;
+    plotDFA1 = new PlotDFA1(this);
+    lay->addWidget(plotDFA1);
+    ui.tabHRVDFA_4->setLayout(lay);
+
+    //lay = new QVBoxLayout;
+    //plotDFA2 = new PlotDFA2(this);
+    //lay->addWidget(plotDFA2);
+    //ui.nowhere->setLayout(lay);
+
+    lay = new QVBoxLayout;
+    plotQRS = new PlotQRS(this);
+    lay->addWidget(plotQRS);
+    ui.groupBox_5->setLayout(lay);
+
+    lay = new QVBoxLayout;
+    plotHRT = new PlotHRT(this);
+    lay->addWidget(plotHRT);
+    ui.groupBox->setLayout(lay);
 	
 }
 
@@ -104,9 +107,8 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 			return;//throw new exception("Nie udało się wczytać sygnału");
 		}
 
-//        _ECGcontroller.runECGBaseline();
         _ECGcontroller.runRPeaks();
-//        _ECGcontroller.runWaves();
+//        _ECGcontroller.runQRSClass();
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data), &(_ECGcontroller.waves_data));
 
 		//HRV2 - poczatek, kfarganus
@@ -114,6 +116,9 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		_ECGcontroller.runHRV2();
 		plotHRVTriangle->setData(_ECGcontroller.hrv2_data);
 		plotPoincare->setData(_ECGcontroller.hrv2_data);
+
+        _ECGcontroller.runHRVDFA();
+//        plotDFA1->setData(_ECGcontroller.hrv_dfa_data);
 
 		QTableWidgetItem *SD1 = new QTableWidgetItem();
 		SD1->setText(QString::number(_ECGcontroller.hrv2_data.GetSD1()) );
