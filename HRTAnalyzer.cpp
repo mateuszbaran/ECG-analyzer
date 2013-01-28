@@ -6,43 +6,44 @@ HRTAnalyzer::HRTAnalyzer() { }
 HRTAnalyzer::~HRTAnalyzer() { }
 
 
-void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclass, const ECGInfo & ecginfo, ECGHRT & hrt_data) {
+void HRTAnalyzer::runModule(const ECGRs & ecgrs, const ECGWaves & waves, const QRSClass & qrsclass, const ECGInfo & ecginfo, ECGHRT & hrt_data) {
+
 	#ifdef USE_MOCKED_INTERVALS_SIGNAL
 		int N = 380; 
 		QRSClass qrsclassification;
-		#ifdef USE_MOCKED_QRS_CLASSIFICATION
+		//w takim wypadku zawsze USE_MOCKED_QRS_CLASSIFICATION 
 			IntSignal tmpSig;
 			tmpSig = IntSignal(new WrappedVectorInt);
-		    tmpSig->signal = gsl_vector_int_alloc(N+1);
-			for(int i=0; i<N+1; i++)	{
+		    tmpSig->signal = gsl_vector_int_alloc(N);
+			for(int i=0; i<N; i++)	{
 				tmpSig->set(i, VENTRICULUS);
 			}
 			qrsclassification.setQrsMorphology(tmpSig);
-		#else
-			qrsclassification = qrsclass;
-		#endif
-		calculateHrtParams(RRtest,N,qrsclassification,hrt_data);
+		calculateHrtParams(RRtest,qrsclassification, N, hrt_data);
 	#else
-		int N = ecgrs.count()-1;
-		int f = ecginfo.channel_one.frequecy;
-		RRs = new double[N];
-		for(int i = 0; i<N; i++)	{
-			RRs[i] = (ecgrs.GetRs()->get(i+1) - ecgrs.GetRs()->get(i))*1000/f;
-			int a = RRs[i];
-		}
 		QRSClass qrsclassification;
 		#ifdef USE_MOCKED_QRS_CLASSIFICATION
+			int N = ecgrs.count();
+			int f = ecginfo.channel_one.frequecy;
+			RRs = new double[N];
+			RRs[0] = -1.0;
+			for(int i = 1; i<N; i++)	{
+				RRs[i] = double(ecgrs.GetRs().get()->get(i) - ecgrs.GetRs().get()->get(i-1))*1000.0/double(f);
+			}
 			IntSignal tmpSig;
 			tmpSig = IntSignal(new WrappedVectorInt);
-		    tmpSig->signal = gsl_vector_int_alloc(N+1);
-			for(int i=0; i<N+1; i++)	{
+		    tmpSig->signal = gsl_vector_int_alloc(N);
+			for(int i=0; i<N; i++)	{
 				tmpSig->set(i, VENTRICULUS);
 			}
 			qrsclassification.setQrsMorphology(tmpSig);
+			calculateHrtParams(RRs, qrsclassification, N, hrt_data);
 		#else
-			qrsclassification = qrsclass;
+			int N = qrsclass.GetQRS_morphology()->signal->size;
+			RRs = new double[N];
+			syncRPeaksAndWaves(RRs,ecgrs,waves,ecginfo);
+			calculateHrtParams(RRs, qrsclass, N, hrt_data);
 		#endif
-		calculateHrtParams(RRs, qrsclassification, N,hrt_data);
 
 		delete [] RRs;
 	#endif
@@ -55,6 +56,46 @@ void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclass, cons
 }
 
 void HRTAnalyzer::setParams(ParametersTypes &parameterTypes) { }
+
+
+//"produkcja" sygna³u z interwa³ami R zgodnego z QRSami znalezionymi przez Waves
+//taka synchronizacja zosta³a wprowadzona by unikn¹æ niezgodnoœci z QRSClass, które korzysta z Waves, a nie RPeaks
+//w miejsca, w który wykryty jest QRS, ale brak RPeaku wstawiana jest wartoœæ interwa³u = -1
+void HRTAnalyzer::syncRPeaksAndWaves(double * signal, const ECGRs & ecgrs, const ECGWaves & waves, const ECGInfo & ecginfo)	{
+	int Nwaves = waves.GetQRS_onset()->signal->size;
+	int Nrpeaks = ecgrs.GetRs()->signal->size;
+	int f = ecginfo.channel_one.frequecy;
+
+	signal[0] = -1.0;
+
+	int iWaves = 1;
+	int iRpeaks = 1;
+	int qrsOnset;
+	int qrsEnd;
+	int rPeak;
+
+	while(iWaves<Nwaves && iRpeaks<Nrpeaks )	{
+		qrsOnset = waves.GetQRS_onset()->get(iWaves);
+		qrsEnd = waves.GetQRS_end()->get(iWaves);
+		rPeak = ecgrs.GetRs().get()->get(iRpeaks);
+
+		if(rPeak > qrsOnset && rPeak < qrsEnd)	{
+			signal[iWaves] = double(rPeak - ecgrs.GetRs().get()->get(iRpeaks-1))*1000.0/double(f);
+			iRpeaks++;
+			iWaves++;
+		}
+		else if(rPeak <= qrsOnset)	{
+			iRpeaks++;
+		}
+		else if(rPeak >= qrsEnd)	{
+			signal[iWaves] = -1.0;
+			iWaves++;
+		}
+	}
+	while(iWaves<Nwaves)	{
+		signal[iWaves] = -1.0;
+	}
+}
 
 // G³ówna funkcja, zwraca obiekt z danymi do wizualizacji
 void HRTAnalyzer::calculateHrtParams(double *signal,  const QRSClass & qrsclass, int size, ECGHRT & hrt_data)
@@ -86,7 +127,7 @@ vector<int> HRTAnalyzer::findVpcOnsets(double *signal,  const QRSClass & qrsclas
 	for(int i = 6; i < size-19; i++)
 	{
 		//Sprawdzenie czy modu³ QRS uzna³ QRS zwi¹zany z danym interwa³em RR za komorowy
-		if(qrsclass.GetQRS_morphology()->get(i+1) == VENTRICULUS)	{
+		if(signal[i] != -1 && qrsclass.GetQRS_morphology()->get(i) == VENTRICULUS)	{
 				// Interwa³ referencyjny
 				double mean5before = (signal[i-5] + signal[i-4] + signal[i-3] + signal[i-2] + signal[i-1])/5;
 		 

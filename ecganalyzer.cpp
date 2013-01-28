@@ -143,8 +143,8 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
 		//HRV2 koniec
 		
-//		_ECGcontroller.runHRT();
-//		plotHRT->setData(_ECGcontroller.hrt_data);
+		_ECGcontroller.runHRT();
+		plotHRT->setData(_ECGcontroller.hrt_data);
 
 //        _ECGcontroller.runHRV1();
 //        plotHRVFrequency->setData(_ECGcontroller.hrv1_data);

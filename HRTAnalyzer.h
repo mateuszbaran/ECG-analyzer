@@ -1,6 +1,6 @@
 #pragma once
 //#define USE_MOCKED_INTERVALS_SIGNAL
-#define USE_MOCKED_QRS_CLASSIFICATION
+//#define USE_MOCKED_QRS_CLASSIFICATION
 #include "ModulesInterfaces.h"
 #include "ECGHRT.h"
 #include "ECGSignal.h"
@@ -31,12 +31,16 @@ class HRTAnalyzer : public HRTModule {
 public:
 	HRTAnalyzer();
 	~HRTAnalyzer();
-	void runModule(const ECGRs &, const QRSClass &,  const ECGInfo &, ECGHRT &);
+	void runModule(const ECGRs &, const ECGWaves &, const QRSClass &,  const ECGInfo &, ECGHRT &);
 	void run(ECGHRT &);
 	void setParams(ParametersTypes &);
 
 private:
 	double* RRs;
+
+	//"produkcja" sygna³u z Rpeakami zgodnego z QRSami znalezionymi przez Waves
+	//taka synchronizacja zosta³a wprowadzona by unikn¹æ niezgodnoœci z QRSClass, które korzysta z Waves, a nie RPeaks
+	void syncRPeaksAndWaves(double * , const ECGRs &, const ECGWaves &, const ECGInfo &);
 
 	void calculateHrtParams(double *signal,  const QRSClass & qrsclass, int size, ECGHRT &);
 	

@@ -268,7 +268,11 @@ void ECGController::runHRT ()
   {
     runQRSClass();
   }
-  hrt_module->runModule(r_peaks_data, qrsclass_data, ecg_info, hrt_data);
+  if (!waves_module->run_)
+  {
+    runWaves();
+  }
+  hrt_module->runModule(r_peaks_data, waves_data, qrsclass_data, ecg_info, hrt_data);
   hrt_module->run_ = true;
   LOG_END
 }
