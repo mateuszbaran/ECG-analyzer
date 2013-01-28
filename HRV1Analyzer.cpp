@@ -51,9 +51,9 @@ void HRV1Analyzer::prepareSignal() {
 		#else
             signalSize = rPeaksData.GetRs()->signal->size;
 
-			sig = new double[signalSize-1];
+			sig = new double[signalSize];
 
-			double scalingValue = (double)((1/signalSampling)*1000);
+			double scalingValue = (double)(1000.0/signalSampling);
 			int v1, v2;
 
 			for(int i = 0; i < signalSize-1; i++) {
@@ -61,6 +61,7 @@ void HRV1Analyzer::prepareSignal() {
 				v2 = gsl_vector_int_get (rPeaksData.GetRs()->signal, i+1);
 
 				sig[i] = (double) abs(v2-v1) * scalingValue;
+				this->signalSize -= 1;
 			}
 
 		#endif
@@ -76,9 +77,12 @@ void HRV1Analyzer::prepareSigAbsolute() {
 
 	sigAbsolute[0] = sig[0];
 
-	for(int i=1; i<signalSize; i++) {
-        sigAbsolute[i] = sig[i] + sigAbsolute[i-1];
-	}
+	#ifdef DEBUG_SIG
+		for(int i=1; i<signalSize; i++) {
+			sigAbsolute[i] = sig[i] + sigAbsolute[i-1];
+			qDebug() << "sig: " << sig[i] << " sigA: " << sigAbsolute[i];
+		}
+	#endif
 }
 
 /**
@@ -160,7 +164,8 @@ void HRV1Analyzer::calculateParameters() {
   if (numberOfSteps < 0)
   {
     //TODO: something went wrong, fix
-    return;
+    qDebug() << "ok";
+	//return;
   }
 
     double * mRRI = new double[numberOfSteps];
@@ -224,39 +229,55 @@ void HRV1Analyzer::calculateParameters() {
 
 	double* sigAfterSpline = cubicSpline(sigAbsolute, sig, signalSize);
 
-	double* fftMagnitude = doFFT(sigAfterSpline);
+	int sigAfterSplineSize = (int)(sigAbsolute[signalSize-1]/(FREQUENCY_FFT))-1;
 
+	double* fftMagnitude = doFFT(sigAfterSpline, sigAfterSplineSize);
+
+
+	double freqq = (double)signalSampling/sigAfterSplineSize;
 
 	//wlasciwa analiza czestotliwosciowa
     for(int i = 1; i< sizeFftIndex; i++) {
-        if(i<=0.003*signalSampling) {
+        if(0.003>i*freqq) {
             this->hrv1Data->ULF += fftMagnitude[i];
         }
-        else if(i>0.003*signalSampling && i<=0.04*signalSampling) {
+        else if(0.003<i*freqq && 0.04>=i*freqq) {
             this->hrv1Data->VLF += fftMagnitude[i];
         }
-        else if(i>0.04*signalSampling && i<=0.15*signalSampling) {
+        else if(0.04<i*freqq && 0.15>=i*freqq) {
             this->hrv1Data->LF += fftMagnitude[i];
         }
-        else if(i>0.15*signalSampling && i<=0.4*signalSampling) {
+        else if(0.15<i*freqq && 0.4>=i*freqq) {
             this->hrv1Data->HF += fftMagnitude[i];
         }
     }
     this->hrv1Data->TP = this->hrv1Data->ULF + this->hrv1Data->VLF + this->hrv1Data->LF + this->hrv1Data->HF;
     this->hrv1Data->LFHF = this->hrv1Data->LF / this->hrv1Data->HF;
 
-
+	#ifdef DEBUG
+		qDebug() << "ULF:" << this->hrv1Data->ULF;
+		qDebug() << "VLF:" << this->hrv1Data->VLF;
+		qDebug() << "LF:" << this->hrv1Data->LF;
+		qDebug() << "HF:" << this->hrv1Data->HF;
+		qDebug() << "TP:" << this->hrv1Data->TP;
+		qDebug() << "LFHF:" << this->hrv1Data->LFHF;
+	#endif
     ////////////////////power & frequency plot
 
     #ifndef DEV
         this->hrv1Data->freqency = OtherSignal(new WrappedVector);
+		this->hrv1Data->freqency->signal = gsl_vector_alloc(sizeFftIndex);
         this->hrv1Data->power = OtherSignal(new WrappedVector);
+		this->hrv1Data->power->signal = gsl_vector_alloc(sizeFftIndex);
 
         for(int i=0; i<sizeFftIndex; i++) {
             this->hrv1Data->freqency->set(i, i);
             this->hrv1Data->power->set(i, fftMagnitude[i]);
         }
-    #endif
+		#ifdef DEBUG
+			qDebug() << "Power & freq plot: sizeFftIndex: " << sizeFftIndex;
+		#endif
+#endif
 
 
     //sprzatanie pamieci
@@ -274,7 +295,7 @@ void HRV1Analyzer::calculateParameters() {
  * Funkcja przeprowadzajaca analize fft zinterpolowanego sygnalu
  * z wykorzystaniem biblioteki kiss fft
  */
-double* HRV1Analyzer::doFFT(double* sigAfterSpline) {
+double* HRV1Analyzer::doFFT(double* sigAfterSpline, int size) {
 
 	#ifdef DEBUG
 		qDebug() << "Method doFFT() started";
@@ -283,23 +304,18 @@ double* HRV1Analyzer::doFFT(double* sigAfterSpline) {
 	#ifdef DEV
         std::cout << "Method doFFT() started\n";
     #endif
-
-	int i,size = (int)(sigAbsolute[signalSize-1]/(FREQUENCY_FFT)) +1;
-	int isinverse = 1;
+	size = 2000;
 
 	kiss_fft_cpx * out_cpx = new kiss_fft_cpx[size], * out = new kiss_fft_cpx[size], *cpx_buf;
 
-	kiss_fftr_cfg fft = kiss_fftr_alloc(size*2 ,0 ,0,0);
-	kiss_fftr_cfg ifft = kiss_fftr_alloc(size*2,isinverse,0,0);
-
+	kiss_fft_cfg fft = kiss_fft_alloc(size, false, NULL,0);
 	cpx_buf = copycpx(sigAfterSpline,size);
-	kiss_fftr(fft,(kiss_fft_scalar*)cpx_buf, out_cpx);
-	kiss_fftri(ifft,out_cpx,(kiss_fft_scalar*)out );
+
+	kiss_fft(fft,cpx_buf, out_cpx);
 
 	//zwalnianie pamieci
 	kiss_fft_cleanup();
 	free(fft);
-	free(ifft);
 
 	sizeFftIndex = (size+(size%2))/2;
 	double * fftMagnitude = new double[sizeFftIndex];
@@ -329,6 +345,7 @@ double* HRV1Analyzer::doFFT(double* sigAfterSpline) {
 
 	delete[] out_cpx;
 	delete[] out;
+	delete cpx_buf;
 
 	#ifdef DEBUG
 		qDebug() << "Method doFFT() finished";

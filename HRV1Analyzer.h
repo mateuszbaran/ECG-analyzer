@@ -7,6 +7,7 @@
 /// wlacza tryb debugowania
 //#define DEBUG
 //#define DEBUG_FFT
+//#define DEBUG_SIG
 
 #pragma once
 
@@ -65,7 +66,7 @@ private:
     void prepareSigAbsolute();
 	void calculateParameters();
 
-	double* doFFT(double* sigAfterSpline);
+	double* doFFT(double* sigAfterSpline, int size);
 	kiss_fft_cpx* copycpx(double *mat, int nframe);
 	double mean(double *tab, int start, int end);
 	double std(double *tab, int start, int end);
