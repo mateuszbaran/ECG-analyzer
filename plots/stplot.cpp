@@ -22,9 +22,9 @@ StPlot::StPlot(QWidget* parent):
   grid->setMajPen(QPen(Qt::white, 0, Qt::DotLine));
   grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
   grid->attach(this);
-  setAxisTitle(QwtPlot::xBottom, "Czas [s]");
+  setAxisTitle(QwtPlot::xBottom, "Czas [mm:ss.ms]");
   setAxisTitle(QwtPlot::yLeft, "Amplituda [mv]");
-  
+  setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(360));
   curve = new QwtPlotCurve("Filtered signal");
   curve->setYAxis(QwtPlot::yLeft);
   curve->attach(this);
@@ -106,6 +106,7 @@ void StPlot::setSignal(const ECGSignalChannel& signal, const ECGChannelInfo& inf
   STPoints->setSamples(*STVector);
   //RPoints->setSamples(*RVector);
   setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(info.frequecy));
+  qDebug() << info.gain;
   setAxisScaleDraw(QwtPlot::yLeft, new GainScaleDraw(info.gain));
   data->setSamples(*samples);
   curve->setData(data);

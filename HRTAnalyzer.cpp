@@ -1,5 +1,4 @@
 #include "HRTAnalyzer.h"
-#include "ECGSignal.h"
 #include <QDebug>
 
 HRTAnalyzer::HRTAnalyzer() { }
@@ -9,7 +8,19 @@ HRTAnalyzer::~HRTAnalyzer() { }
 void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclasses, const ECGInfo & ecginfo, ECGHRT & hrt_data) {
 	#ifdef USE_MOCKED_INTERVALS_SIGNAL
 		int N = 380; 
-		calculateHrtParams(RRtest,N,hrt_data);
+		QRSClass qrsclassification;
+		#ifdef USE_MOCKED_QRS_CLASSIFICATION
+			IntSignal tmpSig;
+			tmpSig = IntSignal(new WrappedVectorInt);
+		    tmpSig->signal = gsl_vector_int_alloc(N+1);
+			for(int i=0; i<N+1; i++)	{
+				tmpSig->set(i, VENTRICULUS);
+			}
+			qrsclassification.setQrsMorphology(tmpSig);
+		#else
+			qrsclassification = qrsclass;
+		#endif
+		calculateHrtParams(RRtest,N,qrsclassification,hrt_data);
 	#else
 		int N = ecgrs.count()-1;
 		int f = ecginfo.channel_one.frequecy;
@@ -18,7 +29,20 @@ void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclasses, co
 			RRs[i] = (ecgrs.GetRs()->get(i+1) - ecgrs.GetRs()->get(i))*1000/f;
 			int a = RRs[i];
 		}
-		calculateHrtParams(RRs,N,hrt_data);
+		QRSClass qrsclassification;
+		#ifdef USE_MOCKED_QRS_CLASSIFICATION
+			IntSignal tmpSig;
+			tmpSig = IntSignal(new WrappedVectorInt);
+		    tmpSig->signal = gsl_vector_int_alloc(N+1);
+			for(int i=0; i<N+1; i++)	{
+				tmpSig->set(i, VENTRICULUS);
+			}
+			qrsclassification.setQrsMorphology(tmpSig);
+		#else
+			qrsclassification = qrsclass;
+		#endif
+		calculateHrtParams(RRs, qrsclassification, N,hrt_data);
+
 		delete [] RRs;
 	#endif
 
@@ -32,9 +56,9 @@ void HRTAnalyzer::runModule(const ECGRs & ecgrs, const QRSClass & qrsclasses, co
 void HRTAnalyzer::setParams(ParametersTypes &parameterTypes) { }
 
 // G³ówna funkcja, zwraca obiekt z danymi do wizualizacji
-void HRTAnalyzer::calculateHrtParams(double *signal, int size, ECGHRT & hrt_data)
+void HRTAnalyzer::calculateHrtParams(double *signal,  const QRSClass & qrsclass, int size, ECGHRT & hrt_data)
 {
-	vector<int> vpc_list = findVpcOnsets(signal, size);
+	vector<int> vpc_list = findVpcOnsets(signal, qrsclass, size);
 	hrt_data.setAllSignalsSize(vpc_list.size());
 	hrt_data.vpcCounter = vpc_list.size();
 
@@ -46,75 +70,75 @@ void HRTAnalyzer::calculateHrtParams(double *signal, int size, ECGHRT & hrt_data
 		#endif
 	} 
 	else	{
-		qDebug() <<vpc_list.size();
 		hrt_data.isCorrect = 1;
 		double* avgTach = calculateAvgTach(signal, vpc_list);
 
 		double to = calculateTO(signal, size, vpc_list);
-		qDebug() <<to;
 		calculateTS(signal, size, vpc_list, avgTach, to, hrt_data);
 	}
 }
 
 
-vector<int> HRTAnalyzer::findVpcOnsets(double *signal, int size)
+vector<int> HRTAnalyzer::findVpcOnsets(double *signal,  const QRSClass & qrsclass, int size)
 {
 	vector<int> vpc_list;
-	cout<<vpc_list.size();
 	for(int i = 6; i < size-19; i++)
 	{
-			// Interwa³ referencyjny
-			double mean5before = (signal[i-5] + signal[i-4] + signal[i-3] + signal[i-2] + signal[i-1])/5;
+		//Sprawdzenie czy modu³ QRS uzna³ QRS zwi¹zany z danym interwa³em RR za komorowy
+		if(qrsclass.GetQRS_morphology()->get(i+1) == VENTRICULUS)	{
+				// Interwa³ referencyjny
+				double mean5before = (signal[i-5] + signal[i-4] + signal[i-3] + signal[i-2] + signal[i-1])/5;
 		 
-			// Sprawdzenie czy interwa³ mo¿e byæ kandydatem na VPC
-			if((0.8 * mean5before < signal[i]) || (signal[i+1] < 1.1 * mean5before) || abs(signal[i-1] - signal[i-2]) > 200)
-			{
-			continue;
-			}
+				// Sprawdzenie czy interwa³ mo¿e byæ kandydatem na VPC
+				if((0.8 * mean5before < signal[i]) || (signal[i+1] < 1.1 * mean5before) || abs(signal[i-1] - signal[i-2]) > 200)
+				{
+				continue;
+				}
 			
-			// Sprawdzenie czy d³ugoœæ jest >300 ms i <2000 ms
-			int param = 0; 
-			for(int j = i - 5; j <= i + 19; j++)
-			{
-			if(j == i - 1 || j == i || j == i+1)
-			{
-				continue;
-			}
-
-			if(signal[j] > 2000 || signal[j] < 300)
-			{
-				param = 1;
-				break;
-			}
-			}
-    
-			if(param == 1)
-			{
-				continue;
-			}
-
-			// Sprawdzenie czy 2 s¹siednie zwyk³e interwa³y maj¹ ró¿nicê mniejsz¹ ni¿ o 200 ms
-			// oraz czy ka¿dy ze zwyk³ych interwa³ów ró¿ni siê o mniej ni¿ 20% od interwa³u referencyjnego.
-			for(int j = i-5; j <= i + 19; j++)
-			{
-				if(j == i-1 || j == i || j == i+1) 
+				// Sprawdzenie czy d³ugoœæ jest >300 ms i <2000 ms
+				int param = 0; 
+				for(int j = i - 5; j <= i + 19; j++)
+				{
+				if(j == i - 1 || j == i || j == i+1)
 				{
 					continue;
 				}
 
-				if(abs(signal[j] - signal[j+1]) > 200 || (abs(signal[j] - mean5before) > 0.2 * mean5before))
+				if(signal[j] > 2000 || signal[j] < 300)
 				{
 					param = 1;
 					break;
 				}
-			}
+				}
     
-			if(param == 1)
-			{
-			continue;
-			}
+				if(param == 1)
+				{
+					continue;
+				}
+
+				// Sprawdzenie czy 2 s¹siednie zwyk³e interwa³y maj¹ ró¿nicê mniejsz¹ ni¿ o 200 ms
+				// oraz czy ka¿dy ze zwyk³ych interwa³ów ró¿ni siê o mniej ni¿ 20% od interwa³u referencyjnego.
+				for(int j = i-5; j <= i + 19; j++)
+				{
+					if(j == i-1 || j == i || j == i+1) 
+					{
+						continue;
+					}
+
+					if(abs(signal[j] - signal[j+1]) > 200 || (abs(signal[j] - mean5before) > 0.2 * mean5before))
+					{
+						param = 1;
+						break;
+					}
+				}
+    
+				if(param == 1)
+				{
+				continue;
+				}
 			 
-		    vpc_list.push_back(i-5);
+				vpc_list.push_back(i-5);
+		}
 	}
 
 	return vpc_list;

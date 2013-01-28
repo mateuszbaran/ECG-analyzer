@@ -27,6 +27,7 @@ signals:
     
 public slots:
     void setData(ECGHRV2 &data);
+    void toggleTriangle(bool checked);
 
 private:
     QwtPlotCurve *rr;

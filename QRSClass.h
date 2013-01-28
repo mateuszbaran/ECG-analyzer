@@ -48,4 +48,3 @@ private:
   int id;
   IntSignal QRS_morphology;
 };
-

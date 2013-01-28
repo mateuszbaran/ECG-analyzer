@@ -3,6 +3,8 @@
 
 #include "../ECGSignal.h"
 #include "../ECGChannelInfo.h"
+#include "../ECGWaves.h"
+
 #ifdef WIN32
 #define QWT_DLL
 #include <qwt6/qwt_plot.h>
@@ -12,6 +14,7 @@
 #include <qwt6/qwt_picker_machine.h>
 #include <qwt6/qwt_plot_zoomer.h>
 #include <qwt6/qwt_plot_panner.h>
+#include <qwt6/qwt_symbol.h>
 #else
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
@@ -20,6 +23,7 @@
 #include <qwt_picker_machine.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
+#include <qwt_symbol.h>
 #endif
 
 class EcgCh : public QwtPlot
@@ -28,21 +32,32 @@ class EcgCh : public QwtPlot
 
 public:
     explicit EcgCh(QWidget *parent = 0);
-    QPointF lastSample();
 signals:
-    
+    void rPeaksEnabled(bool enabled);
+    void qrsOnEnabled(bool enabled);
+    void qrsOffEnabled(bool enabled);
+    void pOnEnabled(bool enabled);
+    void pOffEnabled(bool enabled);
+    void tOffEnabled(bool enabled);
+
 public slots:
     void setSignal(ECGSignalChannel signal, ECGChannelInfo info);
-    void setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks);
-
+    void setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks, ECGWaves* waves);
+    void toggleRPeaks(bool toggle);
+    void toggleQrsOn(bool toggle);
+    void toggleQrsOff(bool toggle);
+    void togglePOn(bool toggle);
+    void togglePOff(bool toggle);
+    void toggleTOff(bool toggle);
 private:
-    QwtPlotCurve* curve;
+    void addIntSignal(QwtPlotCurve* curve, IntSignal signal);
+    QwtPlotCurve* signalCurve;
     QwtPlotCurve* peaksCurve;
-    QwtPointSeriesData* data;
-    QwtPointSeriesData* peaksData;
-    QVector<QPointF>* samples;
-    QVector<QPointF>* peaksSamples;
-//    QwtPlotPicker *picker;
+    QwtPlotCurve* qrsOnSetCurve;
+    QwtPlotCurve* qrsEndSetCurve;
+    QwtPlotCurve* pOnSetCurve;
+    QwtPlotCurve* pEndSetCurve;
+    QwtPlotCurve* tEndSetCurve;
     
 };
 

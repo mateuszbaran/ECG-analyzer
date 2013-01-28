@@ -51,7 +51,7 @@ public:
   void runWaves();
   void runHRV1();
   void runHRV2();
-  void runHRVDFT();
+  void runHRVDFA();
   void runQRSClass();
   void runSTInterval();
   void runTwaveAlt();
@@ -67,6 +67,7 @@ public:
   ECGHRV2 hrv2_data;
   ECGHRVDFA hrv_dfa_data;
   QRSClass classes_data;
+  QRSClass qrsclass_data;
   ECGST st_data;
   ECGTWave twave_data;
   ECGHRT hrt_data;

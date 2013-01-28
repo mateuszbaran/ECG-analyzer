@@ -5,33 +5,33 @@
 
 double findMinimum (ECGSignalChannel *signal,int forBegin, int forEnd) {
 
-    ECGSignalChannel sig;
-    sig = *signal;
-    auto sigSize = sig->signal->size;
+	ECGSignalChannel sig;
+	sig = *signal;
+	auto sigSize = sig->signal->size;
 
-    auto minChannelOne = gsl_vector_get (sig->signal, forBegin);
-    for (int i = forBegin; i < forEnd; i++) {
-        auto currentValue = gsl_vector_get (sig->signal, i);
-        if (currentValue<minChannelOne) minChannelOne=currentValue;
-    }
+	auto minChannelOne = gsl_vector_get (sig->signal, forBegin);
+	for (int i = forBegin; i < forEnd; i++) {
+		auto currentValue = gsl_vector_get (sig->signal, i);
+		if (currentValue<minChannelOne) minChannelOne=currentValue;
+	}
 
-    return minChannelOne;
+	return minChannelOne;
 }
 
 double findMaximum (ECGSignalChannel *signal,int forBegin, int forEnd) {
 
 
-    ECGSignalChannel sig;
-    sig = *signal;
-    auto sigSize = sig->signal->size;
+	ECGSignalChannel sig;
+	sig = *signal;
+	auto sigSize = sig->signal->size;
 
-    auto maxChannelOne = gsl_vector_get (sig->signal, forBegin);
-    for (int i = forBegin; i < forEnd; i++) {
-        auto currentValue = gsl_vector_get (sig->signal, i);
-        if (currentValue>maxChannelOne) maxChannelOne=currentValue;
-    }
+	auto maxChannelOne = gsl_vector_get (sig->signal, forBegin);
+	for (int i = forBegin; i < forEnd; i++) {
+		auto currentValue = gsl_vector_get (sig->signal, i);
+		if (currentValue>maxChannelOne) maxChannelOne=currentValue;
+	}
 
-    return maxChannelOne;
+	return maxChannelOne;
 }
 
 
@@ -47,13 +47,14 @@ QRSPointsDetector::~QRSPointsDetector(void)
 
 void QRSPointsDetector::setParams(ParametersTypes &parameterTypes){}
 
-void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal, const ECGInfo & ecgi, const ECGRs &ecgRs, ECGWaves & ecgWaves){
+
+void QRSPointsDetector::runModule (ECGWaves &ecgWaves, const ECGSignalChannel &filteredSignal, const ECGRs &ecgRs, const ECGInfo &ecgi, ECGClasses &classes){
 	double inputValue = gsl_vector_get (filteredSignal->signal, 1);
 	try{
 		this->filteredSignal = filteredSignal;
-		#ifdef USE_MOCKED_SIGNAL
-			this->filteredSignal = getMockedSignal();
-		#endif
+#ifdef USE_MOCKED_SIGNAL
+		this->filteredSignal = getMockedSignal();
+#endif
 		this->rsPositions = ecgRs;
 
 		this->qrsPoints = &ecgWaves;
@@ -66,18 +67,18 @@ void QRSPointsDetector::runModule(const ECGSignalChannel &filteredSignal, const 
 		detectPT();
 
 	}catch (...) {
-		#ifdef DEBUG
-			cout << "modules failed" << endl;
-		#endif
+#ifdef DEBUG
+		cout << "modules failed" << endl;
+#endif
 	}
 }
 
 
 bool QRSPointsDetector::detectQRS()
 {
-	#ifdef DEBUG
-		cout << "Detecting qrs-onset and qrs-end" << endl;
-	#endif
+#ifdef DEBUG
+	cout << "Detecting qrs-onset and qrs-end" << endl;
+#endif
 
 	auto signalSize = filteredSignal->signal->size;
 
@@ -94,7 +95,7 @@ bool QRSPointsDetector::detectQRS()
 		double pp = inputValueChannelOne*inputValueChannelOne;
 		gsl_vector_set(powerSig->signal, i, inputValueChannelOne*inputValueChannelOne);
 	}
-	
+
 	//gradient
 	ECGSignalChannel gradSig;
 	gradSig = ECGSignalChannel(new WrappedVector);
@@ -140,7 +141,7 @@ bool QRSPointsDetector::detectQRS()
 	}
 
 	//gradient
-    gradSig =gradient(&expSig);
+	gradSig =gradient(&expSig);
 
 	//average
 	ECGSignalChannel fg3;
@@ -179,11 +180,11 @@ bool QRSPointsDetector::detectQRS()
 		auto value = gsl_vector_get (ts4Sig->signal, rPeak);
 		if(value> max_absoluteC1) max_absoluteC1 = value;
 	}
-	#ifdef DEBUG
-		cout << "Minimal value "<< min_C1 << endl;
-		cout << "Macimal value "<< max_absoluteC1 << endl;	
-	#endif
-	
+#ifdef DEBUG
+	cout << "Minimal value "<< min_C1 << endl;
+	cout << "Macimal value "<< max_absoluteC1 << endl;	
+#endif
+
 	for(int i = 0; i < signalSize; i++)
 	{
 		auto ValueChannelOne = gsl_vector_get (ts4Sig->signal, i);			
@@ -214,17 +215,17 @@ bool QRSPointsDetector::detectQRS()
 		int rPeak = gsl_vector_int_get (v, ithRpeak);
 		gsl_vector_int_set(qrsOnset->signal,ithRpeak,rPeak);
 		gsl_vector_int_set(qrsEnd->signal,ithRpeak,rPeak);
-		#ifdef DEBUG
-			cout << "Rpeak no "<<ithRpeak <<" value :" << rPeak  << endl;	
-		#endif
-		
+#ifdef DEBUG
+		cout << "Rpeak no "<<ithRpeak <<" value :" << rPeak  << endl;	
+#endif
+
 		for(int j = rPeak;j>rPeak-100;j--){
 			auto value = gsl_vector_get (ts4Sig->signal, j);
 			if(value==0){
 				//we have QRS_onset
-				#ifdef DEBUG
-					cout << "QRS_onset " << j  << endl;	
-				#endif
+#ifdef DEBUG
+				cout << "QRS_onset " << j  << endl;	
+#endif
 				gsl_vector_int_set(qrsOnset->signal,ithRpeak,j);
 				break;
 			}
@@ -233,9 +234,9 @@ bool QRSPointsDetector::detectQRS()
 			auto value = gsl_vector_get (ts4Sig->signal, j);
 			if(value==0){
 				//we have QRS_end
-				#ifdef DEBUG
-					cout << "QRS_end " << j  << endl;	
-				#endif
+#ifdef DEBUG
+				cout << "QRS_end " << j  << endl;	
+#endif
 				gsl_vector_int_set(qrsEnd->signal,ithRpeak,j);
 				break;
 			}
@@ -248,19 +249,19 @@ bool QRSPointsDetector::detectQRS()
 
 bool QRSPointsDetector::detectPT(){
 	double qrsCount = qrsPoints->GetQRS_onset()->signal->size;
-	
+
 
 	auto signalSize = filteredSignal->signal->size;
-	
+
 	ECGSignalChannel allPTSig;
 	allPTSig = ECGSignalChannel(new WrappedVector);
 	allPTSig->signal = gsl_vector_alloc(signalSize);
 
-	#ifdef DEBUG
-		cout << "Number of cycles " << qrsCount-1  << endl;	
-	#endif
+#ifdef DEBUG
+	cout << "Number of cycles " << qrsCount-1  << endl;	
+#endif
 
-    IntSignal tEnd;
+	IntSignal tEnd;
 	tEnd = IntSignal(new WrappedVectorInt);
 	tEnd->signal = gsl_vector_int_alloc(qrsCount);
 
@@ -280,37 +281,45 @@ bool QRSPointsDetector::detectPT(){
 	{	
 		auto qrsOnset = gsl_vector_int_get (qrsPoints->GetQRS_onset()->signal, i);
 		auto qrsEnd = gsl_vector_int_get (qrsPoints->GetQRS_end()->signal, i);
-	    auto qrsOnset2 = gsl_vector_int_get (qrsPoints->GetQRS_onset()->signal, i+1);
+		auto qrsOnset2 = gsl_vector_int_get (qrsPoints->GetQRS_onset()->signal, i+1);
 		auto qrsEnd_2 = gsl_vector_int_get (qrsPoints->GetQRS_end()->signal, i+1);
 		double cycleSize = qrsOnset2 - qrsEnd;
-
-		#ifdef DEBUG
-			cout << "Cycle     :  " << i << endl;
-			cout << "qrsEnd    :  " << qrsEnd << endl;
-			cout << "qrsOnset  :  " << qrsOnset << endl;
-			cout << "qrsOnset2 :  " << qrsOnset2 << endl;
-			cout << "qrsEnd_2  :  " << qrsEnd_2 << endl;
 		
-		#endif
+		gsl_vector_int_set(tEnd->signal,i,qrsEnd);
+		gsl_vector_int_set(pOnset->signal,i+1,qrsOnset2);
+		gsl_vector_int_set(pEnd->signal,i+1,qrsOnset2);
+
+		if(cycleSize<1)
+			continue;
+
+#ifdef DEBUG
+		cout << "Cycle     :  " << i << endl;
+		cout << "qrsEnd    :  " << qrsEnd << endl;
+		cout << "qrsOnset  :  " << qrsOnset << endl;
+		cout << "qrsOnset2 :  " << qrsOnset2 << endl;
+		cout << "qrsEnd_2  :  " << qrsEnd_2 << endl;
+
+#endif
 
 		double min,max = 0;
 		min = gsl_vector_get (filteredSignal->signal, qrsEnd);
-
+		
 		ECGSignalChannel cycleSig;
 		cycleSig = ECGSignalChannel(new WrappedVector);
 		cycleSig->signal = gsl_vector_alloc(cycleSize);
-
+		
+		
 		for(int j = qrsEnd+10; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (filteredSignal->signal, j);
 			max = (max>value)? max:value;
 			min = (min<value)? min:value;
 		}
-
-		#ifdef DEBUG
-			cout << "Maximal value in cycle " << max  << endl;
-			cout << "Minimal value in cycle " << min  << endl;
-		#endif
+		
+#ifdef DEBUG
+		cout << "Maximal value in cycle " << max  << endl;
+		cout << "Minimal value in cycle " << min  << endl;
+#endif
 
 		for(int j = qrsOnset; j < qrsEnd; j++)
 		{
@@ -327,9 +336,9 @@ bool QRSPointsDetector::detectPT(){
 		//finding median 
 		gsl_sort_vector(cycleSig->signal);
 		double median = gsl_vector_get (cycleSig->signal, cycleSize/2);
-		#ifdef DEBUG
-			cout << "Median in cycle " << median  << endl;
-		#endif
+#ifdef DEBUG
+		cout << "Median in cycle " << median  << endl;
+#endif
 		for(int j = qrsEnd; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (allPTSig->signal, j);
@@ -345,7 +354,6 @@ bool QRSPointsDetector::detectPT(){
 		}
 
 		//finding points 
-		gsl_vector_int_set(tEnd->signal,i,qrsEnd);
 		double p1=0,p2=0;
 		//T is in first 75%
 		for(int j = qrsEnd; j < qrsEnd+cycleSize*3/4; j++)
@@ -357,28 +365,27 @@ bool QRSPointsDetector::detectPT(){
 				}
 			}else if(value <1){
 				p2 = j;
-			
-			#ifdef DEBUG
+
+#ifdef DEBUG
 				cout << "Candidate for T start " << p1  << endl;
 				cout << "Candidate for T_end " << p2  << endl;
-			#endif
+#endif
 
-			if(p2-p1>cycleSize/100*15){
-				gsl_vector_int_set(tEnd->signal,i,j);
-				#ifdef DEBUG
+				if(p2-p1>cycleSize/100*15){
+					gsl_vector_int_set(tEnd->signal,i,j);
+#ifdef DEBUG
 					cout << "We have next T_end: " << p2  << endl;
-				#endif
-				break;
-			}else{
-			p1 = p2 =0;
-			}
+#endif
+					break;
+				}else{
+					p1 = p2 =0;
+				}
 			}
 		}
 		//p in last 23%
 
-		gsl_vector_int_set(pOnset->signal,i+1,qrsOnset2);
-		gsl_vector_int_set(pEnd->signal,i+1,qrsOnset2);
 		p1 = p2 =0;
+
 		for(int j = qrsEnd+cycleSize*3/4; j < qrsOnset2; j++)
 		{
 			auto value = gsl_vector_get (allPTSig->signal, j);	
@@ -388,19 +395,19 @@ bool QRSPointsDetector::detectPT(){
 				}
 			}else if(value <1){
 				p2 = j;
-			
 
-			if(p2-p1>cycleSize/100*3){
-				gsl_vector_int_set(pOnset->signal,i,p1);
-				gsl_vector_int_set(pEnd->signal,i,p2);
-				#ifdef DEBUG
+
+				if(p2-p1>cycleSize/100*3){
+					gsl_vector_int_set(pOnset->signal,i,p1);
+					gsl_vector_int_set(pEnd->signal,i,p2);
+#ifdef DEBUG
 					cout << "We have next P_onset: " << p1  << endl;
 					cout << "We have next P_end  : " << p2  << endl;
-				#endif
-				break;
-			}else{
-			p1 = p2 =0;
-			}
+#endif
+					break;
+				}else{
+					p1 = p2 =0;
+				}
 			}
 		}
 
@@ -419,7 +426,7 @@ bool QRSPointsDetector::detectPT(){
 
 
 ECGSignalChannel QRSPointsDetector::gradient(ECGSignalChannel * signal){
-	
+
 	ECGSignalChannel sig;
 	sig = *signal;
 	auto sigSize = sig->signal->size;
@@ -431,7 +438,7 @@ ECGSignalChannel QRSPointsDetector::gradient(ECGSignalChannel * signal){
 	double min;
 	double max;
 	int limit=signalSize-5;
-	
+
 	for (int i=5;i<limit;i++){
 		min=findMinimum(&sig,i-5,i+5);
 		max=findMaximum(&sig,i-5,i+5);
@@ -497,7 +504,7 @@ ECGSignalChannel QRSPointsDetector::averageFilter(ECGSignalChannel * signal){
 		sumC1 = sumC1 - gsl_vector_get (sig->signal, i-6) + gsl_vector_get (sig->signal, i+5); 
 		gsl_vector_set(tmpSig->signal, i-1, sumC1/11);
 	}
- 	
+
 	gsl_vector_set(tmpSig->signal, signalSize-1, sumC1/11);
 	//gsl_vector_set(tmpSig->signal, signalSize-1, sumC2/11);
 	gsl_vector_set(tmpSig->signal, signalSize-2, sumC1/11);
@@ -537,7 +544,7 @@ ECGSignalChannel QRSPointsDetector::getMockedSignal()
 	ifstream myfile;
 	myfile.open("FilteredSignal.txt");
 	if (myfile.is_open())
-    {
+	{
 		int i = 0;
 		while (!myfile.eof())
 		{
@@ -552,12 +559,12 @@ ECGSignalChannel QRSPointsDetector::getMockedSignal()
 				break;
 		}
 		myfile.close();
-    }
+	}
 	else
 	{
-		#ifdef DEBUG
-			cout << "Cannot read mocked signal." << endl;
-		#endif
+#ifdef DEBUG
+		cout << "Cannot read mocked signal." << endl;
+#endif
 		TRI_LOG_STR("Cannot read mocked signal.");
 	}
 	return mockedSignal;

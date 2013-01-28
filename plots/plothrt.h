@@ -10,11 +10,13 @@
 #include <qwt6/qwt_plot_grid.h>
 #include <qwt6/qwt_plot_curve.h>
 #include <qwt6/qwt_scale_draw.h>
+#include <qwt6/qwt_legend.h>
 #else
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_scale_draw.h>
+#include <qwt_legend.h>
 #endif
 
 class PlotHRT : public QwtPlot

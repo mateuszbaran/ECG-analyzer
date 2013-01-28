@@ -11,6 +11,7 @@
 #include "DFAAnalyzer.h"
 #include "GeometricAnalysis.h"
 #include "TWaveAltDetector.h"
+#include "QRSPointsDetector.h"
 
 
 #include "wfdb/wfdb.h"
@@ -26,7 +27,8 @@ ECGController::ECGController (void) :
   rpeaks_module(new RPeaksDetector()),
   hrv_dft_module(new DFAAnalyzer()),
   hrt_module(new HRTAnalyzer()),
-  waves_module(new QRSPointsDetector()),
+  waves_module(NULL),
+  qrs_class_module(new QRSPointsDetector()),
   t_wave_alt_module(new TWaveAltDetector()),
   hrv1_module(new HRV1Analyzer()),
   hrv2_module(new GeometricAnalysis()),
@@ -204,7 +206,7 @@ void ECGController::runQRSClass ()
   {
     runECGBaseline();
   }
-  if (!waves_module->run_)
+  if (waves_module && !waves_module->run_)
   {
     runWaves();
   }
@@ -227,7 +229,7 @@ void ECGController::runSTInterval ()
   {
     runRPeaks();
   }
-  if (!waves_module->run_)
+  if (waves_module && !waves_module->run_)
   {
     runWaves();
   }
@@ -243,7 +245,7 @@ void ECGController::runTwaveAlt ()
   {
     runECGBaseline();
   }
-  if (!waves_module->run_)
+  if (waves_module && !waves_module->run_)
   {
     runWaves();
   }
@@ -267,7 +269,7 @@ void ECGController::runHRT ()
   {
     runQRSClass();
   }
-  hrt_module->runModule(r_peaks_data, classes_data, ecg_info, hrt_data);
+  hrt_module->runModule(r_peaks_data, qrsclass_data, ecg_info, hrt_data);
   hrt_module->run_ = true;
   LOG_END
 }
@@ -300,7 +302,8 @@ void ECGController::setRPeaksNotRun()
 void ECGController::setWavesNotRun()
 {
   TRI_LOG_STR(__FUNCTION__);
-  waves_module->run_ = false;
+  if(waves_module)
+	waves_module->run_ = false;
   setQRSClassNotRun();
   setSTIntervalNotRun();
   setTwaveAltNotRun();
@@ -472,28 +475,28 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			runRPeaks();
 			HANDLE_INTERRUPTION
 			statusUpdate("R peaks detection completed; HRV1 analysis ongoing.");
-			runHRV1();
+			//runHRV1();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRV1 analysis completed; HRV2 analysis ongoing.");
-      runHRV2();
+			runHRV2();
 			HANDLE_INTERRUPTION
-			statusUpdate("HRV2 analysis completed; HRVDFT analysis ongoing.");
-      runHRVDFT();
+			statusUpdate("HRV2 analysis completed; waves analysis ongoing.");
+			//runWaves();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRVDFT analysis completed; QRS analysis ongoing.");
-			runWaves();
+			runQRSClass();
       HANDLE_INTERRUPTION
-			statusUpdate("QRS analysis completed; QRS class analysis ongoing.");
-      runQRSClass();
-      HANDLE_INTERRUPTION
-			statusUpdate("QRS class analysis completed; ST segment analysis ongoing.");
+			statusUpdate("QRS analysis completed; ST interval analysis ongoing.");
+			runSTInterval();
+			HANDLE_INTERRUPTION
+			statusUpdate("ST interval analysis completed; HRVDFA analysis ongoing.");
       runSTInterval();
 			HANDLE_INTERRUPTION
-			statusUpdate("ST segment analysis completed; T wave analysis ongoing.");
-      runTwaveAlt();
-      HANDLE_INTERRUPTION
-			statusUpdate("T wave analysis completed; HRT analysis ongoing.");
-      runHRT();
+			statusUpdate("HRVDFA analysis completed; T wave alternans analysis ongoing.");
+			//runTwaveAlt();
+			HANDLE_INTERRUPTION
+			statusUpdate("T wave alternans analysis completed; HRT analysis ongoing.");
+			runHRT();
 			statusUpdate("Analysis complete!");
 			analysisComplete();
 			analysisCompl = true;
