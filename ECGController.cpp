@@ -211,7 +211,7 @@ void ECGController::runQRSClass ()
   }
   if (qrs_class_module)
   {
-    qrs_class_module->runModule(waves_data, filtered_signal, ecg_info, classes_data);
+    qrs_class_module->runModule(waves_data, filtered_signal, ecg_info, qrsclass_data);
     qrs_class_module->run_ = true;
   }
   LOG_END

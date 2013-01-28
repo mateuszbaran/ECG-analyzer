@@ -4,6 +4,7 @@
 #include "../ECGSignal.h"
 #include "../ECGChannelInfo.h"
 #include "../ECGWaves.h"
+#include "../QRSClass.h"
 
 #ifdef WIN32
 #define QWT_DLL
@@ -39,16 +40,19 @@ signals:
     void pOnEnabled(bool enabled);
     void pOffEnabled(bool enabled);
     void tOffEnabled(bool enabled);
+    void classEnabled(bool enabled);
 
 public slots:
     void setSignal(ECGSignalChannel signal, ECGChannelInfo info);
-    void setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks, ECGWaves* waves);
+    void setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks, ECGWaves* waves, QRSClass* qrsclass);
     void toggleRPeaks(bool toggle);
     void toggleQrsOn(bool toggle);
     void toggleQrsOff(bool toggle);
     void togglePOn(bool toggle);
     void togglePOff(bool toggle);
     void toggleTOff(bool toggle);
+    void toggleSV(bool togle);
+    void toggleV(bool toggle);
 private:
     void addIntSignal(QwtPlotCurve* curve, IntSignal signal);
     QwtPlotCurve* signalCurve;
@@ -58,7 +62,9 @@ private:
     QwtPlotCurve* pOnSetCurve;
     QwtPlotCurve* pEndSetCurve;
     QwtPlotCurve* tEndSetCurve;
-    
+    QwtPlotCurve* svCurve;
+    QwtPlotCurve* vCurve;
+
 };
 
 #endif // ECGCH_H

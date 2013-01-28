@@ -94,6 +94,16 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     legendTOff->setCheckable(true);
     legendMenu->addAction(legendTOff);
 
+    legendV = new QAction(QIcon(":/ECGanalyzer/icons/legend_trojkat.png"), "Zespół komorowy", legendMenu);
+    legendV->setIconVisibleInMenu(true);
+    legendV->setCheckable(true);
+    legendMenu->addAction(legendV);
+
+    legendSV = new QAction(QIcon(":/ECGanalyzer/icons/legend_gwiazda.png"), "Zespół nadkomorowy", legendMenu);
+    legendSV->setIconVisibleInMenu(true);
+    legendSV->setCheckable(true);
+    legendMenu->addAction(legendSV);
+
     setLegendRPeaksEnabled(false);
     setLegendPOffEnabled(false);
     setLegendPOnEnabled(false);
@@ -144,6 +154,8 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     connect(legendPOff, SIGNAL(toggled(bool)), ch1, SLOT(togglePOff(bool)));
     connect(legendPOn, SIGNAL(toggled(bool)), ch1, SLOT(togglePOn(bool)));
     connect(legendTOff, SIGNAL(toggled(bool)), ch1, SLOT(toggleTOff(bool)));
+    connect(legendV, SIGNAL(toggled(bool)), ch1, SLOT(toggleV(bool)));
+    connect(legendSV, SIGNAL(toggled(bool)), ch1, SLOT(toggleSV(bool)));
 
     connect(ch1, SIGNAL(rPeaksEnabled(bool)), this, SLOT(setLegendRPeaksEnabled(bool)));
     connect(ch1, SIGNAL(qrsOnEnabled(bool)), this, SLOT(setLegendQrsOnEnabled(bool)));
@@ -151,6 +163,7 @@ Ecg2Ch::Ecg2Ch(QWidget *parent) :
     connect(ch1, SIGNAL(pOnEnabled(bool)), this, SLOT(setLegendPOnEnabled(bool)));
     connect(ch1, SIGNAL(pOffEnabled(bool)), this, SLOT(setLegendPOffEnabled(bool)));
     connect(ch1, SIGNAL(tOffEnabled(bool)), this, SLOT(setLegendTOffEnabled(bool)));
+    connect(ch1, SIGNAL(classEnabled(bool)), this, SLOT(setLegendClassEnabled(bool)));
 }
 
 Ecg2Ch::~Ecg2Ch()
@@ -159,7 +172,7 @@ Ecg2Ch::~Ecg2Ch()
     delete ch2;
 }
 
-void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves *waves)
+void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves *waves, QRSClass *qrsclass)
 {
     double max_value_one, min_value_one, max_value_two, min_value_two;
 
@@ -169,7 +182,7 @@ void Ecg2Ch::setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves 
     float min_value = min(min_value_one, min_value_two);
 
 
-    ch1->setSignal(signal->channel_one, info->channel_one, peaks->GetRs(), waves);
+    ch1->setSignal(signal->channel_one, info->channel_one, peaks->GetRs(), waves, qrsclass);
     ch2->setSignal(signal->channel_two, info->channel_two);
 
     QRectF defaultRect(QPointF(0, max_value), QPointF((float)min(abs((int)(max_value * 1.3)), (int)signal->channel_one->signal->size), min_value));
@@ -235,6 +248,14 @@ void Ecg2Ch::setLegendTOffEnabled(bool enabled) {
     legendTOff->setEnabled(enabled);
     legendTOff->setChecked(enabled);
 }
+
+void Ecg2Ch::setLegendClassEnabled(bool enabled) {
+    legendV->setEnabled(enabled);
+    legendSV->setEnabled(enabled);
+    legendV->setChecked(false);
+    legendSV->setChecked(false);
+}
+
 
 void Ecg2Ch::resizeEvent(QResizeEvent *e) {
     control->resize(e);
