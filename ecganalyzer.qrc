@@ -21,5 +21,7 @@
         <file>icons/legend_dark_green.png</file>
         <file>icons/legend_green.png</file>
         <file>icons/legend.png</file>
+        <file>icons/legend_gwiazda.png</file>
+        <file>icons/legend_trojkat.png</file>
     </qresource>
 </RCC>

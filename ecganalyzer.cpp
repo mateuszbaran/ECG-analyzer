@@ -4,6 +4,7 @@
 #include <QThread>
 #include <functional>
 #include <boost/foreach.hpp>
+#include <QDebug>
 
 using namespace std;
 
@@ -110,9 +111,10 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
         _ECGcontroller.runRPeaks();
         _ECGcontroller.runQRSClass();
+
         on_run_st_analysis_button_clicked();
 
-        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data), &(_ECGcontroller.waves_data));
+        ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data), &(_ECGcontroller.waves_data), &(_ECGcontroller.qrsclass_data));
 
 		//HRV2 - poczatek, kfarganus
 		setHRV2Params();
@@ -141,8 +143,8 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 
 		//HRV2 koniec
 		
-		_ECGcontroller.runHRT();
-		plotHRT->setData(_ECGcontroller.hrt_data);
+//		_ECGcontroller.runHRT();
+//		plotHRT->setData(_ECGcontroller.hrt_data);
 
 //        _ECGcontroller.runHRV1();
 //        plotHRVFrequency->setData(_ECGcontroller.hrv1_data);

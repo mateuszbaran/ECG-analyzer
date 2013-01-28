@@ -23,7 +23,6 @@ EcgCh::EcgCh(QWidget *parent) :
      peaksCurve->setYAxis(QwtPlot::yLeft);
      peaksCurve->setStyle(QwtPlotCurve::NoCurve);
      peaksCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::red), QColor(Qt::red), QSize(6, 6)));
-     peaksCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
      peaksCurve->setPen(QPen(Qt::red, 5));
      peaksCurve->attach(this);
 
@@ -56,6 +55,20 @@ EcgCh::EcgCh(QWidget *parent) :
      tEndSetCurve->setStyle(QwtPlotCurve::NoCurve);
      tEndSetCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(116,11,11), QColor(116,11,11), QSize(6, 6)));
      tEndSetCurve->attach(this);
+
+     vCurve = new QwtPlotCurve("V");
+     vCurve->setYAxis(QwtPlot::yLeft);
+     vCurve->setStyle(QwtPlotCurve::NoCurve);
+     vCurve->setSymbol(new QwtSymbol(QwtSymbol::Triangle,QColor(Qt::red), QColor(Qt::red), QSize(6, 6)));
+     vCurve->attach(this);
+     vCurve->setVisible(false);
+
+     svCurve = new QwtPlotCurve("SV");
+     svCurve->setYAxis(QwtPlot::yLeft);
+     svCurve->setStyle(QwtPlotCurve::NoCurve);
+     svCurve->setSymbol(new QwtSymbol(QwtSymbol::Star1,QColor(Qt::red), QColor(Qt::red), QSize(6, 6)));
+     svCurve->attach(this);
+     svCurve->setVisible(false);
 
      setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(360.0));
 
@@ -90,7 +103,7 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info)
     replot();
 }
 
- void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks, ECGWaves* waves)
+void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info, IntSignal peaks, ECGWaves* waves, QRSClass *qrsclass)
  {
     setSignal(signal, info);
     if (peaks)
@@ -134,8 +147,31 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info)
         emit pOffEnabled(false);
         emit tOffEnabled(false);
     }
- }
+    if (qrsclass->GetQRS_morphology())
+    {
+        gsl_vector_int *v = qrsclass->GetQRS_morphology()->signal;
 
+        QVector<QPointF> svSamples;
+        QVector<QPointF> vSamples;
+        for (long int i = 0; i < v->size; i++)
+        {
+
+            if (v->data[i*v->stride])
+                svSamples.push_back(qrsOnSetCurve->sample(i));
+            else
+                vSamples.push_back(qrsOnSetCurve->sample(i));
+        }
+
+        vCurve->setSamples(vSamples);
+        svCurve->setSamples(svSamples);
+        emit classEnabled(true);
+    }
+    else
+    {
+        emit classEnabled(false);
+    }
+    replot();
+}
  void EcgCh::toggleRPeaks(bool toggle)
  {
      peaksCurve->setVisible(toggle);
@@ -169,6 +205,18 @@ void EcgCh::setSignal(ECGSignalChannel signal, ECGChannelInfo info)
  void EcgCh::toggleTOff(bool toggle)
  {
      tEndSetCurve->setVisible(toggle);
+     replot();
+ }
+
+ void EcgCh::toggleV(bool toggle)
+ {
+     vCurve->setVisible(toggle);
+     replot();
+ }
+
+ void EcgCh::toggleSV(bool toggle)
+ {
+     svCurve->setVisible(toggle);
      replot();
  }
 

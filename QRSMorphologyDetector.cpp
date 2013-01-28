@@ -1,5 +1,5 @@
 #include "QRSMorphologyDetector.h"
-
+#include <QDebug>
 
 
 double dlugosc(ECGSignalChannel * signal, int forBegin, int forEnd){
@@ -125,6 +125,7 @@ bool QRSMorphologyDetector::detectQRSMorphology()
 		else gsl_vector_int_set(tmpSig->signal,i,VENTRICULUS);
 
 	}
-	qrsMorphology->setQrsMorphology(tmpSig);
+
+    qrsMorphology->setQrsMorphology(tmpSig);
 	return 1;
 }

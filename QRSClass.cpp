@@ -1,4 +1,5 @@
 #include "QRSClass.h"
+#include <QDebug>
 
 QRSClass::QRSClass (void)
 {}

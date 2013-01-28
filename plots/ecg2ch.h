@@ -22,7 +22,7 @@ public:
     ~Ecg2Ch();
     
 public slots:
-    void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves *waves);
+    void setSignal(ECGSignal *signal, ECGInfo *info, ECGRs *peaks, ECGWaves *waves, QRSClass *qrsclass);
     void syncToggled(bool);
     void setLegendRPeaksEnabled(bool enabled);
     void setLegendQrsOnEnabled(bool enabled);
@@ -30,6 +30,7 @@ public slots:
     void setLegendPOnEnabled(bool enabled);
     void setLegendPOffEnabled(bool enabled);
     void setLegendTOffEnabled(bool enabled);
+    void setLegendClassEnabled(bool enabled);
 
     virtual void resizeEvent(QResizeEvent* e);
 private:
@@ -39,7 +40,7 @@ private:
 
     QToolButton *syncButton, *zoomResetFirstButton, *zoomInFirstButton, *zoomOutFirstButton, *zoomResetSecondButton, *zoomInSecondButton, *zoomOutSecondButton, *legendButton;
     QMenu *legendMenu;
-    QAction *legendRpeaks, *legendQrsOn, *legendQrsOff, *legendPOn, *legendPOff, *legendTOff;
+    QAction *legendRpeaks, *legendQrsOn, *legendQrsOff, *legendPOn, *legendPOff, *legendTOff, *legendV, *legendSV;
 
 };
 
