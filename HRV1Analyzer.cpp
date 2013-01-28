@@ -43,26 +43,26 @@ void HRV1Analyzer::prepareSignal() {
 	        ExampleSignal es = ExampleSignal();
 
 	        sig = es.getSignal();
-	        signalSize = es.getLength();
+	        this->signalSize = es.getLength();
 	        signalSampling = 500;
 
 			std::cout << "ExampleSignal loaded.\n";
 
 		#else
-            signalSize = rPeaksData.GetRs()->signal->size;
-
-			sig = new double[signalSize];
+            this->signalSize = (unsigned int) rPeaksData.GetRs()->signal->size*1;
+			sig = new double[this->signalSize];
 
 			double scalingValue = (double)(1000.0/signalSampling);
 			int v1, v2;
 
-			for(int i = 0; i < signalSize-1; i++) {
+			for(int i = 0; i < this->signalSize-1; i++) {
 				v1 = gsl_vector_int_get (rPeaksData.GetRs()->signal, i);
 				v2 = gsl_vector_int_get (rPeaksData.GetRs()->signal, i+1);
 
 				sig[i] = (double) abs(v2-v1) * scalingValue;
-				this->signalSize -= 1;
 			}
+			//po przygotowaniu wielkosc sygnalu RR ulega zmniejszeniu
+			this->signalSize = this->signalSize -1;
 
 		#endif
 
@@ -73,16 +73,17 @@ void HRV1Analyzer::prepareSignal() {
 	}
 
 void HRV1Analyzer::prepareSigAbsolute() {
-	sigAbsolute = new double[signalSize];
+	sigAbsolute = new double[this->signalSize];
 
 	sigAbsolute[0] = sig[0];
 
-	#ifdef DEBUG_SIG
-		for(int i=1; i<signalSize; i++) {
-			sigAbsolute[i] = sig[i] + sigAbsolute[i-1];
+	for(int i=1; i<this->signalSize; i++) {
+		sigAbsolute[i] = sig[i] + sigAbsolute[i-1];
+		#ifdef DEBUG_SIG
 			qDebug() << "sig: " << sig[i] << " sigA: " << sigAbsolute[i];
-		}
-	#endif
+		#endif
+	}
+	
 }
 
 /**
@@ -100,12 +101,12 @@ void HRV1Analyzer::calculateParameters() {
 	/////////////////////RR_avg
 	//OK: accuracy (vs Matlab 2010b) 0.00005
 
-	this->hrv1Data->RR_avg = mean(sig,0,signalSize);
+	this->hrv1Data->RR_avg = mean(sig,0,this->signalSize);
 
 	/////////////////////RR_stddev
     //OK: accuracy 0.006
 
-	this->hrv1Data->RR_stddev = std(sig,0,signalSize);
+	this->hrv1Data->RR_stddev = std(sig,0,this->signalSize);
 
 
 	//////////////////////SDNN
@@ -113,24 +114,29 @@ void HRV1Analyzer::calculateParameters() {
 
 	temp=0;
 
-	for(int i=0; i<signalSize; i++) {
+	for(int i=0; i<this->signalSize; i++) {
 		temp += (this->hrv1Data->RR_avg-sig[i])
 						*(this->hrv1Data->RR_avg-sig[i]);
 	}
 
-	this->hrv1Data->SDNN = sqrt( (double)temp/signalSize );
-
+	this->hrv1Data->SDNN = sqrt( (double)temp/this->signalSize );
+	#ifdef DEBUG
+		qDebug() << "SDNN:" << this->hrv1Data->SDNN;
+	#endif
 
 	//////////////////////RMSSD
 	//OK: accuracy 0.00005
 
 	temp=0;
 
-	for(int i=0; i<signalSize-1; i++) {
+	for(int i=0; i<this->signalSize-1; i++) {
 		temp += (sig[i+1]-sig[i])*(sig[i+1]-sig[i]);
 	}
 
-	this->hrv1Data->RMSSD = sqrt( (double)temp/(signalSize-1) );
+	this->hrv1Data->RMSSD = sqrt( (double)temp/(this->signalSize-1) );
+	#ifdef DEBUG
+		qDebug() << "RMSSD:" << this->hrv1Data->RMSSD;
+	#endif
 
 
 	//////////////////////NN50
@@ -139,18 +145,24 @@ void HRV1Analyzer::calculateParameters() {
 	temp=0;
 	double thresholdNN50  = 50;
 
-	for(int i=0; i<signalSize-1; i++) {
+	for(int i=0; i<this->signalSize-1; i++) {
 		if (abs(sig[i+1]-sig[i]) > thresholdNN50)
 			temp++;
 	}
 
 	this->hrv1Data->NN50 = temp;
+	#ifdef DEBUG
+		qDebug() << "NN50:" << this->hrv1Data->NN50;
+	#endif
 
 
 	/////////////////////pNN50
 	//OK: accuracy 0.00005
 
-	this->hrv1Data->pNN50 = this->hrv1Data->NN50*100/(signalSize-1);
+	this->hrv1Data->pNN50 = this->hrv1Data->NN50*100/(this->signalSize-1);
+	#ifdef DEBUG
+		qDebug() << "pNN50:" << this->hrv1Data->pNN50;
+	#endif
 
 	/////////////////////SDANN & SDANNi
 	//SDANN: accuracy 0.5
@@ -160,13 +172,13 @@ void HRV1Analyzer::calculateParameters() {
 
     //temp variables
     int windowSize = 1000*60*5; /* 60 seconds*5minutes */
-	int numberOfSteps = std::floor( sigAbsolute[signalSize-1]/windowSize );
-  if (numberOfSteps < 0)
-  {
-    //TODO: something went wrong, fix
-    qDebug() << "ok";
-	//return;
-  }
+	long numberOfSteps = std::floor( sigAbsolute[this->signalSize-1]/windowSize );
+	//zabezpieczenie na wypadek smieci w ostatniej probce
+	  if (numberOfSteps < 0) {
+		//qDebug() << "Pewne problemy z sygnalem. Naprawiono!";
+		this->signalSize = this->signalSize -1;
+		long numberOfSteps = std::floor( sigAbsolute[this->signalSize-1]/windowSize );
+	  }
 
     double * mRRI = new double[numberOfSteps];
     double * stdRR5 = new double[numberOfSteps];
@@ -181,13 +193,13 @@ void HRV1Analyzer::calculateParameters() {
         windowStartIndex = 0;
         windowEndIndex = 0;
 
-	    for(int i=0; i<signalSize; i++) {
+	    for(int i=0; i<this->signalSize; i++) {
 	        if(windowStartTime<=sigAbsolute[i]) {
                 windowStartIndex=i;
                 break;
 	        }
 	    }
-	    for(int i=0; i<signalSize; i++) {
+	    for(int i=0; i<this->signalSize; i++) {
 	        if(windowEndTime<=sigAbsolute[i]) {
                 windowEndIndex=i;
                 break;
@@ -199,9 +211,9 @@ void HRV1Analyzer::calculateParameters() {
 	    stdRR5[step-1] = std(sig, windowStartIndex, windowEndIndex+1);
 
 		#ifdef DEBUG
-			qDebug() << "windowStartIndex=" << windowStartIndex << " windowEndIndex=" << windowEndIndex;
-			qDebug() << "windowStartTime=" << windowStartTime << " windowEndTime=" << windowEndTime;
-			qDebug() << "mRRI=" << mRRI[step-1] << " stdRR5=" << stdRR5[step-1];
+		qDebug() << "#windowStartIndex=" << windowStartIndex << " windowEndIndex=" << windowEndIndex;
+		qDebug() << "#windowStartTime=" << windowStartTime << " windowEndTime=" << windowEndTime;
+		qDebug() << "#mRRI=" << mRRI[step-1] << " stdRR5=" << stdRR5[step-1];
 		#endif
 
 	}
@@ -209,27 +221,34 @@ void HRV1Analyzer::calculateParameters() {
 	//zapis SDANN i SDANNi
 	this->hrv1Data->SDANN = std(mRRI, 0, numberOfSteps);
 	this->hrv1Data->SDANN_index = mean(stdRR5, 0, numberOfSteps);
+	#ifdef DEBUG
+		qDebug() << "SDANN:" << this->hrv1Data->SDANN;
+		qDebug() << "SDANNi:" << this->hrv1Data->SDANN_index;
+	#endif
 
 
 	///////////////////SDSD
 	//OK: accuracy 0.01
 
-    double* tmpSig = new double[signalSize-1];
+    double* tmpSig = new double[this->signalSize-1];
 
-    for(int i=0; i<signalSize-1; i++) {
+    for(int i=0; i<this->signalSize-1; i++) {
         tmpSig[i] = sig[i+1] - sig[i];
     }
 
-    this->hrv1Data->SDSD = std(tmpSig,0,signalSize-1);
+    this->hrv1Data->SDSD = std(tmpSig,0,this->signalSize-1);
+	#ifdef DEBUG
+		qDebug() << "SDSD:" << this->hrv1Data->SDSD;
+	#endif
 
     delete[] tmpSig;
 
 
 	////////////////////FFT
 
-	double* sigAfterSpline = cubicSpline(sigAbsolute, sig, signalSize);
+	double* sigAfterSpline = cubicSpline(sigAbsolute, sig, this->signalSize);
 
-	int sigAfterSplineSize = (int)(sigAbsolute[signalSize-1]/(FREQUENCY_FFT))-1;
+	int sigAfterSplineSize = (int)(sigAbsolute[this->signalSize-1]/(FREQUENCY_FFT))-1;
 
 	double* fftMagnitude = doFFT(sigAfterSpline, sigAfterSplineSize);
 
@@ -253,7 +272,7 @@ void HRV1Analyzer::calculateParameters() {
     }
     this->hrv1Data->TP = this->hrv1Data->ULF + this->hrv1Data->VLF + this->hrv1Data->LF + this->hrv1Data->HF;
     this->hrv1Data->LFHF = this->hrv1Data->LF / this->hrv1Data->HF;
-
+	
 	#ifdef DEBUG
 		qDebug() << "ULF:" << this->hrv1Data->ULF;
 		qDebug() << "VLF:" << this->hrv1Data->VLF;
@@ -297,6 +316,9 @@ void HRV1Analyzer::calculateParameters() {
  */
 double* HRV1Analyzer::doFFT(double* sigAfterSpline, int size) {
 
+	// ustalenie uwagi na interesujacy nas fragment sygnalu 
+	int sizeFftSig = 2000; //nieco ponad 1,6Hz
+
 	#ifdef DEBUG
 		qDebug() << "Method doFFT() started";
 	#endif
@@ -304,7 +326,9 @@ double* HRV1Analyzer::doFFT(double* sigAfterSpline, int size) {
 	#ifdef DEV
         std::cout << "Method doFFT() started\n";
     #endif
-	size = 2000;
+    
+	size = (size>2000)?sizeFftSig:(int)(size*3/4); //nieco ponad 1,6Hz
+
 
 	kiss_fft_cpx * out_cpx = new kiss_fft_cpx[size], * out = new kiss_fft_cpx[size], *cpx_buf;
 
@@ -320,13 +344,9 @@ double* HRV1Analyzer::doFFT(double* sigAfterSpline, int size) {
 	sizeFftIndex = (size+(size%2))/2;
 	double * fftMagnitude = new double[sizeFftIndex];
 
-	#ifdef DEBUG
-		qDebug() << "fftMagnitude[] length: " << sizeFftIndex;
-	#endif
-
 	#ifdef DEV
         std::cout << "fftMagnitude[] length: " << sizeFftIndex << "\n";
-    #endif
+  #endif
 
 	for(int i=0; i<sizeFftIndex; i++) {
 		fftMagnitude[i] = 2*(out_cpx[i].r*out_cpx[i].r)/(size*size); //=(abs(out_cpx[i].r)/size)*(abs(out_cpx[i].r)/size)
@@ -394,11 +414,11 @@ double* HRV1Analyzer::cubicSpline(double* x, double* y, int nframe) {
                             s);
 
 	//wlasciwe interpolowanie funkcji
-    long sizeAfterSpline = (long)(x[signalSize-1]/FREQUENCY_FFT) +1;
+    long sizeAfterSpline = (long)(x[this->signalSize-1]/FREQUENCY_FFT) +1;
 	double* sigI = new double[sizeAfterSpline];
 
-	#ifdef DEV
-        std::cout << "cubicSpline sizeAfterSpline= " << sizeAfterSpline << "\n";
+	#ifdef DEBUG
+        qDebug() << "cubicSpline sizeAfterSpline= " << sizeAfterSpline << "\n";
     #endif
 
     for(int i=0; i<sizeAfterSpline; i++) {

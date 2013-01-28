@@ -5,9 +5,9 @@
 //#define DEV
 
 /// wlacza tryb debugowania
-//#define DEBUG
+#define DEBUG
 //#define DEBUG_FFT
-//#define DEBUG_SIG
+#define DEBUG_SIG
 
 #pragma once
 
@@ -57,9 +57,9 @@ private:
 	//RR peaks signal parameters
 	double *sig;
 	double *sigAbsolute;
-    long signalSize;
-    long sizeFftIndex;
-    int signalSampling;
+    unsigned int signalSize;
+    unsigned int sizeFftIndex;
+    unsigned int signalSampling;
 
     //methods
     void prepareSignal();
