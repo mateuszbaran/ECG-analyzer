@@ -27,8 +27,7 @@ ECGController::ECGController (void) :
   rpeaks_module(new RPeaksDetector()),
   hrv_dft_module(new DFAAnalyzer()),
   hrt_module(new HRTAnalyzer()),
-  waves_module(NULL),
-  qrs_class_module(new QRSPointsDetector()),
+  waves_module(new QRSPointsDetector()),
   t_wave_alt_module(new TWaveAltDetector()),
   hrv1_module(new HRV1Analyzer()),
   hrv2_module(new GeometricAnalysis()),
@@ -187,7 +186,7 @@ void ECGController::runHRV2 ()
   LOG_END
 }
 
-void ECGController::runHRVDFT ()
+void ECGController::runHRVDFA ()
 {
   TRI_LOG_STR(__FUNCTION__);
   if (!rpeaks_module->run_)
@@ -481,7 +480,7 @@ void ECGController::rerunAnalysis( std::function<void(std::string)> statusUpdate
 			runHRV2();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRV2 analysis completed; waves analysis ongoing.");
-			//runWaves();
+			runWaves();
 			HANDLE_INTERRUPTION
 			statusUpdate("HRVDFT analysis completed; QRS analysis ongoing.");
 			runQRSClass();

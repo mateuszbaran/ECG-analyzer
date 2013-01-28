@@ -12,14 +12,14 @@
 
 using namespace std;
 
-class QRSPointsDetector : public QRSClassModule
+class QRSPointsDetector : public WavesModule
 {
 public:
 	QRSPointsDetector(void);
 	~QRSPointsDetector(void);
 
 	void setParams(ParametersTypes &parameterTypes);
-	void runModule (ECGWaves &, const ECGSignalChannel &, const ECGRs &, const ECGInfo &, ECGClasses &);
+	void runModule (const ECGSignalChannel &, const ECGInfo &, const ECGRs &, ECGWaves &);
 
 	ECGSignalChannel getMockedSignal();
     ECGRs getMockedRPeak();

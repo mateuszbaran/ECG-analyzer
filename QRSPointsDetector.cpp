@@ -48,7 +48,7 @@ QRSPointsDetector::~QRSPointsDetector(void)
 void QRSPointsDetector::setParams(ParametersTypes &parameterTypes){}
 
 
-void QRSPointsDetector::runModule (ECGWaves &ecgWaves, const ECGSignalChannel &filteredSignal, const ECGRs &ecgRs, const ECGInfo &ecgi, ECGClasses &classes){
+void QRSPointsDetector::runModule (const ECGSignalChannel &filteredSignal, const ECGInfo &ecgi, const ECGRs &ecgRs, ECGWaves &ecgWaves){
 	double inputValue = gsl_vector_get (filteredSignal->signal, 1);
 	try{
 		this->filteredSignal = filteredSignal;
