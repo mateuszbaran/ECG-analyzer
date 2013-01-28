@@ -233,28 +233,448 @@ Autorzy: Weronika Łabaj i Piotr Matuszkiewicz.
 
 \begin{description}
 \item[Temat] Metody filtracji i detekcji izolinii w sygnale EKG
-\item[Opis] Występujące zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej w sygnale EKG niejednokrotnie uniemożliwiają właściwą i poprawną analizę sygnału. Celem projektu jest opracowanie i implementacja metod związanych filtracją i detekcją linii izoelektrycznej w~sygnale EKG. W szczególności należy rozważyć:
-  \begin{itemize}
-  \item filtr Butterwortha,
-  \item średnią kroczącą,
-  \item metody nieadaptacyjne: filtr Savitzky-Golay’a
-  \item metody atapdacyjne np. filtr Wienera, LMS
-  \end{itemize}
-\item[Dane] ciąg próbek sygnału EKG z bazy Physionet.org
-\item[Szukane] moduł programu filtrujący sygnał EKG z zakłóceń sieciowych/mięśniowych oraz usuwający z sygnału falowanie linii izoelektrycznej przy wykorzystaniu różnych metod; w ostatecznym module programu będzie możliwość wyboru algorytmu filtrującego i usuwającego falowanie linii izoelektrycznej
+\item[Opis] Wystepujace w sygnale EKG zakłócenia sieciowe i mięśniowe, jak również falowanie linii izoelektrycznej niejednokrotnie uniemożliwiaja przeprowadzenie własciwej i poprawną analizy sygnału. W szczególności mają one wpływ na detekcję odcinków ST. W zwiazku z tym detekcja i usunięcie izolini, zwanej również linią bazową (\textit{ang. baseline}) jest standardowym pierwszym elementem w tym procesie. Od tego, w jakim stopniu sygnał oddany do dalszej analizy pozbawiony bedzie zakłóceń zależy jej dokładność i powodzenie. Celem niniejszej części projektu jest opracowanie i implementacja metod zwiazanych z detekcją i filtracją linii bazowej w sygnale EKG.
+\item[Dane] Do przetwarzania w projekcie wykorzystywane są ciągi próbek sygnału EKG z bazy Physionet.org (\verb|MIT-BIH|)
+\item[Szukane] Efektem pracy ma być moduł programu filtrujący sygnał EKG z zakłóceń sieciowych/mięśniowych oraz usuwający z sygnału falowanie linii izoelektrycznej przy wykorzystaniu różnych metod. Moduł powinien umożliwiać wybór metody detekcji i usuwania oraz ustawienie parametrów.
 \end{description}
 
 \subsubsection{Badania literaturowe}
 \label{sec:baseline:papers}
+Problem detekcji i usuwania lini bazowej jest szeroko omawiany zarówno w książkach związanych z tematyką przetwarzania sygnałow diagnostycznych \cite{AUGUST1}, jak i w publikacjach i pracach naukowych \cite{KAUR1}\cite{MUKA1}. W kontekście tego klasycznego problemu porównywano już wiele metod - zarówno typowe filtry FIR i IIR, transformację falkową, uśrednianie sygnału, czy też filtry adaptacyjne, biorąc pod uwagę zmiany współczynników jakości w zależności od ustalonych parametrów. Wśród parametrów, jakie stosowane są do oceny jakości działania filtrów można wymienić:
+\begin{enumerate}
+\item \verb+SNR+ - \textit{Signal-to-Noise Ratio} -  stosunek sygnału do szumu, jeden z popularniejszych parametrów
+\item \verb+PSD+ - \textit{Power Spectral Density} - gęstość widmowa mocy
+\item \verb+PRD+ - \textit{Percent Root Mean Square Difference} - procentowa różnica średnio-kwadratowa
+\item \verb+PSNR+ - \textit{Peak Signal-to-Noise Ratio} - szczytowy stosunek sygnału do szumu
+\end{enumerate}
+Każda metoda ma zarówno wady i zalety, dlatego dokonanie wyboru w celu implementacji w projekcie nie było łatwym zadaniem.
+
+\paragraph{Wybór metod}
+Biorąc pod uwagę fakt, iż nadrzędnym celem projektu jest zbudowanie oprogramowania do analizy sygnału EKG, a nie badanie wydajności metod na poszczególnych etapach przetwarzania, wybór padł na metody sprawdzone. Wybrano jedną metodę uśredniającą - \verb|metodę średniej| \verb|kroczącej| (\textit{ang. moving average method}) oraz filtry o \verb|nieskończonej odpowiedzi impulsowej| (\verb|IIR|) - \verb|Butterworth'a| i \verb|Chebyshev'a|. Taki zestaw, bazując na informacjach ze źródeł, powinien spełnić stawianie przed nim wymagania. Do oceny jakości działania filtrów zastosowano \verb|SNR| i \verb|PSNR|.
+
+\subparagraph{Metoda średniej kroczącej}
+Algorytm uśredniania sygnału w ruchomym oknie jest bardzo prostą metodą usuwania zakłóceń sygnału. Sygnał jest wygładzany poprzez zastąpienie wartości średnią wyliczoną wartością sygnału w oknie o ustalonej szerokości (nieparzystej, \textit{2N+1}, gdzie \verb|N| to sąsiedztwo) \eqref{eq:I}. Po dokonaniu obliczenia okno przesuwane jest o jedną próbkę i kalkulacje są powtarzane. 
+\begin{equation}
+Ys(i) = \frac{1}{2N+1}(Y(i+N)+Y(i+N-1)+...+Y(i-N) \label{eq:I}
+\end{equation}
+Oczywistym jest, że na krańcach przedziału nie można stosować tej metody, ze względu na brak możliwości obrania odpowiednio dużego sąsiedztwa - w takim przypadku przepisuje się wartości sygnału bazowego do wektora wynikowego.\\
+Aby średnią kroczącą zastosować do usuwania lini bazowej należy wyliczone wartości odejmować od odpowiednich próbek sygnału bazowego. Metoda zachowuje się wtedy jak swego rodzaju filtr górnoprzepustowy \cite{KAUR1}. Metoda ta została wybrana do projektu ze względu na prostotę i szybkość implementacji. Nie jest ona jednak pozbawiona wad. Usuwa zakłócenia w sposób zadowalający, niemniej jednak powoduje dość znaczące zatracanie cech charakterystycznych sygnału, na przykład w przypadku EKG wyraźnych "pików". Jest to łatwe do stwierdzenia empirycznie, zestawiając wykresy sygnału bazowego i przefiltrowanego \eqref{fig:fig_srednia}.
+
+\subparagraph{Filtr Butterworth'a}
+Według różnych źródeł \cite{JAGT1} pasmo informacyjne sygnału EKG zawiera się w przedziale od \verb|0.05Hz-5Hz| do \verb|100Hz|, dlatego do redukcji zakłóceń można stosować filtry zarówno dolno- jak i górnoprzepustowe.\\
+
+Filtr \verb|Butterworth'a| to filtr charakteryzujący się maksymalnie płaską charakterystyką amplitudową w paśmie przenoszenia. Częstotliwość graniczną filtru wyznacza spadek sygnału (\textit{ang. ripple}) o 3 dB. Jest to filtr powszechnie uważany za bardzo skuteczny w filtrowaniu linii bazowej \cite{KAUR1}.\\
+Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Butterworth'a| (IIR):
+\begin{enumerate}
+\item \textit{górnoprzepustowa} drugiego rzędu, o częstotliwości odcięcia (\textit{ang. cut-off frequency}) \verb|5Hz|\eqref{fig_butter}
+\item \textit{dolnoprzepustowa} czwartego rzędu, o częstotliwości odcięcia \verb|100Hz|
+\end{enumerate}
+O ile w przypadku filtru dolnoprzepustowego dobór częstotliwości nie dziwi - bo jak już wcześniej wspomniano na 100Hz kończy się pasmo informacyjne EKG - o tyle w przypadku górnoprzepustowego może paść pytanie, dlaczego akurat 5Hz. W sygnale EKG, do poziomu 5Hz, można napotkać artefakty wynikające z ruchy pacjenta (\textit{motion artifacts}, a dodatkowo filtr wyeliminuje również zakłócenia na niższych częstotliwościach.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{include/fig_butter.eps}
+\caption{Odpowiedź amplitudowa filtru Butterworth'a (górnoprzepustowego)}
+\label{fig_butter}
+\end{figure}
+Jak już to zostało wspomniane - filtr Butterwortha jest bardzo skuteczny, niemniej jednak równniez on nie jest pozbawiony wad. Przez to, że jako filtr IIR ma nieliniową odpowiedź fazową, istnieje tendencja do znacznego zniekształcania sygnału bazowego. Aby uniknąć tego zjawiska stosuje się tzw. \verb|filtrowanie o charakterystyce zero-fazowej| \textit{ang. Zero-Phase filtering}, opisan w kolejnych paragrafch.
+
+\subparagraph{Filtr Chebyshev'a} 
+Jest to rodzaj filtru elektrycznego, którego charakterystyczną cechą jest wykorzystanie \textit{wielomianów Chebyshev'a} do aproksymacji charakterystyki częstotliwościowej amplitudowej. Optymalizacja przebiegu charakterystyki częstotliwościowej amplitudowej w filtrach tego typu ma kluczowe znaczenie.\\
+Wyróżnia się dwa typy filtrów:
+\begin{enumerate}
+\item \verb|filtry Chebyshev'a typu I| - zafalowania przebiegu wzmocnienia w paśmie przepustowym, oraz płaski przebieg charakterystyki w paśmie zaporowym
+\item \verb|filtry Chebyshev'a typu II| - zafalowania przebiegu wzmocnienia w paśmie zaporowym, oraz płaski przebieg charakterystyki w paśmie przepustowym, nazywany przez to zwykle \textit{inwersyjnym}
+\end{enumerate}
+Filtry \verb|Chebyshev'a| mają porównywalną skuteczność do filtrów \verb|Butterworth'a|. Na ich korzyśc przemawia zdecydowanie lepsze tłumienie za pasmem przepustowym (stroma charakterystyka). Wsród minusów można wymienić falowanie w pasmie przepustowym w przypadku filtru \verb|typu I| oraz dodatkowy parametru - \verb|tętnienie, ang. ripple| - niezbędny do zdefiniowania filtru. Dla porównania w przypadku \verb|Butterworth'a| wystarczy częstotliwośc odcięcia.\\
+Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Chebyshev'a|:
+\begin{enumerate}
+\item \textit{górnoprzepustowa typu II}, trzeciego rzędu, o częstotliwości odcięcia \verb|0.5Hz| i tętnieniu \verb|-3dB|
+\item \textit{dolnoprzepustowa typu I}, piątego rzędu, o częstotliwości odcięcia \verb|100Hz| i tętnieniu \verb|-3dB|
+\end{enumerate}
+Również w przypadku tego filtru konieczne będzie zastosowanie się tzw. \verb|filtrowania o charakterystyce| \verb|zero-fazowej| \textit{ang. Zero-Phase filtering}.
+
+\subparagraph{Filtrowanie o charakterystyce zero-fazowej}
+Filtrowanie \verb|Zero-Phase| wykorzystuje w swym działaniu współczynniki filtru bazowego (np. Butterworth'a czy też Czebyshev'a) i wykonuje filtrowanie dwukrotnie, stosując małe okno, w obie strony sygnału - od początku do końca i od końca do początku. Rezultatem tego filtrowania jest:
+\begin{enumerate}
+\item brak opóźnień w sygnale przefiltrowanym, ze względu na przejście sygnału w obie strony
+\item redukcja zaburzeń sygnału na krańcach przedziału - poprzez zachowanie warunków początkowych
+\item zachowanie cech charakterystycznych sygnału bazowego (w przeciwieństwie do samego filtru IIR czy też np. średniej kroczącej)
+\item rząd filtru zero-fazowego jest równy podwojonemu rzędowi filtru bazowego.
+\end{enumerate}
+Filtr może być opisany przez poniższe rekurencyjne równanie \eqref{eq:II}
+\begin{equation}
+y[n] = a_{0}x[n]+a_{1}x[n+1]+a_{2}x[n+2]+a_{3}x[n+3]+b_{1}y[n+1]+b_{2}y[n+2]+b_{3}y[n+3] \label{eq:II}
+\end{equation}
+a nastepnie odwrotne rekurencyjne równanie, do zastosowania przy przejściu od końca sygnału \eqref{eq:III}
+\begin{equation}
+y[n] = a_{0}x[n]+a_{1}x[n-1]+a_{2}x[n-2]+a_{3}x[n-3]+b_{1}y[n-1]+b_{2}y[n-2]+b_{3}y[n-3] \label{eq:III}
+\end{equation}
+Należy przyjąć, że \verb|b| to współczynniki licznika transmitancji filtru bazowego, a \verb|a| to współczynniki mianownika.
+
+\subparagraph{Signal-to-Noise Ratio}
+Parametr oznaczający stosunek sygnału (użytecznego) do szumu. Jest stosowany jako parametr pomocniczy w określeniu jakości sygnału. Obliczany za pomocą następującej formuły:
+\begin{equation}
+SNR= 20\log_{10}(\frac{A_{sygnal}}{A_{szum}}) \label{eq:IV}
+\end{equation}
+gdzie \verb|A| oznacza amplitudę sygnału. W praktyce \verb|A| wyliczane jest jako średnia kwadratowa amplitud w sygnale.
+
+\subparagraph{Peak Signal-to-Noise Ratio}
+Parametr oznaczający stosunek maksymalnej mocy sygnału do średniej wartości szumu. Również jest stosowany jako parametr pomocniczy w określeniu jakości sygnału. Obliczany za pomocą następującej formuły:
+\begin{equation}
+PSNR= 10\log_{10}(\frac{k^2}{MSE}) \label{eq:V}
+\end{equation}
+gdzie \verb|MSE| oznacza błąd średniokwadratowy obliczany za pomoca
+\begin{equation}
+MSE=\frac{1}{N}\sum\limits_{i=1}^N([f(i)-f'(i)]^2)\label{eq:VI}
+\end{equation}
+gdzie \verb|N| oznacza długość sygnału, \verb|f| to sygnał oryginalny, \verb|f'| to sygnał przefiltrowany, a \verb|k| to maksymalna amplituda sygnału bazowego.
+
+
+\subsubsection{Opis funkcjonalności modułu}
+Nadrzędnym przeznaczeniem modułu jest filtracja i usuwanie lini bazowej. Niemniej jednak moduł bardziej kompleksowo przygotowuje sygnał do dalszej analizy.\\
+Realizowane są następujące funkcjonalności:
+\begin{enumerate}
+\item Wybór kanału, który będzie przetwarzany w kolejnych etapach działania aplikacji. Wybór dokonywany jest poprzez porównanie SNR obu kanałów.
+\item Detekcja i usunięcie zakłóceń lini bazowej sygnału - główne zadanie.
+\item Normalizacja sygnału przed zwróceniem do dalszej analizy.
+\end{enumerate}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{include/baselineflow.eps}
+\caption{Diagram prezentujący funkcjonalnosć modułu ECGBaselineRemoval}
+\label{fig:fig_baselineflow}
+\end{figure}
+Koniecznosć wprowadzenia oceny i wyboru kanału do dalszej analizy został podyktowany nadrzędnymi decyzjami architekturalnymi. W razie potrzeby może zostać pominięta.\\
 
 \subsubsection{Opis procedur i metod}
 \label{sec:baseline:procs}
+\paragraph{Klasa: ECGBaselineRemoval}
+- Główna klasa modułu, dziedzicząca po wirtualnym ECGBaselineModule. Jest ona odpowiedzialna za przetworzenie sygnału pierwotnego i zwrócenie sygnału przefiltrowanego (pozbawionego zakłóceń lini bazowej). Pojedyńcza instancja tej klasy tworzona jest wraz z uruchomieniem aplikacji.
+
+\begin{lstlisting}
+void ECGBaselineRemoval::runModule(const ECGSignal &inputSignal, 
+const ECGInfo & ecgi, ECGSignalChannel &outputSignal)
+\end{lstlisting}
+Podstawowa metoda w module. Jest odpowiedzialna za uruchomienie głównej funkcjonalności - przetworzenia sygnału. Pod hasłem "przetworzenie" kryje się wybranie odpowiedniego kanału, realizacja filtrowania oraz normalizacja. \\
+Parametry:
+\begin{enumerate}
+\item \verb|const ECGSignal &inputSignal| - referencja do sygnału bazowego, zawierającego dwa kanały
+\item \verb|const ECGInfo & ecgi| - referencja do obiektu informacyjnego typu \verb|ECGInfo|, przechowującego dane dotyczące sygnału (m.in. częstotliwość próbkowania, ilość próbek)
+\item \verb|ECGSignalChannel &outputSignal| - referencja do sygnału wyjściowego - po wykonaniu metody \verb|ECGBaselineRemoval::runModule| odnosi się do sygnału przefiltrowanego; instancja klasy \verb|ECGSignalChannel| - pojedyńczy kanał
+\end{enumerate}
+
+\begin{lstlisting}
+void ECGBaselineRemoval::setParams(ParametersTypes &params)
+\end{lstlisting}
+Metoda pozwala na wybór algorytmu filtracji poprzez ustawienie flagi \verb|baselineRemovalMethod|, oraz ustawienie parametrów, korzystając z wartości pochodzących z graficznego interfejsu użytkownika. \\
+Parametry:
+\begin{enumerate}
+\item \verb|ParametersTypes &params| - referencja do obiektu typu \verb|PatametersTypes| - zawierającego parametry przekazane z graficznego interfejsu użytkownika
+\end{enumerate}
+
+\begin{lstlisting}
+void ECGBaselineRemoval::movingAverageBaselineRemoval(ECGSignalChannel 
+&inputSignal, ECGSignalChannel &outputSignal, int span)
+\end{lstlisting}
+Metoda opakowująca (tzw. \textit{wrapper}) instancję klasy realizującej filtrowanie metodą średniej kroczącej \ref{sec:baseline:papers}. \\
+Parametry parametry:
+\begin{enumerate}
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|int span| - wartość całkowita - nieparzysta - będąca rozmiarem okna w algorytmie średniej kroczącej
+\end{enumerate}
+
+\begin{lstlisting}
+void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel 
+&inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, 
+int order, double cutoffFrequency, double attenuation)
+\end{lstlisting}
+Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Butterworth'a \ref{sec:baseline:papers}. \\
+
+Parametry:
+\begin{enumerate}
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|const ECGInfo &ecgi| - referencja do obiektu informacyjnego \verb|ECGInfo|, przechowującego dane sygnału (m.in. częstotliwość próbkowania, ilość próbek)
+\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|double attenuation| - tłumienie 
+\end{enumerate}
+
+\begin{lstlisting}
+void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel 
+&inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, 
+int order, double cutoffFrequency, double ripple)
+\end{lstlisting}
+Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Chebyshev'a \ref{sec:baseline:papers}. \\
+
+Parametry:
+\begin{enumerate}
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|const ECGInfo &ecgi| - referencja do obiektu informacyjnego \verb|ECGInfo|, przechowującego dane sygnału (m.in. częstotliwość próbkowania, ilość próbek)
+\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|double ripple| - tętnienie 
+\end{enumerate}
+
+\paragraph{Klasa: SignalPreprocessor}
+- Klasa pomocnicza odpowiedzialna za wstępną analizę sygnału oraz jego normalizację.
+
+\begin{lstlisting}
+int SignalPreprocessor::evaluateSignalChannels(const ECGSignal &inputSignal)
+\end{lstlisting}
+Metoda realizująca porównanie kanałów, bazując na wyliczeniu współczynnika \verb|SNR| (\verb|Snr::snr|) tysiąca pierwszych próbek oraz wybór lepszego z nich. \\
+
+Parametry:
+\begin{enumerate}
+\item \verb|const ECGSignal &inputSignal| - referencja do sygnału bazowego (dwa kanały)
+\end{enumerate}
+Wartość zwracana:
+\begin{enumerate}
+\item liczba całkowita odpowiadająca numerowi kanału po ewaluacji (1 albo 2)
+\end{enumerate} 
+
+\begin{lstlisting}
+void SignalPreprocessor::normalize(ECGSignalChannel &inputSignal, 
+ECGSignalChannel &outputSignal)
+\end{lstlisting}
+Metoda odpowiedzialna za normalizację sygnału, tj. przeskalowanie do przedziału wartości 0..1. Wywoływana jako ostatni etap realizacji przetwarzania wstępnego - \verb|ECGBaselineRemoval::runModule()|.\\
+Parametry:
+\begin{enumerate}
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\end{enumerate}
+
+\paragraph{Klasa: Filter}
+- Klasa odpowiadająca za realizację filtrowania \verb|IIR| (\textit{ang. infinite impulse response}) na bazie współczynników pozyskanych z metod projektujących filtry \verb|Butterworth'a| bądź \verb|Chebyshev'a|. 
+
+\begin{lstlisting}
+void Filter::zeroPhase(std::vector<double> b, std::vector<double> a,
+ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order)
+\end{lstlisting}
+Metoda realizująca filtrowanie typu Zero-Phase \ref{sec:baseline:papers}. Wykorzystuje współczynniki transmitancji filtru bazowego, zgodnie z \eqref{eq:II} oraz \eqref{eq:III}. Metoda została zaimplementowana na wzór funkcji \verb|filtfilt| ze środowiska Matlab.\\
+
+Parametry:
+\begin{enumerate}
+\item \verb|(std::vector<double> b| - wektor współczynników pochodzących z licznika transmitancji zaprojektowanego filtra
+\item \verb|(std::vector<double> a| - wektor współczynników pochodzących z mianownika transmitancji zaprojektowanego filtra
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\end{enumerate}
+
+\begin{lstlisting}
+void Filter::filter(std::vector<double> b, std::vector<double> a,
+ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order)
+\end{lstlisting}
+
+Metoda realizująca filtr \verb|IIR| na bazie zestawu współczynników transmitancji filtru \verb|Butterworth'a| bądź \verb|Chebyshev'a|. Funkcja bazuje na swoim odpowiedniku (\verb|filter|) ze środowiska Matlab. Jest uniwersalna i może realizować również inne filtry. \verb|Filter::filter| może być wykorzystywana autonomicznie bądź wywoływana niejawnie w ramach metody \verb|Filter::zeroPhase|.\\
+
+Parametry:
+\begin{enumerate}
+\item \verb|(std::vector<double> b| - wektor współczynników pochodzących z licznika transmitancji zaprojektowanego filtra
+\item \verb|(std::vector<double> a| - wektor współczynników pochodzących z mianownika transmitancji zaprojektowanego filtra
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\end{enumerate}
+
+\paragraph{Klasa: MovingAverage}
+- Klasa realizująca filtrowanie metodą średniej kroczącej.
+
+\begin{lstlisting}
+void MovingAverage::removeBaseline(ECGSignalChannel &inputSignal, 
+ECGSignalChannel \&outputSignal, int span)
+\end{lstlisting}
+Metoda realizująca uswanie linii bazowej algorytmem średniej kroczącej. Główna pętla metody implementuje \eqref{eq:I} wywołując metodę \verb|MovingAverage::calculateAvgValueOfNeighbours|\\
+
+Parametry:
+\begin{enumerate}
+\item \verb|ECGSignalChannel &inputSignal| - referencja do obiektu będącego wybranym kanałem z sygnału wejściowego
+\item \verb|ECGSignalChannel &outputSignal| - referencja do obiektu wyjściowego
+\item \verb|int span| - wartość całkowita - nieparzysta - będąca rozmiarem okna w algorytmie średniej kroczącej
+\end{enumerate}
+
+\begin{lstlisting}
+double MovingAverage::calculateAvgValueOfNeighbours(gsl_vector *signal, 
+int currentIndex, int span)
+\end{lstlisting}
+Metoda obliczająca średnią wartość próbek w sąsiedztwie danej próbki, w oknie o szerokości określonej wartością zmiennej \verb|int span|\\
+
+Przyjmowane parametry
+\begin{enumerate}
+\item \verb|gsl_vector *signal| - wektor przechowujący próbki przetwarzanego sygnału
+\item \verb|int currentIndex| - indeks aktualnie analizowanej próbki
+\item \verb|int span| - wartość całkowita - nieparzysta - będąca rozmiarem okna w algorytmie średniej kroczącej
+\end{enumerate}
+
+\paragraph{Klasa: Butterworth}
+- Klasa realizująca projektowanie filtra \verb|Butterworth'a|.
+
+\begin{lstlisting}
+std::vector<std::vector<double>> Butterworth::filterDesign(int order, 
+double attenuation, double cutoffFreq, int sampleFreq, int type)
+\end{lstlisting}
+Metoda odpowiedzialna za zaprojektowanie filtra \verb|Butterworth'a|.\\
+
+Parametry:
+\begin{enumerate}
+\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double attenuation| - tłumienie 
+\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|int sampleFreq| - częstotliwość próbkowania sygnału wejściowego, potrzebną do obliczenia współczynników filtra
+\item \verb|int type| - zmienna określająca typ (lowpass -1, highpass - 2) filtra do zaprojektowania
+\end{enumerate}
+Wartość zwracana:
+\begin{enumerate}
+\item \verb|std::vector<std::vector<double>>| - dwuwymiarowy wektor wartości zmiennoprzecinkowych, zwracający zestaw współczynników z mianownika i licznika transmitancji zaprojektowanego filtra
+\end{enumerate}
+
+\paragraph{Klasa: Chebyshev}
+- Klasa realizująca projektowanie filtra \verb|Chebyshev'a|.\\
+
+\begin{lstlisting}
+std::vector<std::vector<double>> Chebyshev::filterDesign(int order, 
+double ripple, double cutoffFreq, int sampleFreq, int type)
+\end{lstlisting}
+Metoda odpowiedzialna za zaprojektowanie filtra \verb|Chebyshev'a|\\
+
+Parametry:
+\begin{enumerate}
+\item \verb|int order| - wartość całkowita dodatnia, odpowiadająca rzędowi filtra
+\item \verb|double ripple| - tętnienie pasma przepustowego 
+\item \verb|double cutoffFrequency| - częstotliwość odcięcia filtra - wartość zmiennoprzecinkowa (może przyjąć np \textit{0.05[Hz]})
+\item \verb|int sampleFreq| - częstotliwość próbkowania sygnału wejściowego, potrzebną do obliczenia współczynników filtra
+\item \verb|int type| - zmienna określająca typ (\textit{lowpass} - 1, \textit{highpass} - 2) filtra do zaprojektowania
+\end{enumerate}
+Wartość zwracana:
+\begin{enumerate}
+\item \verb|std::vector<std::vector<double>>| - dwuwymiarowy wektor wartości zmiennoprzecinkowych, zwracający zestaw współczynników z mianownika i licznika transmitancji zaprojektowanego filtra
+\end{enumerate}
+
+\paragraph{Klasa: Snr}
+- Klasa realizująca metody ewaluacji filtrów, wraz z metodami pomocniczymi zgodnie ze wzorami \eqref{eq:IV},\eqref{eq:V} i \eqref{eq:VI}. Pozwala na wyliczenie współczynników \verb|SNR| (\verb|Snr::snr|) oraz \verb|PSNR| (\verb|Snr::psnr|) dla zadanych sygnałów. Ze względu na generyczność rozwiązań w niej zaimplementowanych opis interfejsu zostaje pominięty.
+
+\paragraph{Projektowanie filtrów - realizacja}
+- Do projektowania filtrów \verb|Butterworth'a| oraz \verb|Chebyshev'a| miała zostać wykorzystana biblioteka \verb|SPUC - Signal Processing using C++| (\textit{http://spuc.sourceforge.net/}). Niestety po jej zbudowaniu zgodnie z zaleceniami twórców okazało się, że praktycznie niemożliwe jest linkowanie jej w sposób klasyczny z projektem Visual Studio. Ze względu na ten fakt próby jej wykorzystania zostały porzucone na rzecz implementacji analogicznej z tą, która występuje w pakiecie Matlab.
 
 \subsubsection{Warunki testowania}
 \label{sec:baseline:tests}
+Testy na etapie prototypowania przeprowadzane były w środowisku Matlab. Dało to pogląd na wymagania, jakie niesie za sobą proces usuwania linii bazowej. Na etapie realizacji projektu przeprowadzano równolegle testy zarówno w aplikacji jak i ponownie w Matlab. Dane testowe pochodzą z bazy \verb|MIT-BIH|.\\\\
+Wartości proponowanych parametrów dla poszczególnych metod zostały dobrane na bazie doświadczeń oraz informacji ze źródeł naukowych, o czym zostało już nadmienione powyżej \ref{sec:baseline:papers}.\\
+
+\paragraph{Parametry filtrów}
+\subparagraph{Metoda średniej kroczącej}
+\begin{enumerate}
+\item \verb|span = 5|
+\end{enumerate}
+
+\subparagraph{Filtr Butteworth'a}
+Pierwszy zestaw:
+\begin{enumerate}
+\item \verb|order = 2|
+\item \verb|cutoff_frequency = 5Hz|
+\item \verb|sample_frequency = 360Hz|
+\item \verb|type = 'high'|
+\end{enumerate}
+Drugi zestaw:
+\begin{enumerate}
+\item \verb|order = 4|
+\item \verb|cutoff_frequency = 100Hz|
+\item \verb|sample_frequency = 360Hz|
+\item \verb|type = 'low'|
+\end{enumerate}
+
+\subparagraph{Filtr Chebyshev'a}
+Pierwszy zestaw:
+\begin{enumerate}
+\item \verb|order = 3|
+\item \verb|cutoff_frequency = 0.5Hz|
+\item \verb|ripple = 3dB|
+\item \verb|sample_frequency = 360Hz|
+\item \verb|type = 'high'|
+\end{enumerate}
+Drugi zestaw:
+\begin{enumerate}
+\item \verb|order = 5|
+\item \verb|cutoff_frequency = 100Hz|
+\item \verb|ripple = 3dB|
+\item \verb|sample_frequency = 360Hz|
+\item \verb|type = 'low'|
+\end{enumerate}
+
+W większości przypadków wyodrębnione w procesie prototypowania skuteczne parametry pokryły się z propozycjami naukowców.
 
 \subsubsection{Wyniki}
 \label{sec:baseline:results}
+Testy polegały na analizie poglądowej zmiany przebiegu sygnału po zastosowaniu filtra oraz na wyliczeniu parametrów \verb|SNR| oraz \verb|PSNR|.
+
+\paragraph{Poglądowe porównanie metod}
+\subparagraph{Metoda średniej kroczącej}
+W przypadku jedynej metody uśredniającej w zestawieniu wynik poglądowy jest zadowalający. Na wykresie \ref{fig:fig_srednia} widać wyraźnie, iż samo zastosowanie uśredniania wygładziło przebieg sygnału (wykres pomarańczowy), a po odjęciu wartości wyliczonej od sygnału bazowego otrzymano sygnał wynikowy o wiele bardziej podatny na skuteczną analizę.\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{include/fig_srednia.eps}
+\caption{Sygnał bazowy i sygnał przefiltrowany algorytmem średniej kroczącej}
+\label{fig:fig_srednia}
+\end{figure}
+
+Niestety wyraźnie widać utratę cech charaktetystycznych sygnału bazowego - "piki" dalej występują w tych samych miejscach, niemniej jednak zostały one wyraźnie spłaszczone.
+
+\subparagraph{Filtry górnoprzepustowe}
+Filtry górnoprzepustowe, niezależnie od typu - czy \verb|Butterworth'a|, czy też \verb|Chebyshev'a| - wykazały się dobrą skutecznoscią w usuwaniu linii bazowej. Jak widać na wykresie \ref{fig:fig_skuteczne} falowanie sygnału zostało w znaczącym stopniu zredukowane. Minimalnie lepszy efekt w przypadku filtrów górnoprzepustowych dawał \verb|Butterworth|.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{include/fig_skuteczne.eps}
+\caption{Sygnał bazowy i sygnały po skutecznej filtracji}
+\label{fig:fig_skuteczne}
+\end{figure}
+
+Warto nadmienić, że filtry \verb|IIR| nie powodują aż tak dużej utraty cech charakterystycznych jak średnia krocząca. 
+
+\subparagraph{Filtry dolnoprzepustowe}
+
+Bez względu na to, że wartości filtrów dolnoprzepustowych były bezpośrednio zapożyczone z literatury, ich stosowanie nie przyniosło oczekiwanych rezultatów. Przebieg sygnału po przefiltrowaniu pozostawał praktycznie bez zmian. Jedyną korzyścią, jaką można dostrzec jest nieznaczne wygładzenie wykresu (\ref{fig:fig_nieskuteczne}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.8]{include/fig_nieskuteczne.eps}
+\caption{Sygnał bazowy i sygnały po nieskutecznej filtracji}
+\label{fig:fig_nieskuteczne}
+\end{figure}
+
+\paragraph{Porównanie parametrów SNR i PSNR}
+Oprócz oceny poglądowej działania filtrów dokonano również pomiarów parametrów \verb|SNR| i \verb|PSNR|. Zestawienie wyników prezentują poniższe tabele:
+
+\verb|SNR|[dB]\\
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+sygnał & Butterworth (high) & Chebyshev (high) & Srednia krocząca & Butterworth (low) & Chebyshev (low) \\hline
+100\_V5   & -6.4236 & -3.9277 & -12.5362  & 36.7097 &  18.4894 \\ \hline
+100\_MII   & -6.0413 &  -4.2806 &  -12.7211 & 40.6467 &  18.1320 \\ \hline
+\end{tabular}
+
+\verb|PSNR|[dB]\\
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+sygnał & Butterworth (high) & Chebyshev (high) & Srednia krocząca & Butterworth (low) & Chebyshev (low) \\hline
+100\_V5   & -48.1567 & -61.0092 & -41.1130  &  -75.2726 &  -56.3931 \\ \hline
+100\_MII   &  -50.9663 &   -76.0654 &  -43.5110 &  -72.6385 &  -57.2145 \\ \hline
+\end{tabular}
+\\
+Niestety oba parametry w przypadku badanych sygnałów okazały się zwracać nieoczekiwane - pozornie błędne - wyniki. W idealnym przypadku zarówno \verb|SNR| jak i \verb|PSNR| powinny zwracać wartosci dodatnie. Co więcej - bardziej skuteczne metody (w tym przypadku filtry górnoprzepustowe oraz metoda średniej kroczącej) powinny zwracać wyniki znacząco wyższe od metod nieskutecznych. Otrzymane wyniki mogłyby wskazywać na istnienie błędu w implementacji metody, jednak była ona weryfikowana wielokrotnie.\\
+Dopóki nie zostaną roziwązane zaistniałe problemy nie można traktować parametrów \verb|SNR| oraz \verb|PSNR| jako wiążących w procesie oceny skuteczności filtracji.
+
+\paragraph{Wnioski}
+Zaproponowane metody w przypadku doboru odpowiednich parametrów oferują skuteczność na dobrym poziomie. Potwierdzają to również lepsze rezultaty osiągane przez zespoły odpowiedzialne za moduły analizujące sygnał EKG po zmianie sygnału źrodłowego na sygnał pozbawiony lini bazowej.\\
+
+Testy wykazały, że zarówno metoda średniej kroczącej jak i filtry górnoprzepustowe mogą z powodzeniem być stosowane w tym module. Warto jednak zaznaczyć, że w przypadku wyboru między tymi dwoma typami filtracji i usuwania lini bazowej użytkownik musi zastanowić się, czy ważniejsze w dalszym etapie analizy będzie zachowanie wyraźnych cech sygnału czy też jak najskuteczniejsza redukcja falowania linii izoelektrycznej.\\
+
+Zalecane są dalsze testy, w celu ustalenia przyczyn niskiej skuteczności filtrów dolnoprzepustowych.
+
 
 \subsection{Wykrywanie załamków R}
 \label{sec:Rs}
