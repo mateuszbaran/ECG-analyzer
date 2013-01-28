@@ -250,9 +250,11 @@ Problem detekcji i usuwania lini bazowej jest szeroko omawiany zarówno w ksią�
 Każda metoda ma zarówno wady i zalety, dlatego dokonanie wyboru w celu implementacji w projekcie nie było łatwym zadaniem.
 
 \paragraph{Wybór metod}
-Biorąc pod uwagę fakt, iż nadrzędnym celem projektu jest zbudowanie oprogramowania do analizy sygnału EKG, a nie badanie wydajności metod na poszczególnych etapach przetwarzania, wybór padł na metody sprawdzone. Wybrano jedną metodę uśredniającą - \verb|metodę średniej| \verb|kroczącej| (\textit{ang. moving average method}) oraz filtry o \verb|nieskończonej odpowiedzi impulsowej| (\verb|IIR|) - \verb|Butterworth'a| i \verb|Chebyshev'a|. Taki zestaw, bazując na informacjach ze źródeł, powinien spełnić stawianie przed nim wymagania. Do oceny jakości działania filtrów zastosowano \verb|SNR| i \verb|PSNR|.
+\mbox{} \\
+Biorąc pod uwagę fakt, iż nadrzędnym celem projektu jest zbudowanie oprogramowania do analizy sygnału EKG, a nie badanie wydajności metod na poszczególnych etapach przetwarzania, wybór padł na metody sprawdzone. Wybrano jedną metodę uśredniającą - \verb|metodę średniej| \verb|kroczącej| (\textit{ang. moving average method}) oraz filtry o \verb|nieskończonej odpowiedzi impulsowej| (\verb|IIR|) - \verb|Butterwortha| i \verb|Czebyszewa|. Taki zestaw, bazując na informacjach ze źródeł, powinien spełnić stawianie przed nim wymagania. Do oceny jakości działania filtrów zastosowano \verb|SNR| i \verb|PSNR|.
 
 \subparagraph{Metoda średniej kroczącej}
+\mbox{} \\
 Algorytm uśredniania sygnału w ruchomym oknie jest bardzo prostą metodą usuwania zakłóceń sygnału. Sygnał jest wygładzany poprzez zastąpienie wartości średnią wyliczoną wartością sygnału w oknie o ustalonej szerokości (nieparzystej, \textit{2N+1}, gdzie \verb|N| to sąsiedztwo) \eqref{eq:I}. Po dokonaniu obliczenia okno przesuwane jest o jedną próbkę i kalkulacje są powtarzane. 
 \begin{equation}
 Ys(i) = \frac{1}{2N+1}(Y(i+N)+Y(i+N-1)+...+Y(i-N) \label{eq:I}
@@ -260,11 +262,12 @@ Ys(i) = \frac{1}{2N+1}(Y(i+N)+Y(i+N-1)+...+Y(i-N) \label{eq:I}
 Oczywistym jest, że na krańcach przedziału nie można stosować tej metody, ze względu na brak możliwości obrania odpowiednio dużego sąsiedztwa - w takim przypadku przepisuje się wartości sygnału bazowego do wektora wynikowego.\\
 Aby średnią kroczącą zastosować do usuwania lini bazowej należy wyliczone wartości odejmować od odpowiednich próbek sygnału bazowego. Metoda zachowuje się wtedy jak swego rodzaju filtr górnoprzepustowy \cite{KAUR1}. Metoda ta została wybrana do projektu ze względu na prostotę i szybkość implementacji. Nie jest ona jednak pozbawiona wad. Usuwa zakłócenia w sposób zadowalający, niemniej jednak powoduje dość znaczące zatracanie cech charakterystycznych sygnału, na przykład w przypadku EKG wyraźnych "pików". Jest to łatwe do stwierdzenia empirycznie, zestawiając wykresy sygnału bazowego i przefiltrowanego \eqref{fig:fig_srednia}.
 
-\subparagraph{Filtr Butterworth'a}
+\subparagraph{Filtr Butterwortha}
+\mbox{} \\
 Według różnych źródeł \cite{JAGT1} pasmo informacyjne sygnału EKG zawiera się w przedziale od \verb|0.05Hz-5Hz| do \verb|100Hz|, dlatego do redukcji zakłóceń można stosować filtry zarówno dolno- jak i górnoprzepustowe.\\
 
-Filtr \verb|Butterworth'a| to filtr charakteryzujący się maksymalnie płaską charakterystyką amplitudową w paśmie przenoszenia. Częstotliwość graniczną filtru wyznacza spadek sygnału (\textit{ang. ripple}) o 3 dB. Jest to filtr powszechnie uważany za bardzo skuteczny w filtrowaniu linii bazowej \cite{KAUR1}.\\
-Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Butterworth'a| (IIR):
+Filtr \verb|Butterwortha| to filtr charakteryzujący się maksymalnie płaską charakterystyką amplitudową w paśmie przenoszenia. Częstotliwość graniczną filtru wyznacza spadek sygnału (\textit{ang. ripple}) o 3 dB. Jest to filtr powszechnie uważany za bardzo skuteczny w filtrowaniu linii bazowej \cite{KAUR1}.\\
+Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Butterwortha| (IIR):
 \begin{enumerate}
 \item \textit{górnoprzepustowa} drugiego rzędu, o częstotliwości odcięcia (\textit{ang. cut-off frequency}) \verb|5Hz|\eqref{fig_butter}
 \item \textit{dolnoprzepustowa} czwartego rzędu, o częstotliwości odcięcia \verb|100Hz|
@@ -273,20 +276,21 @@ O ile w przypadku filtru dolnoprzepustowego dobór częstotliwości nie dziwi - 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.5]{include/fig_butter.eps}
-\caption{Odpowiedź amplitudowa filtru Butterworth'a (górnoprzepustowego)}
+\caption{Odpowiedź amplitudowa filtru Butterwortha (górnoprzepustowego)}
 \label{fig_butter}
 \end{figure}
 Jak już to zostało wspomniane - filtr Butterwortha jest bardzo skuteczny, niemniej jednak równniez on nie jest pozbawiony wad. Przez to, że jako filtr IIR ma nieliniową odpowiedź fazową, istnieje tendencja do znacznego zniekształcania sygnału bazowego. Aby uniknąć tego zjawiska stosuje się tzw. \verb|filtrowanie o charakterystyce zero-fazowej| \textit{ang. Zero-Phase filtering}, opisan w kolejnych paragrafch.
 
-\subparagraph{Filtr Chebyshev'a} 
-Jest to rodzaj filtru elektrycznego, którego charakterystyczną cechą jest wykorzystanie \textit{wielomianów Chebyshev'a} do aproksymacji charakterystyki częstotliwościowej amplitudowej. Optymalizacja przebiegu charakterystyki częstotliwościowej amplitudowej w filtrach tego typu ma kluczowe znaczenie.\\
+\subparagraph{Filtr Czebyszewa} 
+\mbox{} \\
+Jest to rodzaj filtru elektrycznego, którego charakterystyczną cechą jest wykorzystanie \textit{wielomianów Czebyszewa} do aproksymacji charakterystyki częstotliwościowej amplitudowej. Optymalizacja przebiegu charakterystyki częstotliwościowej amplitudowej w filtrach tego typu ma kluczowe znaczenie.\\
 Wyróżnia się dwa typy filtrów:
 \begin{enumerate}
-\item \verb|filtry Chebyshev'a typu I| - zafalowania przebiegu wzmocnienia w paśmie przepustowym, oraz płaski przebieg charakterystyki w paśmie zaporowym
-\item \verb|filtry Chebyshev'a typu II| - zafalowania przebiegu wzmocnienia w paśmie zaporowym, oraz płaski przebieg charakterystyki w paśmie przepustowym, nazywany przez to zwykle \textit{inwersyjnym}
+\item \verb|filtry Czebyszewa typu I| - zafalowania przebiegu wzmocnienia w paśmie przepustowym, oraz płaski przebieg charakterystyki w paśmie zaporowym
+\item \verb|filtry Czebyszewa typu II| - zafalowania przebiegu wzmocnienia w paśmie zaporowym, oraz płaski przebieg charakterystyki w paśmie przepustowym, nazywany przez to zwykle \textit{inwersyjnym}
 \end{enumerate}
-Filtry \verb|Chebyshev'a| mają porównywalną skuteczność do filtrów \verb|Butterworth'a|. Na ich korzyśc przemawia zdecydowanie lepsze tłumienie za pasmem przepustowym (stroma charakterystyka). Wsród minusów można wymienić falowanie w pasmie przepustowym w przypadku filtru \verb|typu I| oraz dodatkowy parametru - \verb|tętnienie, ang. ripple| - niezbędny do zdefiniowania filtru. Dla porównania w przypadku \verb|Butterworth'a| wystarczy częstotliwośc odcięcia.\\
-Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Chebyshev'a|:
+Filtry \verb|Czebyszewa| mają porównywalną skuteczność do filtrów \verb|Butterwortha|. Na ich korzyśc przemawia zdecydowanie lepsze tłumienie za pasmem przepustowym (stroma charakterystyka). Wsród minusów można wymienić falowanie w pasmie przepustowym w przypadku filtru \verb|typu I| oraz dodatkowy parametru - \verb|tętnienie, ang. ripple| - niezbędny do zdefiniowania filtru. Dla porównania w przypadku \verb|Butterwortha| wystarczy częstotliwośc odcięcia.\\
+Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Czebyszewa|:
 \begin{enumerate}
 \item \textit{górnoprzepustowa typu II}, trzeciego rzędu, o częstotliwości odcięcia \verb|0.5Hz| i tętnieniu \verb|-3dB|
 \item \textit{dolnoprzepustowa typu I}, piątego rzędu, o częstotliwości odcięcia \verb|100Hz| i tętnieniu \verb|-3dB|
@@ -294,7 +298,8 @@ Na potrzeby projektu proponowane są dwie wersjie filtru \verb|Chebyshev'a|:
 Również w przypadku tego filtru konieczne będzie zastosowanie się tzw. \verb|filtrowania o charakterystyce| \verb|zero-fazowej| \textit{ang. Zero-Phase filtering}.
 
 \subparagraph{Filtrowanie o charakterystyce zero-fazowej}
-Filtrowanie \verb|Zero-Phase| wykorzystuje w swym działaniu współczynniki filtru bazowego (np. Butterworth'a czy też Czebyshev'a) i wykonuje filtrowanie dwukrotnie, stosując małe okno, w obie strony sygnału - od początku do końca i od końca do początku. Rezultatem tego filtrowania jest:
+\mbox{} \\
+Filtrowanie \verb|Zero-Phase| wykorzystuje w swym działaniu współczynniki filtru bazowego (np. Butterwortha czy też Czebyszewa) i wykonuje filtrowanie dwukrotnie, stosując małe okno, w obie strony sygnału - od początku do końca i od końca do początku. Rezultatem tego filtrowania jest:
 \begin{enumerate}
 \item brak opóźnień w sygnale przefiltrowanym, ze względu na przejście sygnału w obie strony
 \item redukcja zaburzeń sygnału na krańcach przedziału - poprzez zachowanie warunków początkowych
@@ -312,6 +317,7 @@ y[n] = a_{0}x[n]+a_{1}x[n-1]+a_{2}x[n-2]+a_{3}x[n-3]+b_{1}y[n-1]+b_{2}y[n-2]+b_{
 Należy przyjąć, że \verb|b| to współczynniki licznika transmitancji filtru bazowego, a \verb|a| to współczynniki mianownika.
 
 \subparagraph{Signal-to-Noise Ratio}
+\mbox{} \\
 Parametr oznaczający stosunek sygnału (użytecznego) do szumu. Jest stosowany jako parametr pomocniczy w określeniu jakości sygnału. Obliczany za pomocą następującej formuły:
 \begin{equation}
 SNR= 20\log_{10}(\frac{A_{sygnal}}{A_{szum}}) \label{eq:IV}
@@ -319,6 +325,7 @@ SNR= 20\log_{10}(\frac{A_{sygnal}}{A_{szum}}) \label{eq:IV}
 gdzie \verb|A| oznacza amplitudę sygnału. W praktyce \verb|A| wyliczane jest jako średnia kwadratowa amplitud w sygnale.
 
 \subparagraph{Peak Signal-to-Noise Ratio}
+\mbox{} \\
 Parametr oznaczający stosunek maksymalnej mocy sygnału do średniej wartości szumu. Również jest stosowany jako parametr pomocniczy w określeniu jakości sygnału. Obliczany za pomocą następującej formuły:
 \begin{equation}
 PSNR= 10\log_{10}(\frac{k^2}{MSE}) \label{eq:V}
@@ -389,7 +396,7 @@ void ECGBaselineRemoval::butterworthBaselineRemoval(ECGSignalChannel
 &inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, 
 int order, double cutoffFrequency, double attenuation)
 \end{lstlisting}
-Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Butterworth'a \ref{sec:baseline:papers}. \\
+Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Butterwortha \ref{sec:baseline:papers}. \\
 
 Parametry:
 \begin{enumerate}
@@ -406,7 +413,7 @@ void ECGBaselineRemoval::chebyshevBaselineRemoval(ECGSignalChannel
 &inputSignal, ECGSignalChannel &outputSignal, const ECGInfo &ecgInfo, 
 int order, double cutoffFrequency, double ripple)
 \end{lstlisting}
-Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Chebyshev'a \ref{sec:baseline:papers}. \\
+Metoda opakowująca instancję klasy realizującej filtrowanie filtrem Czebyszewa \ref{sec:baseline:papers}. \\
 
 Parametry:
 \begin{enumerate}
@@ -447,7 +454,7 @@ Parametry:
 \end{enumerate}
 
 \paragraph{Klasa: Filter}
-- Klasa odpowiadająca za realizację filtrowania \verb|IIR| (\textit{ang. infinite impulse response}) na bazie współczynników pozyskanych z metod projektujących filtry \verb|Butterworth'a| bądź \verb|Chebyshev'a|. 
+- Klasa odpowiadająca za realizację filtrowania \verb|IIR| (\textit{ang. infinite impulse response}) na bazie współczynników pozyskanych z metod projektujących filtry \verb|Butterwortha| bądź \verb|Czebyszewa|. 
 
 \begin{lstlisting}
 void Filter::zeroPhase(std::vector<double> b, std::vector<double> a,
@@ -469,7 +476,7 @@ void Filter::filter(std::vector<double> b, std::vector<double> a,
 ECGSignalChannel &inputSignal, ECGSignalChannel &outputSignal, int order)
 \end{lstlisting}
 
-Metoda realizująca filtr \verb|IIR| na bazie zestawu współczynników transmitancji filtru \verb|Butterworth'a| bądź \verb|Chebyshev'a|. Funkcja bazuje na swoim odpowiedniku (\verb|filter|) ze środowiska Matlab. Jest uniwersalna i może realizować również inne filtry. \verb|Filter::filter| może być wykorzystywana autonomicznie bądź wywoływana niejawnie w ramach metody \verb|Filter::zeroPhase|.\\
+Metoda realizująca filtr \verb|IIR| na bazie zestawu współczynników transmitancji filtru \verb|Butterwortha| bądź \verb|Czebyszewa|. Funkcja bazuje na swoim odpowiedniku (\verb|filter|) ze środowiska Matlab. Jest uniwersalna i może realizować również inne filtry. \verb|Filter::filter| może być wykorzystywana autonomicznie bądź wywoływana niejawnie w ramach metody \verb|Filter::zeroPhase|.\\
 
 Parametry:
 \begin{enumerate}
@@ -510,13 +517,13 @@ Przyjmowane parametry
 \end{enumerate}
 
 \paragraph{Klasa: Butterworth}
-- Klasa realizująca projektowanie filtra \verb|Butterworth'a|.
+- Klasa realizująca projektowanie filtra \verb|Butterwortha|.
 
 \begin{lstlisting}
 std::vector<std::vector<double>> Butterworth::filterDesign(int order, 
 double attenuation, double cutoffFreq, int sampleFreq, int type)
 \end{lstlisting}
-Metoda odpowiedzialna za zaprojektowanie filtra \verb|Butterworth'a|.\\
+Metoda odpowiedzialna za zaprojektowanie filtra \verb|Butterwortha|.\\
 
 Parametry:
 \begin{enumerate}
@@ -532,13 +539,13 @@ Wartość zwracana:
 \end{enumerate}
 
 \paragraph{Klasa: Chebyshev}
-- Klasa realizująca projektowanie filtra \verb|Chebyshev'a|.\\
+- Klasa realizująca projektowanie filtra \verb|Czebyszewa|.\\
 
 \begin{lstlisting}
 std::vector<std::vector<double>> Chebyshev::filterDesign(int order, 
 double ripple, double cutoffFreq, int sampleFreq, int type)
 \end{lstlisting}
-Metoda odpowiedzialna za zaprojektowanie filtra \verb|Chebyshev'a|\\
+Metoda odpowiedzialna za zaprojektowanie filtra \verb|Czebyszewa|\\
 
 Parametry:
 \begin{enumerate}
@@ -556,8 +563,8 @@ Wartość zwracana:
 \paragraph{Klasa: Snr}
 - Klasa realizująca metody ewaluacji filtrów, wraz z metodami pomocniczymi zgodnie ze wzorami \eqref{eq:IV},\eqref{eq:V} i \eqref{eq:VI}. Pozwala na wyliczenie współczynników \verb|SNR| (\verb|Snr::snr|) oraz \verb|PSNR| (\verb|Snr::psnr|) dla zadanych sygnałów. Ze względu na generyczność rozwiązań w niej zaimplementowanych opis interfejsu zostaje pominięty.
 
-\paragraph{Projektowanie filtrów - realizacja}
-- Do projektowania filtrów \verb|Butterworth'a| oraz \verb|Chebyshev'a| miała zostać wykorzystana biblioteka \verb|SPUC - Signal Processing using C++| (\textit{http://spuc.sourceforge.net/}). Niestety po jej zbudowaniu zgodnie z zaleceniami twórców okazało się, że praktycznie niemożliwe jest linkowanie jej w sposób klasyczny z projektem Visual Studio. Ze względu na ten fakt próby jej wykorzystania zostały porzucone na rzecz implementacji analogicznej z tą, która występuje w pakiecie Matlab.
+\paragraph{Projektowanie filtrów - realizacja}\mbox{} \\
+Do projektowania filtrów \verb|Butterwortha| oraz \verb|Czebyszewa| miała zostać wykorzystana biblioteka \verb|SPUC - Signal Processing using C++| (\textit{http://spuc.sourceforge.net/}). Niestety po jej zbudowaniu zgodnie z zaleceniami twórców okazało się, że praktycznie niemożliwe jest linkowanie jej w sposób klasyczny z projektem Visual Studio. Ze względu na ten fakt próby jej wykorzystania zostały porzucone na rzecz implementacji analogicznej z tą, która występuje w pakiecie Matlab.
 
 \subsubsection{Warunki testowania}
 \label{sec:baseline:tests}
@@ -571,6 +578,7 @@ Wartości proponowanych parametrów dla poszczególnych metod zostały dobrane n
 \end{enumerate}
 
 \subparagraph{Filtr Butteworth'a}
+\mbox{} \\
 Pierwszy zestaw:
 \begin{enumerate}
 \item \verb|order = 2|
@@ -586,7 +594,8 @@ Drugi zestaw:
 \item \verb|type = 'low'|
 \end{enumerate}
 
-\subparagraph{Filtr Chebyshev'a}
+\subparagraph{Filtr Czebyszewa}
+\mbox{} \\
 Pierwszy zestaw:
 \begin{enumerate}
 \item \verb|order = 3|
@@ -612,7 +621,8 @@ Testy polegały na analizie poglądowej zmiany przebiegu sygnału po zastosowani
 
 \paragraph{Poglądowe porównanie metod}
 \subparagraph{Metoda średniej kroczącej}
-W przypadku jedynej metody uśredniającej w zestawieniu wynik poglądowy jest zadowalający. Na wykresie \ref{fig:fig_srednia} widać wyraźnie, iż samo zastosowanie uśredniania wygładziło przebieg sygnału (wykres pomarańczowy), a po odjęciu wartości wyliczonej od sygnału bazowego otrzymano sygnał wynikowy o wiele bardziej podatny na skuteczną analizę.\\
+\mbox{} \\
+W przypadku jedynej metody uśredniającej w zestawieniu wynik poglądowy jest zadowalający. Na wykresie \ref{fig:fig_srednia} widać, iż samo zastosowanie uśredniania wygładziło przebieg sygnału (wykres pomarańczowy), a po odjęciu wartości wyliczonej od sygnału bazowego otrzymano sygnał wynikowy wydaje się być bardziej podatny na skuteczną analizę.\\
 
 \begin{figure}[h]
 \centering
@@ -621,10 +631,11 @@ W przypadku jedynej metody uśredniającej w zestawieniu wynik poglądowy jest z
 \label{fig:fig_srednia}
 \end{figure}
 
-Niestety wyraźnie widać utratę cech charaktetystycznych sygnału bazowego - "piki" dalej występują w tych samych miejscach, niemniej jednak zostały one wyraźnie spłaszczone.
+Niestety wyraźnie widać utratę cech charaktetystycznych sygnału bazowego - "piki" dalej występują w tych samych miejscach, niemniej jednak zostały one wyraźnie spłaszczone. Istnieje podejrzenie, że nie każda metoda ekstrakcji cech sygnału poradzi sobie z tak niewyraźnymi "pikami". W tym przypadku należy przeprowadzić testy polegające na stosowaniu różnych metod analizy sygnału, aby ostatecznie ocenić skuteczność średniej kroczącej.
 
 \subparagraph{Filtry górnoprzepustowe}
-Filtry górnoprzepustowe, niezależnie od typu - czy \verb|Butterworth'a|, czy też \verb|Chebyshev'a| - wykazały się dobrą skutecznoscią w usuwaniu linii bazowej. Jak widać na wykresie \ref{fig:fig_skuteczne} falowanie sygnału zostało w znaczącym stopniu zredukowane. Minimalnie lepszy efekt w przypadku filtrów górnoprzepustowych dawał \verb|Butterworth|.
+\mbox{} \\
+Filtry górnoprzepustowe, niezależnie od typu - czy \verb|Butterwortha|, czy też \verb|Czebyszewa| - wykazały się dobrą skutecznoscią w usuwaniu linii bazowej. Jak widać na wykresie \ref{fig:fig_skuteczne} falowanie sygnału zostało w znaczącym stopniu zredukowane. Minimalnie lepszy efekt w przypadku filtrów górnoprzepustowych dawał \verb|Butterworth|.
 
 \begin{figure}[h]
 \centering
@@ -636,7 +647,7 @@ Filtry górnoprzepustowe, niezależnie od typu - czy \verb|Butterworth'a|, czy t
 Warto nadmienić, że filtry \verb|IIR| nie powodują aż tak dużej utraty cech charakterystycznych jak średnia krocząca. 
 
 \subparagraph{Filtry dolnoprzepustowe}
-
+\mbox{} \\
 Bez względu na to, że wartości filtrów dolnoprzepustowych były bezpośrednio zapożyczone z literatury, ich stosowanie nie przyniosło oczekiwanych rezultatów. Przebieg sygnału po przefiltrowaniu pozostawał praktycznie bez zmian. Jedyną korzyścią, jaką można dostrzec jest nieznaczne wygładzenie wykresu (\ref{fig:fig_nieskuteczne}).
 
 \begin{figure}[h]
@@ -647,31 +658,37 @@ Bez względu na to, że wartości filtrów dolnoprzepustowych były bezpośredni
 \end{figure}
 
 \paragraph{Porównanie parametrów SNR i PSNR}
+\mbox{} \\
 Oprócz oceny poglądowej działania filtrów dokonano również pomiarów parametrów \verb|SNR| i \verb|PSNR|. Zestawienie wyników prezentują poniższe tabele:
 
-\verb|SNR|[dB]\\
+\begin{center}
+\verb|SNR|[dB]\\ 
+
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-sygnał & Butterworth (high) & Chebyshev (high) & Srednia krocząca & Butterworth (low) & Chebyshev (low) \\hline
+sygnał & Butter. (high) & Czeby. (high) & Śr. krocząca & Butter. (low) & Czeby. (low) \\ \hline
 100\_V5   & -6.4236 & -3.9277 & -12.5362  & 36.7097 &  18.4894 \\ \hline
 100\_MII   & -6.0413 &  -4.2806 &  -12.7211 & 40.6467 &  18.1320 \\ \hline
 \end{tabular}
-
+\mbox{} \\
+\mbox{} \\
 \verb|PSNR|[dB]\\
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-sygnał & Butterworth (high) & Chebyshev (high) & Srednia krocząca & Butterworth (low) & Chebyshev (low) \\hline
+sygnał & Butter. (high) & Czeby. (high) & Śr. krocząca & Butter. (low) & Czeby. (low) \\ \hline
 100\_V5   & -48.1567 & -61.0092 & -41.1130  &  -75.2726 &  -56.3931 \\ \hline
 100\_MII   &  -50.9663 &   -76.0654 &  -43.5110 &  -72.6385 &  -57.2145 \\ \hline
 \end{tabular}
-\\
-Niestety oba parametry w przypadku badanych sygnałów okazały się zwracać nieoczekiwane - pozornie błędne - wyniki. W idealnym przypadku zarówno \verb|SNR| jak i \verb|PSNR| powinny zwracać wartosci dodatnie. Co więcej - bardziej skuteczne metody (w tym przypadku filtry górnoprzepustowe oraz metoda średniej kroczącej) powinny zwracać wyniki znacząco wyższe od metod nieskutecznych. Otrzymane wyniki mogłyby wskazywać na istnienie błędu w implementacji metody, jednak była ona weryfikowana wielokrotnie.\\
+\mbox{} \\
+\end{center}
+Niestety oba parametry w przypadku badanych sygnałów okazały się zwracać nieoczekiwane - pozornie błędne - wyniki. W idealnym przypadku zarówno \verb|SNR| jak i \verb|PSNR| powinny zwracać wartości dodatnie. Co więcej - bardziej skuteczne metody (w tym przypadku filtry górnoprzepustowe oraz metoda średniej kroczącej) powinny zwracać wyniki znacząco wyższe od metod nieskutecznych. Otrzymane wyniki mogłyby wskazywać na istnienie błędu w implementacji metody, jednak była ona weryfikowana wielokrotnie.\\
 Dopóki nie zostaną roziwązane zaistniałe problemy nie można traktować parametrów \verb|SNR| oraz \verb|PSNR| jako wiążących w procesie oceny skuteczności filtracji.
 
 \paragraph{Wnioski}
+\mbox{} \\
 Zaproponowane metody w przypadku doboru odpowiednich parametrów oferują skuteczność na dobrym poziomie. Potwierdzają to również lepsze rezultaty osiągane przez zespoły odpowiedzialne za moduły analizujące sygnał EKG po zmianie sygnału źrodłowego na sygnał pozbawiony lini bazowej.\\
 
-Testy wykazały, że zarówno metoda średniej kroczącej jak i filtry górnoprzepustowe mogą z powodzeniem być stosowane w tym module. Warto jednak zaznaczyć, że w przypadku wyboru między tymi dwoma typami filtracji i usuwania lini bazowej użytkownik musi zastanowić się, czy ważniejsze w dalszym etapie analizy będzie zachowanie wyraźnych cech sygnału czy też jak najskuteczniejsza redukcja falowania linii izoelektrycznej.\\
+Testy wykazały, że filtry górnoprzepustowe mogą z powodzeniem być stosowane w tym module. Metoda średniej kroczącej do pewnego stopnia również dobrze poradziła sobie z zadaniem. Warto jednak zaznaczyć, że w przypadku wyboru między tymi dwoma typami filtracji i usuwania lini bazowej użytkownik musi zastanowić się, czy ważniejsze w dalszym etapie analizy będzie zachowanie wyraźnych cech sygnału czy też jak najskuteczniejsza redukcja falowania linii izoelektrycznej.\\
 
 Zalecane są dalsze testy, w celu ustalenia przyczyn niskiej skuteczności filtrów dolnoprzepustowych.
 
