@@ -10,7 +10,7 @@ private:
 	int offset;
 };
 
-LabeledScaleDraw::LabeledScaleDraw(int _offset) : QwtScaleDraw(), offset(_offset) { }
+LabeledScaleDraw::LabeledScaleDraw(int _offset) : QwtScaleDraw(), offset(_offset) { setLabelRotation(330); setLabelAlignment(Qt::AlignLeft);}
 LabeledScaleDraw::~LabeledScaleDraw() { }
 
 QwtText LabeledScaleDraw::label(double value) const
@@ -48,9 +48,13 @@ PlotHRT::PlotHRT(QWidget *parent) :
 	setAxisTitle(QwtPlot::xBottom, "relative interval number");
 	setAxisTitle(QwtPlot::yLeft, "RR [ms]");
 
+    QwtLegend *legend = new QwtLegend();
+    legend->setItemMode(QwtLegend::ReadOnlyItem);
+    this->insertLegend(legend, QwtPlot::RightLegend);
+
     setAxisMaxMajor(QwtPlot::xBottom, 30);
 	rr = new QwtPlotCurve("RR");
-	ts = new QwtPlotCurve("TS");
+    ts = new QwtPlotCurve("Odcinek TS");
 	ts->setPen(QPen(Qt::red, 2));
 	rr->setYAxis(QwtPlot::yLeft);
 	ts->setYAxis(QwtPlot::yLeft);

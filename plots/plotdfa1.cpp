@@ -30,11 +30,14 @@ void PlotDFA1::setData(ECGHRVDFA &data)
 	OtherSignal x = data.GetDfa_x();
 	OtherSignal y = data.GetDfa_y();
 	QVector<QPointF> points;
-	size_t size = x->signal->size;
-	for (size_t i = 0; i < size; ++i)
-	{
-		points.push_back(QPointF(float(x->get(i)), float(y->get(i))));
-	}
-	curve->setSamples(points);
+    if (x && y)
+    {
+        size_t size = x->signal->size;
+        for (size_t i = 0; i < size; ++i)
+        {
+            points.push_back(QPointF(float(x->get(i)), float(y->get(i))));
+        }
+        curve->setSamples(points);
+    }
 	replot();
 }

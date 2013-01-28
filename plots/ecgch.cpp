@@ -21,38 +21,40 @@ EcgCh::EcgCh(QWidget *parent) :
      signalCurve->attach(this);
      peaksCurve = new QwtPlotCurve("r-peaks");
      peaksCurve->setYAxis(QwtPlot::yLeft);
+     peaksCurve->setStyle(QwtPlotCurve::NoCurve);
+     peaksCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(Qt::red), QColor(Qt::red), QSize(6, 6)));
      peaksCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
      peaksCurve->setPen(QPen(Qt::red, 5));
      peaksCurve->attach(this);
 
      qrsOnSetCurve = new QwtPlotCurve("qrsOnSet");
      qrsOnSetCurve->setYAxis(QwtPlot::yLeft);
-     qrsOnSetCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
-     qrsOnSetCurve->setPen(QPen(QColor(0,255,0), 5));
+     qrsOnSetCurve->setStyle(QwtPlotCurve::NoCurve);
+     qrsOnSetCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(0,255,0), QColor(0,255,0), QSize(6, 6)));
      qrsOnSetCurve->attach(this);
 
      qrsEndSetCurve = new QwtPlotCurve("qrsEndSet");
      qrsEndSetCurve->setYAxis(QwtPlot::yLeft);
-     qrsEndSetCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
-     qrsEndSetCurve->setPen(QPen(QColor(0,150,0), 5));
+     qrsEndSetCurve->setStyle(QwtPlotCurve::NoCurve);
+     qrsEndSetCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(0,150,0), QColor(0,150,0), QSize(6, 6)));
      qrsEndSetCurve->attach(this);
 
      pOnSetCurve = new QwtPlotCurve("pOnSet");
      pOnSetCurve->setYAxis(QwtPlot::yLeft);
-     pOnSetCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
-     pOnSetCurve->setPen(QPen(QColor(0,0,255), 5));
+     pOnSetCurve->setStyle(QwtPlotCurve::NoCurve);
+     pOnSetCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(0,0,255), QColor(0,0,255), QSize(6, 6)));
      pOnSetCurve->attach(this);
 
      pEndSetCurve = new QwtPlotCurve("pEndSet");
      pEndSetCurve->setYAxis(QwtPlot::yLeft);
-     pEndSetCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
-     pEndSetCurve->setPen(QPen(QColor(0,94,185), 5));
+     pEndSetCurve->setStyle(QwtPlotCurve::NoCurve);
+     pEndSetCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(0,94,185), QColor(0,94,185), QSize(6, 6)));
      pEndSetCurve->attach(this);
 
      tEndSetCurve = new QwtPlotCurve("tEndSet");
      tEndSetCurve->setYAxis(QwtPlot::yLeft);
-     tEndSetCurve->setStyle(QwtPlotCurve::CurveStyle::Dots);
-     tEndSetCurve->setPen(QPen(QColor(116,11,11), 5));
+     tEndSetCurve->setStyle(QwtPlotCurve::NoCurve);
+     tEndSetCurve->setSymbol(new QwtSymbol(QwtSymbol::Ellipse,QColor(116,11,11), QColor(116,11,11), QSize(6, 6)));
      tEndSetCurve->attach(this);
 
      setAxisScaleDraw(QwtPlot::xBottom, new TimeScaleDraw(360.0));

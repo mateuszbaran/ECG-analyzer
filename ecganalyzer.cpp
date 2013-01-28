@@ -40,10 +40,11 @@ ECGanalyzer::ECGanalyzer(QWidget *parent, Qt::WFlags flags)
     ui.tab_3->setLayout(lay);
     ui.checkBoxShowOnPlotSD1SD2Parameters->setChecked(true);
     connect(ui.checkBoxShowOnPlotSD1SD2Parameters, SIGNAL(toggled(bool)), plotPoincare, SLOT(toggleSD(bool)));
-    //lay = new QVBoxLayout;
-    //plotHRVFrequency = new PlotHRVFrequency(this);
-    //lay->addWidget(plotHRVFrequency);
-    //ui.nowhere->setLayout(lay);
+
+//    lay = new QVBoxLayout;
+//    plotHRVFrequency = new PlotHRVFrequency(this);
+//    lay->addWidget(plotHRVFrequency);
+//    ui.tab->setLayout(lay);
 
     lay = new QVBoxLayout;
     plotDFA1 = new PlotDFA1(this);
@@ -108,7 +109,9 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		}
 
         _ECGcontroller.runRPeaks();
-//        _ECGcontroller.runQRSClass();
+        _ECGcontroller.runQRSClass();
+        on_run_st_analysis_button_clicked();
+
         ui.rawPlotWidget->setSignal(&(_ECGcontroller.raw_signal), &(_ECGcontroller.ecg_info), &(_ECGcontroller.r_peaks_data), &(_ECGcontroller.waves_data));
 
 		//HRV2 - poczatek, kfarganus
@@ -118,7 +121,7 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		plotPoincare->setData(_ECGcontroller.hrv2_data);
 
         _ECGcontroller.runHRVDFA();
-//        plotDFA1->setData(_ECGcontroller.hrv_dfa_data);
+        plotDFA1->setData(_ECGcontroller.hrv_dfa_data);
 
 		QTableWidgetItem *SD1 = new QTableWidgetItem();
 		SD1->setText(QString::number(_ECGcontroller.hrv2_data.GetSD1()) );
@@ -141,6 +144,8 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		_ECGcontroller.runHRT();
 		plotHRT->setData(_ECGcontroller.hrt_data);
 
+//        _ECGcontroller.runHRV1();
+//        plotHRVFrequency->setData(_ECGcontroller.hrv1_data);
 		QTableWidgetItem *vpc_number = new QTableWidgetItem();
 		vpc_number->setText(QString::number(_ECGcontroller.hrt_data.vpcCounter) );
 		ui.tableWidgetHRTAnalysis->setItem(0, 0, vpc_number);
