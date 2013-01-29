@@ -103,10 +103,18 @@ void HRV1Analyzer::calculateParameters() {
 
 	this->hrv1Data->RR_avg = mean(sig,0,this->signalSize);
 
+	#ifdef DEBUG
+		qDebug() << "RR_avg:" << this->hrv1Data->RR_avg;
+	#endif
+
 	/////////////////////RR_stddev
     //OK: accuracy 0.006
 
 	this->hrv1Data->RR_stddev = std(sig,0,this->signalSize);
+
+	#ifdef DEBUG
+		qDebug() << "RR_stddev:" << this->hrv1Data->RR_stddev;
+	#endif
 
 
 	//////////////////////SDNN
@@ -119,7 +127,8 @@ void HRV1Analyzer::calculateParameters() {
 						*(this->hrv1Data->RR_avg-sig[i]);
 	}
 
-	this->hrv1Data->SDNN = sqrt( (double)temp/this->signalSize );
+	this->hrv1Data->SDNN = sqrt( (double)temp/this->signalSize-1 );
+
 	#ifdef DEBUG
 		qDebug() << "SDNN:" << this->hrv1Data->SDNN;
 	#endif
@@ -134,6 +143,7 @@ void HRV1Analyzer::calculateParameters() {
 	}
 
 	this->hrv1Data->RMSSD = sqrt( (double)temp/(this->signalSize-1) );
+
 	#ifdef DEBUG
 		qDebug() << "RMSSD:" << this->hrv1Data->RMSSD;
 	#endif
@@ -151,6 +161,7 @@ void HRV1Analyzer::calculateParameters() {
 	}
 
 	this->hrv1Data->NN50 = temp;
+
 	#ifdef DEBUG
 		qDebug() << "NN50:" << this->hrv1Data->NN50;
 	#endif
@@ -160,6 +171,7 @@ void HRV1Analyzer::calculateParameters() {
 	//OK: accuracy 0.00005
 
 	this->hrv1Data->pNN50 = this->hrv1Data->NN50*100/(this->signalSize-1);
+
 	#ifdef DEBUG
 		qDebug() << "pNN50:" << this->hrv1Data->pNN50;
 	#endif
@@ -173,12 +185,13 @@ void HRV1Analyzer::calculateParameters() {
     //temp variables
     int windowSize = 1000*60*5; /* 60 seconds*5minutes */
 	long numberOfSteps = std::floor( sigAbsolute[this->signalSize-1]/windowSize );
+
 	//zabezpieczenie na wypadek smieci w ostatniej probce
-	  if (numberOfSteps < 0) {
-		//qDebug() << "Pewne problemy z sygnalem. Naprawiono!";
+	if (numberOfSteps < 0) {
+		qDebug() << "Dopasowano sygnal!";
 		this->signalSize = this->signalSize -1;
 		long numberOfSteps = std::floor( sigAbsolute[this->signalSize-1]/windowSize );
-	  }
+	}
 
     double * mRRI = new double[numberOfSteps];
     double * stdRR5 = new double[numberOfSteps];
@@ -210,10 +223,10 @@ void HRV1Analyzer::calculateParameters() {
 	    mRRI[step-1] = mean(sig, windowStartIndex, windowEndIndex+1);
 	    stdRR5[step-1] = std(sig, windowStartIndex, windowEndIndex+1);
 
-		#ifdef DEBUG
-		qDebug() << "#windowStartIndex=" << windowStartIndex << " windowEndIndex=" << windowEndIndex;
-		qDebug() << "#windowStartTime=" << windowStartTime << " windowEndTime=" << windowEndTime;
-		qDebug() << "#mRRI=" << mRRI[step-1] << " stdRR5=" << stdRR5[step-1];
+		#ifdef DEBUG_WINDOWS
+			qDebug() << "#windowStartIndex=" << windowStartIndex << " windowEndIndex=" << windowEndIndex;
+			qDebug() << "#windowStartTime=" << windowStartTime << " windowEndTime=" << windowEndTime;
+			qDebug() << "#mRRI=" << mRRI[step-1] << " stdRR5=" << stdRR5[step-1];
 		#endif
 
 	}
@@ -221,6 +234,7 @@ void HRV1Analyzer::calculateParameters() {
 	//zapis SDANN i SDANNi
 	this->hrv1Data->SDANN = std(mRRI, 0, numberOfSteps);
 	this->hrv1Data->SDANN_index = mean(stdRR5, 0, numberOfSteps);
+
 	#ifdef DEBUG
 		qDebug() << "SDANN:" << this->hrv1Data->SDANN;
 		qDebug() << "SDANNi:" << this->hrv1Data->SDANN_index;
@@ -237,6 +251,7 @@ void HRV1Analyzer::calculateParameters() {
     }
 
     this->hrv1Data->SDSD = std(tmpSig,0,this->signalSize-1);
+
 	#ifdef DEBUG
 		qDebug() << "SDSD:" << this->hrv1Data->SDSD;
 	#endif
@@ -281,6 +296,7 @@ void HRV1Analyzer::calculateParameters() {
 		qDebug() << "TP:" << this->hrv1Data->TP;
 		qDebug() << "LFHF:" << this->hrv1Data->LFHF;
 	#endif
+
     ////////////////////power & frequency plot
 
     #ifndef DEV
@@ -293,10 +309,7 @@ void HRV1Analyzer::calculateParameters() {
             this->hrv1Data->freqency->set(i, i);
             this->hrv1Data->power->set(i, fftMagnitude[i]);
         }
-		#ifdef DEBUG
-			qDebug() << "Power & freq plot: sizeFftIndex: " << sizeFftIndex;
-		#endif
-#endif
+	#endif
 
 
     //sprzatanie pamieci
@@ -351,6 +364,7 @@ double* HRV1Analyzer::doFFT(double* sigAfterSpline, int size) {
 	for(int i=0; i<sizeFftIndex; i++) {
 		fftMagnitude[i] = 2*(out_cpx[i].r*out_cpx[i].r)/(size*size); //=(abs(out_cpx[i].r)/size)*(abs(out_cpx[i].r)/size)
 	}
+
 	// wziecie tylko polowy wartosci fft (bo jest symetryczne)
 	fftMagnitude[0] = fftMagnitude[0]/2;
 	if(size%2==0) {
@@ -382,11 +396,14 @@ double* HRV1Analyzer::doFFT(double* sigAfterSpline, int size) {
  * przez biblioteke kiss fft
  */
 kiss_fft_cpx* HRV1Analyzer::copycpx(double *mat, int nframe) {
+
 	int i;
 	kiss_fft_cpx *mat2;
+
 	mat2=(kiss_fft_cpx*)KISS_FFT_MALLOC(sizeof(kiss_fft_cpx)*nframe);
-        kiss_fft_scalar zero;
-        memset(&zero,0,sizeof(zero) );
+    kiss_fft_scalar zero;
+    memset(&zero,0,sizeof(zero) );
+
 	for(i=0; i<nframe ; i++) {
 		mat2[i].r = mat[i];
 		mat2[i].i = zero;

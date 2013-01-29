@@ -146,8 +146,74 @@ void ECGanalyzer::on_actionWczytaj_plik_z_sygnalem_triggered()
 		_ECGcontroller.runHRT();
 		plotHRT->setData(_ECGcontroller.hrt_data);
 
-//        _ECGcontroller.runHRV1();
+		//HRV1 start
+        _ECGcontroller.runHRV1();
 //        plotHRVFrequency->setData(_ECGcontroller.hrv1_data);
+
+		//statistical params
+		QTableWidgetItem *RR_avg = new QTableWidgetItem();
+		RR_avg->setText(QString::number(_ECGcontroller.hrv1_data.RR_avg));
+		ui.tableWidgetStatisticalParameters->setItem(0,0, RR_avg);
+		
+		QTableWidgetItem *RR_stddev = new QTableWidgetItem();
+		RR_stddev->setText(QString::number(_ECGcontroller.hrv1_data.RR_stddev));
+		ui.tableWidgetStatisticalParameters->setItem(1,0, RR_stddev);
+
+		QTableWidgetItem *SDNN = new QTableWidgetItem();
+		SDNN->setText(QString::number(_ECGcontroller.hrv1_data.SDNN));
+		ui.tableWidgetStatisticalParameters->setItem(2,0, SDNN);
+
+		QTableWidgetItem *RMSSD = new QTableWidgetItem();
+		RMSSD->setText(QString::number(_ECGcontroller.hrv1_data.RMSSD));
+		ui.tableWidgetStatisticalParameters->setItem(3,0, RMSSD);
+
+		QTableWidgetItem *NN50 = new QTableWidgetItem();
+		NN50->setText(QString::number(_ECGcontroller.hrv1_data.NN50));
+		ui.tableWidgetStatisticalParameters->setItem(4,0, NN50);
+
+		QTableWidgetItem *pNN50 = new QTableWidgetItem();
+		pNN50->setText(QString::number(_ECGcontroller.hrv1_data.pNN50));
+		ui.tableWidgetStatisticalParameters->setItem(5,0, pNN50);
+
+		QTableWidgetItem *SDANN = new QTableWidgetItem();
+		SDANN->setText(QString::number(_ECGcontroller.hrv1_data.SDANN));
+		ui.tableWidgetStatisticalParameters->setItem(6,0, SDANN);
+
+		QTableWidgetItem *SDANN_index = new QTableWidgetItem();
+		SDANN_index->setText(QString::number(_ECGcontroller.hrv1_data.SDANN_index));
+		ui.tableWidgetStatisticalParameters->setItem(7,0, SDANN_index);
+
+		QTableWidgetItem *SDSD = new QTableWidgetItem();
+		SDSD->setText(QString::number(_ECGcontroller.hrv1_data.SDSD));
+		ui.tableWidgetStatisticalParameters->setItem(8,0, SDSD);
+
+		//frequency params
+		QTableWidgetItem *TP = new QTableWidgetItem();
+		TP->setText(QString::number(_ECGcontroller.hrv1_data.TP));
+		ui.tableWidgetFrequencyParameters->setItem(0,0, TP);
+
+		QTableWidgetItem *HF = new QTableWidgetItem();
+		HF->setText(QString::number(_ECGcontroller.hrv1_data.HF));
+		ui.tableWidgetFrequencyParameters->setItem(1,0, HF);
+
+		QTableWidgetItem *LF = new QTableWidgetItem();
+		LF->setText(QString::number(_ECGcontroller.hrv1_data.LF));
+		ui.tableWidgetFrequencyParameters->setItem(2,0, LF);
+
+		QTableWidgetItem *VLF = new QTableWidgetItem();
+		VLF->setText(QString::number(_ECGcontroller.hrv1_data.VLF));
+		ui.tableWidgetFrequencyParameters->setItem(3,0, VLF);
+
+		QTableWidgetItem *ULF = new QTableWidgetItem();
+		ULF->setText(QString::number(_ECGcontroller.hrv1_data.ULF));
+		ui.tableWidgetFrequencyParameters->setItem(4,0, ULF);
+
+		QTableWidgetItem *LFHF = new QTableWidgetItem();
+		LFHF->setText(QString::number(_ECGcontroller.hrv1_data.LFHF));
+		ui.tableWidgetFrequencyParameters->setItem(5,0, LFHF);
+
+		//HRV1 koniec
+		
 		QTableWidgetItem *vpc_number = new QTableWidgetItem();
 		vpc_number->setText(QString::number(_ECGcontroller.hrt_data.vpcCounter) );
 		ui.tableWidgetHRTAnalysis->setItem(0, 0, vpc_number);

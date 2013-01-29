@@ -7,7 +7,8 @@
 /// wlacza tryb debugowania
 #define DEBUG
 //#define DEBUG_FFT
-#define DEBUG_SIG
+//#define DEBUG_SIG
+//#define DEBUG_WINDOWS
 
 #pragma once
 
