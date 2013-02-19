@@ -13,7 +13,11 @@ using namespace std;
 enum QRSType
 {
   VENTRICULUS,
-  SUPRACENTRICULAR
+  SUPRACENTRICULAR,
+  CLASS1,
+  CLASS2,
+  CLASS3,
+  CLASS4
 };
 
 /**

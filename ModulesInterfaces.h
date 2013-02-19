@@ -11,6 +11,7 @@
 #include "ECGST.h"
 #include "ECGTWave.h"
 #include "ECGWaves.h"
+#include "QRSClass.h"
 
 #include <map>
 #include <string>
